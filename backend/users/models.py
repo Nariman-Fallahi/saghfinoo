@@ -7,17 +7,17 @@ from .managers import CustomUserManager
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     number = models.CharField(max_length=12, unique=True)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    password = models.CharField(max_length=50)
+    first_name = models.CharField(max_length=51)
+    last_name = models.CharField(max_length=52)
+    password = models.CharField(max_length=512)
     image = models.CharField(max_length=1000, default='')
 
     is_active = models.BooleanField(default=True)
-    permisions = models.CharField(max_length=50, default='')
-    CreatedAt = models.DateTimeField(default=timezone.now())
-    ModifiedAt = models.DateTimeField(default=timezone.now())
+    permisions = models.CharField(max_length=53, default='')
+    created_at = models.DateTimeField(default=timezone.now())
+    modified_at = models.DateTimeField(default=timezone.now())
     
-    
+
     USERNAME_FIELD = 'number'
     REQUIRED_FIELDS = []
 

@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'real_estate_agents',
     'real_estate_offices',
     'real_estates',
-    'users'
+    'users',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
@@ -60,6 +61,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
 
 ROOT_URLCONF = 'core.urls'
 
@@ -144,3 +147,9 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:8000',
     'https://localhost:8000'
 )
+
+REST_FRAMEWORK ={
+    'DEFAULT_AUTHENTICATION_CLASSES':[
+        'rest_framework.authentication.TokenAuthentication'
+    ]
+}
