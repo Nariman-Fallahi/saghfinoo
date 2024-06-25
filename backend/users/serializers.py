@@ -1,14 +1,17 @@
 from .models import CustomUser
 from rest_framework import serializers
-
+# from common.utils import input_check
 
 class VerifyNumberSerializer(serializers.Serializer):
-    number = serializers.CharField(max_length=12)
     code = serializers.IntegerField()
+    number = serializers.CharField(max_length=11)
 
     def validate(self, attrs):
 
-        if len(attrs['number']) != 11 or attrs['number'][:2] != "09":
+        if len(attrs.get('number', '')) != 11 or attrs.get('number', '')[:2] != "09":
+            raise serializers.ValidationError(f"invalid number length:{len(attrs.get('number', ''))}")
+
+        if attrs.get('number', '')[:2] != "09":
             raise serializers.ValidationError("invalid number")
 
         
@@ -18,10 +21,16 @@ class VerifyNumberSerializer(serializers.Serializer):
 class SignupSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['number', 'first_name', 'last_name', 'password']
+        fields = ['first_name', 'last_name', 'password']
 
+    def validate(self, attrs):
+
+        # if input_check.check_name(attrs['first_name']):
+            # raise serializers.ValidationError("invalid first_name")
+
+        return super().validate(attrs)
 
 class SigninSerializer(serializers.Serializer):
-    number = serializers.CharField(max_length=12)
-    password = serializers.CharField(max_length=50)
+    number = serializers.CharField(max_length=11)
+    password = serializers.CharField(max_length=512)
 
