@@ -2,32 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+* {
+  direction: rtl;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+p {
+  cursor: default;
+}
+
+.openMenu {
+  display: block;
+  animation: OPEN_MENU 0.3s ease-in forwards;
+}
+@keyframes OPEN_MENU {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.closeMenu {
+  display: block;
+  animation: CLOSE_MENU 0.2s ease-in forwards;
+}
+@keyframes CLOSE_MENU {
+  0% {
+    width: 100%;
+  }
+  100% {
+    width: 0;
+    display: none;
+  }
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+.bg-search {
+  background-image: url("/image/Bg-SearchBox.webp");
+}
+
+@media (hover: none) {
+  .swiper-button-prev,
+  .swiper-button-next {
+    display: none !important;
   }
+}
+
+#nprogress .bar {
+  border-radius: 15px !important;
 }
