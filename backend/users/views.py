@@ -16,6 +16,7 @@ from .models import CustomUser
 NUMBER_WAIT_TIME = datetime.timedelta(0, 30)
 tempdb = TempDB(NUMBER_WAIT_TIME)
 
+
 @api_view(['POST'])
 def verify_number(req):
 
@@ -23,9 +24,10 @@ def verify_number(req):
     serializer = VerifyNumberSerializer(data=req.data)
     if serializer.is_valid():
         if serializer.data.get('code') == 0:
-            
+            # send code to number
+
             now = datetime.datetime.now()
-            
+            # delay for send code to a number
             if tempdb.get(serializer.data.get('number'), now) > now:
                 return Response({"error":f"wait {round((tempdb.get(serializer.data.get('number'), now) - now).total_seconds())} seconds"})
             
@@ -38,6 +40,8 @@ def verify_number(req):
             req.session['try'] = 0
             return Response({"msg":"code sent to number"}, status=200)
         else:
+            # check code
+
             if req.session.get('try', 0) > 5:
                 return Response({"error":"to manay tries"})
             
@@ -52,15 +56,20 @@ def verify_number(req):
 
                 user = CustomUser.objects.filter(number=req.session['number'])
                 if len(user) == 0:
+                    # signup
                     # user not exist go to signup
+                    
                     req.session['must signup'] = True
                     return Response({"msg":"Auth done. Go to /api/v1/complete-signup"}, status=200)
                 else:
+                    # login
+                    
                     # password = CustomUser.objects.first(number=serializer.data['number']).password
                     user = user[0]
                     token, created = Token.objects.get_or_create(user=user)
                     return Response({"msg":"You are in!", 'token':token.key}, status=200)
             else:
+                # wrong code
                 req.session['try'] = req.session.get('try', 0) + 1
                 return Response({"error":"invalid code"}, status=400)                
             
@@ -70,10 +79,11 @@ def verify_number(req):
 
 @api_view(['POST'])
 def signup(req):
-
+    # check number is verified before
     if req.session.get('must signup', '') != True:
         return Response({"error":"verifiy number first"}, status=400)
 
+    # check is user created before
     user = CustomUser.objects.filter(number=req.session['number'])
     if len(user) > 0:
         return Response({"error":"user already created"}, status=400)
@@ -104,6 +114,7 @@ def login(req):
         else:
             return Response({"error":"incurrect number or password"}, status=400)
     return Response(serializer.errors, status=400)
+
 
 @api_view(["GET"])
 @permission_classes((IsAuthenticated, ))
