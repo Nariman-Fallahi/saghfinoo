@@ -6,6 +6,14 @@ class VerifyNumberSerializer(serializers.Serializer):
     number = serializers.CharField(max_length=12)
     code = serializers.IntegerField()
 
+    def validate(self, attrs):
+
+        if len(attrs['number']) != 11 or attrs['number'][:2] != "09":
+            raise serializers.ValidationError("invalid number")
+
+        
+
+        return super().validate(attrs)
 
 class SignupSerializer(serializers.ModelSerializer):
     class Meta:
