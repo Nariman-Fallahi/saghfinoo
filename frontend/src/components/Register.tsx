@@ -32,7 +32,6 @@ export default function Register() {
     }
   }
 
-  
   const handleFocus = (index: number) => {
     setFocusedInput(index);
   };
@@ -41,25 +40,36 @@ export default function Register() {
     setFocusedInput(null);
   };
 
-  const address = 'https://8000-idx-saghfinoo-1719090394822.cluster-qtqwjj3wgzff6uxtk26wj7fzq6.cloudworkstations.dev/api/v1/users/login';
+  
+  const apiUrl =
+    "https://8000-idx-saghfinoo-1719090394822.cluster-qtqwjj3wgzff6uxtk26wj7fzq6.cloudworkstations.dev/api/v1/users/login";
 
   const sendPhoneNumber = async () => {
     try {
-      const response = await axios.post(address, {
-        number: phone,
-      });
+      const response = await axios.post(
+        apiUrl,
+        { number: phone },
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.status === 200) {
-        console.log("Code sent to phone number");
-        setCodeSent(true); // بعد از ارسال موفقیت آمیز کد، مرحله بعدی فعال می‌شود
+        console.log("کد به شماره تلفن ارسال شد");
+        setCodeSent(true);
+      } else {
+        console.log("خطا در ارسال کد به شماره تلفن");
       }
     } catch (error) {
-      console.error("Failed to send phone number");
+      console.error("خطا:", error);
     }
   };
-  
+
   const btnSendPhoneNumber = () => {
-    if(phone !== undefined) {
+    if (phone !== undefined) {
       if (phone!.length === 11) {
         setInputErr(false);
         sendPhoneNumber();
@@ -110,7 +120,7 @@ export default function Register() {
               )}
 
               {!codeSent && (
-                <form className="w-full pb-3" style={{direction: "rtl"}}>
+                <form className="w-full pb-3" style={{ direction: "rtl" }}>
                   <input
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="09123456789"

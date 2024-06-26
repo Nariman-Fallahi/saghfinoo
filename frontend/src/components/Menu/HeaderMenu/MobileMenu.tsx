@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Button } from "@nextui-org/button";
 import { navigationMenuType } from "@/types/Home";
+import useModalStore from "@/store";
 
 type mobileMenuType = {
   NavigationMenu: navigationMenuType;
@@ -10,6 +11,7 @@ type mobileMenuType = {
 
 export default function MobileMenu({ NavigationMenu }: mobileMenuType) {
   const [openMenu, setOpenMenu] = useState<boolean>();
+  const { setOpen } = useModalStore();
 
   return (
     <>
@@ -59,7 +61,7 @@ export default function MobileMenu({ NavigationMenu }: mobileMenuType) {
             </Button>
           </div>
 
-          <div className="w-full bg-gray-100 px-2 py-5 mt-4 flex items-center">
+          <div onClick={() => setOpen(true)} className="w-full bg-gray-100 px-2 py-5 mt-4 flex items-center">
             <Image
               width={20}
               height={20}

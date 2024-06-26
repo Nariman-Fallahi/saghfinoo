@@ -10,14 +10,19 @@
   },
   "dependencies": {
     "@nextui-org/button": "^2.0.34",
+    "@nextui-org/checkbox": "^2.1.2",
+    "@nextui-org/modal": "^2.0.36",
     "@nextui-org/system": "^2.2.2",
     "@nextui-org/theme": "^2.2.6",
+    "axios": "^1.7.2",
     "framer-motion": "^11.2.11",
     "next": "14.2.4",
     "next-nprogress-bar": "^2.3.12",
     "react": "^18",
     "react-dom": "^18",
-    "swiper": "^11.1.4"
+    "react-otp-input": "^3.1.1",
+    "swiper": "^11.1.4",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@types/node": "^20",
