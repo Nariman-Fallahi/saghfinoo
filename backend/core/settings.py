@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-(r19jmezop^@vvlo5ge7bk3sm+3i59785u&2u(2!$$*%iebf^v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', '*']
 
 
 # Application definition
@@ -60,6 +60,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 
@@ -145,15 +147,15 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost',
-    'https://localhost',
-    'http://0.0.0.0',
-    'http://0.0.0.0',
-    'https://127.0.0.1',
-    'http://127.0.0.1',
-)
-
+# CORS_ORIGIN_WHITELIST = (
+    # 'http://localhost',
+    # 'https://localhost',
+    # 'http://0.0.0.0',
+    # 'http://0.0.0.0',
+    # 'https://127.0.0.1',
+    # 'http://127.0.0.1',
+# )
+CORS_ORIGIN_ALLOW_ALL = True
 REST_FRAMEWORK ={
     'DEFAULT_AUTHENTICATION_CLASSES':[
         'rest_framework.authentication.TokenAuthentication'
