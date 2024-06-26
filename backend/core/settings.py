@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-(r19jmezop^@vvlo5ge7bk3sm+3i59785u&2u(2!$$*%iebf^v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', '*']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -53,6 +53,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -60,8 +61,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'middleware.cors.Cors',
 
-    'corsheaders.middleware.CorsMiddleware'
 ]
 
 
@@ -71,7 +72,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR , 'templates'), os.path.join(BASE_DIR), '../frontend/.next/server/app'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -140,22 +141,38 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
-
+STATIC_URL = '_next/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, '../frontend/.next/static'),
+    os.path.join(BASE_DIR, '../frontend/public'),
+]
+STATIC_ROOT = os.path.join(BASE_DIR, '../frontend/.next')
+MEDIA_ROOT = os.path.join(BASE_DIR, '../frontend/public')
+MEDIA_URL = '/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CORS_ORIGIN_WHITELIST = (
-    # 'http://localhost',
-    # 'https://localhost',
-    # 'http://0.0.0.0',
-    # 'http://0.0.0.0',
-    # 'https://127.0.0.1',
-    # 'http://127.0.0.1',
-# )
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',
+    'https://localhost:3000',
+    'http://0.0.0.0',
+    'http://0.0.0.0',
+    'https://127.0.0.1',
+    'http://127.0.0.1',
+)
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_HEADERS = [
+    'access-control-allow-origin', 
+    'content-type',
+    'accept',
+    'athorization',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
 REST_FRAMEWORK ={
     'DEFAULT_AUTHENTICATION_CLASSES':[
         'rest_framework.authentication.TokenAuthentication'
