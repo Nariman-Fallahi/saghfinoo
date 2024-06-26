@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+p,h1,h2,h3,h4,h5,h6 {
+  cursor: default;
+  direction: rtl;
+}
+
+.openMenu {
+  display: block;
+  animation: OPEN_MENU 0.3s ease-in forwards;
+}
+@keyframes OPEN_MENU {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.closeMenu {
+  display: block;
+  animation: CLOSE_MENU 0.2s ease-in forwards;
+}
+@keyframes CLOSE_MENU {
+  0% {
+    width: 100%;
+  }
+  100% {
+    width: 0;
+    display: none;
+  }
+}
+
+.bg-search {
+  background-image: url("/image/Bg-SearchBox.webp");
+}
+
+@media (hover: none) {
+  .swiper-button-prev,
+  .swiper-button-next {
+    display: none !important;
+  }
+}
+
+#nprogress .bar {
+  border-radius: 15px !important;
+}
