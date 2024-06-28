@@ -2,10 +2,10 @@ import random
 import datetime
 
 from django.shortcuts import render
+from django.conf import settings
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import authenticate
 
@@ -29,7 +29,7 @@ def verify_number(req):
 
             now = datetime.datetime.now()
             # delay for send code to a number
-            if tempdb.get(serializer.data.get('number'), now) > now:
+            if tempdb.get(serializer.data.get('number'), now) > now and not settings.TESTING:
                 return Response({"error":f"wait {round((tempdb.get(serializer.data.get('number'), now) - now).total_seconds())} seconds", "code": users_codes.NUMBER_DELAY}, status=400)
             
             code = random.randint(10000, 99999)
@@ -127,7 +127,7 @@ def am_i_in(req):
 @api_view(["POST"])
 @permission_classes((IsAuthenticated,))
 def logout(req):
-    Token.objects.delete(user=req.user)
+    req.user.auth_token.delete()
     return Response({"msg":"done!"}, status=200)
 
 
@@ -135,3 +135,4 @@ def logout(req):
 @permission_classes((IsAuthenticated,))
 def get_user_info(req):
     return Response({"first_name":req.user.first_name, "last_name":req.user.last_name, "number":req.user.number}, status=200)
+
