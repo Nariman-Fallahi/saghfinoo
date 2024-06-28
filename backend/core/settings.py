@@ -12,7 +12,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+import sys
+
 from dotenv import load_dotenv
+
 
 load_dotenv()
 
@@ -29,6 +32,7 @@ SECRET_KEY = 'django-insecure-(r19jmezop^@vvlo5ge7bk3sm+3i59785u&2u(2!$$*%iebf^v
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+TESTING = sys.argv[1:2] == ['test']
 
 ALLOWED_HOSTS = ['*']
 
@@ -176,5 +180,7 @@ CORS_ALLOW_HEADERS = [
 REST_FRAMEWORK ={
     'DEFAULT_AUTHENTICATION_CLASSES':[
         'rest_framework.authentication.TokenAuthentication'
-    ]
+    ],
+
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
