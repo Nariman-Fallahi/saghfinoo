@@ -30,7 +30,7 @@ def verify_number(req):
             now = datetime.datetime.now()
             # delay for send code to a number
             if tempdb.get(serializer.data.get('number'), now) > now:
-                return Response({"error":f"wait {round((tempdb.get(serializer.data.get('number'), now) - now).total_seconds())} seconds", "code": users_codes.NUMBER_DELAY})
+                return Response({"error":f"wait {round((tempdb.get(serializer.data.get('number'), now) - now).total_seconds())} seconds", "code": users_codes.NUMBER_DELAY}, status=400)
             
             code = random.randint(10000, 99999)
             # todo: send code
@@ -44,7 +44,7 @@ def verify_number(req):
             # check code
 
             if req.session.get('try', 0) > 5:
-                return Response({"error":"to manay tries", "code":users_codes.TO_MANNY_TRIES})
+                return Response({"error":"to manay tries", "code":users_codes.TO_MANNY_TRIES}, status=400)
             
             if req.session.get('code', 0) == 0:
                 return Response({"error":"zero the code first", "code":users_codes.ZERO_CODE_FIRST}, status=400)
