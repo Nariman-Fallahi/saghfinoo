@@ -2,8 +2,8 @@
 import Image from "next/image";
 import { useState } from "react";
 import { Button } from "@nextui-org/button";
-import { navigationMenuType } from "@/types/Home";
-import useModalStore from "@/store";
+import { navigationMenuType } from "@/types/Type";
+import {useModalStore} from "@/Store";
 
 type mobileMenuType = {
   NavigationMenu: navigationMenuType;
