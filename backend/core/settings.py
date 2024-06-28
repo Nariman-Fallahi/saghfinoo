@@ -177,7 +177,7 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
     'withcredentials',
 ]
-
+CORS_ALLOW_CREDENTIALS = True
 REST_FRAMEWORK ={
     'DEFAULT_AUTHENTICATION_CLASSES':[
         'rest_framework.authentication.TokenAuthentication'
