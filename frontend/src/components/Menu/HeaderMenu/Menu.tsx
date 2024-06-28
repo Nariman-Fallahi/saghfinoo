@@ -1,6 +1,6 @@
 import MobileMenu from "./MobileMenu";
 import DesktopMenu from "./DesktopMenu";
-import { navigationMenuType } from "@/types/Home";
+import { navigationMenuType } from "@/types/Type";
 
 export default function Menu() {
   const navigationMenu : navigationMenuType = [

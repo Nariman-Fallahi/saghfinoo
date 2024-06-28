@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
 import { Button } from "@nextui-org/button";
-import { navigationMenuType } from "@/types/Home";
-import useModalStore from "@/store";
+import { navigationMenuType } from "@/types/Type";
+import {useModalStore} from "@/Store";
 
 type desktopMenuType = {
   NavigationMenu: navigationMenuType;
