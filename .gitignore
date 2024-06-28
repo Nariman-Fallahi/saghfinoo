@@ -1,7 +1,5 @@
 __pycache__
 .env
-<<<<<<< Updated upstream
 db.sqlite3
-=======
-/backend/myenv
->>>>>>> Stashed changes
+backend/myenv
+.idx
