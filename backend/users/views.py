@@ -40,7 +40,8 @@ def verify_number(req):
             
             code = random.randint(10000, 99999)
             # todo: send code
-            print("code:", code)
+            if settings.DEBUG and not settings.TESTING:
+                print("code:", code)
             token = str(random.randint(10000000, 9999999999)) + random.choice(['fdf', 'dfad', 'ajifd', 'eiurei']) # random_token()
 
             auth_cache.set(number, {"delay":now+NUMBER_WAIT_TIME, "token":token, "code":code, "tries":0,})
@@ -66,16 +67,16 @@ def verify_number(req):
                     # signup
                     # user not exist go to signup
                     
-                    auth_cache.set(serializer.data['token'], {'must signup':True})
+                    auth_cache.set(number, {'token':serializer.data['token'],'must signup':True})
                     return Response({"msg":"Auth done. Go to /api/v1/complete-signup", "code":users_codes.COMPLETE_SIGNUP, "status":200})
                 else:
                     # login
                     
                     # password = CustomUser.objects.first(number=serializer.data['number']).password
                     user = user[0]
-                    refresh = RefreshToken.for_user(user)
+                    refresh, access = get_jwt_tokens_for_user(user)
     
-                    return Response({"msg":"You are in!", 'access':refresh.access_token, 'refresh':str(refresh), "code":users_codes.LOGIN_DONE, "status":200})
+                    return Response({"msg":"You are in!", 'access':access, 'refresh':refresh, 'expire': settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'], "code":users_codes.LOGIN_DONE, "status":200})
             else:
                 # wrong code
                 info['tries'] = info.get('tries', 0) + 1
@@ -89,41 +90,53 @@ def verify_number(req):
 @api_view(['POST'])
 def signup(req):
     # check number is verified before
-    if req.session.get('must signup', '') != True:
-        return Response({"error":"verifiy number first", "code":users_codes.VERIFY_NUMBER_FIRST, "status":400})
 
     # check is user created before
-    user = CustomUser.objects.filter(number=req.session['number'])
-    if len(user) > 0:
-        return Response({"error":"user already created", "code":users_codes.USER_EXIST, "status":400})
 
     serializer = SignupSerializer(data=req.data)
     if serializer.is_valid():
+
+        info = auth_cache.get(serializer.data['number'], {})
+
+        if not info.get('must signup', False):
+            return Response({"errors":{'number':"verifiy number first"}, "code":users_codes.VERIFY_NUMBER_FIRST, "status":400})
+
+        user = CustomUser.objects.filter(number=serializer.data['number'])
+        if len(user) > 0:
+            return Response({"errors":{'number':"user already created"}, "code":users_codes.USER_EXIST, "status":400})
+
         user = CustomUser()
         user.first_name = serializer.data['first_name']
         user.last_name = serializer.data['last_name']
-        user.number = req.session['number']
+        user.number = serializer.data['number']
         user.set_password(serializer.data['password'])
         user.save()
 
-        token, created = Token.objects.get_or_create(user=user)
-        return Response({"msg":"done", "token":token.key, "code":users_codes.LOGIN_DONE, "status":201})
+        refresh, access = get_jwt_tokens_for_user(user)
+        
+        return Response({"msg":"done", "access":access, 'refresh':refresh, 'expire':settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'], "code":users_codes.LOGIN_DONE, "status":201})
     return Response({"errors":serializer.errors, "codes":users_codes.INVALID_FIELD, "status":400})
 
 
-@api_view(['POST'])
-def login(req):
-    serializer = SigninSerializer(data=req.data)
-    if serializer.is_valid():
-        user = authenticate(username=serializer.data['number'], password=serializer.data['password'])
+def get_jwt_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
 
-        if user:
-            token, created = Token.objects.get_or_create(user=user)
+    return str(refresh), str(refresh.access_token)
 
-            return Response({"msg":"You are in!", "token":token.key, "code":users_codes.LOGIN_DONE, "status":200})
-        else:
-            return Response({"error":"incurrect number or password", "code":users_codes.INCURRECT_NUMBER_OR_PASSWORD, "status":400})
-    return Response({"errors":serializer.errors, "code":users_codes.INVALID_FIELD, "status":400})
+
+# @api_view(['POST'])
+# def login(req):
+#     serializer = SigninSerializer(data=req.data)
+#     if serializer.is_valid():
+#         user = authenticate(username=serializer.data['number'], password=serializer.data['password'])
+
+#         if user:
+#             token, created = Token.objects.get_or_create(user=user)
+
+#             return Response({"msg":"You are in!", "token":token.key, "code":users_codes.LOGIN_DONE, "status":200})
+#         else:
+#             return Response({"error":"incurrect number or password", "code":users_codes.INCURRECT_NUMBER_OR_PASSWORD, "status":400})
+#     return Response({"errors":serializer.errors, "code":users_codes.INVALID_FIELD, "status":400})
 
 
 @api_view(["GET"])
@@ -152,12 +165,15 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         resp = super().post(request, *args, **kwargs)
         resp.data['status'] = resp.status_code
         resp.status_code = 200
+        resp.data['expire'] = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']
         return resp
-    
+
+        
 
 class CustomTokenRefreshView(TokenRefreshView):
     def post(self, request: Request, *args, **kwargs) -> Response:
         resp = super().post(request, *args, **kwargs)
         resp.data['status'] = resp.status_code
         resp.status_code = 200
+        resp.data['expire'] = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']
         return resp

@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from .models import CustomUser
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -21,9 +22,10 @@ class VerifyNumberSerializer(serializers.Serializer):
         return super().validate(attrs)
 
 class SignupSerializer(serializers.ModelSerializer):
+    token = serializers.CharField(max_length=512)
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'password']
+        fields = ['number', 'first_name', 'last_name', 'password', 'token']
 
     def validate(self, attrs):
 
