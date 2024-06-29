@@ -66,11 +66,12 @@ class VerifyNumberTests(APITestCase):
         self.assertEqual(resp.data['status'], 200, resp.data)
         self.assertEqual(resp.data['code'], users_codes.COMPLETE_SIGNUP, resp.data)
 
+
     def test_right_code_when_user_exist(self):
         #create user
 
         # verfy number
-        data = {'number':self.number, 'code':0}
+        data = {'number':self.number, 'code':0, 'token':''}
         resp = self.client.post(self.url, data)
         self.assertEqual(resp.data['status'], 200, resp.data)
         self.assertEqual(resp.data['code'], users_codes.CODE_SENT_TO_NUMBER, resp.data)
@@ -82,9 +83,9 @@ class VerifyNumberTests(APITestCase):
         self.assertEqual(resp.data['code'], users_codes.COMPLETE_SIGNUP, resp.data)
         
         # signup
-        data2 = {'first_name':'abc', 'last_name':'abc', 'password':'1234', 'token': data['token']}
+        data2 = {'number':self.number, 'first_name':'abc', 'last_name':'abc', 'password':'1234', 'token': data['token']}
         resp = self.client.post(reverse('signup'), data2)
-        token = resp.data['token']
+        # token = resp.data['token']
         self.assertEqual(resp.data['status'], 201, resp.data)
 
         # logout
@@ -92,7 +93,7 @@ class VerifyNumberTests(APITestCase):
         # self.assertEqual(resp.data['status'], 200, resp.data)
 
         # verify number (must login)
-        data = {'number':self.number, 'code':0}
+        data = {'number':self.number, 'code':0, 'token':''}
         resp = self.client.post(self.url, data)
         self.assertEqual(resp.data['status'], 200, resp.data)
         self.assertEqual(resp.data['code'], users_codes.CODE_SENT_TO_NUMBER, resp.data)
@@ -104,6 +105,11 @@ class VerifyNumberTests(APITestCase):
         self.assertEqual(resp.data['code'], users_codes.LOGIN_DONE, resp.data)
         self.assertTrue(resp.data.get('accesss') != '', f"access is '' or not exist: {resp.data}")
         self.assertTrue(resp.data.get('refresh') != '', f"refresh is '' or not exist: {resp.data}")
+
+        # test login
+        resp = self.client.get(reverse('get_user_info'), headers={'access': resp.data['access']})
+        print(resp.data, resp.status_code)
+        self.assertEqual(resp.data['status'], 200, resp.data)
 
     def test_wrong_code(self):
         data = {'number':self.number, 'code': 0, 'token':''}
@@ -118,3 +124,18 @@ class VerifyNumberTests(APITestCase):
         self.assertEqual(resp.data['code'], users_codes.WRONG_CODE, resp.data)
 
 
+# class SignupTests(APITestCase):
+#     def setUp(self):
+#         self.number = '09111111111'
+#         self.url = reverse('signup')
+#         self.default_data = {'number':self.number, 'first_name': 'abc', 'last_name':'abc', 'token': '', 'password': 'abc'}
+        
+
+#     def test_without_verify_number(self):
+        
+#         resp = self.client.post(self.url, self.default_data)
+#         self.assertEqual(resp.data['status'], 400, resp.data)
+#         self.assertEqual(resp.data['code'], users_codes.VERIFY_NUMVER_FIRST)
+
+#     def test_when_user_exist(self):
+#         pass
