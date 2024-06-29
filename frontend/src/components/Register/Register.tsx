@@ -9,7 +9,6 @@ import Otp from "./Otp";
 import { useUserStatus } from "@/Store";
 import InputPhoneNumber from "./InputPhoneNumber";
 import { UserStatusValue } from "@/enum/enums";
-import { cookies } from "next/headers";
 
 export default function Register() {
   let sizeModal: any = "";
@@ -67,37 +66,35 @@ export default function Register() {
         {
           headers: {
             "Content-Type": "application/json",
-             withCredentials: true,
           },
+          withCredentials: true,
         },
       );
       if (response1.status === 200 && response1.data.code) {
-        const receivedCode = response1.data;
-        console.log("کد دریافت شده از سرور:", receivedCode);
-        const sessionId = response1.headers;
-        console.log(sessionId);
-  
+        console.log("کد دریافت شده از سرور:", response1.data.code);
+        console.log(response1.headers);
+
         const response2 = await axios.post(
           apiUrlSPN,
           { number: "09187965685", code: 66691 },
           {
             headers: {
               "Content-Type": "application/json",
-              
             },
-            // withCredentials: true,
+            withCredentials: true,
           }
         );
         if (response2.status === 200) {
           console.log("کد به شماره تلفن ارسال شد");
           console.log(response2.data);
+          console.log(response2.headers);
+          
         }
       }
     } catch (error) {
       console.error("خطا:", error);
     }
   };
-  
 
   const btnSendPhoneNumber = () => {
     if (phone !== undefined) {

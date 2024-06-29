@@ -1,15 +1,17 @@
 import Image from "next/image";
-import { dataMenuType } from "@/types/Menu";
-import { staticFooterItemsType } from "@/types/Menu";
+import { dataMenuType } from "@/types/Type";
+import { staticFooterItemsType } from "@/types/Type";
 
 type MobileMenuType = {
   footerItems: dataMenuType;
   staticFooterItems: staticFooterItemsType;
+  Developers: any
 };
 
 export default function MobileMenu({
   footerItems,
   staticFooterItems,
+  Developers
 }: MobileMenuType) {
   return (
     <footer className="w-full mt-10 p-3 pt-10 bg-[#F9F9F9] flex flex-col pb-0 md:hidden">
@@ -25,7 +27,7 @@ export default function MobileMenu({
       </div>
 
       <p className="text-[10px] mt-7 text-gray-700">
-        {staticFooterItems.Description}
+        {staticFooterItems.description}
       </p>
 
       <div className="w-full flex justify-between mt-5 text-gray-700">
@@ -62,6 +64,7 @@ export default function MobileMenu({
         />
       </div>
       {/* END Icon */}
+      <Developers />
     </footer>
   );
 }

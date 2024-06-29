@@ -23,7 +23,7 @@ export type staticFooterItemsType = {
   titleFooterMenu: string;
   icon: string;
   title: string;
-  Description: string;
+  description: string;
 };
 
 //   Otp

@@ -1,7 +1,8 @@
 import MobileMenu from "./MobileMenu";
 import DesktopMenu from "./DesktopMenu";
-import { dataMenuType } from "@/types/Menu";
-import { staticFooterItemsType } from "@/types/Menu";
+import { dataMenuType } from "@/types/Type";
+import { staticFooterItemsType } from "@/types/Type";
+import Image from "next/image";
 
 export default function FooterMenu() {
   const dynamicFooterItems: dataMenuType = [
@@ -66,10 +67,86 @@ export default function FooterMenu() {
     titleFooterMenu: "سقفینو سقفی ایده آل برای زندگی",
     icon: "/icons/Logo.svg",
     title: "تجربه لذت خانه دار شدن سریع و آسان",
-    Description: `سقفینو پلی است تا به سرعت در بین هزاران آگهی ثبت شده جستجو کنید.
-    <br />
-    ملک مورد نظر را پیدا کنید و برای انجام معامله ای مطمین با مشاورین املاک
-    معتمد و متخصص شهرتان در ارتباط باشید.`,
+    description:
+      "سقفینو پلی است تا به سرعت در بین هزاران آگهی ثبت شده جستجو کنید ملک مورد نظر را پیدا کنید و برای انجام معامله ای مطمین با مشاورین املاک معتمد و متخصص شهرتان در ارتباط باشید.",
+  };
+
+  const DevelopersItem = [
+    {
+      fullName: "نریمان فلاحی",
+      role: "فرانت اند",
+      contect: [
+        {
+          image: "/icons/github.png",
+          url: "https://github.com/Nariman-Fallahi",
+        },
+        {
+          image: "/icons/linkedin.png",
+          url: "https://www.linkedin.com/in/narimanfallahi/",
+        },
+      ],
+    },
+    {
+      fullName: "محمدامین یعقوبی",
+      role: "بک اند",
+      contect: [
+        { image: "/icons/github.png", url: "https://github.com/yaghoubi-mn" },
+        {
+          image: "/icons/linkedin.png",
+          url: "https://www.linkedin.com/in/mohammadamin-yaghoubi-461aaa296/",
+        },
+      ],
+    },
+  ];
+
+  const Developers = () => {
+    return (
+      <div className="w-full flex flex-col items-center mt-2 text-sm">
+        <p>توسعه دهندگان</p>
+        <div className="flex w-full mt-2 justify-center">
+          {DevelopersItem.map((item, index) => {
+            return (
+              <div
+                key={index}
+                className="w-full p-3 flex flex-col items-center border border-gray-300
+                 rounded mr-2 ml-2 lg:w-[25%]"
+              >
+                <div className="flex w-full justify-between">
+                  <p className="text-xs lg:text-sm">{item.fullName}</p>
+                  <p className="text-xs text-blue-500 lg:text-sm">{item.role}</p>
+                </div>
+
+                <div className="flex mt-2">
+                  {item.contect.map((itemContext, indexContext) => {
+                    return (
+                      <a
+                        target="_blank"
+                        key={indexContext}
+                        href={itemContext.url}
+                      >
+                        <Image
+                          className="mr-2 ml-2 lg:w-[30px] lg:h-[30px]"
+                          width={25}
+                          height={25}
+                          src={itemContext.image}
+                          alt=""
+                        />
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div
+          className="w-full flex p-2 bg-gray-200 text-xs absolute mt-[7rem]
+         justify-center lg:text-sm"
+        >
+          تمام حقوق برای سقفینو محفوظ است.
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -77,14 +154,14 @@ export default function FooterMenu() {
       <MobileMenu
         footerItems={footerItems}
         staticFooterItems={staticFooterItems}
+        Developers={Developers}
       />
       <DesktopMenu
         dynamicFooterItems={dynamicFooterItems}
         footerItems={footerItems}
         staticFooterItems={staticFooterItems}
+        Developers={Developers}
       />
     </>
   );
 }
-
-("dynamicFooterItems");
