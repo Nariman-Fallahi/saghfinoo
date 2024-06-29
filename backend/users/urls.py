@@ -13,5 +13,5 @@ urlpatterns = [
     path('auth', obtain_auth_token, name='auth'),
     path('am-i-in', views.am_i_in, name='am_i_in'),
     path('get-user-info', views.get_user_info, name='get_user_info'),
-    path('logout', views.logout, name='logout'),
+    # path('logout', views.logout, name='logout'),
 ]

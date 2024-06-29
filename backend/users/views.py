@@ -1,21 +1,18 @@
 import random
 import datetime
 
-from django.shortcuts import render
 from django.conf import settings
 from django.core.cache import caches
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authtoken.models import Token
-from rest_framework.authentication import authenticate
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from common.utils.tempdb import TempDB
 from common.codes import users_codes
-from .serializers import VerifyNumberSerializer, SigninSerializer, SignupSerializer, CustomTokenObtainPairSerializer
+from .serializers import VerifyNumberSerializer, SignupSerializer, CustomTokenObtainPairSerializer
 from .models import CustomUser
 
 NUMBER_WAIT_TIME = datetime.timedelta(0, 30)
@@ -140,20 +137,22 @@ def get_jwt_tokens_for_user(user):
 
 
 @api_view(["GET"])
-@permission_classes((IsAuthenticated, ))
+@permission_classes([IsAuthenticated, ])
+@authentication_classes([JWTAuthentication])
 def am_i_in(req):
     return Response({"msg":"You are in!", "status":200})
 
 
-@api_view(["POST"])
-@permission_classes((IsAuthenticated,))
-def logout(req):
-    req.user.auth_token.delete()
-    return Response({"msg":"done!", "status":200})
+# @api_view(["POST"])
+# @permission_classes((IsAuthenticated,))
+# def logout(req):
+#     req.user.auth_token.delete()
+#     return Response({"msg":"done!", "status":200})
 
 
 @api_view(["GET"])
-@permission_classes((IsAuthenticated,))
+@permission_classes([IsAuthenticated])
+@authentication_classes([JWTAuthentication])
 def get_user_info(req):
     return Response({"first_name":req.user.first_name, "last_name":req.user.last_name, "number":req.user.number, "status":200})
 
