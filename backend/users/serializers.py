@@ -6,6 +6,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 class VerifyNumberSerializer(serializers.Serializer):
     code = serializers.IntegerField()
     number = serializers.CharField(max_length=11)
+    token = serializers.CharField(max_length=512, allow_blank=True)
 
     def validate(self, attrs):
 

@@ -3,19 +3,23 @@ import datetime
 
 from django.shortcuts import render
 from django.conf import settings
+from django.core.cache import caches
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import authenticate
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from common.utils.tempdb import TempDB
 from common.codes import users_codes
-from .serializers import VerifyNumberSerializer, SigninSerializer, SignupSerializer
+from .serializers import VerifyNumberSerializer, SigninSerializer, SignupSerializer, CustomTokenObtainPairSerializer
 from .models import CustomUser
 
 NUMBER_WAIT_TIME = datetime.timedelta(0, 30)
-tempdb = TempDB(NUMBER_WAIT_TIME)
+auth_cache = caches['auth']
 
 
 @api_view(['POST'])
@@ -24,55 +28,59 @@ def verify_number(req):
     # if req.method == "POST":
     serializer = VerifyNumberSerializer(data=req.data)
     if serializer.is_valid():
+        number = serializer.data['number']
         if serializer.data.get('code') == 0:
             # send code to number
-
+        
             now = datetime.datetime.now()
             # delay for send code to a number
-            if tempdb.get(serializer.data.get('number'), now) > now and not settings.TESTING:
-                return Response({"error":f"wait {round((tempdb.get(serializer.data.get('number'), now) - now).total_seconds())} seconds", "code": users_codes.NUMBER_DELAY, "status":400})
+            t = auth_cache.get(number, {}).get('delay', now)
+            if t > now and not settings.TESTING:
+                return Response({"errors":{'number':f"wait {round((t - now).total_seconds())} seconds"}, "code": users_codes.NUMBER_DELAY, "status":400})
             
             code = random.randint(10000, 99999)
             # todo: send code
             print("code:", code)
-            tempdb.set(serializer.data.get('number'), now+NUMBER_WAIT_TIME)
-            req.session['code'] = code
-            req.session['number'] = serializer.data.get('number')
-            req.session['try'] = 0
-            return Response({"msg":"code sent to number", "code":users_codes.CODE_SENT_TO_NUMBER, "status":200})
+            token = str(random.randint(10000000, 9999999999)) + random.choice(['fdf', 'dfad', 'ajifd', 'eiurei']) # random_token()
+
+            auth_cache.set(number, {"delay":now+NUMBER_WAIT_TIME, "token":token, "code":code, "tries":0,})
+            
+            return Response({"msg":"code sent to number", "code":users_codes.CODE_SENT_TO_NUMBER, "token":token, "status":200}, headers={"test":True})
         else:
             # check code
-
-            if req.session.get('try', 0) > 5:
-                return Response({"error":"to manay tries", "code":users_codes.TO_MANNY_TRIES, "status":400})
+            info = auth_cache.get(number, {})
+            if info.get('tries', 0) > 5:
+                return Response({"errors":{'code':"to manay tries"}, "code":users_codes.TO_MANNY_TRIES, "status":400})
             
-            if req.session.get('code', 0) == 0:
-                return Response({"error":"zero the code first", "code":users_codes.ZERO_CODE_FIRST, "status":400})
+            if info.get('token', '') == '' or info.get('token', '') != serializer.data['token']:
+                return Response({"errors":{'code':"zero the code first"}, "code":users_codes.ZERO_CODE_FIRST, "status":400})
 
-            if serializer.data.get('code') == req.session['code']:
+            if serializer.data.get('code') == info.get('code', 0):
                 # sign in or go sign up
                 
-                del req.session['code']
-                del req.session['try']
+                auth_cache.delete(number)
 
-                user = CustomUser.objects.filter(number=req.session['number'])
+                user = CustomUser.objects.filter(number=number)
+
                 if len(user) == 0:
                     # signup
                     # user not exist go to signup
                     
-                    req.session['must signup'] = True
+                    auth_cache.set(serializer.data['token'], {'must signup':True})
                     return Response({"msg":"Auth done. Go to /api/v1/complete-signup", "code":users_codes.COMPLETE_SIGNUP, "status":200})
                 else:
                     # login
                     
                     # password = CustomUser.objects.first(number=serializer.data['number']).password
                     user = user[0]
-                    token, created = Token.objects.get_or_create(user=user)
-                    return Response({"msg":"You are in!", 'token':token.key, "code":users_codes.LOGIN_DONE, "status":200})
+                    refresh = RefreshToken.for_user(user)
+    
+                    return Response({"msg":"You are in!", 'access':refresh.access_token, 'refresh':str(refresh), "code":users_codes.LOGIN_DONE, "status":200})
             else:
                 # wrong code
-                req.session['try'] = req.session.get('try', 0) + 1
-                return Response({"error":"wrong code", "code":users_codes.WRONG_CODE, "status":400})                
+                info['tries'] = info.get('tries', 0) + 1
+                auth_cache.set(number, info)
+                return Response({"errors":{'code':"wrong code"}, "code":users_codes.WRONG_CODE, "status":400})                
             
         
     return Response({"errors":serializer.errors, "code":users_codes.INVALID_FIELD, "status":400})
@@ -136,3 +144,20 @@ def logout(req):
 def get_user_info(req):
     return Response({"first_name":req.user.first_name, "last_name":req.user.last_name, "number":req.user.number, "status":200})
 
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
+    
+    def post(self, request: Request, *args, **kwargs) -> Response:
+        resp = super().post(request, *args, **kwargs)
+        resp.data['status'] = resp.status_code
+        resp.status_code = 200
+        return resp
+    
+
+class CustomTokenRefreshView(TokenRefreshView):
+    def post(self, request: Request, *args, **kwargs) -> Response:
+        resp = super().post(request, *args, **kwargs)
+        resp.data['status'] = resp.status_code
+        resp.status_code = 200
+        return resp
