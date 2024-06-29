@@ -11,8 +11,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-import os
+# import os
 import sys
+from datetime import timedelta
 
 from dotenv import load_dotenv
 
@@ -34,7 +35,7 @@ SECRET_KEY = 'django-insecure-(r19jmezop^@vvlo5ge7bk3sm+3i59785u&2u(2!$$*%iebf^v
 DEBUG = True
 TESTING = sys.argv[1:2] == ['test']
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -48,12 +49,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+
     'news',
     'real_estate_agents',
     'real_estate_offices',
     'real_estates',
     'users',
-    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
@@ -76,7 +79,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR , 'templates'), os.path.join(BASE_DIR), '../frontend/.next/server/app'],
+        'DIRS': [], #[os.path.join(BASE_DIR , 'templates'), os.path.join(BASE_DIR), '../frontend/.next/server/app'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -108,6 +111,19 @@ DATABASES = {
     }
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379',
+        'TIMEOUT': 7*24*60*60
+    },
+    
+    'auth': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379',
+        'TIMEOUT': 10*60
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -145,14 +161,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = '_next/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, '../frontend/.next/static'),
-    os.path.join(BASE_DIR, '../frontend/public'),
-]
-STATIC_ROOT = os.path.join(BASE_DIR, '../frontend/.next')
-MEDIA_ROOT = os.path.join(BASE_DIR, '../frontend/public')
-MEDIA_URL = '/'
+STATIC_URL = 'static/'
+# STATIC_URL = '_next/static/'
+# STATICFILES_DIRS = [
+    # os.path.join(BASE_DIR, '../frontend/.next/static'),
+    # os.path.join(BASE_DIR, '../frontend/public'),
+# ]
+# STATIC_ROOT = os.path.join(BASE_DIR, '../frontend/.next')
+# MEDIA_ROOT = os.path.join(BASE_DIR, '../frontend/public')
+# MEDIA_URL = '/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -160,12 +177,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
-    'https://localhost:3000',
-    'http://0.0.0.0:3000',
-    'http://0.0.0.0:3000',
-    'https://127.0.0.1:3000',
     'http://127.0.0.1:3000',
 )
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+]
+
+CORS_TRUSTED_ORIGINS = [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+]
+
+
+
 # CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_HEADERS = [
     'access-control-allow-origin', 
@@ -180,8 +206,16 @@ CORS_ALLOW_HEADERS = [
 CORS_ALLOW_CREDENTIALS = True
 REST_FRAMEWORK ={
     'DEFAULT_AUTHENTICATION_CLASSES':[
-        'rest_framework.authentication.TokenAuthentication'
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
     ],
 
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME':timedelta(minutes=60),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+    'SLIDING_TOKEN_LIFETIME': timedelta(days=30),
+    'SLIDING_TOKEN_REFRESH_LIFETIME_LATE_USER': timedelta(days=1),
+    'SLIDING_TOKEN_LIFETIME_LATE_USER': timedelta(days=30), 
 }
