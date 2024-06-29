@@ -5,7 +5,7 @@ import { staticFooterItemsType } from "@/types/Type";
 type MobileMenuType = {
   footerItems: dataMenuType;
   staticFooterItems: staticFooterItemsType;
-  Developers: any
+  Developers: React.FC
 };
 
 export default function MobileMenu({

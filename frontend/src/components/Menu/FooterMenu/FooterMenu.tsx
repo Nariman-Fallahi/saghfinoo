@@ -3,6 +3,7 @@ import DesktopMenu from "./DesktopMenu";
 import { dataMenuType } from "@/types/Type";
 import { staticFooterItemsType } from "@/types/Type";
 import Image from "next/image";
+import { DevelopersType } from "@/types/Type";
 
 export default function FooterMenu() {
   const dynamicFooterItems: dataMenuType = [
@@ -71,11 +72,11 @@ export default function FooterMenu() {
       "سقفینو پلی است تا به سرعت در بین هزاران آگهی ثبت شده جستجو کنید ملک مورد نظر را پیدا کنید و برای انجام معامله ای مطمین با مشاورین املاک معتمد و متخصص شهرتان در ارتباط باشید.",
   };
 
-  const DevelopersItem = [
+  const DevelopersItem: DevelopersType = [
     {
       fullName: "نریمان فلاحی",
       role: "فرانت اند",
-      contect: [
+      contact: [
         {
           image: "/icons/github.png",
           url: "https://github.com/Nariman-Fallahi",
@@ -89,7 +90,7 @@ export default function FooterMenu() {
     {
       fullName: "محمدامین یعقوبی",
       role: "بک اند",
-      contect: [
+      contact: [
         { image: "/icons/github.png", url: "https://github.com/yaghoubi-mn" },
         {
           image: "/icons/linkedin.png",
@@ -99,7 +100,7 @@ export default function FooterMenu() {
     },
   ];
 
-  const Developers = () => {
+  const Developers: React.FC = () => {
     return (
       <div className="w-full flex flex-col items-center mt-2 text-sm">
         <p>توسعه دهندگان</p>
@@ -113,22 +114,24 @@ export default function FooterMenu() {
               >
                 <div className="flex w-full justify-between">
                   <p className="text-xs lg:text-sm">{item.fullName}</p>
-                  <p className="text-xs text-blue-500 lg:text-sm">{item.role}</p>
+                  <p className="text-xs text-blue-500 lg:text-sm">
+                    {item.role}
+                  </p>
                 </div>
 
                 <div className="flex mt-2">
-                  {item.contect.map((itemContext, indexContext) => {
+                  {item.contact.map((itemContact, indexContact) => {
                     return (
                       <a
                         target="_blank"
-                        key={indexContext}
-                        href={itemContext.url}
+                        key={indexContact}
+                        href={itemContact.url}
                       >
                         <Image
                           className="mr-2 ml-2 lg:w-[30px] lg:h-[30px]"
                           width={25}
                           height={25}
-                          src={itemContext.image}
+                          src={itemContact.image}
                           alt=""
                         />
                       </a>

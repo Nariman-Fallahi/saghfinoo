@@ -6,7 +6,7 @@ type DecktopMenuType = {
   dynamicFooterItems: dataMenuType;
   footerItems: dataMenuType;
   staticFooterItems: staticFooterItemsType;
-  Developers: any
+  Developers: React.FC
 };
 
 export default function DecktopMenu({

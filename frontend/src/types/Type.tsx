@@ -12,7 +12,7 @@ interface IconItem {
 
 type FooterItem = string | IconItem;
 
-interface FooterSection {
+type  FooterSection = {
   title: string;
   items: FooterItem[];
 }
@@ -43,3 +43,15 @@ export type InputPhoneNumberType = {
   setIsSelected: (value: boolean) => void;
   btnSendPhoneNumber: () => void;
 };
+
+// DeveloperMenuFooter
+type contact = {
+  image: string;
+  url: string;
+}
+
+export type DevelopersType = {
+  fullName: string;
+  role: string;
+  contact: contact[];
+}[];
