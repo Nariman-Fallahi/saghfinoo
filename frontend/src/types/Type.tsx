@@ -12,10 +12,10 @@ interface IconItem {
 
 type FooterItem = string | IconItem;
 
-interface FooterSection {
+type FooterSection = {
   title: string;
   items: FooterItem[];
-}
+};
 
 export type dataMenuType = FooterSection[];
 
@@ -23,7 +23,7 @@ export type staticFooterItemsType = {
   titleFooterMenu: string;
   icon: string;
   title: string;
-  Description: string;
+  description: string;
 };
 
 //   Otp
@@ -37,9 +37,34 @@ export type OtpType = {
 
 // InputPhoneNumber
 export type InputPhoneNumberType = {
-  setPhone: (value: string) => void;
+  setPhoneNumber: (value: string) => void;
   inputErr: boolean;
   isSelected: boolean;
   setIsSelected: (value: boolean) => void;
   btnSendPhoneNumber: () => void;
+};
+
+// DeveloperMenuFooter
+type contact = {
+  image: string;
+  url: string;
+};
+
+export type DevelopersType = {
+  fullName: string;
+  role: string;
+  contact: contact[];
+}[];
+
+// SignUp
+export type SignUpInputType = {
+  id: number;
+  title: string;
+  placeholder: string;
+  icon: string;
+}[];
+
+export type SignUpType = {
+  token: string;
+  phoneNumber: string;
 };

@@ -1,17 +1,19 @@
 import Image from "next/image";
-import { dataMenuType } from "@/types/Menu";
-import { staticFooterItemsType } from "@/types/Menu";
+import { dataMenuType } from "@/types/Type";
+import { staticFooterItemsType } from "@/types/Type";
 
 type DecktopMenuType = {
   dynamicFooterItems: dataMenuType;
   footerItems: dataMenuType;
   staticFooterItems: staticFooterItemsType;
+  Developers: React.FC
 };
 
 export default function DecktopMenu({
   dynamicFooterItems,
   footerItems,
   staticFooterItems,
+  Developers
 }: DecktopMenuType) {
   return (
     <footer className="w-full mt-10 pt-7 bg-gray-200 flex-col pb-0 hidden md:flex">
@@ -48,7 +50,7 @@ export default function DecktopMenu({
           <Image width={120} height={120} src="/icons/Logo.svg" alt="" />
           <h4 className="mt-6 text-base">{staticFooterItems.title}</h4>
           <p className="mt-3 text-gray-700 text-xs">
-            {staticFooterItems.Description}
+            {staticFooterItems.description}
           </p>
         </div>
         {/* 2 */}
@@ -91,6 +93,7 @@ export default function DecktopMenu({
         />
       </div>
       {/* END Icon */}
+      <Developers />
     </footer>
   );
 }

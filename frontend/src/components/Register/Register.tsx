@@ -1,24 +1,27 @@
 "use client";
 import { Modal, ModalContent, ModalBody } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
-import { useModalStore } from "@/Store";
 import Image from "next/image";
 import { useState } from "react";
 import axios from "axios";
 import Otp from "./Otp";
-import { useUserStatus } from "@/Store";
-import InputPhoneNumber from "./InputPhoneNumber";
-import { UserStatusValue } from "@/enum/enums";
-import { cookies } from "next/headers";
+import PhoneNumber from "./PhoneNumber";
+import { UserStatusValue } from "@/constant/Constants";
+import SignUp from "./SignUp";
+// Zustand
+import { useModalStore } from "@/store/Register";
+import { useUserStatus } from "@/store/Register";
 
 export default function Register() {
   let sizeModal: any = "";
   const { isOpen, setOpen } = useModalStore();
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [isSelected, setIsSelected] = useState<boolean>(false);
-  const [phone, setPhone] = useState<string>();
   const [inputErr, setInputErr] = useState<boolean>(false);
   const [otp, setOtp] = useState<string>("");
   const [focusedInput, setFocusedInput] = useState<number | null>(null);
+  const [token, setToken] = useState<string>("");
+  // Zustand
   const { userStatus, setUserStatus } = useUserStatus();
 
   // constants
@@ -38,7 +41,7 @@ export default function Register() {
       break;
 
     case UserStatusValue.status3:
-      ModalRegisterDescription = "لطفا نام و رمز عبور خود را وارد نمایید.";
+      ModalRegisterTitle = "ثبت نام";
   }
 
   if (typeof window !== "undefined") {
@@ -61,52 +64,50 @@ export default function Register() {
 
   const sendPhoneNumber = async () => {
     try {
-      const response1 = await axios.post(
+      const response = await axios.post(
         apiUrlSPN,
-        { number: "09187966902", code: 0 },
+        { number: "09187894565", code: 0, token: "" },
         {
           headers: {
             "Content-Type": "application/json",
-             withCredentials: true,
           },
-        },
-      );
-      if (response1.status === 200 && response1.data.code) {
-        const receivedCode = response1.data;
-        console.log("کد دریافت شده از سرور:", receivedCode);
-        const sessionId = response1.headers;
-        console.log(sessionId);
-  
-        const response2 = await axios.post(
-          apiUrlSPN,
-          { number: "09187965685", code: 66691 },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              
-            },
-            // withCredentials: true,
-          }
-        );
-        if (response2.status === 200) {
-          console.log("کد به شماره تلفن ارسال شد");
-          console.log(response2.data);
         }
+      );
+      if (response.status === 200 && response.data.code) {
+        setToken(response.data.token);
+        setUserStatus(UserStatusValue.status2);
+        console.log("کد دریافت شده از سرور:", response.data);
       }
     } catch (error) {
       console.error("خطا:", error);
     }
   };
-  
+
+  const clickSendCode = async () => {
+    try {
+      const response = await axios.post(
+        apiUrlSPN,
+        { number: "09187894565", code: otp, token: token },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response.data.code === 1011) {
+        setUserStatus(UserStatusValue.status3);
+      } else {
+        console.log(" یه مشکلی هست");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const btnSendPhoneNumber = () => {
-    if (phone !== undefined) {
-      if (phone!.length === 11) {
-        setInputErr(false);
-        sendPhoneNumber();
-      } else {
-        setInputErr(true);
-      }
+    if (phoneNumber !== "" && phoneNumber.length === 11) {
+      setInputErr(false);
+      sendPhoneNumber();
     } else {
       setInputErr(true);
     }
@@ -121,13 +122,16 @@ export default function Register() {
               className="mt-5 w-full flex flex-col items-center"
               style={{ direction: "ltr" }}
             >
-              <Image
-                className="md:hidden"
-                width={85}
-                height={45}
-                src="/icons/Logo.svg"
-                alt=""
-              />
+              {userStatus == UserStatusValue.status1 ||
+                (userStatus == UserStatusValue.status2 && (
+                  <Image
+                    className="md:hidden"
+                    width={85}
+                    height={45}
+                    src="/icons/Logo.svg"
+                    alt=""
+                  />
+                ))}
 
               <p className="mt-[64px] text-xl font-bold md:text-2xl md:mt-[32px]">
                 {ModalRegisterTitle}
@@ -148,8 +152,8 @@ export default function Register() {
               )}
 
               {userStatus === UserStatusValue.status1 && (
-                <InputPhoneNumber
-                  setPhone={setPhone}
+                <PhoneNumber
+                  setPhoneNumber={setPhoneNumber}
                   inputErr={inputErr}
                   isSelected={isSelected}
                   setIsSelected={setIsSelected}
@@ -169,10 +173,14 @@ export default function Register() {
                   <Button
                     className="mt-[64px] w-full rounded-lg p-2 bg-[#CB1B1B]
                    text-white md:mt-[50px] md:text-lg"
+                    onPress={clickSendCode}
                   >
                     تایید کد
                   </Button>
                 </div>
+              )}
+              {userStatus === UserStatusValue.status3 && (
+                <SignUp token={token} phoneNumber={phoneNumber} />
               )}
             </div>
           </ModalBody>

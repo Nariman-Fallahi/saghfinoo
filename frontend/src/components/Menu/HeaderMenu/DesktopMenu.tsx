@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { Button } from "@nextui-org/button";
 import { navigationMenuType } from "@/types/Type";
-import {useModalStore} from "@/Store";
+import { useModalStore } from "@/store/Register";
 
 type desktopMenuType = {
   NavigationMenu: navigationMenuType;
