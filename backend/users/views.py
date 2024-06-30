@@ -75,7 +75,7 @@ def verify_number(req):
                     user = user[0]
                     refresh, access = get_jwt_tokens_for_user(user)
     
-                    return Response({"msg":"You are in!", 'access':access, 'refresh':refresh, 'expire': settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'], "code":users_codes.LOGIN_DONE, "status":200})
+                    return Response({"msg":"You are in!", 'access':access, 'refresh':refresh, 'expire': int(settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']), "code":users_codes.LOGIN_DONE, "status":200})
             else:
                 # wrong code
                 info['tries'] = info.get('tries', 0) + 1
@@ -114,7 +114,7 @@ def signup(req):
 
         refresh, access = get_jwt_tokens_for_user(user)
         
-        return Response({"msg":"done", "access":access, 'refresh':refresh, 'expire':settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'], "code":users_codes.LOGIN_DONE, "status":201})
+        return Response({"msg":"done", "access":access, 'refresh':refresh, 'expire': int(settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']), "code":users_codes.LOGIN_DONE, "status":201})
     return Response({"errors":serializer.errors, "codes":users_codes.INVALID_FIELD, "status":400})
 
 
@@ -167,7 +167,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         resp = super().post(request, *args, **kwargs)
         resp.data['status'] = resp.status_code
         resp.status_code = 200
-        resp.data['expire'] = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']
+        resp.data['expire'] = int(settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'])
         return resp
 
         
@@ -177,5 +177,5 @@ class CustomTokenRefreshView(TokenRefreshView):
         resp = super().post(request, *args, **kwargs)
         resp.data['status'] = resp.status_code
         resp.status_code = 200
-        resp.data['expire'] = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']
+        resp.data['expire'] = int(settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'])
         return resp
