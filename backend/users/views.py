@@ -116,7 +116,7 @@ def signup(req):
         refresh, access = get_jwt_tokens_for_user(user)
         
         return Response({"msg":"done", "access":access, 'refresh':refresh, 'expire': settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(), "code":users_codes.LOGIN_DONE, "status":201})
-    return Response({"errors":serializer.errors, "codes":users_codes.INVALID_FIELD, "status":400})
+    return Response({"errors":serializer.errors, "code":users_codes.INVALID_FIELD, "status":400})
 
 
 def get_jwt_tokens_for_user(user):

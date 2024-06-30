@@ -11,8 +11,8 @@ class VerifyNumberSerializer(serializers.Serializer):
 
     def validate(self, attrs):
 
-        if len(attrs.get('number', '')) != 11 or attrs.get('number', '')[:2] != "09":
-            raise serializers.ValidationError(f"invalid number length:{len(attrs.get('number', ''))}")
+        if len(attrs.get('number', '')) != 11:
+            raise serializers.ValidationError(f"invalid number length: current is {len(attrs.get('number', ''))}")
 
         if attrs.get('number', '')[:2] != "09":
             raise serializers.ValidationError("invalid number")
