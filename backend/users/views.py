@@ -67,6 +67,7 @@ def verify_number(req):
                     # user not exist go to signup
                     
                     auth_cache.set(number, {'token':serializer.data['token'],'must signup':True})
+
                     return Response({"msg":"Auth done. Go to /api/v1/complete-signup", "code":users_codes.COMPLETE_SIGNUP, "status":200})
                 else:
                     # login
@@ -75,7 +76,7 @@ def verify_number(req):
                     user = user[0]
                     refresh, access = get_jwt_tokens_for_user(user)
     
-                    return Response({"msg":"You are in!", 'access':access, 'refresh':refresh, 'expire': int(settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']), "code":users_codes.LOGIN_DONE, "status":200})
+                    return Response({"msg":"You are in!", 'access':access, 'refresh':refresh, 'expire': settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(), "code":users_codes.LOGIN_DONE, "status":200})
             else:
                 # wrong code
                 info['tries'] = info.get('tries', 0) + 1
@@ -92,12 +93,12 @@ def signup(req):
     # check number is verified before
 
     # check is user created before
-
+    
     serializer = SignupSerializer(data=req.data)
     if serializer.is_valid():
-
+        
         info = auth_cache.get(serializer.data['number'], {})
-        print("info:", info)
+
         if not info.get('must signup', False):
             return Response({"errors":{'number':"verifiy number first"}, "code":users_codes.VERIFY_NUMBER_FIRST, "status":400})
 
@@ -114,7 +115,7 @@ def signup(req):
 
         refresh, access = get_jwt_tokens_for_user(user)
         
-        return Response({"msg":"done", "access":access, 'refresh':refresh, 'expire': int(settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']), "code":users_codes.LOGIN_DONE, "status":201})
+        return Response({"msg":"done", "access":access, 'refresh':refresh, 'expire': settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(), "code":users_codes.LOGIN_DONE, "status":201})
     return Response({"errors":serializer.errors, "codes":users_codes.INVALID_FIELD, "status":400})
 
 
@@ -167,7 +168,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         resp = super().post(request, *args, **kwargs)
         resp.data['status'] = resp.status_code
         resp.status_code = 200
-        resp.data['expire'] = int(settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'])
+        resp.data['expire'] = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds()
         return resp
 
         
@@ -177,5 +178,5 @@ class CustomTokenRefreshView(TokenRefreshView):
         resp = super().post(request, *args, **kwargs)
         resp.data['status'] = resp.status_code
         resp.status_code = 200
-        resp.data['expire'] = int(settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'])
+        resp.data['expire'] = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds()
         return resp
