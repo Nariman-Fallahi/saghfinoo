@@ -6,3 +6,4 @@ psycopg2-binary
 python-dotenv
 djangorestframework-simplejwt
 redis
+drf-yasg

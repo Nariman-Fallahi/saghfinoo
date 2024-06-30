@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
+    'drf_yasg',
 
     'news',
     'real_estate_agents',
@@ -209,7 +211,12 @@ REST_FRAMEWORK ={
         'rest_framework_simplejwt.authentication.JWTAuthentication'
     ],
 
+    'DEFAULT_PERMISION_CLASSES': {
+        'rest_framework.permisions.IsAuthenticated',
+    },
+
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+    'EXCEPTION_HANDLER': 'common.utils.error_handlers.custom_error_handler'
 }
 
 SIMPLE_JWT = {
