@@ -7,3 +7,4 @@ python-dotenv
 djangorestframework-simplejwt
 redis
 drf-yasg
+django-debug-toolbar

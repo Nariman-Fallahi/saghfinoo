@@ -39,6 +39,7 @@ urlpatterns = [
     path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name="schema_json"),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema_swagger_ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema_redoc_ui'),
+    path('__debug__', include('debug_toolbar.urls')),
 
     path('api/v1/users/', include("users.urls")),
 ]
