@@ -86,6 +86,7 @@ def verify_number(req):
     return Response({"errors":serializer.errors, "code":users_codes.INVALID_FIELD, "status":400})
 
 
+@swagger_auto_schema(methods=["POST"], query_serializer=SignupSerializer)
 @api_view(['POST'])
 def signup(req):
     # check number is verified before
