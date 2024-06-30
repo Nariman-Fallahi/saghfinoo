@@ -2,17 +2,17 @@ import { Button } from "@nextui-org/button";
 import { Checkbox } from "@nextui-org/checkbox";
 import { InputPhoneNumberType } from "@/types/Type";
 
-export default function InputPhoneNumber({
-  setPhone,
+export default function PhoneNumber({
   inputErr,
   isSelected,
+  setPhoneNumber,
   setIsSelected,
   btnSendPhoneNumber,
 }: InputPhoneNumberType) {
   return (
     <form className="w-full pb-3" style={{ direction: "rtl" }}>
       <input
-        onChange={(e) => setPhone(e.target.value)}
+        onChange={(e) => setPhoneNumber(e.target.value)}
         placeholder="09123456789"
         type="number"
         className="mt-[40px] p-2 rounded-lg w-full border-[#2F80ED] border

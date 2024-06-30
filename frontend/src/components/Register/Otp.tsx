@@ -1,6 +1,6 @@
 import OtpInput from "react-otp-input";
 import { OtpType } from "@/types/Type";
-import { useUserStatus } from "@/Store";
+import { useUserStatus } from "@/store/Register";
 
 export default function Otp({
   otp,

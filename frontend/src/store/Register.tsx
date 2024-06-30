@@ -1,6 +1,6 @@
 // modal-Register-Store
 import create from "zustand";
-import { UserStatusValue } from "./enum/enums";
+import { UserStatusValue } from "../constant/Constants";
 
 interface ModalState {
   isOpen: boolean;
