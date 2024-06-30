@@ -10,15 +10,17 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from drf_yasg.utils import swagger_auto_schema
 
 from common.codes import users_codes
 from .serializers import VerifyNumberSerializer, SignupSerializer, CustomTokenObtainPairSerializer
 from .models import CustomUser
+from .doc import verify_number_schema_responses
 
 NUMBER_WAIT_TIME = datetime.timedelta(0, 30)
 auth_cache = caches['auth']
 
-
+@swagger_auto_schema(methods=["POST"], query_serializer=VerifyNumberSerializer, responses=verify_number_schema_responses, operation_description="", )
 @api_view(['POST'])
 def verify_number(req):
 
