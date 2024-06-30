@@ -97,7 +97,7 @@ def signup(req):
     if serializer.is_valid():
 
         info = auth_cache.get(serializer.data['number'], {})
-
+        print("info:", info)
         if not info.get('must signup', False):
             return Response({"errors":{'number':"verifiy number first"}, "code":users_codes.VERIFY_NUMBER_FIRST, "status":400})
 
