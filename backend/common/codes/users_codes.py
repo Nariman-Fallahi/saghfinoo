@@ -1,13 +1,13 @@
 
 
-NUMBER_DELAY = 1001
-CODE_SENT_TO_NUMBER = 1002
-TO_MANNY_TRIES = 1003
-ZERO_CODE_FIRST = 1004
-LOGIN_DONE = 1005
-WRONG_CODE = 1006
-INVALID_FIELD = 1007
-VERIFY_NUMBER_FIRST = 1008
-USER_EXIST = 1009
-INCURRECT_NUMBER_OR_PASSWORD = 1010
-COMPLETE_SIGNUP = 1011
+NUMBER_DELAY = 'number_delay'
+CODE_SENT_TO_NUMBER = 'code_sent_to_number'
+TO_MANNY_TRIES = 'to_manny_tries'
+ZERO_CODE_FIRST = 'zero_code_first'
+LOGIN_DONE =  'login_done'
+WRONG_CODE = 'wrong_code'
+INVALID_FIELD = 'invalid_field'
+VERIFY_NUMBER_FIRST = 'verify_number_first'
+USER_EXIST = 'user_exist'
+INCURRECT_NUMBER_OR_PASSWORD = 'incurrect_number_or_password'
+COMPLETE_SIGNUP = 'complete_signup'

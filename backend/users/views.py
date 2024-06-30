@@ -68,7 +68,7 @@ def verify_number(req):
                     
                     auth_cache.set(number, {'token':serializer.data['token'],'must signup':True})
 
-                    return Response({"msg":"Auth done. Go to /api/v1/complete-signup", "code":users_codes.COMPLETE_SIGNUP, "status":200})
+                    return Response({"msg":"Auth done. Go to /api/v1/complete-signup", "code":users_codes.COMPLETE_SIGNUP, "status":303})
                 else:
                     # login
                     
