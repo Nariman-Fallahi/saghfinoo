@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
-    'debug_toolbar',
 
     'news',
     'real_estate_agents',
@@ -63,7 +62,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -231,3 +229,14 @@ SIMPLE_JWT = {
 
 # django debug toolbar
 INTERNAL_IPS = ['127.0.0.1']
+
+if not TESTING:
+    INSTALLED_APPS = [
+        *INSTALLED_APPS,
+        'debug_toolbar',
+    ]
+
+    MIDDLEWARE = [
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
+        *MIDDLEWARE,
+    ]
