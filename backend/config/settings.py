@@ -63,7 +63,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'middleware.debug_tool.DebugTool',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -237,6 +236,7 @@ if not TESTING:
     ]
 
     MIDDLEWARE = [
+        'middleware.debug_tool.DebugTool',
         'debug_toolbar.middleware.DebugToolbarMiddleware',
         *MIDDLEWARE,
     ]
