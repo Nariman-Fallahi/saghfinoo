@@ -35,7 +35,8 @@ SECRET_KEY = 'django-insecure-(r19jmezop^@vvlo5ge7bk3sm+3i59785u&2u(2!$$*%iebf^v
 DEBUG = True
 TESTING = sys.argv[1:2] == ['test']
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+# todo: add server host ip and next server ip
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -62,6 +63,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'middleware.debug_tool.DebugTool',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -70,7 +72,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'middleware.cors.Cors',
 
 ]
 
@@ -199,7 +200,6 @@ CORS_ALLOW_HEADERS = [
     'access-control-allow-origin', 
     'content-type',
     'accept',
-    'athorization',
     'user-agent',
     'x-csrftoken',
     'x-requested-with',
@@ -240,3 +240,6 @@ if not TESTING:
         'debug_toolbar.middleware.DebugToolbarMiddleware',
         *MIDDLEWARE,
     ]
+
+# delay between two OTP code request for same number
+NUMBER_DELAY = timedelta(minutes=1, seconds=30)
