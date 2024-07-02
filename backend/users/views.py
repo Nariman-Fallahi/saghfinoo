@@ -17,7 +17,6 @@ from .serializers import VerifyNumberSerializer, SignupSerializer, CustomTokenOb
 from .models import CustomUser
 from .doc import verify_number_schema_responses
 
-NUMBER_WAIT_TIME = datetime.timedelta(0, 30)
 auth_cache = caches['auth']
 
 @swagger_auto_schema(methods=["POST"], query_serializer=VerifyNumberSerializer, responses=verify_number_schema_responses, operation_description="", )
@@ -43,13 +42,13 @@ def verify_number(req):
                 print("code:", code)
             token = str(random.randint(10000000, 9999999999)) + random.choice(['fdf', 'dfad', 'ajifd', 'eiurei']) # random_token()
 
-            auth_cache.set(number, {"delay":now+NUMBER_WAIT_TIME, "token":token, "code":code, "tries":0,})
+            auth_cache.set(number, {"delay":now+settings.NUMBER_DELAY, "token":token, "code":code, "tries":0,})
             
             return Response({"msg":"code sent to number", "code":users_codes.CODE_SENT_TO_NUMBER, "token":token, "status":200}, headers={"test":True})
         else:
             # check code
             info = auth_cache.get(number, {})
-            if info.get('tries', 0) > 5:
+            if info.get('tries', 0) >= 5:
                 return Response({"errors":{'code':"to manay tries"}, "code":users_codes.TO_MANNY_TRIES, "status":400})
             
             if info.get('token', '') == '' or info.get('token', '') != serializer.data['token']:
