@@ -9,15 +9,15 @@ import Register from "@/components/Register/Register";
 
 export default function Home() {
   return (
-  <>
-   <Menu />
-   <SearchBox />
-   <TopRealEstate />
-   <Features />
-   <LatestNews />
-   <RealEstate />
-   <FooterMenu />
-   <Register />
-   </>
+    <>
+      <Menu />
+      <SearchBox />
+      <TopRealEstate />
+      <Features />
+      <LatestNews />
+      <RealEstate />
+      <FooterMenu />
+      <Register />
+    </>
   );
 }

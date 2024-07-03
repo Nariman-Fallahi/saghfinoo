@@ -9,6 +9,7 @@ const config: Config = {
     "./node_modules/@nextui-org/theme/dist/components/button.js",
     "./node_modules/@nextui-org/theme/dist/components/modal.js",
     "./node_modules/@nextui-org/theme/dist/components/checkbox.js",
+    "./node_modules/@nextui-org/theme/dist/components/spinner.js",
   ],
   theme: {
     extend: {
