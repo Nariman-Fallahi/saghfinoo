@@ -3,7 +3,8 @@ import Image from "next/image";
 import { useState } from "react";
 import { Button } from "@nextui-org/button";
 import { navigationMenuType } from "@/types/Type";
-import { useModalStore } from "@/store/Register";
+import { useModalStore, useUserInfo } from "@/store/Register";
+import { useEffect } from "react";
 
 type mobileMenuType = {
   NavigationMenu: navigationMenuType;
@@ -12,6 +13,24 @@ type mobileMenuType = {
 export default function MobileMenu({ NavigationMenu }: mobileMenuType) {
   const [openMenu, setOpenMenu] = useState<boolean>();
   const { setOpen } = useModalStore();
+  const { userInfo } = useUserInfo();
+  const [isLogin, setIsLogin] = useState<boolean>();
+
+  useEffect(() => {
+    console.log(userInfo);
+    
+    if (userInfo !== undefined) {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }, [userInfo]);
+
+  const ClickRegister = () => {
+    if (!isLogin) {
+      setOpen(true);
+    }
+  };
 
   return (
     <>
@@ -62,18 +81,39 @@ export default function MobileMenu({ NavigationMenu }: mobileMenuType) {
           </div>
 
           <div
-            onClick={() => setOpen(true)}
+            onClick={ClickRegister}
             className="w-full bg-gray-100 px-2 py-5 mt-4 flex items-center"
           >
             <Image
-              width={20}
-              height={20}
+              width={isLogin ? 30 : 20}
+              height={isLogin ? 30 : 20}
               src="/icons/profile-circle.svg"
               alt=""
-            />
-            <p className="mr-2 text-xs">ورود یا ثبت نام</p>
+            />{" "}
+            {isLogin && (
+              <Image
+                width={20}
+                height={20}
+                className="mr-2"
+                src="/icons/edit.svg"
+                alt=""
+              />
+            )}
+            <p className="mr-2 text-xs">
+              {isLogin
+                ? `${userInfo?.first_name} ${userInfo?.last_name}`
+                : "ورود یا ثبت نام"}
+            </p>
+            {isLogin && (
+              <Image
+                width={20}
+                height={20}
+                src="/icons/arrow-left-2.svg"
+                className="mr-2"
+                alt=""
+              />
+            )}
           </div>
-
           <div className="mt-5 flex items-center justify-between px-2">
             <div className="flex items-center">
               <Image

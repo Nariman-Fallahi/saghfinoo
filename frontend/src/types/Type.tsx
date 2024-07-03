@@ -33,6 +33,9 @@ export type OtpType = {
   handleFocus: (index: number) => void;
   handleBlur: () => void;
   focusedInput: number | null;
+  time: number;
+  setTime: (value : number) => void;
+  sendPhoneNumber: () => void;
 };
 
 // InputPhoneNumber
@@ -42,6 +45,7 @@ export type InputPhoneNumberType = {
   isSelected: boolean;
   setIsSelected: (value: boolean) => void;
   btnSendPhoneNumber: () => void;
+  loading: boolean;
 };
 
 // DeveloperMenuFooter
@@ -68,3 +72,8 @@ export type SignUpType = {
   token: string;
   phoneNumber: string;
 };
+
+export type InputPasswordType = {
+  type: string;
+  icon: string;
+}

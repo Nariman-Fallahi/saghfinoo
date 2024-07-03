@@ -1,6 +1,5 @@
-// modal-Register-Store
 import create from "zustand";
-import { UserStatusValue } from "../constant/Constants";
+import { RegisterStatusValue } from "../constant/Constants";
 
 interface ModalState {
   isOpen: boolean;
@@ -12,13 +11,38 @@ export const useModalStore = create<ModalState>((set) => ({
   setOpen: (open) => set({ isOpen: open }),
 }));
 
-// UserStatus
+// ---
 
-interface UserStatus {
-  userStatus: string;
-  setUserStatus: (val: string) => void;
+interface RegisterStatus {
+  registerStatus: string;
+  setRegisterStatus: (val: string) => void;
 }
-export const useUserStatus = create<UserStatus>((set) => ({
-  userStatus: UserStatusValue.status1,
-  setUserStatus: (val) => set(() => ({ userStatus: val })),
+export const useRegisterStatus = create<RegisterStatus>((set) => ({
+  registerStatus: RegisterStatusValue.status1,
+  setRegisterStatus: (val) => set(() => ({ registerStatus: val })),
+}));
+
+// ---
+
+interface UserInfo {
+  userInfo:
+    | {
+        first_name: string;
+        last_name: string;
+        number: string;
+      }
+    | undefined;
+  setUserInfo: (
+    val:
+      | {
+          first_name: string;
+          last_name: string;
+          number: string;
+        }
+      | undefined
+  ) => void;
+}
+export const useUserInfo = create<UserInfo>((set) => ({
+  userInfo: undefined,
+  setUserInfo: (val) => set(() => ({ userInfo: val })),
 }));

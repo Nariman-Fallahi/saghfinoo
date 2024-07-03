@@ -1,34 +1,85 @@
 import { SignUpItem } from "@/constant/Constants";
 import { Button } from "@nextui-org/button";
 import { useState } from "react";
-import axios from "axios";
 import { SignUpType } from "@/types/Type";
+import { Error } from "@/notification/Error";
+import Image from "next/image";
+import { Success } from "@/notification/Success";
+import { useModalStore } from "@/store/Register";
+import { InputPasswordType } from "@/types/Type";
+import { Spinner } from "@nextui-org/spinner";
+import { useRegisterStatus } from "@/store/Register";
+import { RegisterStatusValue } from "@/constant/Constants";
+import { setCookie } from "cookies-next";
+import { useRouter } from "next/navigation";
 
 export default function SignUp({ token, phoneNumber }: SignUpType) {
   const [focus, setFocus] = useState<number>();
-  const [firstName, setFirstName] = useState<string>();
-  const [lastName, setLastName] = useState<string>();
-  const [password, setPassword] = useState<string>();
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const { setOpen } = useModalStore();
+  const [typeInputPassword, setTypeInputPassword] = useState<InputPasswordType>(
+    {
+      type: "password",
+      icon: "/icons/eye.svg",
+    }
+  );
+  const [loading, setLoading] = useState<boolean>(false);
+  const { setRegisterStatus } = useRegisterStatus();
+  const router = useRouter();
 
   const apiUrlSignUp = "http://127.0.0.1:8000/api/v1/users/complete-signup";
 
-  const ClickBtnSignUp = () => {};
+  const ClickBtnSignUp = () => {
+    if (firstName == "" || lastName == "" || password == "") {
+      Error("لطفا اطلاعات خود را کامل وارد نمایید.");
+    } else {
+      UserSignUp();
+    }
+  };
 
   const UserSignUp = async () => {
+    setLoading(true);
     try {
-      const response = await axios.post(apiUrlSignUp, {
-        first_name: firstName,
-        last_name: lastName,
-        password: password,
-        token: token,
-        number: phoneNumber,
+      const response = await fetch(apiUrlSignUp, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          first_name: firstName,
+          last_name: lastName,
+          password: password,
+          token: token,
+          number: phoneNumber,
+        }),
       });
-      if (response.status == 200) {
-        console.log(response.data);
+
+      const data = await response.json();
+
+      if (response.status === 200 && data.code === "login_done") {
+        console.log(data);
+        setCookie("access", data.access, {
+          maxAge: data.expire,
+          sameSite: "strict",
+        });
+        setCookie("refresh", data.refresh, {
+          sameSite: "strict",
+        });
+        console.log(data);
+        Success("ثبت نام با موفقیت انجام شد.");
+        setRegisterStatus(RegisterStatusValue.status1);
+        setOpen(false);
+        router.push("/proUser");
+      } else {
+        Error("در ارسال اطلاعات مشکلی پیش آمد.");
       }
     } catch (error) {
+      Error("در ارتباط با سرور مشکلی پیش آمد.");
       console.log(error);
     }
+    setLoading(false);
   };
 
   const OnChangeInput = (value: string, id: number) => {
@@ -41,6 +92,17 @@ export default function SignUp({ token, phoneNumber }: SignUpType) {
         break;
       case 2:
         setPassword(value);
+    }
+  };
+
+  const ShowPassword = () => {
+    switch (typeInputPassword.type) {
+      case "password":
+        setTypeInputPassword({ type: "text", icon: "/icons/eye-slash.svg" });
+        break;
+      case "text":
+        setTypeInputPassword({ type: "password", icon: "/icons/eye.svg" });
+        break;
     }
   };
 
@@ -67,14 +129,32 @@ export default function SignUp({ token, phoneNumber }: SignUpType) {
                   : "",
             }}
           >
-            <p>ffff</p>
+            <Image
+              width={16}
+              height={16}
+              className="md:w-[17px] md:h-[17px]"
+              src={item.icon}
+              alt=""
+            />
             <input
               onFocus={() => setFocus(index)}
               placeholder={item.placeholder}
-              type="text"
-              className="w-full outline-none mr-2 text-xs"
+              type={item.id !== 2 ? "text" : typeInputPassword.type}
+              className="w-full outline-none mr-2 text-xs md:text-sm"
               onChange={(e) => OnChangeInput(e.target.value, item.id)}
             />
+            {item.id === 2 && (
+              <div>
+                <Image
+                  width={18}
+                  height={18}
+                  onClick={ShowPassword}
+                  className="cursor-pointer mr-2"
+                  src={typeInputPassword.icon}
+                  alt=""
+                />
+              </div>
+            )}
           </div>
         );
       })}
@@ -82,9 +162,11 @@ export default function SignUp({ token, phoneNumber }: SignUpType) {
         <Button
           className="mt-5 w-4/5 rounded-lg p-2 bg-[#CB1B1B]
         text-white md:mt-[50px] md:text-lg"
-          onPress={UserSignUp}
+          onPress={ClickBtnSignUp}
+          isLoading={loading}
+          spinner={<Spinner color="white" size="sm" />}
         >
-          ثبت اطلاعات
+          {loading ? "" : "ثبت اطلاعات"}
         </Button>
       </div>
     </div>

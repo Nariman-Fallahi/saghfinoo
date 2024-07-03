@@ -3,14 +3,17 @@ import { Modal, ModalContent, ModalBody } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
 import Image from "next/image";
 import { useState } from "react";
-import axios from "axios";
 import Otp from "./Otp";
 import PhoneNumber from "./PhoneNumber";
-import { UserStatusValue } from "@/constant/Constants";
+import { RegisterStatusValue } from "@/constant/Constants";
 import SignUp from "./SignUp";
-// Zustand
+import { Error } from "@/notification/Error";
+import { Spinner } from "@nextui-org/spinner";
+import { Success } from "@/notification/Success";
 import { useModalStore } from "@/store/Register";
-import { useUserStatus } from "@/store/Register";
+import { useRegisterStatus } from "@/store/Register";
+import { setCookie } from "cookies-next";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
   let sizeModal: any = "";
@@ -21,26 +24,28 @@ export default function Register() {
   const [otp, setOtp] = useState<string>("");
   const [focusedInput, setFocusedInput] = useState<number | null>(null);
   const [token, setToken] = useState<string>("");
-  // Zustand
-  const { userStatus, setUserStatus } = useUserStatus();
+  const [loading, setLoading] = useState<boolean>(false);
+  const { registerStatus, setRegisterStatus } = useRegisterStatus();
+  const [time, setTime] = useState<number>(90);
+  const router = useRouter();
 
   // constants
   let ModalRegisterTitle: string = "";
   let ModalRegisterDescription: string = "";
 
-  switch (userStatus) {
-    case UserStatusValue.status1:
+  switch (registerStatus) {
+    case RegisterStatusValue.status1:
       ModalRegisterTitle = "ورود/ثبت نام";
       ModalRegisterDescription =
         "لطفا برای ورود یا ثبت نام شماره موبایل خود را وارد کنید.";
       break;
 
-    case UserStatusValue.status2:
+    case RegisterStatusValue.status2:
       ModalRegisterTitle = "کد تایید";
-      ModalRegisterDescription = `کد ارسال شده به شماره تلفن ${"222"} را وارد کنید.`;
+      ModalRegisterDescription = `کد ارسال شده به شماره تلفن ${phoneNumber} را وارد کنید.`;
       break;
 
-    case UserStatusValue.status3:
+    case RegisterStatusValue.status3:
       ModalRegisterTitle = "ثبت نام";
   }
 
@@ -60,57 +65,110 @@ export default function Register() {
     setFocusedInput(null);
   };
 
-  const apiUrlSPN: string = "http://127.0.0.1:8000/api/v1/users/verify-number";
-
-  const sendPhoneNumber = async () => {
-    try {
-      const response = await axios.post(
-        apiUrlSPN,
-        { number: "09187894565", code: 0, token: "" },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (response.status === 200 && response.data.code) {
-        setToken(response.data.token);
-        setUserStatus(UserStatusValue.status2);
-        console.log("کد دریافت شده از سرور:", response.data);
-      }
-    } catch (error) {
-      console.error("خطا:", error);
-    }
-  };
-
-  const clickSendCode = async () => {
-    try {
-      const response = await axios.post(
-        apiUrlSPN,
-        { number: "09187894565", code: otp, token: token },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (response.data.code === 1011) {
-        setUserStatus(UserStatusValue.status3);
-      } else {
-        console.log(" یه مشکلی هست");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const btnSendPhoneNumber = () => {
-    if (phoneNumber !== "" && phoneNumber.length === 11) {
+    if (
+      phoneNumber !== "" &&
+      phoneNumber.length === 11 &&
+      phoneNumber[0] === "0" &&
+      phoneNumber[1] === "9"
+    ) {
       setInputErr(false);
       sendPhoneNumber();
     } else {
       setInputErr(true);
     }
+  };
+
+  const apiUrlSPN: string = "http://127.0.0.1:8000/api/v1/users/verify-number";
+
+  const sendPhoneNumber = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(apiUrlSPN, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ number: phoneNumber, code: 0, token: "" }),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 200 && data.code === "code_sent_to_number") {
+        setToken(data.token);
+        setRegisterStatus(RegisterStatusValue.status2);
+        setInterval(() => {
+          setTime((prevTime) => prevTime - 1);
+        }, 1000);
+        console.log("کد دریافت شده از سرور:", data);
+      } else {
+        Error("در ارسال شماره تلفن مشکلی پیش آمد.");
+        console.log(data);
+      }
+    } catch (error) {
+      Error("در ارتباط با سرور مشکلی پیش آمد.");
+      console.error("خطا:", error);
+    }
+    setLoading(false);
+  };
+
+  const BtnSendCode = () => {
+    if (otp === "" || otp.length < 5) {
+      Error("لطفا کد را کامل وارد نمایید.");
+    } else {
+      clickSendCode();
+    }
+  };
+
+  const clickSendCode = async () => {
+    setLoading(true);
+    try {
+      console.log("agin");
+
+      const response = await fetch(apiUrlSPN, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ number: phoneNumber, code: otp, token: token }),
+      });
+
+      const data = await response.json();
+
+      if (data.status === 303) {
+        setRegisterStatus(RegisterStatusValue.status3);
+      } else if (data.code === "wrong_code") {
+        Error("کد وارد شده اشتباه میباشد.");
+      } else if (data.code === "to_manny_tries") {
+        Error("لطفا بعد تلاش کنید.");
+      } else if (data.code === "login_done") {
+        console.log(data);
+        setCookie("access", data.access, {
+          maxAge: data.expire,
+          sameSite: "strict",
+        });
+        setCookie("refresh", data.refresh, {
+          sameSite: "strict",
+        });
+        console.log(data);
+        
+        setRegisterStatus(RegisterStatusValue.status1);
+        setOpen(false);
+        Success("ثبت نام با موفقیت انجام شد.");
+        router.push('/proUser');
+      } else {
+        console.log(data);
+      }
+    } catch (error) {
+      Error("در ارتباط با سرور مشکلی پیش آمد.");
+      console.log(error);
+    }
+    setLoading(false);
+  };
+
+  const EditMN = () => {
+    setRegisterStatus(RegisterStatusValue.status1);
+    setPhoneNumber("");
   };
 
   return (
@@ -119,11 +177,11 @@ export default function Register() {
         <>
           <ModalBody>
             <div
-              className="mt-5 w-full flex flex-col items-center"
+              className="mt-5 w-full flex flex-col items-center pb-3"
               style={{ direction: "ltr" }}
             >
-              {userStatus == UserStatusValue.status1 ||
-                (userStatus == UserStatusValue.status2 && (
+              {registerStatus == RegisterStatusValue.status1 ||
+                (registerStatus == RegisterStatusValue.status2 && (
                   <Image
                     className="md:hidden"
                     width={85}
@@ -137,7 +195,7 @@ export default function Register() {
                 {ModalRegisterTitle}
               </p>
 
-              {userStatus == UserStatusValue.status1 && (
+              {registerStatus == RegisterStatusValue.status1 && (
                 <p className="hidden md:block mt-4">به سقفینو خوش آمدید.</p>
               )}
 
@@ -145,41 +203,51 @@ export default function Register() {
                 {ModalRegisterDescription}
               </p>
 
-              {userStatus == UserStatusValue.status2 && (
-                <span className="text-sm md:text-base mt-1 text-[#717171] cursor-pointer">
+              {registerStatus == RegisterStatusValue.status2 && (
+                <span
+                  onClick={EditMN}
+                  className="text-sm md:text-base mt-1 text-[#717171]
+                 cursor-pointer"
+                >
                   ویرایش شماره موبایل
                 </span>
               )}
 
-              {userStatus === UserStatusValue.status1 && (
+              {registerStatus === RegisterStatusValue.status1 && (
                 <PhoneNumber
                   setPhoneNumber={setPhoneNumber}
                   inputErr={inputErr}
                   isSelected={isSelected}
                   setIsSelected={setIsSelected}
                   btnSendPhoneNumber={btnSendPhoneNumber}
+                  loading={loading}
                 />
               )}
 
-              {userStatus === UserStatusValue.status2 && (
-                <div className="mt-8 w-full">
+              {registerStatus === RegisterStatusValue.status2 && (
+                <div className="mt-8 w-full flex flex-col items-center">
                   <Otp
                     otp={otp}
                     setOtp={setOtp}
                     handleFocus={handleFocus}
                     handleBlur={handleBlur}
                     focusedInput={focusedInput}
+                    time={time}
+                    setTime={setTime}
+                    sendPhoneNumber={sendPhoneNumber}
                   />
                   <Button
                     className="mt-[64px] w-full rounded-lg p-2 bg-[#CB1B1B]
                    text-white md:mt-[50px] md:text-lg"
-                    onPress={clickSendCode}
+                    onPress={BtnSendCode}
+                    isLoading={loading}
+                    spinner={<Spinner color="white" size="sm" />}
                   >
-                    تایید کد
+                    {loading ? "" : "ثبت کد"}
                   </Button>
                 </div>
               )}
-              {userStatus === UserStatusValue.status3 && (
+              {registerStatus === RegisterStatusValue.status3 && (
                 <SignUp token={token} phoneNumber={phoneNumber} />
               )}
             </div>
