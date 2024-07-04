@@ -8,3 +8,5 @@ djangorestframework-simplejwt
 redis
 drf-yasg
 django-debug-toolbar
+boto3
+django-storages

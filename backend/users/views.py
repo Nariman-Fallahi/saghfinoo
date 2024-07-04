@@ -1,5 +1,6 @@
 import random
 import datetime
+import uuid
 
 from django.conf import settings
 from django.core.cache import caches
@@ -11,6 +12,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from drf_yasg.utils import swagger_auto_schema
+from django.core.files.storage import default_storage
 
 from common.codes import users_codes
 from .serializers import VerifyNumberSerializer, SignupSerializer, CustomTokenObtainPairSerializer
@@ -157,7 +159,7 @@ def am_i_in(req):
 @permission_classes([IsAuthenticated])
 @authentication_classes([JWTAuthentication])
 def get_user_info(req):
-    return Response({"first_name":req.user.first_name, "last_name":req.user.last_name, "number":req.user.number, "status":200})
+    return Response({"first_name":req.user.first_name, "last_name":req.user.last_name, "number":req.user.number, "image": f'{settings.S3_ENDPOINT_URL_WITH_BUCKET}/{req.user.image}', "status":200})
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -179,3 +181,18 @@ class CustomTokenRefreshView(TokenRefreshView):
         resp.status_code = 200
         resp.data['expire'] = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds()
         return resp
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@authentication_classes([JWTAuthentication])
+def upload_profile_image(req):
+    image = req.FILES['image']
+    file_ext = image.name.split('.')[-1]
+    file_name = f'{uuid.uuid4()}.{file_ext}'
+
+    if req.user.image:
+        default_storage.delete(req.user.image)
+    req.user.image = default_storage.save(f'users/{file_name}', image, max_length=1*1024*1024)
+    req.user.save()
+
+    return Response({"msg":"done", 'status':200})

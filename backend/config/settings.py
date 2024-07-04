@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-# import os
+import os
 import sys
 from datetime import timedelta
 
@@ -48,13 +48,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    # Third-Party apps
     'rest_framework',
     'corsheaders',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
+    'storages',
 
+    # Local apps
     'news',
     'real_estate_agents',
     'real_estate_offices',
@@ -172,6 +176,27 @@ STATIC_URL = 'static/'
 # STATIC_ROOT = os.path.join(BASE_DIR, '../frontend/.next')
 # MEDIA_ROOT = os.path.join(BASE_DIR, '../frontend/public')
 # MEDIA_URL = '/'
+
+
+STORAGES = {
+    'default':{
+        'BACKEND': 'storages.backends.s3.S3Storage',
+    },  
+
+    'staticfiles': {
+        'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+    },
+}
+
+
+#  S3
+AWS_ACCESS_KEY_ID = os.getenv('S3_ACCESS_KEY')
+AWS_SECRET_ACCESS_KEY = os.getenv('S3_SECRET_KEY')
+AWS_STORAGE_BUCKET_NAME = os.getenv('S3_BUCKET_NAME')
+AWS_S3_ENDPOINT_URL = os.getenv('S3_ENDPOINT_URL')
+S3_ENDPOINT_URL_WITH_BUCKET = f"{AWS_S3_ENDPOINT_URL.split('://')[0]}://{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_ENDPOINT_URL.split('://')[1]}"
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 

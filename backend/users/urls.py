@@ -14,4 +14,5 @@ urlpatterns = [
     path('am-i-in', views.am_i_in, name='am_i_in'),
     path('get-user-info', views.get_user_info, name='get_user_info'),
     path('logout', TokenBlacklistView.as_view(), name='logout'),
+    path('upload-profile-image', views.upload_profile_image, name='upload_profile_image'),
 ]

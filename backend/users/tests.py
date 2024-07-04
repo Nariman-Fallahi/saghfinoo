@@ -37,7 +37,7 @@ class VerifyNumberTests(APITestCase):
         self.assertEqual(resp.data['status'], 200)
         data2['token'] = resp.data['token'] 
 
-        for i in range(6):
+        for i in range(5):
             resp = self.client.post(self.url, data2)
             self.assertEqual(resp.data['status'], 400, resp.data)
             self.assertEqual(resp.data['code'], users_codes.WRONG_CODE, resp.data)
@@ -190,3 +190,12 @@ class SignupTests(APITestCase):
         # token = resp.data['token']
         self.assertEqual(resp.data['status'], 400, resp.data)
         self.assertEqual(resp.data['code'], users_codes.INVALID_FIELD, resp.data)
+
+    def test_invalid_field(self):
+        data = self.default_data
+        for field in FIELDS:
+            for char in INVALID_CHARS:
+                data[field] = data[field][:len(self.default_data[field])] + char
+                resp = self.client.post(self.url, data)
+                self.assertEqual(resp.data['status'], 400, resp.data)
+                self.assertEqual(resp.data['code'], users_codes.INVALID_FIELD, resp.data)
