@@ -159,7 +159,10 @@ def am_i_in(req):
 @permission_classes([IsAuthenticated])
 @authentication_classes([JWTAuthentication])
 def get_user_info(req):
-    return Response({"first_name":req.user.first_name, "last_name":req.user.last_name, "number":req.user.number, "image": f'{settings.S3_ENDPOINT_URL_WITH_BUCKET}/{req.user.image}', "status":200})
+    image_url = ''
+    if req.user.image:
+        image_url = f'{settings.S3_ENDPOINT_URL_WITH_BUCKET}/{req.user.image}'
+    return Response({"first_name":req.user.first_name, "last_name":req.user.last_name, "number":req.user.number, "image": image_url, "status":200})
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
