@@ -60,7 +60,7 @@ INSTALLED_APPS = [
 
     # Local apps
     'news',
-    'realtor',
+    'realtors',
     'real_estate_offices',
     'real_estates',
     'users',
