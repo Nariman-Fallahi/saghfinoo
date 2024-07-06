@@ -5,7 +5,7 @@ from real_estate_offices.models import RealEstateOffice
 
 class Realtor(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    real_estate_office = models.ForeignKey(RealEstateOffice, on_delete=models.SET_DEFAULT, null=True, default=None)
+    real_estate_office = models.ForeignKey(RealEstateOffice, on_delete=models.SET_DEFAULT, null=True, blank=True, default=None)
     is_confirmed_by_real_estate_office = models.BooleanField(default=False) # must confirmed by real estate office owner
 
     score = models.FloatField(default=5)

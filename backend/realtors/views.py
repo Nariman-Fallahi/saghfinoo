@@ -11,8 +11,8 @@ class CreateRealtor(APIView):
     authentication_classes = [JWTAuthentication]
 
     def post(self, req):
-        serializer = self.serializer_class(data=req.data)
+        serializer = RealtorSerializer(data=req.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(user=req.user)
             return Response({"msg":"done", 'status':200})
-        return Response({"errors":serializer.error_messages, 'status':400})
+        return Response({"errors":serializer.errors, 'status':400})
