@@ -57,4 +57,5 @@ class RealEstateOfficePreviewResponseSerializer(serializers.ModelSerializer):
             'score', 
             'number_of_active_ads', 
             'number_of_comments',
+            'image_full_path',
         ]
