@@ -64,8 +64,8 @@ class GetRealEstateOfficeAPIView(APIView):
 
     def get(self, req, slug):
         try:
-            reo = RealEstateOffice.objects.get(is_confirmed=True, username=slug).values(*RealEstateOfficeResponseSerializer.Meta.fields)
-            return Response({"data":reo, 'status':200})        
+            reo = RealEstateOfficeResponseSerializer(RealEstateOffice.objects.get(is_confirmed=True, username=slug))
+            return Response({"data":reo.data, 'status':200})        
         except RealEstateOffice.DoesNotExist:
             return Response({'status':404})
         
