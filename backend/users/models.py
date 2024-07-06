@@ -11,7 +11,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=51)
     last_name = models.CharField(max_length=52)
     password = models.CharField(max_length=512)
+
     image = models.CharField(max_length=1000, default='')
+    image_full_path = models.CharField(max_length=1000, default='')
 
     is_active = models.BooleanField(default=True)
     permisions = models.CharField(max_length=53, default='')
@@ -25,6 +27,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     def __str__(self) -> str:
-        return self.number
+        return self.first_name+' '+self.last_name+', '+self.number
     
 

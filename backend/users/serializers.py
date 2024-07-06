@@ -50,3 +50,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         return token
 
+class CustomUserResponseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CustomUser
+        fields = ['first_name', 'last_name', 'number', 'image_full_path', 'created_at']

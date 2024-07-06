@@ -2,6 +2,8 @@ import random
 import datetime
 import uuid
 
+from PIL import Image
+
 from django.conf import settings
 from django.core.cache import caches
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
@@ -15,7 +17,7 @@ from drf_yasg.utils import swagger_auto_schema
 from django.core.files.storage import default_storage
 
 from common.codes import users_codes
-from .serializers import VerifyNumberSerializer, SignupSerializer, CustomTokenObtainPairSerializer
+from .serializers import VerifyNumberSerializer, SignupSerializer, CustomTokenObtainPairSerializer, CustomUserResponseSerializer
 from .models import CustomUser
 from .doc import verify_number_schema_responses
 
@@ -159,10 +161,8 @@ def am_i_in(req):
 @permission_classes([IsAuthenticated])
 @authentication_classes([JWTAuthentication])
 def get_user_info(req):
-    image_url = ''
-    if req.user.image:
-        image_url = f'{settings.S3_ENDPOINT_URL_WITH_BUCKET}/{req.user.image}'
-    return Response({"first_name":req.user.first_name, "last_name":req.user.last_name, "number":req.user.number, "image": image_url, "status":200})
+    s = CustomUserResponseSerializer(req.user)
+    return Response({"data":s.data, "status":200})
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -184,18 +184,25 @@ class CustomTokenRefreshView(TokenRefreshView):
         resp.status_code = 200
         resp.data['expire'] = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds()
         return resp
-    
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 @authentication_classes([JWTAuthentication])
 def upload_profile_image(req):
-    image = req.FILES['image']
+    image = req.FILES.get('image', '')
+    if image == '':
+        return Response({'errors':{'image':'image not sent'}})
+
+    if Image.open(image).format not in ('PNG', 'JPEG'):
+        return Response({"errors":{"image":"invalid image format (accepted formats: PNG, JPEG)"}})
+    
     file_ext = image.name.split('.')[-1]
     file_name = f'{uuid.uuid4()}.{file_ext}'
 
     if req.user.image:
         default_storage.delete(req.user.image)
     req.user.image = default_storage.save(f'users/{file_name}', image, max_length=1*1024*1024)
+    req.user.image_full_path = f'{settings.S3_ENDPOINT_URL_WITH_BUCKET}/{req.user.image}'
     req.user.save()
 
     return Response({"msg":"done", 'status':200})
