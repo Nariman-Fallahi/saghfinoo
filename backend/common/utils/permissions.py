@@ -1,0 +1,24 @@
+from rest_framework.permissions import BasePermission
+
+from . import realtor_model
+
+class IsOwner(BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        return request.user == obj.owner
+    
+class IsAdmin(BasePermission):
+    
+    def has_object_permission(self, request, view, obj):
+        return True
+        # todo: complete
+
+class IsRealtor(BasePermission):
+    
+    def has_permission(self, request, view):
+        try:
+            realtor = realtor_model.objects.get(user=request.user)#, is_confirmed=True)
+            request.realtor = realtor
+            return True
+        except realtor_model.DoesNotExist:
+            return False
