@@ -41,7 +41,8 @@ class RealEstateOfficeResponseSerializer(serializers.ModelSerializer):
             'site',
             'linkedin',
             'telegram',
-            'instagram',    
+            'instagram',
+            'blue_tick',    
         ]
 
 class RealEstateOfficePreviewResponseSerializer(serializers.ModelSerializer):
@@ -57,4 +58,6 @@ class RealEstateOfficePreviewResponseSerializer(serializers.ModelSerializer):
             'score', 
             'number_of_active_ads', 
             'number_of_comments',
+            'image_full_path',
+            'blue_tick',
         ]
