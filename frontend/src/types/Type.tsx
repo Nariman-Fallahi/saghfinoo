@@ -34,7 +34,7 @@ export type OtpType = {
   handleBlur: () => void;
   focusedInput: number | null;
   time: number;
-  setTime: (value : number) => void;
+  setTime: (value: number) => void;
   sendPhoneNumber: () => void;
 };
 
@@ -76,4 +76,20 @@ export type SignUpType = {
 export type InputPasswordType = {
   type: string;
   icon: string;
-}
+};
+
+// real-estate-offices Type
+export type RealEstateOfficesType = {
+  data: [
+    {
+      name: string;
+      username: string;
+      city: string;
+      main_street: string;
+      sub_street: string;
+      score: number;
+      number_of_active_ads: number;
+      number_of_comments: number;
+    }
+  ];
+};

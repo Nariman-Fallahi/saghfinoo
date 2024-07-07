@@ -45,7 +45,7 @@ export default function MobileMenu({ NavigationMenu }: mobileMenuType) {
           variant="light"
           onPress={() => setOpenMenu(true)}
         >
-          <Image width={24} height={24} src="icons/menu.svg" alt="" />
+          <Image width={24} height={24} src="/icons/menu.svg" alt="" />
         </Button>
         <Image width={72} height={32} src="/icons/Logo.svg" alt="" />
         <Button

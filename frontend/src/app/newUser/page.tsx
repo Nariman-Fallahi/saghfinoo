@@ -5,8 +5,6 @@ import TopRealEstate from "@/components/Home/NewUser/TopRealEstate";
 import SearchBox from "@/components/Home/SearchBox";
 import FooterMenu from "@/components/Menu/FooterMenu/FooterMenu";
 import Menu from "@/components/Menu/HeaderMenu/Menu";
-import Register from "@/components/Register/Register";
-// END New Home
 
 export default function Home() {
   return (
@@ -18,7 +16,6 @@ export default function Home() {
       <LatestNews />
       <RealEstate />
       <FooterMenu />
-      <Register />
     </>
   );
 }

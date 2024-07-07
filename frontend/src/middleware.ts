@@ -31,8 +31,8 @@ export async function middleware(req: NextRequest) {
           }
         }
       }
-    } catch (error) {
-      console.error("Error fetching data:", error);
+    } catch {
+      return NextResponse.redirect(new URL("/newUser", req.url));
     }
   } else if (access && refresh && url.pathname !== "/proUser") {
     return NextResponse.redirect(new URL("/proUser", req.url));

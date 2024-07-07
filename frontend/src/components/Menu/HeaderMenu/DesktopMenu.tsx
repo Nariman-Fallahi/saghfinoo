@@ -23,17 +23,11 @@ export default function DesktopMenu({ NavigationMenu }: desktopMenuType) {
     }
   }, [userInfo]);
 
-  const ClickRegister = () => {
-    if (!isLogin) {
-      setOpen(true);
-    }
-  };
-
   return (
-    <div className="w-full justify-center mt-6 z-40 hidden md:flex fixed">
+    <div className="w-full justify-center hidden md:flex">
       <nav
         className="w-[88%] bg-white fixed p-3 flex justify-between items-center
-         shadow rounded-2xl"
+         shadow rounded-2xl mt-6 z-50"
       >
         <ul className="flex items-center text-sm lg:text-[20px]">
           <Image

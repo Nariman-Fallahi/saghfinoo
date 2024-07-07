@@ -5,6 +5,7 @@ import { navigationMenuType } from "@/types/Type";
 import { useUserInfo } from "@/store/Register";
 import { getCookie } from "cookies-next";
 import { useEffect } from "react";
+import Register from "@/components/Register/Register";
 
 export default function Menu() {
   const access = getCookie("access");
@@ -62,6 +63,7 @@ export default function Menu() {
     <>
       <MobileMenu NavigationMenu={navigationMenu} />
       <DesktopMenu NavigationMenu={navigationMenu} />
+      <Register />
     </>
   );
 }
