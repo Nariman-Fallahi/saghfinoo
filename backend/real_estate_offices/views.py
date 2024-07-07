@@ -50,7 +50,6 @@ class EditRealEstateOfficeAPIView(APIView):
 class GetAllRealEstateOfficeAPIView(APIView):
 
     def get(self, req):
-        
         try:
             page, limit = get_page_and_limit(req)
         except Exception as e:

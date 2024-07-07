@@ -22,6 +22,7 @@ class RealEstateOffice(models.Model):
     image = models.CharField(max_length=1000, default='')
     image_full_path = models.CharField(max_length=1000, default='')
     
+    blue_tick = models.BooleanField(default=False)
     score = models.FloatField(default=5)
     number_of_active_ads = models.PositiveIntegerField(default=0)
     number_of_comments = models.PositiveIntegerField(default=0)
