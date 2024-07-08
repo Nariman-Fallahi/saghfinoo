@@ -17,7 +17,7 @@ class IsRealtor(BasePermission):
     
     def has_permission(self, request, view):
         try:
-            realtor = realtor_model.objects.get(user=request.user)#, is_confirmed=True)
+            realtor = realtor_model.objects.get(user=request.user, is_confirmed=True)
             request.realtor = realtor
             return True
         except realtor_model.DoesNotExist:
