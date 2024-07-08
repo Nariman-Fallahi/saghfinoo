@@ -44,7 +44,7 @@ def verify_number(req):
             # todo: send code
             if settings.DEBUG and not settings.TESTING:
                 print("code:", code)
-            token = str(random.randint(10000000, 9999999999)) + random.choice(['fdf', 'dfad', 'ajifd', 'eiurei']) # random_token()
+            token = uuid.uuid4()
 
             auth_cache.set(number, {"delay":now+settings.NUMBER_DELAY, "token":token, "code":code, "tries":0,})
             

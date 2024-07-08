@@ -17,8 +17,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     is_active = models.BooleanField(default=True)
     permisions = models.CharField(max_length=53, default='')
-    created_at = models.DateTimeField(default=timezone.now())
-    modified_at = models.DateTimeField(default=timezone.now())
+    created_at = models.DateTimeField(default=timezone.now)
+    modified_at = models.DateTimeField(default=timezone.now)
     is_staff = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'number'
