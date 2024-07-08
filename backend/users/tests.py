@@ -4,6 +4,8 @@ from rest_framework.test import APITestCase
 from common.codes import users_codes
 from django.core.cache import caches
 
+from common.utils.test import test_invalid_field
+
 auth_cache = caches['auth']
 
 class VerifyNumberTests(APITestCase):
@@ -192,10 +194,22 @@ class SignupTests(APITestCase):
         self.assertEqual(resp.data['code'], users_codes.INVALID_FIELD, resp.data)
 
     def test_invalid_field(self):
-        data = self.default_data
-        for field in FIELDS:
-            for char in INVALID_CHARS:
-                data[field] = data[field][:len(self.default_data[field])] + char
-                resp = self.client.post(self.url, data)
-                self.assertEqual(resp.data['status'], 400, resp.data)
-                self.assertEqual(resp.data['code'], users_codes.INVALID_FIELD, resp.data)
+    
+        test_invalid_field(self, self.url, self.default_data)
+
+    def test_right(self):
+        data = {'number':self.number, 'code':0, 'token':''}
+        resp = self.client.post(self.verify_number_url, data)
+        self.assertEqual(resp.data['status'], 200, resp.data)
+        self.assertEqual(resp.data['code'], users_codes.CODE_SENT_TO_NUMBER, resp.data)
+
+        data['code'] = auth_cache.get(data['number'])['code']
+        data['token'] = resp.data['token']
+        resp = self.client.post(self.verify_number_url, data)
+        self.assertEqual(resp.data['status'], 303, resp.data)
+        self.assertEqual(resp.data['code'], users_codes.COMPLETE_SIGNUP, resp.data)
+        
+        # signup
+        data2 = {'number':self.number, 'first_name':'abc', 'last_name':'abc', 'password':'1234', 'token': data['token']}
+        resp = self.client.post(self.url, data2)
+        
