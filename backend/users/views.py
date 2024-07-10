@@ -16,7 +16,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from drf_yasg.utils import swagger_auto_schema
 from django.core.files.storage import default_storage
 
-from common.codes import users_codes
+from common import codes
 from .serializers import VerifyNumberSerializer, SignupSerializer, CustomTokenObtainPairSerializer, CustomUserResponseSerializer
 from .models import CustomUser
 from .doc import verify_number_schema_responses
@@ -38,7 +38,7 @@ def verify_number(req):
             # delay for send code to a number
             t = auth_cache.get(number, {}).get('delay', now)
             if t > now and not settings.TESTING:
-                return Response({"errors":{'number':f"wait {round((t - now).total_seconds())} seconds"}, "code": users_codes.NUMBER_DELAY, "status":400})
+                return Response({"errors":{'number':f"wait {round((t - now).total_seconds())} seconds"}, "code": codes.NUMBER_DELAY, "status":400})
             
             code = random.randint(10000, 99999)
             # todo: send code
@@ -48,15 +48,15 @@ def verify_number(req):
 
             auth_cache.set(number, {"delay":now+settings.NUMBER_DELAY, "token":token, "code":code, "tries":0,})
             
-            return Response({"msg":"code sent to number", "code":users_codes.CODE_SENT_TO_NUMBER, "token":token, "status":200}, headers={"test":True})
+            return Response({"msg":"code sent to number", "code":codes.CODE_SENT_TO_NUMBER, "token":token, "status":200}, headers={"test":True})
         else:
             # check code
             info = auth_cache.get(number, {})
             if info.get('tries', 0) >= 5:
-                return Response({"errors":{'code':"to manay tries"}, "code":users_codes.TO_MANNY_TRIES, "status":400})
+                return Response({"errors":{'code':"to manay tries"}, "code":codes.TO_MANNY_TRIES, "status":400})
             
             if info.get('token', '') == '' or info.get('token', '') != serializer.data['token']:
-                return Response({"errors":{'code':"zero the code first"}, "code":users_codes.ZERO_CODE_FIRST, "status":400})
+                return Response({"errors":{'code':"zero the code first"}, "code":codes.ZERO_CODE_FIRST, "status":400})
 
             if serializer.data.get('code') == info.get('code', 0):
                 # sign in or go sign up
@@ -71,7 +71,7 @@ def verify_number(req):
                     
                     auth_cache.set(number, {'token':serializer.data['token'],'must signup':True})
 
-                    return Response({"msg":"Auth done. Go to /api/v1/complete-signup", "code":users_codes.COMPLETE_SIGNUP, "status":303})
+                    return Response({"msg":"Auth done. Go to /api/v1/complete-signup", "code":codes.COMPLETE_SIGNUP, "status":303})
                 else:
                     # login
                     
@@ -79,15 +79,15 @@ def verify_number(req):
                     user = user[0]
                     refresh, access = get_jwt_tokens_for_user(user)
     
-                    return Response({"msg":"You are in!", 'access':access, 'refresh':refresh, 'expire': settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(), "code":users_codes.LOGIN_DONE, "status":200})
+                    return Response({"msg":"You are in!", 'access':access, 'refresh':refresh, 'expire': settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(), "code":codes.LOGIN_DONE, "status":200})
             else:
                 # wrong code
                 info['tries'] = info.get('tries', 0) + 1
                 auth_cache.set(number, info)
-                return Response({"errors":{'code':"wrong code"}, "code":users_codes.WRONG_CODE, "status":400})                
+                return Response({"errors":{'code':"wrong code"}, "code":codes.WRONG_CODE, "status":400})                
             
         
-    return Response({"errors":serializer.errors, "code":users_codes.INVALID_FIELD, "status":400})
+    return Response({"errors":serializer.errors, "code":codes.INVALID_FIELD, "status":400})
 
 
 @swagger_auto_schema(methods=["POST"], query_serializer=SignupSerializer)
@@ -103,11 +103,11 @@ def signup(req):
         info = auth_cache.get(serializer.data['number'], {})
 
         if not info.get('must signup', False):
-            return Response({"errors":{'number':"verifiy number first"}, "code":users_codes.VERIFY_NUMBER_FIRST, "status":400})
+            return Response({"errors":{'number':"verifiy number first"}, "code":codes.VERIFY_NUMBER_FIRST, "status":400})
 
         user = CustomUser.objects.filter(number=serializer.data['number'])
         if len(user) > 0:
-            return Response({"errors":{'number':"user already created"}, "code":users_codes.USER_EXIST, "status":400})
+            return Response({"errors":{'number':"user already created"}, "code":codes.USER_EXIST, "status":400})
 
         user = CustomUser()
         user.first_name = serializer.data['first_name']
@@ -118,8 +118,8 @@ def signup(req):
 
         refresh, access = get_jwt_tokens_for_user(user)
         
-        return Response({"msg":"done", "access":access, 'refresh':refresh, 'expire': settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(), "code":users_codes.LOGIN_DONE, "status":201})
-    return Response({"errors":serializer.errors, "code":users_codes.INVALID_FIELD, "status":400})
+        return Response({"msg":"done", "access":access, 'refresh':refresh, 'expire': settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(), "code":codes.LOGIN_DONE, "status":201})
+    return Response({"errors":serializer.errors, "code":codes.INVALID_FIELD, "status":400})
 
 
 def get_jwt_tokens_for_user(user):
@@ -137,10 +137,10 @@ def get_jwt_tokens_for_user(user):
 #         if user:
 #             token, created = Token.objects.get_or_create(user=user)
 
-#             return Response({"msg":"You are in!", "token":token.key, "code":users_codes.LOGIN_DONE, "status":200})
+#             return Response({"msg":"You are in!", "token":token.key, "code":codes.LOGIN_DONE, "status":200})
 #         else:
-#             return Response({"error":"incurrect number or password", "code":users_codes.INCURRECT_NUMBER_OR_PASSWORD, "status":400})
-#     return Response({"errors":serializer.errors, "code":users_codes.INVALID_FIELD, "status":400})
+#             return Response({"error":"incurrect number or password", "code":codes.INCURRECT_NUMBER_OR_PASSWORD, "status":400})
+#     return Response({"errors":serializer.errors, "code":codes.INVALID_FIELD, "status":400})
 
 
 @api_view(["GET"])
