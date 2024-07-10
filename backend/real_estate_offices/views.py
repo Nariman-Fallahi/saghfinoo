@@ -10,6 +10,7 @@ from django.conf import settings
 
 from common.utils.permissions import IsOwner, IsAdmin, IsRealtor
 from common.utils.request import get_page_and_limit
+from common import codes
 
 from .serializers import RealEstateOfficeSerializer, RealEstateOfficePreviewResponseSerializer, RealEstateOfficeResponseSerializer
 from .models import RealEstateOffice
@@ -28,11 +29,11 @@ class CreateRealEstateOfficeAPIView(APIView):
         if serializer.is_valid():
             try:
                 reo = RealEstateOffice.objects.get(owner=req.user)
-                return Response({'errors':{"user":"user is already owner of "+reo.name}, 'status':400})
+                return Response({'errors':{"user":"user is already owner of "+reo.name}, 'code':codes.USER_IS_ALREADY_REO_OWNER, 'status':400})
             except RealEstateOffice.DoesNotExist:
                 serializer.save(owner=req.realtor.user)
                 return Response({"msg": "done", 'status':200})
-        return Response({"errors": serializer.errors, 'status':400})
+        return Response({"errors": serializer.errors, 'code':codes.INVALID_FIELD, 'status':400})
     
 class EditRealEstateOfficeAPIView(APIView):
 
@@ -45,7 +46,7 @@ class EditRealEstateOfficeAPIView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({"msg":"done", 'status':200})
-        return Response({"errors": serializer.errors, 'status':400})
+        return Response({"errors": serializer.errors, 'code':codes.INVALID_FIELD, 'status':400})
 
 class GetAllRealEstateOfficeAPIView(APIView):
 
@@ -53,14 +54,14 @@ class GetAllRealEstateOfficeAPIView(APIView):
         try:
             page, limit = get_page_and_limit(req)
         except Exception as e:
-            return Response({'errors':e.dict, 'status':400})
+            return Response({'errors':e.dict, 'code':codes.INVLAID_QUERY_PARAM, 'status':400})
         
         reo = RealEstateOffice.objects.filter(is_confirmed=True).values(*RealEstateOfficePreviewResponseSerializer.Meta.fields)[page*limit:page*limit+limit]
         
         return Response({'data':reo, 'status':200})
     
 class GetRealEstateOfficeAPIView(APIView):
-
+    """get real estate office by username"""
     def get(self, req, slug):
         try:
             reo = RealEstateOfficeResponseSerializer(RealEstateOffice.objects.get(is_confirmed=True, username=slug))
@@ -71,7 +72,7 @@ class GetRealEstateOfficeAPIView(APIView):
 
 
 class UploadRealEstateOfficeImageAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
     authentication_classes = [JWTAuthentication]
     
     def post(self, req):
@@ -85,7 +86,7 @@ class UploadRealEstateOfficeImageAPIView(APIView):
         try:
             reo = RealEstateOffice.objects.get(owner=req.user)
         except RealEstateOffice.DoesNotExist:
-            return Response({'errors':{'user':'user not owner of any real estate office'}, 'status':404})
+            return Response({'errors':{'user':'user not owner of any real estate office'}, 'code':codes.USER_IS_NOT_OWNER, 'status':404})
 
         file_ext = image.name.split('.')[-1]
         file_name = f'{uuid.uuid4()}.{file_ext}'
