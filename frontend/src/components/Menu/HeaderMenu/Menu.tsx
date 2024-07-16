@@ -6,6 +6,7 @@ import { useUserInfo } from "@/store/Register";
 import { getCookie } from "cookies-next";
 import { useEffect } from "react";
 import Register from "@/components/Register/Register";
+import { ApiService } from "@/ApiService";
 
 export default function Menu() {
   const access = getCookie("access");
@@ -15,22 +16,27 @@ export default function Menu() {
     {
       title: "اجاره",
       icon: "/icons/arrow-left.svg",
+      link: ""
     },
     {
       title: "خرید",
       icon: "/icons/arrow-left.svg",
+      link: ""
     },
     {
       title: "املاک و مستغلات",
       icon: "/icons/arrow-left.svg",
+      link: "/realEstates"
     },
     {
       title: "مشاورین املاک",
       icon: "/icons/arrow-left.svg",
+      link: ""
     },
     {
       title: "اخبار روز",
       icon: "/icons/arrow-left.svg",
+      link: ""
     },
   ];
 
@@ -38,7 +44,7 @@ export default function Menu() {
     const getUserInfo = async () => {
       try {
         const response = await fetch(
-          "http://127.0.0.1:8000/api/v1/users/get-user-info",
+          ApiService.GetUserInfo,
           {
             headers: {
               Authorization: `Bearer ${access}`,

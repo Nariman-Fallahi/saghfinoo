@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Button } from "@nextui-org/button";
 import { useState, useEffect } from "react";
 import { RealEstateOfficesType } from "@/types/Type";
+import { ApiService } from "@/ApiService";
 
 export default function RealEstatesCards() {
   const [dataREO, setDataREO] = useState<RealEstateOfficesType[]>();
@@ -12,7 +13,7 @@ export default function RealEstatesCards() {
   const getData = async () => {
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/api/v1/real-estate-offices/get-all?page=${pageNumber}&limit=21`
+        `${ApiService.GetAllRealEstateOffices}?page=${pageNumber}&limit=21`
       );
       const data = await response.json();
       if (response.ok) {

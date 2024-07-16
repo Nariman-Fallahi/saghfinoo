@@ -1,4 +1,5 @@
 import { SignUpInputType } from "@/types/Type";
+import { BtnSizeType } from "@/types/Type";
 
 export enum RegisterStatusValue {
   status1 = "phoneNumber",
@@ -35,4 +36,9 @@ export default function Title({ title }: TitleType) {
   return (
     <h3 className="text-sm font-bold md:text-lg lg:text-[32px]">{title}</h3>
   );
+}
+
+export enum nameActiveModalValue {
+  ContactInfo = "ContactInfo",
+  Share = "Share",
 }

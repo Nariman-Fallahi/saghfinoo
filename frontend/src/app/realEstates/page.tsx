@@ -1,5 +1,5 @@
 import Menu from "@/components/Menu/HeaderMenu/Menu";
-import SearchBox from "@/components/SearchBox";
+import SearchBox from "@/components/realEstates-realators/SearchBox";
 import RealEstatesCards from "@/components/RealEstatesCards";
 import FooterMenu from "@/components/Menu/FooterMenu/FooterMenu";
 

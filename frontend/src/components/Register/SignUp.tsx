@@ -12,6 +12,7 @@ import { useRegisterStatus } from "@/store/Register";
 import { RegisterStatusValue } from "@/constant/Constants";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
+import { ApiService } from "@/ApiService";
 
 export default function SignUp({ token, phoneNumber }: SignUpType) {
   const [focus, setFocus] = useState<number>();
@@ -29,8 +30,6 @@ export default function SignUp({ token, phoneNumber }: SignUpType) {
   const { setRegisterStatus } = useRegisterStatus();
   const router = useRouter();
 
-  const apiUrlSignUp = "http://127.0.0.1:8000/api/v1/users/complete-signup";
-
   const ClickBtnSignUp = () => {
     if (firstName == "" || lastName == "" || password == "") {
       Error("لطفا اطلاعات خود را کامل وارد نمایید.");
@@ -42,7 +41,7 @@ export default function SignUp({ token, phoneNumber }: SignUpType) {
   const UserSignUp = async () => {
     setLoading(true);
     try {
-      const response = await fetch(apiUrlSignUp, {
+      const response = await fetch(ApiService.CompleteSignup, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

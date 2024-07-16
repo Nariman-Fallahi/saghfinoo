@@ -5,6 +5,7 @@ import { Button } from "@nextui-org/button";
 import { navigationMenuType } from "@/types/Type";
 import { useModalStore, useUserInfo } from "@/store/Register";
 import { useEffect } from "react";
+import Link from "next/link";
 
 type mobileMenuType = {
   NavigationMenu: navigationMenuType;
@@ -18,7 +19,7 @@ export default function MobileMenu({ NavigationMenu }: mobileMenuType) {
 
   useEffect(() => {
     console.log(userInfo);
-    
+
     if (userInfo !== undefined) {
       setIsLogin(true);
     } else {
@@ -129,16 +130,22 @@ export default function MobileMenu({ NavigationMenu }: mobileMenuType) {
 
           {NavigationMenu.map((item, index) => {
             return (
-              <div
+              <Link
+                href={item.link}
                 key={index}
                 className="mt-7 flex items-center justify-between px-2"
               >
                 <div className="flex items-center">
-                  <Image width={20} height={20} src="/icons/house.svg" alt="" />
+                  <Image width={20} height={20} src={item.icon} alt="" />
                   <p className="text-xs mr-2">{item.title}</p>
                 </div>
-                <Image width={20} height={20} src={item.icon} alt="" />
-              </div>
+                <Image
+                  width={20}
+                  height={20}
+                  src="/icons/arrow-left.svg"
+                  alt=""
+                />
+              </Link>
             );
           })}
         </div>

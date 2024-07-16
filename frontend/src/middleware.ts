@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { getCookie, setCookie } from "cookies-next";
+import { ApiService } from "./ApiService";
 
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl;
@@ -10,7 +11,7 @@ export async function middleware(req: NextRequest) {
   if (access === undefined && refresh !== undefined) {
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/api/v1/users/token/refresh",
+        ApiService.Refresh,
         {
           method: "POST",
           headers: {

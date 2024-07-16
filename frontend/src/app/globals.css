@@ -2,7 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-p,h1,h2,h3,h4,h5,h6 {
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   cursor: default;
   direction: rtl;
 }
@@ -46,7 +52,7 @@ p,h1,h2,h3,h4,h5,h6 {
 }
 
 #nprogress .bar {
-  border-radius: 15px !important;
+  border-radius: 20px !important;
 }
 
 .directionRTL {
@@ -57,4 +63,21 @@ p,h1,h2,h3,h4,h5,h6 {
   .Toastify__toast-body > div:last-child {
     font-size: 14px !important;
   }
+  .selectBtn::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.selectBtn::-webkit-scrollbar {
+  width: 12px;
+}
+
+.selectBtn::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+  border: 3px solid #f1f1f1;
+}
+
+.selectBtn::-webkit-scrollbar-thumb:active {
+  background: #555;
 }

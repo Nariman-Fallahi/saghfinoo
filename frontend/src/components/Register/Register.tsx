@@ -14,6 +14,7 @@ import { useModalStore } from "@/store/Register";
 import { useRegisterStatus } from "@/store/Register";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
+import { ApiService } from "@/ApiService";
 
 export default function Register() {
   let sizeModal: any = "";
@@ -66,25 +67,25 @@ export default function Register() {
   };
 
   const btnSendPhoneNumber = () => {
-    if (
-      phoneNumber !== "" &&
-      phoneNumber.length === 11 &&
-      phoneNumber[0] === "0" &&
-      phoneNumber[1] === "9"
-    ) {
-      setInputErr(false);
-      sendPhoneNumber();
-    } else {
-      setInputErr(true);
+    if (isSelected) {
+      if (
+        phoneNumber !== "" &&
+        phoneNumber.length === 11 &&
+        phoneNumber[0] === "0" &&
+        phoneNumber[1] === "9"
+      ) {
+        setInputErr(false);
+        sendPhoneNumber();
+      } else {
+        setInputErr(true);
+      }
     }
   };
-
-  const apiUrlSPN: string = "http://127.0.0.1:8000/api/v1/users/verify-number";
 
   const sendPhoneNumber = async () => {
     setLoading(true);
     try {
-      const response = await fetch(apiUrlSPN, {
+      const response = await fetch(ApiService.verifynumber, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -125,7 +126,7 @@ export default function Register() {
     try {
       console.log("agin");
 
-      const response = await fetch(apiUrlSPN, {
+      const response = await fetch(ApiService.verifynumber, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -151,11 +152,11 @@ export default function Register() {
           sameSite: "strict",
         });
         console.log(data);
-        
+
         setRegisterStatus(RegisterStatusValue.status1);
         setOpen(false);
         Success("ثبت نام با موفقیت انجام شد.");
-        router.push('/proUser');
+        router.push("/proUser");
       } else {
         console.log(data);
       }

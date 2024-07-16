@@ -2,6 +2,7 @@
 export type navigationMenuType = {
   title: string;
   icon: string;
+  link: string;
 }[];
 
 // Menu
@@ -93,3 +94,6 @@ export type RealEstateOfficesType = {
     }
   ];
 };
+
+// BtnSizeType
+export type BtnSizeType = "sm" | "md" | "lg" | undefined;

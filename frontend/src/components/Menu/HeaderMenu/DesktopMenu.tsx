@@ -5,6 +5,7 @@ import { navigationMenuType } from "@/types/Type";
 import { useModalStore, useUserInfo } from "@/store/Register";
 import { useEffect } from "react";
 import { useState } from "react";
+import Link from "next/link";
 
 type desktopMenuType = {
   NavigationMenu: navigationMenuType;
@@ -39,12 +40,13 @@ export default function DesktopMenu({ NavigationMenu }: desktopMenuType) {
           />
           {NavigationMenu.map((item, index) => {
             return (
-              <li
+              <Link
+                href={item.link}
                 key={index}
                 className="mr-4 lg:mr-6 cursor-pointer hover:text-red-600"
               >
                 {item.title}
-              </li>
+              </Link>
             );
           })}
         </ul>
