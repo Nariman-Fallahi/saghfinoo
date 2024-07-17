@@ -27,18 +27,18 @@ def validate_landline_number(landline_number: str):
     
 
 def validate_name(name: str):
-    valid_chars = characters.PERSIAN_CHARS + characters.ENGLISH_CHARS
+    valid_chars = characters.NAME_CHARS
 
     validate(name.lower(), valid_chars)
         
 def validate_description(description: str):
-    valid_chars = characters.PERSIAN_CHARS + characters.ENGLISH_CHARS + characters.PERSIAN_SIGNS + characters.ENGLISH_SIGNS
+    valid_chars = characters.DESCRIPTION_CHARS
 
     validate(description.lower(), valid_chars)
         
 
 def validate_username(username: str):
-    valid_chars = characters.ENGLISH_CHARS + "_.-"
+    valid_chars = characters.USERNAME_CHARS
 
     validate(username.lower(), valid_chars)
 
