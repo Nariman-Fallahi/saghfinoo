@@ -46,6 +46,7 @@ urlpatterns = [
     path('api/v1/realtors/', include('realtors.urls')),
     path('api/v1/news/', include('news.urls')),
     path('api/v1/real-estates', include('real_estates.urls')),
+    path('api/v1/tools/', include('tools.urls')),
 ]
 
 if not settings.TESTING:
