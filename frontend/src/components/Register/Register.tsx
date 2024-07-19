@@ -2,11 +2,11 @@
 import { Modal, ModalContent, ModalBody } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Otp from "./Otp";
 import PhoneNumber from "./PhoneNumber";
 import { RegisterStatusValue } from "@/constant/Constants";
-import SignUp from "./SignUp";
+import SignUp from "./signUp/SignUp";
 import { Error } from "@/notification/Error";
 import { Spinner } from "@nextui-org/spinner";
 import { Success } from "@/notification/Success";
@@ -14,9 +14,12 @@ import { useModalStore } from "@/store/Register";
 import { useRegisterStatus } from "@/store/Register";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
-import { ApiService } from "@/ApiService";
+import { Api } from "@/ApiService";
+import { usePostRequest } from "@/ApiService";
+import { LoginDataType } from "@/types/Type";
 
 export default function Register() {
+  const router = useRouter();
   let sizeModal: any = "";
   const { isOpen, setOpen } = useModalStore();
   const [phoneNumber, setPhoneNumber] = useState<string>("");
@@ -25,10 +28,13 @@ export default function Register() {
   const [otp, setOtp] = useState<string>("");
   const [focusedInput, setFocusedInput] = useState<number | null>(null);
   const [token, setToken] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
   const { registerStatus, setRegisterStatus } = useRegisterStatus();
   const [time, setTime] = useState<number>(90);
-  const router = useRouter();
+  const { mutate, isSuccess, data, isPending } =
+    usePostRequest<LoginDataType>({
+      url: Api.verifynumber,
+      key: "verifynumber",
+    });
 
   // constants
   let ModalRegisterTitle: string = "";
@@ -75,71 +81,39 @@ export default function Register() {
         phoneNumber[1] === "9"
       ) {
         setInputErr(false);
-        sendPhoneNumber();
+        mutate({ number: phoneNumber, code: 0, token: "" });
       } else {
         setInputErr(true);
       }
     }
   };
 
-  const sendPhoneNumber = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(ApiService.verifynumber, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ number: phoneNumber, code: 0, token: "" }),
-      });
+  useEffect(() => {
+    if (isSuccess && data.code === "code_sent_to_number") {
+      setToken(data.token);
+      setRegisterStatus(RegisterStatusValue.status2);
+      const intervalId = setInterval(() => {
+        setTime((prevTime) => prevTime - 1);
+      }, 1000);
 
-      const data = await response.json();
-
-      if (response.status === 200 && data.code === "code_sent_to_number") {
-        setToken(data.token);
-        setRegisterStatus(RegisterStatusValue.status2);
-        setInterval(() => {
-          setTime((prevTime) => prevTime - 1);
-        }, 1000);
-        console.log("کد دریافت شده از سرور:", data);
-      } else {
-        Error("در ارسال شماره تلفن مشکلی پیش آمد.");
-        console.log(data);
-      }
-    } catch (error) {
-      Error("در ارتباط با سرور مشکلی پیش آمد.");
-      console.error("خطا:", error);
+      return () => clearInterval(intervalId);
     }
-    setLoading(false);
-  };
+  }, [isSuccess, data]);
 
   const BtnSendCode = () => {
     if (otp === "" || otp.length < 5) {
       Error("لطفا کد را کامل وارد نمایید.");
     } else {
-      clickSendCode();
+      mutate({ number: phoneNumber, code: otp, token: token });
     }
   };
 
-  const clickSendCode = async () => {
-    setLoading(true);
-    try {
-      console.log("agin");
-
-      const response = await fetch(ApiService.verifynumber, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ number: phoneNumber, code: otp, token: token }),
-      });
-
-      const data = await response.json();
-
+  useEffect(() => {
+    if (isSuccess && data) {
       if (data.status === 303) {
         setRegisterStatus(RegisterStatusValue.status3);
       } else if (data.code === "wrong_code") {
-        Error("کد وارد شده اشتباه میباشد.");
+        Error("کد وارد شده اشتباه می‌باشد.");
       } else if (data.code === "to_manny_tries") {
         Error("لطفا بعد تلاش کنید.");
       } else if (data.code === "login_done") {
@@ -152,7 +126,6 @@ export default function Register() {
           sameSite: "strict",
         });
         console.log(data);
-
         setRegisterStatus(RegisterStatusValue.status1);
         setOpen(false);
         Success("ثبت نام با موفقیت انجام شد.");
@@ -160,12 +133,8 @@ export default function Register() {
       } else {
         console.log(data);
       }
-    } catch (error) {
-      Error("در ارتباط با سرور مشکلی پیش آمد.");
-      console.log(error);
     }
-    setLoading(false);
-  };
+  }, [isSuccess, data]);
 
   const EditMN = () => {
     setRegisterStatus(RegisterStatusValue.status1);
@@ -176,7 +145,7 @@ export default function Register() {
     <Modal size={sizeModal} isOpen={isOpen} onClose={() => setOpen(false)}>
       <ModalContent>
         <>
-          <ModalBody>
+          <ModalBody className="overflow-y-auto">
             <div
               className="mt-5 w-full flex flex-col items-center pb-3"
               style={{ direction: "ltr" }}
@@ -216,12 +185,13 @@ export default function Register() {
 
               {registerStatus === RegisterStatusValue.status1 && (
                 <PhoneNumber
+                phoneNumber={phoneNumber}
                   setPhoneNumber={setPhoneNumber}
                   inputErr={inputErr}
                   isSelected={isSelected}
                   setIsSelected={setIsSelected}
                   btnSendPhoneNumber={btnSendPhoneNumber}
-                  loading={loading}
+                  isPendingVerifyNumber={isPending}
                 />
               )}
 
@@ -235,16 +205,16 @@ export default function Register() {
                     focusedInput={focusedInput}
                     time={time}
                     setTime={setTime}
-                    sendPhoneNumber={sendPhoneNumber}
+                    btnSendPhoneNumber={btnSendPhoneNumber}
                   />
                   <Button
                     className="mt-[64px] w-full rounded-lg p-2 bg-[#CB1B1B]
                    text-white md:mt-[50px] md:text-lg"
                     onPress={BtnSendCode}
-                    isLoading={loading}
+                    isLoading={isPending}
                     spinner={<Spinner color="white" size="sm" />}
                   >
-                    {loading ? "" : "ثبت کد"}
+                    {isPending ? "" : "ثبت کد"}
                   </Button>
                 </div>
               )}

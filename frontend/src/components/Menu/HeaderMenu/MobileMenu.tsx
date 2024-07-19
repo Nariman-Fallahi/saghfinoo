@@ -3,32 +3,29 @@ import Image from "next/image";
 import { useState } from "react";
 import { Button } from "@nextui-org/button";
 import { navigationMenuType } from "@/types/Type";
-import { useModalStore, useUserInfo } from "@/store/Register";
-import { useEffect } from "react";
+import { useModalStore } from "@/store/Register";
 import Link from "next/link";
+import { userInfoDataType } from "@/types/Type";
+import { FetchStatus } from "@tanstack/react-query";
 
 type mobileMenuType = {
   NavigationMenu: navigationMenuType;
+  userInfoData: userInfoDataType;
+  dataStatus: "error" | "success" | "pending";
+  fetchStatus: FetchStatus;
 };
 
-export default function MobileMenu({ NavigationMenu }: mobileMenuType) {
+export default function MobileMenu({
+  NavigationMenu,
+  userInfoData,
+  dataStatus,
+  fetchStatus,
+}: mobileMenuType) {
   const [openMenu, setOpenMenu] = useState<boolean>();
   const { setOpen } = useModalStore();
-  const { userInfo } = useUserInfo();
-  const [isLogin, setIsLogin] = useState<boolean>();
-
-  useEffect(() => {
-    console.log(userInfo);
-
-    if (userInfo !== undefined) {
-      setIsLogin(true);
-    } else {
-      setIsLogin(false);
-    }
-  }, [userInfo]);
 
   const ClickRegister = () => {
-    if (!isLogin) {
+    if (dataStatus === "pending" && fetchStatus === "idle") {
       setOpen(true);
     }
   };
@@ -86,26 +83,26 @@ export default function MobileMenu({ NavigationMenu }: mobileMenuType) {
             className="w-full bg-gray-100 px-2 py-5 mt-4 flex items-center"
           >
             <Image
-              width={isLogin ? 30 : 20}
-              height={isLogin ? 30 : 20}
+              width={dataStatus === "success" ? 30 : 20}
+              height={dataStatus === "success" ? 30 : 20}
               src="/icons/profile-circle.svg"
               alt=""
             />{" "}
-            {isLogin && (
+            {dataStatus === "success" && (
               <Image
                 width={20}
                 height={20}
-                className="mr-2"
                 src="/icons/edit.svg"
+                className="mr-2"
                 alt=""
               />
             )}
             <p className="mr-2 text-xs">
-              {isLogin
-                ? `${userInfo?.first_name} ${userInfo?.last_name}`
+              {dataStatus === "success"
+                ? `${userInfoData.data.first_name} ${userInfoData.data.last_name}`
                 : "ورود یا ثبت نام"}
             </p>
-            {isLogin && (
+            {dataStatus === "success" && (
               <Image
                 width={20}
                 height={20}
@@ -115,19 +112,6 @@ export default function MobileMenu({ NavigationMenu }: mobileMenuType) {
               />
             )}
           </div>
-          <div className="mt-5 flex items-center justify-between px-2">
-            <div className="flex items-center">
-              <Image
-                width={20}
-                height={20}
-                src="/icons/add-circle.svg"
-                alt=""
-              />
-              <p className="text-xs mr-2">ثبت آگهی</p>
-            </div>
-            <Image width={20} height={20} src="/icons/arrow-left.svg" alt="" />
-          </div>
-
           {NavigationMenu.map((item, index) => {
             return (
               <Link

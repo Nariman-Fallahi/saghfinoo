@@ -36,17 +36,18 @@ export type OtpType = {
   focusedInput: number | null;
   time: number;
   setTime: (value: number) => void;
-  sendPhoneNumber: () => void;
+  btnSendPhoneNumber: () => void;
 };
 
 // InputPhoneNumber
 export type InputPhoneNumberType = {
+  phoneNumber: string;
   setPhoneNumber: (value: string) => void;
   inputErr: boolean;
   isSelected: boolean;
   setIsSelected: (value: boolean) => void;
   btnSendPhoneNumber: () => void;
-  loading: boolean;
+  isPendingVerifyNumber: boolean;
 };
 
 // DeveloperMenuFooter
@@ -97,3 +98,44 @@ export type RealEstateOfficesType = {
 
 // BtnSizeType
 export type BtnSizeType = "sm" | "md" | "lg" | undefined;
+
+// usePostRequestType
+export type usePostRequestType = {
+  url: string;
+  key: string;
+};
+
+// Login data type
+export type LoginDataType = {
+  number: string;
+  code: number | string;
+  token: string;
+};
+
+// SignUp Data Type
+export type SignUpDataType = {
+  first_name: string;
+  last_name: string;
+  password: string;
+  token: number | string;
+  number: string;
+};
+
+// useGetRequestType
+export type useGetRequestType = {
+  url: string;
+  key: string;
+  headers: HeadersInit;
+  enabled?: boolean;
+  staleTime?: number;
+};
+
+// user Info Data Type
+export type userInfoDataType = {
+  data:{
+    first_name: string;
+    last_name: string;
+    number: number;
+    image_full_path?: string;
+  }
+}

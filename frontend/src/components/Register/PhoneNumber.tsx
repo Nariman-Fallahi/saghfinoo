@@ -4,18 +4,20 @@ import { InputPhoneNumberType } from "@/types/Type";
 import { Spinner } from "@nextui-org/spinner";
 
 export default function PhoneNumber({
+  phoneNumber,
   inputErr,
   isSelected,
   setPhoneNumber,
   setIsSelected,
   btnSendPhoneNumber,
-  loading,
+  isPendingVerifyNumber,
 }: InputPhoneNumberType) {
   return (
     <form className="w-full" style={{ direction: "rtl" }}>
       <input
         onChange={(e) => setPhoneNumber(e.target.value)}
         placeholder="09123456789"
+        value={phoneNumber}
         type="number"
         className="mt-[40px] p-2 rounded-lg w-full border-[#2F80ED] border
      outline-none text-sm md:p-3 md:mt-[24px]"
@@ -45,7 +47,7 @@ export default function PhoneNumber({
       <Button
         disabled={!isSelected}
         onPress={btnSendPhoneNumber}
-        isLoading={loading}
+        isLoading={isPendingVerifyNumber}
         spinner={<Spinner color="white" size="sm" />}
         className={
           isSelected
@@ -53,7 +55,7 @@ export default function PhoneNumber({
             : "mt-[64px] w-full rounded-lg p-2 bg-gray-300 text-white md:mt-[50px] md:text-lg"
         }
       >
-        {loading ? "" : "ورود"}
+        {isPendingVerifyNumber ? "" : "ورود"}
       </Button>
     </form>
   );

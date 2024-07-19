@@ -10,14 +10,14 @@ export default function Otp({
   focusedInput,
   time,
   setTime,
-  sendPhoneNumber,
+  btnSendPhoneNumber,
 }: OtpType) {
   const minutes = Math.floor(time / 60);
   const seconds = time % 60;
 
   const ResubmitCode = () => {
     setTime(90);
-    sendPhoneNumber();
+    btnSendPhoneNumber();
   };
 
   return (

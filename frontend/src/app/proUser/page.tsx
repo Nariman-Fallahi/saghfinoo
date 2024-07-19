@@ -1,7 +1,21 @@
-import React from 'react'
+import Features from "@/components/Home/NewUser/Features";
+import LatestNews from "@/components/Home/NewUser/LatestNews";
+import RealEstate from "@/components/Home/NewUser/RealEstate";
+import TopRealEstate from "@/components/Home/NewUser/TopRealEstate";
+import SearchBox from "@/components/Home/SearchBox";
+import FooterMenu from "@/components/Menu/FooterMenu/FooterMenu";
+import Menu from "@/components/Menu/HeaderMenu/Menu";
 
-export default function page() {
+export default function Home() {
   return (
-    <div>Home</div>
-  )
+    <>
+      <Menu />
+      <SearchBox />
+      <TopRealEstate />
+      <Features />
+      <LatestNews />
+      <RealEstate />
+      <FooterMenu />
+    </>
+  );
 }

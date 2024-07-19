@@ -2,27 +2,28 @@
 import Image from "next/image";
 import { Button } from "@nextui-org/button";
 import { navigationMenuType } from "@/types/Type";
-import { useModalStore, useUserInfo } from "@/store/Register";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useModalStore } from "@/store/Register";
 import Link from "next/link";
+import { userInfoDataType } from "@/types/Type";
+import { Spinner } from "@nextui-org/spinner";
+import { FetchStatus } from "@tanstack/react-query";
+import { getCookie } from "cookies-next";
 
 type desktopMenuType = {
   NavigationMenu: navigationMenuType;
+  userInfoData: userInfoDataType;
+  dataStatus: "error" | "success" | "pending";
+  fetchStatus: FetchStatus;
 };
 
-export default function DesktopMenu({ NavigationMenu }: desktopMenuType) {
+export default function DesktopMenu({
+  NavigationMenu,
+  userInfoData,
+  dataStatus,
+  fetchStatus,
+}: desktopMenuType) {
   const { setOpen } = useModalStore();
-  const { userInfo } = useUserInfo();
-  const [isLogin, setIsLogin] = useState<boolean>();
-
-  useEffect(() => {
-    if (userInfo !== undefined) {
-      setIsLogin(true);
-    } else {
-      setIsLogin(false);
-    }
-  }, [userInfo]);
+  const access = getCookie("access");
 
   return (
     <div className="w-full justify-center hidden md:flex">
@@ -51,7 +52,13 @@ export default function DesktopMenu({ NavigationMenu }: desktopMenuType) {
           })}
         </ul>
         <ul className="flex items-center">
-          {!isLogin && (
+          {dataStatus === "pending" && fetchStatus !== "idle" && (
+            <div className="ml-10 lg:ml-24">
+              <Spinner size="sm" color="danger" />
+            </div>
+          )}
+
+          {dataStatus === 'pending' && fetchStatus === 'idle' && (
             <Button
               onPress={() => setOpen(true)}
               variant="light"
@@ -61,7 +68,7 @@ export default function DesktopMenu({ NavigationMenu }: desktopMenuType) {
             </Button>
           )}
 
-          {isLogin && (
+          {dataStatus === "success" && (
             <Button
               variant="light"
               className="text-sm rounded-[0.35rem] ml-3 lg:ml-8"
@@ -72,7 +79,7 @@ export default function DesktopMenu({ NavigationMenu }: desktopMenuType) {
                 src="/icons/profile-circle.svg"
                 alt=""
               />
-              <p className="ml-2 cursor-pointer">{`${userInfo?.first_name} ${userInfo?.last_name}`}</p>
+              <p className="ml-2 cursor-pointer">{`${userInfoData.data.first_name} ${userInfoData.data.last_name}`}</p>
             </Button>
           )}
 

@@ -21,28 +21,3 @@ export const useRegisterStatus = create<RegisterStatus>((set) => ({
   registerStatus: RegisterStatusValue.status1,
   setRegisterStatus: (val) => set(() => ({ registerStatus: val })),
 }));
-
-// ---
-
-interface UserInfo {
-  userInfo:
-    | {
-        first_name: string;
-        last_name: string;
-        number: string;
-      }
-    | undefined;
-  setUserInfo: (
-    val:
-      | {
-          first_name: string;
-          last_name: string;
-          number: string;
-        }
-      | undefined
-  ) => void;
-}
-export const useUserInfo = create<UserInfo>((set) => ({
-  userInfo: undefined,
-  setUserInfo: (val) => set(() => ({ userInfo: val })),
-}));

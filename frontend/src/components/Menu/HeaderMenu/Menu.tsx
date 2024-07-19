@@ -2,73 +2,74 @@
 import MobileMenu from "./MobileMenu";
 import DesktopMenu from "./DesktopMenu";
 import { navigationMenuType } from "@/types/Type";
-import { useUserInfo } from "@/store/Register";
 import { getCookie } from "cookies-next";
 import { useEffect } from "react";
 import Register from "@/components/Register/Register";
-import { ApiService } from "@/ApiService";
+import { Api } from "@/ApiService";
+import { useGetRequest } from "@/ApiService";
+import { useState } from "react";
 
 export default function Menu() {
   const access = getCookie("access");
-  const { setUserInfo, userInfo } = useUserInfo();
+  const [enabled, setEnabled] = useState<boolean>(false);
+  const { data, status, fetchStatus, isFetching } = useGetRequest({
+    url: Api.GetUserInfo,
+    key: "getUserInfo",
+    headers: {
+      Authorization: `Bearer ${access}`,
+    },
+    staleTime: 5 * 1000 * 60,
+    enabled: enabled,
+  });
 
   const navigationMenu: navigationMenuType = [
     {
       title: "اجاره",
-      icon: "/icons/arrow-left.svg",
-      link: ""
+      icon: "/icons/house.svg",
+      link: "",
     },
     {
       title: "خرید",
-      icon: "/icons/arrow-left.svg",
-      link: ""
+      icon: "/icons/key.svg",
+      link: "",
     },
     {
       title: "املاک و مستغلات",
-      icon: "/icons/arrow-left.svg",
-      link: "/realEstates"
+      icon: "/icons/house-2.svg",
+      link: "/realEstates",
     },
     {
       title: "مشاورین املاک",
-      icon: "/icons/arrow-left.svg",
-      link: ""
+      icon: "/icons/people.svg",
+      link: "",
     },
     {
       title: "اخبار روز",
-      icon: "/icons/arrow-left.svg",
-      link: ""
+      icon: "/icons/receipt-2.svg",
+      link: "",
     },
   ];
 
   useEffect(() => {
-    const getUserInfo = async () => {
-      try {
-        const response = await fetch(
-          ApiService.GetUserInfo,
-          {
-            headers: {
-              Authorization: `Bearer ${access}`,
-            },
-          }
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setUserInfo(data);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
     if (access !== undefined) {
-      getUserInfo();
+      setEnabled(true);
     }
-  }, []);
+  }, [access]);
 
   return (
     <>
-      <MobileMenu NavigationMenu={navigationMenu} />
-      <DesktopMenu NavigationMenu={navigationMenu} />
+      <MobileMenu
+        NavigationMenu={navigationMenu}
+        userInfoData={data}
+        dataStatus={status}
+        fetchStatus={fetchStatus}
+      />
+      <DesktopMenu
+        NavigationMenu={navigationMenu}
+        userInfoData={data}
+        dataStatus={status}
+        fetchStatus={fetchStatus}
+      />
       <Register />
     </>
   );

@@ -3,6 +3,7 @@ import "./globals.css";
 import localFont from "next/font/local";
 import Providers from "@/components/ProgressBarProvider";
 import { ToastContainer } from "react-toastify";
+import ReactQueryProvider from "@/components/ReactQueryProvider";
 
 const Shabnam = localFont({ src: "../../public/fonts/Shabnam.ttf" });
 
@@ -19,7 +20,9 @@ export default function RootLayout({
   return (
     <html dir="rtl" lang="fa">
       <body className={Shabnam.className}>
-        <Providers>{children}</Providers>
+        <ReactQueryProvider>
+          <Providers>{children}</Providers>
+        </ReactQueryProvider>
         <ToastContainer rtl />
       </body>
     </html>
