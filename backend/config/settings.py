@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'real_estate_offices',
     'real_estates',
     'users',
+    'tools',
 ]
 
 MIDDLEWARE = [
@@ -116,6 +117,12 @@ DATABASES = {
         'PORT':os.getenv('DB_PORT'),
     }
 }
+
+if TESTING:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': ':memory:'
+    }
 
 CACHES = {
     'default': {

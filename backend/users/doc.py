@@ -1,5 +1,5 @@
 from drf_yasg import openapi
-from common.codes import users_codes
+from common import codes
 
 verify_number_schema_responses = {
     '200': openapi.Response(
@@ -7,7 +7,7 @@ verify_number_schema_responses = {
         examples={
             'application/json':{
                 "msg": "code sent to number",
-                "code": users_codes.CODE_SENT_TO_NUMBER,
+                "code": codes.CODE_SENT_TO_NUMBER,
                 "token":"<token>",
                 "status":200 
             }

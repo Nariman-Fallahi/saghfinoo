@@ -2,7 +2,7 @@ from typing import Any, Dict
 from .models import CustomUser
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-# from common.utils import input_check
+from common.utils import validations
 
 class VerifyNumberSerializer(serializers.Serializer):
     code = serializers.IntegerField()
@@ -11,15 +11,14 @@ class VerifyNumberSerializer(serializers.Serializer):
 
     def validate(self, attrs):
 
-        if len(attrs.get('number', '')) != 11:
-            raise serializers.ValidationError(f"invalid number length: current is {len(attrs.get('number', ''))}")
-
-        if attrs.get('number', '')[:2] != "09":
-            raise serializers.ValidationError("invalid number")
-
+        validations.validate_se('number', attrs['number'], validations.validate_number)
         
 
+        if "'" in attrs.get('token'):
+            raise serializers.ValidationError({'token': "invalid token c"})
+
         return super().validate(attrs)
+
 
 class SignupSerializer(serializers.ModelSerializer):
     token = serializers.CharField(max_length=512)
@@ -29,8 +28,13 @@ class SignupSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
 
-        # if input_check.check_name(attrs['first_name']):
-            # raise serializers.ValidationError("invalid first_name")
+        validations.validate_se('number', attrs['number'], validations.validate_number)
+        validations.validate_se('first_name', attrs['first_name'], validations.validate_name)
+        validations.validate_se('last_name', attrs['last_name'], validations.validate_name)
+
+        if "'" in attrs.get('token'):
+            raise serializers.ValidationError({'token': "invalid token c"})
+
 
         return super().validate(attrs)
 
@@ -50,8 +54,21 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         return token
 
+    def validate(self, attrs):
+
+        validations.validate_se('number', attrs['number'], validations.validate_number)
+        
+
+        if "'" in attrs.get('token'):
+            raise serializers.ValidationError({'token': "invalid token c"})
+
+        return super().validate(attrs)
+
+
 class CustomUserResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
         fields = ['first_name', 'last_name', 'number', 'image_full_path', 'created_at']
+
+

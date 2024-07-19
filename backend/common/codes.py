@@ -1,4 +1,5 @@
 
+# Users
 
 NUMBER_DELAY = 'number_delay'
 CODE_SENT_TO_NUMBER = 'code_sent_to_number'
@@ -11,3 +12,12 @@ VERIFY_NUMBER_FIRST = 'verify_number_first'
 USER_EXIST = 'user_exist'
 INCURRECT_NUMBER_OR_PASSWORD = 'incurrect_number_or_password'
 COMPLETE_SIGNUP = 'complete_signup'
+
+
+# real_estate_offices
+
+USER_IS_ALREADY_REO_OWNER = 'user_is_already_reo_owner' # user is already owner of a real estate office
+
+# realtors
+
+REALTOR_NOT_CONFIRMED = 'realtor_not_confirmed'
