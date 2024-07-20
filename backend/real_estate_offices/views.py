@@ -54,7 +54,7 @@ class GetAllRealEstateOfficeAPIView(APIView):
         try:
             page, limit = get_page_and_limit(req)
         except Exception as e:
-            return Response({'errors':e.dict, 'code':codes.INVLAID_QUERY_PARAM, 'status':400})
+            return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
         
         reo = RealEstateOffice.objects.filter(is_confirmed=True).values(*RealEstateOfficePreviewResponseSerializer.Meta.fields)[page*limit:page*limit+limit]
         
@@ -86,15 +86,46 @@ class UploadRealEstateOfficeImageAPIView(APIView):
         try:
             reo = RealEstateOffice.objects.get(owner=req.user)
         except RealEstateOffice.DoesNotExist:
-            return Response({'errors':{'user':'user not owner of any real estate office'}, 'code':codes.USER_IS_NOT_OWNER, 'status':404})
+            return Response({'errors':{'user':'user not owner of any real estate office'}, 'code':codes.USER_IS_NOT_REO_OWNER, 'status':404})
 
         file_ext = image.name.split('.')[-1]
         file_name = f'{uuid.uuid4()}.{file_ext}'
 
         if reo.image:
-            default_storage.delete(req.user.image)
+            default_storage.delete(reo.image)
         reo.image = default_storage.save(f'real_estate_offices/{file_name}', image, max_length=1*1024*1024)
-        reo.image_full_path = f'{settings.S3_ENDPOINT_URL_WITH_BUCKET}/{req.user.image}'
+        reo.image_full_path = f'{settings.S3_ENDPOINT_URL_WITH_BUCKET}/{reo.image}'
+        reo.save()
+
+        return Response({"msg":"done", 'status':200})
+
+
+
+
+class UploadRealEstateOfficeBGImageAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsOwner]
+    authentication_classes = [JWTAuthentication]
+    
+    def post(self, req):
+        image = req.FILES.get('image', '')
+        if image == '':
+            return Response({'errors':{'image':'image not sent'}})
+
+        if Image.open(image).format not in ('PNG', 'JPEG'):
+            return Response({"errors":{"image":"invalid image format (accepted formats: PNG, JPEG)"}})
+        
+        try:
+            reo = RealEstateOffice.objects.get(owner=req.user)
+        except RealEstateOffice.DoesNotExist:
+            return Response({'errors':{'user':'user not owner of any real estate office'}, 'code':codes.USER_IS_NOT_REO_OWNER, 'status':404})
+
+        file_ext = image.name.split('.')[-1]
+        file_name = f'{uuid.uuid4()}.{file_ext}'
+
+        if reo.bg_image:
+            default_storage.delete(reo.bg_image)
+        reo.bg_image = default_storage.save(f'real_estate_offices/{file_name}', image, max_length=1*1024*1024)
+        reo.bg_image_full_path = f'{settings.S3_ENDPOINT_URL_WITH_BUCKET}/{reo.bg_image}'
         reo.save()
 
         return Response({"msg":"done", 'status':200})

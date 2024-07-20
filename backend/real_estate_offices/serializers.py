@@ -60,7 +60,8 @@ class RealEstateOfficeResponseSerializer(serializers.ModelSerializer):
             'linkedin',
             'telegram',
             'instagram',
-            'blue_tick',    
+            'blue_tick',
+            'bg_image_full_path',    
         ]
 
 class RealEstateOfficePreviewResponseSerializer(serializers.ModelSerializer):
