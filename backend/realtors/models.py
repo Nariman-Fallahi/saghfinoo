@@ -12,6 +12,9 @@ class Realtor(models.Model):
     score = models.FloatField(default=5)
     number_of_active_ads = models.PositiveIntegerField(default=0)
 
+    bg_image = models.CharField(max_length=1000, default='') # background image
+    bg_image_full_path = models.CharField(max_length=1000, default='')
+
     description = models.CharField(max_length=200)
     number = models.CharField(max_length=11)
     landline_number = models.CharField(max_length=50)
