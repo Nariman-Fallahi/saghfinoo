@@ -13,7 +13,7 @@ from common.utils.request import get_page_and_limit
 from common import codes
 
 from .serializers import RealEstateSerializer, RealEstatePreviewResponseSerializer, RealEstateResponseSerializer
-from .models import RealEstate, RealEstateImages, RealEstateChoices
+from .models import RealEstate, RealEstateImage, RealEstateChoice
 
 
 
@@ -33,7 +33,7 @@ class CreateRealEstateAPIView(APIView):
     
 
     def get(self, req):
-        recs = RealEstateChoices.objects.all().values('id','key', 'value')
+        recs = RealEstateChoice.objects.all().values('id','key', 'value')
         return Response({'data':recs, 'status':200})
 
 
@@ -96,10 +96,10 @@ class UploadRealEstateImageAPIView(APIView):
         file_ext = image.name.split('.')[-1]
         file_name = f'{uuid.uuid4()}.{file_ext}'
 
-        if RealEstateImages.objects.filter(real_estate=re).count() >= 10:
+        if RealEstateImage.objects.filter(real_estate=re).count() >= 10:
             return Response({'error':{'non-field-error':'maximum image upload limit for real estate'}, 'status':400})
 
-        rei = RealEstateImages()
+        rei = RealEstateImage()
         rei.real_estate = re
         rei.image = default_storage.save(f'real_estate_offices/{file_name}', image, max_length=1*1024*1024)
         rei.image_full_path = f'{settings.S3_ENDPOINT_URL_WITH_BUCKET}/{rei.image}'

@@ -8,10 +8,10 @@ class RealEstatesConfig(AppConfig):
     def ready(self) -> None:
 
         if not settings.DEBUG:
-            from .models import RealEstateChoices
+            from .models import RealEstateChoice
             print('adding real estate choices')
             try:
-                RealEstateChoices.add_default_rows()
+                RealEstateChoice.add_default_rows()
             except Exception as e:
                 print(e)
             print('done')

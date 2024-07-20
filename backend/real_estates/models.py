@@ -4,7 +4,7 @@ from django.utils import timezone
 from realtors.models import Realtor
 
 
-class RealEstateChoices(models.Model):
+class RealEstateChoice(models.Model):
     key = models.CharField(max_length=50)
     value = models.CharField(max_length=50)
 
@@ -30,9 +30,9 @@ class RealEstateChoices(models.Model):
             ('floor_meterial', 'کاشی'),
         )
 
-        if RealEstateChoices.objects.count() == 0:
+        if RealEstateChoice.objects.count() == 0:
             for key, value in default:
-                r = RealEstateChoices()
+                r = RealEstateChoice()
                 r.key = key
                 r.value = value
                 r.save()
@@ -53,8 +53,8 @@ class RealEstate(models.Model):
 
     meterage = models.IntegerField()
     
-    type = models.ForeignKey(RealEstateChoices, on_delete=models.PROTECT, related_name='type') # apartment or villa or ...
-    deal_type = models.ForeignKey(RealEstateChoices, on_delete=models.PROTECT, related_name='deal_type') # buy or rent+mortgage or full mortgage or rent
+    type = models.ForeignKey(RealEstateChoice, on_delete=models.PROTECT, related_name='type') # apartment or villa or ...
+    deal_type = models.ForeignKey(RealEstateChoice, on_delete=models.PROTECT, related_name='deal_type') # buy or rent+mortgage or full mortgage or rent
 
     mortgage_price = models.BigIntegerField()
     rent_price = models.BigIntegerField()
@@ -65,14 +65,14 @@ class RealEstate(models.Model):
     number_of_parkings = models.IntegerField()
     number_of_warehouses = models.IntegerField()
     number_of_wcs = models.IntegerField()
-    wc_type = models.ForeignKey(RealEstateChoices, on_delete=models.PROTECT, related_name='wc_type')
+    wc_type = models.ForeignKey(RealEstateChoice, on_delete=models.PROTECT, related_name='wc_type')
     number_of_elevators = models.IntegerField()
     floor_number = models.IntegerField()
     total_number_of_floors = models.IntegerField()
 
-    heating_system = models.ForeignKey(RealEstateChoices, on_delete=models.PROTECT, related_name='heating_system')
-    cooling_system = models.ForeignKey(RealEstateChoices, on_delete=models.PROTECT, related_name='cooling_system')
-    floor_meterial = models.ForeignKey(RealEstateChoices, on_delete=models.PROTECT, related_name='floor_meterial')
+    heating_system = models.ForeignKey(RealEstateChoice, on_delete=models.PROTECT, related_name='heating_system')
+    cooling_system = models.ForeignKey(RealEstateChoice, on_delete=models.PROTECT, related_name='cooling_system')
+    floor_meterial = models.ForeignKey(RealEstateChoice, on_delete=models.PROTECT, related_name='floor_meterial')
 
     description = models.CharField(max_length=1000)
 
@@ -83,7 +83,7 @@ class RealEstate(models.Model):
 
 
 
-class RealEstateImages(models.Model):
+class RealEstateImage(models.Model):
     real_estate = models.ForeignKey(RealEstate, on_delete=models.PROTECT)
 
     image = models.CharField(max_length=1000)
