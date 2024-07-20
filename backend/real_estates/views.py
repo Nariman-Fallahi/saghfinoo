@@ -53,59 +53,6 @@ class EditRealEstateAPIView(APIView):
 class GetAllRealEstatesAPIView(APIView):
 
     def get(self, req):
-        i=0
-        from random import choice
-        from realtors.models import Realtor
-        for realtor in Realtor.objects.all():
-            for _ in range(5):
-                r = RealEstate()
-                r.owner = realtor
-                r.city = choice(['عجب شیر', 'مراغه', 'ملکان', 'هریس', 'فیرورق'])
-                r.zone = choice([1,2,3,4])
-                r.main_street = choice(['پیروزی', 'بلوار ارتش', 'سعادت آباد', 'پیروزی'])
-                r.sub_street = choice(['خیابان الف', 'خیابان البرز', 'خیابان سینا', 'سه راه یاسر'])
-                r.deal_type = RealEstateChoices.objects.get(id=choice([7,8,9,10]))
-                r.type = RealEstateChoices.objects.get(id=choice([5,6]))
-                r.wc_type = RealEstateChoices.objects.get(id=choice([12,11]))
-                r.cooling_system = RealEstateChoices.objects.get(id=choice([13,14]))
-                r.heating_system = RealEstateChoices.objects.get(id=choice([15,16,17]))
-                r.floor_meterial = RealEstateChoices.objects.get(id=choice([19, 20 ,21]))
-                r.mortgage_price = choice([150_000_000, 200_000_000,100_000_000,300_000_000])
-                r.rent_price = choice([10_000_000, 15_000_000,20_000_000,30_000_000])
-                r.buying_price = choice([5_000_000_000, 10_000_000_000])
-                if r.deal_type.id == 7:
-                    r.rent_price = 0
-                    r.mortgage_price = 0
-                elif r.deal_type.id == 8:
-                    r.buying_price = 0
-                elif r.deal_type.id == 9:
-                    r.buying_price = 0
-                    r.rent_price = 0
-                elif r.deal_type == 10:
-                    r.buying_price = 0
-                    r.mortgage_price = 0
-
-                r.convertible = choice([True, False])
-                r.meterage = choice([150, 200, 100, 300])
-                r.number_of_rooms = choice([1,2,3,4,5])
-                r.number_of_parkings = choice([1,2,3])
-                r.number_of_wcs = choice([1,2,3,4])
-                r.number_of_warehouses = choice([1,2])
-                r.number_of_elevators = choice([1,2])
-                r.floor_number = choice([0,1,2,3,4,5,6,7])
-                r.total_number_of_floors = r.floor_number + choice([3,4,5,6])
-                r.description = "سن بنا: نوساز\n\nموقعیت جغرافیایی بنا: شمالی\n\nنوع سند: شخصی\n\nامکانات امنیتی: آیفون تصویری، درب ضدسرقت\n\nسایر امکانات: کمد دیوری، پنجره‌ها UPVC\n\nزمان بازید ۷ صبح تا ۱۱ شب "
-                if r.type.id ==6:
-                    r.floor_number = 0
-                    r.total_number_of_floors = choice([1,1,1,2])
-                print('saving', r.city)
-                r.save()
-
-                
-
-            if i>30:
-                break
-
         try:
             page, limit = get_page_and_limit(req)
         except Exception as e:
@@ -120,7 +67,7 @@ class GetRealEstateAPIView(APIView):
     def get(self, req, real_estate_id):
         try:
             reo = RealEstate.objects.values(*RealEstateResponseSerializer.Meta.fields).get(is_confirmed=True, id=real_estate_id)
-            return Response({"data":reo.data, 'status':200})        
+            return Response({"data":reo, 'status':200})        
         except RealEstate.DoesNotExist:
             return Response({'status':404})
         
