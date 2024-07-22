@@ -9,6 +9,8 @@ export enum Api {
   Refresh = "http://127.0.0.1:8000/api/v1/users/token/refresh",
   GetUserInfo = "http://127.0.0.1:8000/api/v1/users/get-user-info",
   GetAllRealEstateOffices = "http://127.0.0.1:8000/api/v1/real-estate-offices/get-all",
+  GetProvinces = "http://127.0.0.1:8000/api/v1/tools/get-provinces",
+  GetProvinceCities = "http://127.0.0.1:8000/api/v1/tools/get-province-cities/"
 }
 
 // PostRequest
@@ -42,21 +44,21 @@ export const usePostRequest = <dataType>({ url, key }: usePostRequestType) => {
 
 // GetRequest
 
-export const useGetRequest = ({
-  url,
-  key,
-  headers,
-  enabled,
-  staleTime,
+export const useGetRequest = <dataType>({ 
+  url, 
+  key, 
+  headers, 
+  enabled, 
+  staleTime 
 }: useGetRequestType) => {
-  return useQuery({
+  return useQuery<dataType>({
     queryKey: [key],
     queryFn: async () => {
       const response = await fetch(url, { headers });
       return response.json();
     },
-     staleTime: staleTime,
-     enabled: enabled,
+    staleTime: staleTime,
+    enabled: enabled,
   });
 };
 

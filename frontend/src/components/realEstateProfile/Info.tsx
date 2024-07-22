@@ -16,8 +16,8 @@ export default function Info({ onOpen, setNameActiveModal }: InfoType) {
   const [btnSize, setBtnSize] = useState<BtnSizeType>(undefined);
   const [isloading, setIsloading] = useState<boolean>(true);
 
-  if (typeof window !== "undefined") {
-    useEffect(() => {
+  useEffect(() => {
+    if (typeof window !== "undefined") {
       const handleClickOutside = (event: any) => {
         if (
           !event.target.closest(".open-modal-btn") &&
@@ -32,16 +32,18 @@ export default function Info({ onOpen, setNameActiveModal }: InfoType) {
       return () => {
         document.removeEventListener("click", handleClickOutside);
       };
-    }, []);
+    }
+  }, []);
 
-    useEffect(() => {
+  useEffect(() => {
+    if (typeof window !== "undefined") {
       if (window.innerWidth < 768) {
         setBtnSize("sm");
       } else {
         setBtnSize("md");
       }
-    }, [btnSize]);
-  }
+    }
+  }, [btnSize]);
 
   const ClickContactInfoBtn = () => {
     onOpen();
@@ -57,13 +59,11 @@ export default function Info({ onOpen, setNameActiveModal }: InfoType) {
   // const ClickSaveBtn = () => {
   //   onOpen();
   //   setNameActiveModal(nameActiveModalValue.Save);
-  //   // می‌توانید رفتار دیگر دکمه ذخیره را اضافه کنید
   // };
 
   // const ClickReportBtn = () => {
   //   onOpen();
   //   setNameActiveModal(nameActiveModalValue.Report);
-  //   // می‌توانید رفتار دیگر دکمه گزارش تخلف را اضافه کنید
   // };
 
   return (

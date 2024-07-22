@@ -5,7 +5,7 @@ import { Api } from "./ApiService";
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl;
   const res = NextResponse.next();
-  const access  = getCookie("access", { res, req });
+  const access = getCookie("access", { res, req });
   const refresh = getCookie("refresh", { res, req });
 
   if (access === undefined && refresh !== undefined) {

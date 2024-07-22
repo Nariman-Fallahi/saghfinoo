@@ -7,12 +7,8 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import S_Ads from "@/skeleton/S_Ads";
 
-type AdsType = {
-  setOpenFilterModal: (value: boolean) => void;
-};
-
-export default function Ads({ setOpenFilterModal }: AdsType) {
-  const [isloading, setIsloading] = useState<boolean>(true);
+export default function Ads() {
+  const [isloading, setIsloading] = useState<boolean>(false);
 
   return (
     <div className="mt-10 flex flex-col p-4 md:mt-14 md:p-8">
@@ -23,7 +19,7 @@ export default function Ads({ setOpenFilterModal }: AdsType) {
           <Skeleton width={100} height={20} className="md:!w-[250px]" />
         </div>
       ) : (
-        <Filter setOpenFilterModal={setOpenFilterModal} />
+        <Filter />
       )}
 
       <div className="flex flex-wrap justify-between md:mt-5">

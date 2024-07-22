@@ -125,17 +125,43 @@ export type SignUpDataType = {
 export type useGetRequestType = {
   url: string;
   key: string;
-  headers: HeadersInit;
-  enabled?: boolean;
-  staleTime?: number;
+  headers?: HeadersInit;
+  enabled: boolean;
+  staleTime: number;
 };
 
 // user Info Data Type
 export type userInfoDataType = {
-  data:{
+  data: {
     first_name: string;
     last_name: string;
     number: number;
     image_full_path?: string;
-  }
-}
+  };
+};
+
+// get Provinces Type
+
+type getProvincesType = {
+  id: number;
+  name: string;
+};
+
+export type getProvincesDataType = {
+  data: getProvincesType[];
+};
+
+// get Province Cities
+type getProvinceCitiesType = {
+  name: string;
+};
+
+export type getProvinceCitiesDataType = {
+  data: getProvinceCitiesType[];
+};
+
+// filter Values Type
+export type filterValuesType = {
+  selectedProvince?: { id: number; name: string } | undefined;
+  selectedCity?: string | undefined;
+};

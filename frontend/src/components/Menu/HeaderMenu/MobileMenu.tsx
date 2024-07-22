@@ -10,7 +10,7 @@ import { FetchStatus } from "@tanstack/react-query";
 
 type mobileMenuType = {
   NavigationMenu: navigationMenuType;
-  userInfoData: userInfoDataType;
+  userInfoData: userInfoDataType | undefined;
   dataStatus: "error" | "success" | "pending";
   fetchStatus: FetchStatus;
 };
@@ -99,7 +99,7 @@ export default function MobileMenu({
             )}
             <p className="mr-2 text-xs">
               {dataStatus === "success"
-                ? `${userInfoData.data.first_name} ${userInfoData.data.last_name}`
+                ? `${userInfoData?.data.first_name} ${userInfoData?.data.last_name}`
                 : "ورود یا ثبت نام"}
             </p>
             {dataStatus === "success" && (

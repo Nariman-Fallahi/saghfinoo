@@ -8,11 +8,12 @@ import Register from "@/components/Register/Register";
 import { Api } from "@/ApiService";
 import { useGetRequest } from "@/ApiService";
 import { useState } from "react";
+import { userInfoDataType } from "@/types/Type";
 
 export default function Menu() {
   const access = getCookie("access");
   const [enabled, setEnabled] = useState<boolean>(false);
-  const { data, status, fetchStatus, isFetching } = useGetRequest({
+  const { data, status, fetchStatus } = useGetRequest<userInfoDataType>({
     url: Api.GetUserInfo,
     key: "getUserInfo",
     headers: {

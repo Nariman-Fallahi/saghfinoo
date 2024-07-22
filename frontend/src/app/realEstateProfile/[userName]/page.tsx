@@ -11,10 +11,9 @@ import ModalFilter from "@/components/realEstates-realators/AdsFilter/ModalMobil
 import Comments from "@/components/realEstates-realators/Comments";
 import FooterMenu from "@/components/Menu/FooterMenu/FooterMenu";
 
-export default function page() {
+export default function Page() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [nameActiveModal, setNameActiveModal] = useState<string>("");
-  const[openFilterModal, setOpenFilterModal] = useState<boolean>(false);
 
   return (
     <>
@@ -26,8 +25,7 @@ export default function page() {
         nameActiveModal={nameActiveModal}
       />
       <Consultants />
-      <Ads setOpenFilterModal={setOpenFilterModal} />
-      <ModalFilter openFilterModal={openFilterModal} setOpenFilterModal={setOpenFilterModal} />
+      <Ads />
       <Comments />
       <FooterMenu />
     </>

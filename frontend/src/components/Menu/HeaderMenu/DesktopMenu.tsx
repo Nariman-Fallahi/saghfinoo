@@ -11,7 +11,7 @@ import { getCookie } from "cookies-next";
 
 type desktopMenuType = {
   NavigationMenu: navigationMenuType;
-  userInfoData: userInfoDataType;
+  userInfoData: userInfoDataType | undefined;
   dataStatus: "error" | "success" | "pending";
   fetchStatus: FetchStatus;
 };
@@ -58,7 +58,7 @@ export default function DesktopMenu({
             </div>
           )}
 
-          {dataStatus === 'pending' && fetchStatus === 'idle' && (
+          {dataStatus === "pending" && fetchStatus === "idle" && (
             <Button
               onPress={() => setOpen(true)}
               variant="light"
@@ -79,7 +79,7 @@ export default function DesktopMenu({
                 src="/icons/profile-circle.svg"
                 alt=""
               />
-              <p className="ml-2 cursor-pointer">{`${userInfoData.data.first_name} ${userInfoData.data.last_name}`}</p>
+              <p className="ml-2 cursor-pointer">{`${userInfoData?.data.first_name} ${userInfoData?.data.last_name}`}</p>
             </Button>
           )}
 

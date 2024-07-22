@@ -69,7 +69,10 @@ h6 {
 }
 
 .selectBtn::-webkit-scrollbar {
-  width: 12px;
+  width: 10px;
+  background-color: #f0f0f0;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
 }
 
 .selectBtn::-webkit-scrollbar-thumb {
