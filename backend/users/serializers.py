@@ -59,8 +59,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         validations.validate_se('number', attrs['number'], validations.validate_number)
         
 
-        if "'" in attrs.get('token'):
-            raise serializers.ValidationError({'token': "invalid token c"})
+        # if "'" in attrs.get('token'):
+        #     raise serializers.ValidationError({'token': "invalid token c"})
 
         return super().validate(attrs)
 

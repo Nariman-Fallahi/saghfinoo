@@ -21,7 +21,7 @@ class RealtorResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Realtor
-        fields = ['user__first_name', 'user__last_name', 'user__image_full_path', 'bg_imgae_full_path', 'score', 'number_of_active_ads', 'description', 'number', 'landline_number', 'real_estate_office__name', 'real_estate_office__username']
+        fields = ['user__first_name', 'user__last_name', 'user__image_full_path', 'bg_image_full_path', 'score', 'number_of_active_ads', 'description', 'number', 'landline_number', 'real_estate_office__name', 'real_estate_office__username']
 
 
 
