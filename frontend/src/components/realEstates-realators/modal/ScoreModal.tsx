@@ -56,7 +56,7 @@ export default function ScoreModal() {
 
       <h3 className="mt-3 font-bold">علی رضاسیی</h3>
 
-      <p className="mt-6 txt-xs">
+      <p className="mt-6 text-sm">
         با ثبت امتیاز مشاور در بهبود فعالیت سایت به ما کمک کنید.
       </p>
 
@@ -99,7 +99,7 @@ export default function ScoreModal() {
 
       <textarea
         className="w-full p-3 text-sm resize-none h-28 border border-[#E1E1E1] mt-3
-           outline-none rounded"
+           outline-none rounded md:text-base"
         placeholder="لطفا نظر خود را درباره این مشاور بنویسید."
         onChange={(e) => setCommentText(e.target.value)}
       ></textarea>
@@ -107,7 +107,7 @@ export default function ScoreModal() {
       <Button
         className="mt-3 bg-[#CB1B1B] text-white px-3 w-1/2"
         size={isMobile ? "sm" : "md"}
-         isDisabled={isDisabled}
+        isDisabled={isDisabled}
       >
         ثبت امتیاز
       </Button>

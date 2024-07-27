@@ -37,6 +37,7 @@ export default function RealatorProfile() {
           realEstateOfficeName: `مشاور املاک ${data?.data.real_estate_office__name}`,
           score: data?.data.score,
         }}
+        isScore={true}
       />
       <ModalREA
         isOpen={isOpen}

@@ -22,17 +22,19 @@ export default function ModalREA({
   shareData,
 }: ModalREAType) {
   const { activeModalName } = useActiveModalName();
-  const [sizeModal, setSizeModal] = useState<"sm" | "md" | "full">();
+  const [sizeModal, setSizeModal] = useState<"sm" | "md" | 'xl' | "full">();
 
   useEffect(() => {
-  if (isMobile && activeModalName !== "Score") {
-    setSizeModal("sm");
-  } else if (!isMobile && activeModalName !== "Score") {
-    setSizeModal("md");
-  } else if(isMobile && activeModalName === 'Score') {
-    setSizeModal("full");
-  }
-  }, [activeModalName])
+    if (isMobile && activeModalName !== "Score") {
+      setSizeModal("sm");
+    } else if (!isMobile && activeModalName !== "Score") {
+      setSizeModal("md");
+    } else if (isMobile && activeModalName === "Score") {
+      setSizeModal("full");
+    }else if (!isMobile && activeModalName === 'Score') {
+      setSizeModal('xl')
+    }
+  }, [activeModalName]);
 
   return (
     <Modal
@@ -40,7 +42,7 @@ export default function ModalREA({
       onOpenChange={onOpenChange}
       size={sizeModal}
       placement="center"
-      className="pb-2"
+      className="pb-2 overflow-y-auto"
     >
       <ModalContent>
         {(onClose) => (
@@ -51,9 +53,10 @@ export default function ModalREA({
               )}
 
               {activeModalName === "Share" && (
-                // <ShareModal shareData={shareData} />
-                <ScoreModal />
+                <ShareModal shareData={shareData} />
               )}
+
+              {activeModalName === "Score" && <ScoreModal />}
             </ModalBody>
           </>
         )}

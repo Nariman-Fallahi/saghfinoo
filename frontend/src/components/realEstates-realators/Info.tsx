@@ -20,6 +20,7 @@ type InfoType = {
     realEstateOfficeName?: string;
     blueTick?: boolean;
   };
+  isScore?: boolean;
 };
 
 type activeMoreBtnType = {
@@ -28,7 +29,7 @@ type activeMoreBtnType = {
   onPress: () => void;
 };
 
-export default function Info({ onOpen, isPending, data }: InfoType) {
+export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
   const [activeMore, setActiveMore] = useState<boolean>(false);
   const { setActiveModalName } = useActiveModalName();
 
@@ -83,10 +84,15 @@ export default function Info({ onOpen, isPending, data }: InfoType) {
   //   setNameActiveModal(nameActiveModalValue.Save);
   // };
 
-  const ClickReportBtn = () => {
+  // const ClickReportBtn = () => {
+  //   onOpen();
+  //   setActiveModalName("Score");
+  // };
+
+  const RegisterScoreBtn = () => {
     onOpen();
-    // setNameActiveModal(nameActiveModalValue.Report);
-  };
+      setActiveModalName("Score");
+  }
 
   return (
     <div className="w-full flex flex-col">
@@ -198,8 +204,14 @@ export default function Info({ onOpen, isPending, data }: InfoType) {
                   })}
 
                   {activeMoreBtn({
+                    title: "امتیاز دهی به مشاور",
+                    onPress: RegisterScoreBtn,
+                    icon: "/icons/like-dislike.svg",
+                  })}
+
+                  {activeMoreBtn({
                     title: "گزارش",
-                    onPress: ClickReportBtn,
+                    onPress: ClickShareBtn,
                     icon: "/icons/warning-2.svg",
                   })}
                 </div>
@@ -310,11 +322,22 @@ export default function Info({ onOpen, isPending, data }: InfoType) {
 
         <div
           className="p-5 hidden md:flex ml-7 flex-col rounded-xl shadow absolute
-         left-0 bg-white items-center"
+         left-0 bg-white items-center mt-14"
         >
-          <p className="text-[#505050]">
+
+          {isScore ? isPending ? <Skeleton count={2} width={220} /> : 
+          <div className="w-full flex flex-col items-center">
+          <p className="">چه امتیازی به {data.name} میدی؟</p>
+
+          <Button onPress={RegisterScoreBtn} radius="sm" className="bg-[#CB1B1B] text-white w-1/2 mt-2">
+            ثبت امتیاز
+          </Button>
+        </div>
+          :null}
+
+          <p className="text-[#505050] mt-3">
             {isPending ? (
-              <Skeleton width={100} className="md:!w-[150px]" />
+              <Skeleton width={100} className="md:!w-[200px] mt-3" />
             ) : (
               `میزان رضایت مندی کاربران: ${data.score} از 5`
             )}
