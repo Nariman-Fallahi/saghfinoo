@@ -8,9 +8,7 @@ export default function ScoreModal() {
   const [scoreReasonValue, setScoreReasonValue] = useState<string | undefined>(
     undefined
   );
-  const [commentText, setCommentText] = useState<
-    ChangeEvent<HTMLTextAreaElement> | undefined
-  >(undefined);
+  const [commentText, setCommentText] = useState<string | undefined>(undefined);
 
   const scoreBtn = (number: 1 | 2 | 3 | 4 | 5) => {
     return (
@@ -41,6 +39,10 @@ export default function ScoreModal() {
       </Button>
     );
   };
+
+  const isDisabled = !commentText || !scoreReasonValue;
+
+  //TODO: Add Api
 
   return (
     <div className="w-full flex flex-col items-center mt-4">
@@ -99,13 +101,13 @@ export default function ScoreModal() {
         className="w-full p-3 text-sm resize-none h-28 border border-[#E1E1E1] mt-3
            outline-none rounded"
         placeholder="لطفا نظر خود را درباره این مشاور بنویسید."
-        onChange={(value) => setCommentText(value)}
+        onChange={(e) => setCommentText(e.target.value)}
       ></textarea>
 
       <Button
         className="mt-3 bg-[#CB1B1B] text-white px-3 w-1/2"
         size={isMobile ? "sm" : "md"}
-        isDisabled={scoreReasonBtn !== undefined && commentText !== undefined}
+         isDisabled={isDisabled}
       >
         ثبت امتیاز
       </Button>
