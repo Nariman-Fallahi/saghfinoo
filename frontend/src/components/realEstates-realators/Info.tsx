@@ -1,20 +1,36 @@
 import { Button } from "@nextui-org/button";
 import Image from "next/image";
-import { nameActiveModalValue } from "@/constant/Constants";
 import { useState, useEffect } from "react";
-import { BtnSizeType } from "@/types/Type";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { isMobile } from "@/constant/Constants";
+import { useActiveModalName } from "@/store/ReaModalActive";
 
 type InfoType = {
   onOpen: () => void;
-  setNameActiveModal: (value: string) => void;
+  isPending: boolean;
+  data: {
+    titleContactInfoBtn: string;
+    name: string;
+    userImg?: string;
+    bgUserImg?: string;
+    score?: number;
+    description?: string;
+    address?: string;
+    realEstateOfficeName?: string;
+    blueTick?: boolean;
+  };
 };
 
-export default function Info({ onOpen, setNameActiveModal }: InfoType) {
+type activeMoreBtnType = {
+  title: string;
+  icon: string;
+  onPress: () => void;
+};
+
+export default function Info({ onOpen, isPending, data }: InfoType) {
   const [activeMore, setActiveMore] = useState<boolean>(false);
-  const [btnSize, setBtnSize] = useState<BtnSizeType>(undefined);
-  const [isloading, setIsloading] = useState<boolean>(true);
+  const { setActiveModalName } = useActiveModalName();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -35,24 +51,30 @@ export default function Info({ onOpen, setNameActiveModal }: InfoType) {
     }
   }, []);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      if (window.innerWidth < 768) {
-        setBtnSize("sm");
-      } else {
-        setBtnSize("md");
-      }
-    }
-  }, [btnSize]);
+  const activeMoreBtn = ({ title, icon, onPress }: activeMoreBtnType) => {
+    return (
+      <div className="w-full">
+        <Button
+          className="rounded-none border-b h-10 w-full flex"
+          variant="light"
+          size="sm"
+          onPress={onPress}
+        >
+          <Image width={17} height={17} src={icon} alt="" />
+          {title}
+        </Button>
+      </div>
+    );
+  };
 
   const ClickContactInfoBtn = () => {
     onOpen();
-    setNameActiveModal(nameActiveModalValue.ContactInfo);
+    setActiveModalName("ContactInfo");
   };
 
   const ClickShareBtn = () => {
     onOpen();
-    setNameActiveModal(nameActiveModalValue.Share);
+    setActiveModalName("Share");
     setActiveMore(false);
   };
 
@@ -61,30 +83,35 @@ export default function Info({ onOpen, setNameActiveModal }: InfoType) {
   //   setNameActiveModal(nameActiveModalValue.Save);
   // };
 
-  // const ClickReportBtn = () => {
-  //   onOpen();
-  //   setNameActiveModal(nameActiveModalValue.Report);
-  // };
+  const ClickReportBtn = () => {
+    onOpen();
+    // setNameActiveModal(nameActiveModalValue.Report);
+  };
 
   return (
     <div className="w-full flex flex-col">
       <div className="w-full h-44 mt-[60px] md:h-[280px] md:mt-0">
-        {isloading ? (
+        {isPending ? (
           <div className="-mt-1 w-full h-full">
             <Skeleton className="w-full h-full" />
           </div>
         ) : (
           <Image
-            width={100}
-            height={100}
             className="w-full h-full"
-            src="/image/Bg-SearchBox.webp"
+            width={1000}
+            height={500}
+            quality={100}
+            src={
+              data.bgUserImg !== undefined
+                ? data.bgUserImg
+                : "/icons/Banner.png"
+            }
             alt=""
           />
         )}
       </div>
 
-      {isloading ? (
+      {isPending ? (
         <div className="-mt-12 md:-mt-[100px]">
           <Skeleton
             circle
@@ -96,22 +123,46 @@ export default function Info({ onOpen, setNameActiveModal }: InfoType) {
           className="w-[96px] h-[96px] rounded-full -mt-12 relative mr-4
            bg-[#F9F9F9] flex justify-center items-center md:w-[200px] md:h-[200px]
            md:-mt-[100px] md:mr-8"
-        ></div>
+        >
+          <Image
+            src={
+              data.userImg !== undefined ? data.userImg : "/icons/noneImage.svg"
+            }
+            alt=""
+            width={60}
+            height={60}
+            quality={100}
+            sizes="(min-width: 768px) 130px, 130px"
+            className="md:w-[130px] md:h-[130px]"
+          />
+        </div>
       )}
 
       <div className="w-full flex justify-between items-center">
         <div className="w-full p-4 flex flex-col md:p-8">
           <div className="w-full flex justify-between mt-4 items-center">
-            <h3 className="font-bold text-sm md:text-[40px]">
-              {isloading ? (
-                <Skeleton width={80} className="md:!w-[120px]" />
-              ) : (
-                "املاک توسی"
+            <div className="flex items-center">
+              <h3 className="font-bold text-sm md:text-[40px]">
+                {isPending ? (
+                  <Skeleton width={80} className="md:!w-[120px]" />
+                ) : (
+                  data.name
+                )}
+              </h3>
+
+              {data.blueTick && (
+                <Image
+                  width={15}
+                  height={15}
+                  className="mr-2 md:w-5 md:h-5"
+                  src="/icons/blueTick.svg"
+                  alt="Account confirmation check"
+                />
               )}
-            </h3>
+            </div>
 
             <div className="flex flex-col items-end md:hidden">
-              {isloading ? (
+              {isPending ? (
                 <Skeleton circle width={18} height={18} />
               ) : (
                 <Button
@@ -131,49 +182,32 @@ export default function Info({ onOpen, setNameActiveModal }: InfoType) {
 
               {activeMore && (
                 <div
-                  className="w-[100px] h-[120px] bg-white absolute mt-10 z-20 rounded
-                   border-[#2F80ED] border flex flex-col overflow-y-auto selectBtn"
-                  style={{
-                    boxShadow: "0px 0px 0px 3px rgba(47, 128, 237, 0.19)",
-                  }}
+                  className="w-[150px] h-[120px] bg-white absolute mt-10 z-20 rounded-lg
+                   border-[#E1E1E1] border flex flex-col overflow-y-auto selectBtn"
                 >
-                  <div className="w-full">
-                    <Button
-                      className="rounded-none border-b h-10 w-full"
-                      variant="light"
-                      size="sm"
-                    >
-                      ذخیره
-                    </Button>
-                  </div>
+                  {activeMoreBtn({
+                    title: "ذخیره",
+                    onPress: ClickContactInfoBtn,
+                    icon: "/icons/save.svg",
+                  })}
 
-                  <div className="w-full">
-                    <Button
-                      className="rounded-none border-b h-10 w-full"
-                      variant="light"
-                      size="sm"
-                      onClick={ClickShareBtn}
-                    >
-                      اشتراک گذاری
-                    </Button>
-                  </div>
+                  {activeMoreBtn({
+                    title: "اشتراک گذاری",
+                    onPress: ClickShareBtn,
+                    icon: "/icons/export.svg",
+                  })}
 
-                  <div className="w-full">
-                    <Button
-                      className="rounded-none border-b h-10 w-full"
-                      variant="light"
-                      size="sm"
-                      // onClick={ClickReportBtn}
-                    >
-                      گزارش تخلف
-                    </Button>
-                  </div>
+                  {activeMoreBtn({
+                    title: "گزارش",
+                    onPress: ClickReportBtn,
+                    icon: "/icons/warning-2.svg",
+                  })}
                 </div>
               )}
             </div>
 
             <div className="items-center hidden md:flex">
-              {isloading ? (
+              {isPending ? (
                 <Skeleton
                   circle
                   width={26}
@@ -214,41 +248,45 @@ export default function Info({ onOpen, setNameActiveModal }: InfoType) {
           </div>
 
           <p className="text-xs mt-2 text-[#505050] md:text-lg md:mt-5">
-            {isloading ? (
+            {isPending ? (
               <Skeleton width={100} className="md:!w-[150px]" />
             ) : (
-              "میزان رضایت مندی کاربران"
+              `میزان رضایت مندی کاربران: ${data.score} از 5`
             )}
           </p>
 
           <p className="font-bold text-xs mt-2 md:text-lg md:mt-5 lg:text-[32px]">
-            {isloading ? (
+            {isPending ? (
               <Skeleton width={140} className="md:!w-[210px]" />
             ) : (
-              "تخضض ما یافتن خانه دلخواه شما است"
+              data.description
             )}
           </p>
 
           <div className="flex items-center mt-3 md:mt-6">
-            {isloading ? (
+            {isPending ? (
               <Skeleton width={100} className="md:!w-[150px]" />
-            ) : (
+            ) : data.address || data.realEstateOfficeName ? (
               <>
                 <Image
                   width={16}
                   height={16}
-                  className="md:w-6 md:h-6"
-                  src="/icons/location.svg"
-                  alt=""
+                  className="md:w-6 md:h-6 lg:w-7 lg:h-7"
+                  src={
+                    data.address
+                      ? "/icons/location.svg"
+                      : "/icons/user-square.svg"
+                  }
+                  alt={data.address ? "location icon" : "User icon"}
                 />
                 <span className="text-xs font-bold text-[#505050] mr-1 md:text-2xl">
-                  تهران نیاوران
+                  {data.address ? data.address : data.realEstateOfficeName}
                 </span>
               </>
-            )}
+            ) : null}
           </div>
 
-          {isloading ? (
+          {isPending ? (
             <div className="mt-4 md:mt-7">
               <Skeleton
                 width={110}
@@ -262,10 +300,10 @@ export default function Info({ onOpen, setNameActiveModal }: InfoType) {
               variant="bordered"
               color="danger"
               radius="sm"
-              size={btnSize}
+              size={isMobile ? "sm" : "md"}
               onClick={ClickContactInfoBtn}
             >
-              تماس با ما
+              {data.titleContactInfoBtn}
             </Button>
           )}
         </div>
@@ -275,13 +313,13 @@ export default function Info({ onOpen, setNameActiveModal }: InfoType) {
          left-0 bg-white items-center"
         >
           <p className="text-[#505050]">
-            {isloading ? (
+            {isPending ? (
               <Skeleton width={100} className="md:!w-[150px]" />
             ) : (
-              "میزان رضایت مندی کاربران"
+              `میزان رضایت مندی کاربران: ${data.score} از 5`
             )}
           </p>
-          {isloading ? (
+          {isPending ? (
             <Skeleton width={70} className="md:!w-[120px]" />
           ) : (
             <>
@@ -292,7 +330,7 @@ export default function Info({ onOpen, setNameActiveModal }: InfoType) {
                   src="/icons/warning-2.svg"
                   alt=""
                 />
-                <span>گزارش تخلف</span>
+                <span className="cursor-pointer">گزارش تخلف</span>
               </Button>
             </>
           )}

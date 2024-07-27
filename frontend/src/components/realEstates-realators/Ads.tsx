@@ -1,4 +1,4 @@
-import Title from "@/constant/Constants";
+import {Title} from "@/constant/Constants";
 import Image from "next/image";
 import { Button } from "@nextui-org/button";
 import { useState } from "react";

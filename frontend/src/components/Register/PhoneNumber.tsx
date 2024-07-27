@@ -45,15 +45,11 @@ export default function PhoneNumber({
       </div>
       {/* END CheckBox */}
       <Button
-        disabled={!isSelected}
+        isDisabled={!isSelected}
         onPress={btnSendPhoneNumber}
         isLoading={isPendingVerifyNumber}
         spinner={<Spinner color="white" size="sm" />}
-        className={
-          isSelected
-            ? "mt-[64px] w-full rounded-lg p-2 bg-[#CB1B1B] text-white md:mt-[50px] md:text-lg"
-            : "mt-[64px] w-full rounded-lg p-2 bg-gray-300 text-white md:mt-[50px] md:text-lg"
-        }
+        className="mt-[64px] w-full rounded-lg p-2 bg-[#CB1B1B] text-white md:mt-[50px] md:text-lg"
       >
         {isPendingVerifyNumber ? "" : "ورود"}
       </Button>

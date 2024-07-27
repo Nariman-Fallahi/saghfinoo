@@ -15,7 +15,7 @@ export default function Menu() {
   const [enabled, setEnabled] = useState<boolean>(false);
   const { data, status, fetchStatus } = useGetRequest<userInfoDataType>({
     url: Api.GetUserInfo,
-    key: "getUserInfo",
+    key: ["getUserInfo"],
     headers: {
       Authorization: `Bearer ${access}`,
     },

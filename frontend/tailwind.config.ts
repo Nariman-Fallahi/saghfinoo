@@ -11,6 +11,10 @@ const config: Config = {
     "./node_modules/@nextui-org/theme/dist/components/checkbox.js",
     "./node_modules/@nextui-org/theme/dist/components/spinner.js",
   ],
-  plugins: [nextui()],
+  plugins: [nextui({
+    layout: {
+      disabledOpacity: "0.3",
+    }
+  })],
 };
 export default config;

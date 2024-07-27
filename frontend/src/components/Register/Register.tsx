@@ -7,7 +7,7 @@ import Otp from "./Otp";
 import PhoneNumber from "./PhoneNumber";
 import { RegisterStatusValue } from "@/constant/Constants";
 import SignUp from "./signUp/SignUp";
-import { Error } from "@/notification/Error";
+import { ErrorNotification } from "@/notification/Error";
 import { Spinner } from "@nextui-org/spinner";
 import { Success } from "@/notification/Success";
 import { useModalStore } from "@/store/Register";
@@ -17,10 +17,10 @@ import { useRouter } from "next/navigation";
 import { Api } from "@/ApiService";
 import { usePostRequest } from "@/ApiService";
 import { LoginDataType } from "@/types/Type";
+import { isMobile } from "@/constant/Constants";
 
 export default function Register() {
   const router = useRouter();
-  let sizeModal: any = "";
   const { isOpen, setOpen } = useModalStore();
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [isSelected, setIsSelected] = useState<boolean>(false);
@@ -30,11 +30,10 @@ export default function Register() {
   const [token, setToken] = useState<string>("");
   const { registerStatus, setRegisterStatus } = useRegisterStatus();
   const [time, setTime] = useState<number>(90);
-  const { mutate, isSuccess, data, isPending } =
-    usePostRequest<LoginDataType>({
-      url: Api.verifynumber,
-      key: "verifynumber",
-    });
+  const { mutate, isSuccess, data, isPending } = usePostRequest<LoginDataType>({
+    url: Api.verifynumber,
+    key: "verifynumber",
+  });
 
   // constants
   let ModalRegisterTitle: string = "";
@@ -54,14 +53,6 @@ export default function Register() {
 
     case RegisterStatusValue.status3:
       ModalRegisterTitle = "ثبت نام";
-  }
-
-  if (typeof window !== "undefined") {
-    if (window.innerWidth < 768) {
-      sizeModal = "full";
-    } else {
-      sizeModal = "lg";
-    }
   }
 
   const handleFocus = (index: number) => {
@@ -98,11 +89,11 @@ export default function Register() {
 
       return () => clearInterval(intervalId);
     }
-  }, [isSuccess, data]);
+  }, [isSuccess, data, setRegisterStatus]);
 
   const BtnSendCode = () => {
     if (otp === "" || otp.length < 5) {
-      Error("لطفا کد را کامل وارد نمایید.");
+      ErrorNotification("لطفا کد را کامل وارد نمایید.");
     } else {
       mutate({ number: phoneNumber, code: otp, token: token });
     }
@@ -113,9 +104,9 @@ export default function Register() {
       if (data.status === 303) {
         setRegisterStatus(RegisterStatusValue.status3);
       } else if (data.code === "wrong_code") {
-        Error("کد وارد شده اشتباه می‌باشد.");
+        ErrorNotification("کد وارد شده اشتباه می‌باشد.");
       } else if (data.code === "to_manny_tries") {
-        Error("لطفا بعد تلاش کنید.");
+        ErrorNotification("لطفا بعد تلاش کنید.");
       } else if (data.code === "login_done") {
         console.log(data);
         setCookie("access", data.access, {
@@ -134,7 +125,7 @@ export default function Register() {
         console.log(data);
       }
     }
-  }, [isSuccess, data]);
+  }, [isSuccess, data, setRegisterStatus, setOpen, router]);
 
   const EditMN = () => {
     setRegisterStatus(RegisterStatusValue.status1);
@@ -142,7 +133,11 @@ export default function Register() {
   };
 
   return (
-    <Modal size={sizeModal} isOpen={isOpen} onClose={() => setOpen(false)}>
+    <Modal
+      size={isMobile ? "full" : "lg"}
+      isOpen={isOpen}
+      onClose={() => setOpen(false)}
+    >
       <ModalContent>
         <>
           <ModalBody className="overflow-y-auto">
@@ -185,7 +180,7 @@ export default function Register() {
 
               {registerStatus === RegisterStatusValue.status1 && (
                 <PhoneNumber
-                phoneNumber={phoneNumber}
+                  phoneNumber={phoneNumber}
                   setPhoneNumber={setPhoneNumber}
                   inputErr={inputErr}
                   isSelected={isSelected}

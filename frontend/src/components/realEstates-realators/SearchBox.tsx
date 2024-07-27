@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Title from "@/constant/Constants";
+import {Title} from "@/constant/Constants";
 
 type SearchBoxType = {
   title: string;

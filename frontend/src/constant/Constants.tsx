@@ -8,13 +8,36 @@ type TitleType = {
   title: string;
 };
 
-export default function Title({ title }: TitleType) {
+export function Title({ title }: TitleType) {
   return (
     <h3 className="text-sm font-bold md:text-lg lg:text-[32px]">{title}</h3>
   );
 }
 
-export enum nameActiveModalValue {
-  ContactInfo = "ContactInfo",
-  Share = "Share",
-}
+export const isMobile: boolean =
+  typeof window !== "undefined" && window.innerWidth < 768 ? true : false;
+
+export const ScoreReasonData = {
+  reasonsForWeak: [
+    "دریافت کمیسیون اضافی",
+    "عدم پاسخگویی",
+    "برخورد نامناسب",
+    "عدم شناخت بازار",
+  ],
+  reasonsForAverage: [
+    "متعد و پیگیر بودن",
+    "عدم پاسخگویی",
+    "داشتن تخصص و مهارت کافی",
+    "عدم شناخت بازار",
+    "وقت شناس",
+    "دریافت کمیسیون اضافی",
+    "برخورد و رفتار محترمانه",
+    "برخورد نامناسب",
+  ],
+  reasonsForExcellent: [
+    "وقت شناس",
+    "دریافت کمیسیون اضافی",
+    "برخورد و رفتار محترمانه",
+    "برخورد مناسب",
+  ],
+};

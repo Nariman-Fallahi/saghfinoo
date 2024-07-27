@@ -10,9 +10,6 @@ type SelectType = {
   component: JSX.Element;
   className?: string;
   label?: string;
-  SmarginTop?: string;
-  Swidth?: string;
-  Sheight?: string;
 };
 
 // Custom hook to handle clicks outside of a specific element
@@ -42,9 +39,6 @@ export default function Select({
   component,
   className,
   label,
-  SmarginTop,
-  Swidth,
-  Sheight,
 }: SelectType) {
   const [activeSelect, setActiveSelect] = useState<boolean>(isOpen);
   const selectRef = useRef<HTMLDivElement>(null);

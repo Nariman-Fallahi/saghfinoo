@@ -1,7 +1,7 @@
 import { Button } from "@nextui-org/button";
 import { useEffect, useState } from "react";
 import { SignUpType } from "@/types/Type";
-import { Error } from "@/notification/Error";
+import { ErrorNotification } from "@/notification/Error";
 import { Success } from "@/notification/Success";
 import { useModalStore } from "@/store/Register";
 import { InputPasswordType } from "@/types/Type";
@@ -95,10 +95,10 @@ export default function SignUp({ token, phoneNumber }: SignUpType) {
         setOpen(false);
         router.push("/proUser");
       } else {
-        Error("در ارسال اطلاعات مشکلی پیش آمد.");
+        ErrorNotification("در ارسال اطلاعات مشکلی پیش آمد.");
       }
     }
-  }, [isSuccess, data]);
+  }, [isSuccess, data, setRegisterStatus, setOpen, router]);
 
   function isPersian(text: string) {
     const persian = /^[\u0600-\u06FF\s]+$/;
@@ -185,39 +185,34 @@ export default function SignUp({ token, phoneNumber }: SignUpType) {
       </p>
 
       <div className="flex flex-col w-full">
-      <SignUpInput
-        placeholder="نام خود را  وارد نمایید"
-        isPasswordInput={false}
-        onChangeInput={onChangeFristName}
-        textERR={errors.firstName}
-      />
+        <SignUpInput
+          placeholder="نام خود را  وارد نمایید"
+          isPasswordInput={false}
+          onChangeInput={onChangeFristName}
+          textERR={errors.firstName}
+        />
 
-      <SignUpInput
-        placeholder="نام خانوادگی خود را وارد نمایید"
-        isPasswordInput={false}
-        onChangeInput={onChangeLastName}
-        textERR={errors.lastName}
-      />
+        <SignUpInput
+          placeholder="نام خانوادگی خود را وارد نمایید"
+          isPasswordInput={false}
+          onChangeInput={onChangeLastName}
+          textERR={errors.lastName}
+        />
 
-      <SignUpInput
-        placeholder="رمز دلخواه خود را وارد نمایید"
-        isPasswordInput={true}
-        onChangeInput={onChangePassword}
-        textERR={errors.password}
-      />
+        <SignUpInput
+          placeholder="رمز دلخواه خود را وارد نمایید"
+          isPasswordInput={true}
+          onChangeInput={onChangePassword}
+          textERR={errors.password}
+        />
       </div>
-
 
       <div className="w-full flex justify-center">
         <Button
-          className={
-            activeBtn
-              ? "mt-5 w-4/5 rounded-lg p-2 bg-[#CB1B1B] text-white md:mt-[50px] md:text-lg"
-              : "mt-5 w-4/5 rounded-lg p-2 bg-gray-300 text-white md:mt-[50px] md:text-lg"
-          }
+          className="mt-5 w-4/5 rounded-lg p-2 bg-[#CB1B1B] text-white md:mt-[50px] md:text-lg"
           onPress={ClickBtnSignUp}
           isLoading={isPending}
-          disabled={!activeBtn}
+          isDisabled={!activeBtn}
           spinner={<Spinner color="white" size="sm" />}
         >
           {isPending ? "" : "ثبت اطلاعات"}

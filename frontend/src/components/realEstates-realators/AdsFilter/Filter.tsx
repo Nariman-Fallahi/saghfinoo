@@ -2,7 +2,6 @@ import { Button } from "@nextui-org/button";
 import Image from "next/image";
 import Select from "./Select";
 import { useState, useEffect } from "react";
-import { BtnSizeType } from "@/types/Type";
 import ModalFilter from "./ModalMobile/ModalFilter";
 import { useGetRequest } from "@/ApiService";
 import { Api } from "@/ApiService";
@@ -12,9 +11,9 @@ import { getProvinceCitiesDataType } from "@/types/Type";
 import Province from "./selection/Province";
 import City from "./selection/City";
 import { useFilterValue } from "@/store/ReaFilter";
+import { isMobile } from "@/constant/Constants";
 
 export default function Filter() {
-  const [btnSize, setBtnSize] = useState<BtnSizeType>(undefined);
   const [openFilterModal, setOpenFilterModal] = useState<boolean>(false);
   const [openSelect, setOpenSelect] = useState<null | string>(null);
   const { filterValues, setFilterValues } = useFilterValue();
@@ -22,7 +21,7 @@ export default function Filter() {
   const { data: provincesData, status: provincesStatus } =
     useGetRequest<getProvincesDataType>({
       url: Api.GetProvinces,
-      key: "getProvinces",
+      key: ["getProvinces"],
       enabled: true,
       staleTime: 10 * 60 * 1000,
     });
@@ -34,18 +33,10 @@ export default function Filter() {
     refetch,
   } = useGetRequest<getProvinceCitiesDataType>({
     url: `${Api.GetProvinceCities}${filterValues.selectedProvince?.id}`,
-    key: "getProvinceCities",
+    key: ["getProvinceCities"],
     enabled: false,
     staleTime: 0,
   });
-
-  useEffect(() => {
-    if (window.innerWidth < 768 && typeof window !== "undefined") {
-      setBtnSize("sm");
-    } else {
-      setBtnSize("md");
-    }
-  }, [btnSize]);
 
   useEffect(() => {
     refetch();
@@ -74,7 +65,7 @@ export default function Filter() {
         <>
           <Button
             variant="bordered"
-            size={btnSize}
+            size={isMobile ? "sm" : "md"}
             className="w-1/4 border mt-5 rounded md:mt-10 md:hidden"
             onPress={() => setOpenFilterModal(true)}
           >

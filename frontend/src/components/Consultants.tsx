@@ -1,10 +1,9 @@
 "use client";
-import Title from "@/constant/Constants";
+import {Title} from "@/constant/Constants";
 import Image from "next/image";
 import { useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-
 
 export default function Consultants() {
   const [isloading, setIsloading] = useState<boolean>(true);

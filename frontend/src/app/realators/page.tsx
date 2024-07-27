@@ -1,15 +1,37 @@
-import Menu from "@/components/Menu/HeaderMenu/Menu";
+"use client";
+import { Api } from "@/ApiService";
+import { useGetRequest } from "@/ApiService";
+import { allRealtorDataType } from "@/types/Type";
+import { useState } from "react";
+import ErrNoData from "@/components/ErrNoData";
+// Components
 import SearchBox from "@/components/realEstates-realators/SearchBox";
 import RealatorsCarts from "@/components/RealatorsCarts";
-import FooterMenu from "@/components/Menu/FooterMenu/FooterMenu";
 
-export default function page() {
+export default function Realators() {
+  const [pageNumber, setPageNumber] = useState<number>(1);
+
+  const { data, status } = useGetRequest<{
+    data: allRealtorDataType[];
+    status: number;
+  }>({
+    url: `${Api.GetAllRealtor}${pageNumber}`,
+    key: ["getAllRealtor", JSON.stringify(pageNumber)],
+    enabled: true,
+    staleTime: 10 * 60 * 1000,
+  });
+
+  if (status === "error" || (data?.status !== 200 && status !== "pending")) {
+    return <ErrNoData />;
+  }
   return (
     <>
-      <Menu />
       <SearchBox title="مشاورین املاک" />
-      <RealatorsCarts />
-      <FooterMenu />
+      <RealatorsCarts
+        data={data}
+        status={status}
+        setPageNumber={setPageNumber}
+      />
     </>
   );
 }
