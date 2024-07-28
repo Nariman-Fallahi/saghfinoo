@@ -3,7 +3,8 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from common.utils.permissions import IsAdmin, IsRealtor
-from .models import RealEstate
+from .models import RealEstate, RealEstateChoice
+from common.utils import validations
 
 class RealEstateSerializer(serializers.ModelSerializer):
 
@@ -38,6 +39,45 @@ class RealEstateSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, attrs): # todo
+
+        validations.validate_se('city', attrs['city'], validations.validate_name)
+        validations.validate_se('zone', attrs['zone'], validations.validate_num)
+        validations.validate_se('main_street', attrs['main_street'], validations.validate_name)
+        validations.validate_se('sub_street', attrs['sub_street'], validations.validate_name)
+        validations.validate_choice_se('deal_type', attrs['deal_type'], RealEstateChoice)
+        validations.validate_choice_se('type', attrs['type'], RealEstateChoice)
+        deal_type = RealEstateChoice.objects.get(id=attrs['deal_type'])
+        if deal_type.en_value == 'buy':
+            # mortgage_price and rent_price must be 0
+            if attrs['mortgage_price'] != 0:
+                raise serializers.ValidationError({'mortgage_price':'in buying deal type this field must be zero'})
+            if attrs['rent_price'] != 0:
+                raise serializers.ValidationError({'rent_price':'in buying deal type this field must be zero'})
+        elif deal_type.en_value == 'rent':
+            # buying_price and mortgage_price must be 0
+            if attrs['buying_price'] != 0:
+                raise serializers.ValidationError({'buying_price':'in rent deal type this field must be zero'})
+            if attrs['mortgage_price'] != 0:
+                raise serializers.ValidationError({'mortgage_price':'in rent deal type this field must be zero'})
+
+        elif deal_type.en_value == 'rent and mortgage':
+            # buying_price must be zero
+            if attrs['buying_price'] != 0:
+                raise serializers.ValidationError({'buying_price':'in rent and mortgage deal type this field must be zero'})
+
+        elif deal_type.en_value == 'full mortgage':
+            # buying_price and rent_price must be zero
+            if attrs['buying_price'] != 0:
+                raise serializers.ValidationError({'rent_price':'in full mortgage deal type this field must be zero'})
+            if attrs['rent_price'] != 0:
+                raise serializers.ValidationError({'rent_price':'in full mortgage deal type this field must be zero'})
+            
+        validations.validate_choice_se('wc_type', attrs['wc_type'], RealEstateChoice)
+        validations.validate_choice_se('cooling_system', attrs['cooling_system'], RealEstateChoice)
+        validations.validate_choice_se('floor_meterial', attrs['floor_meterial'], RealEstateChoice)
+        validations.validate_choice_se('heating_system', attrs['heating_system'], RealEstateChoice)
+        validations.validate_se('description', attrs['description'], validations.validate_description)
+
         return super().validate(attrs)
 
 
