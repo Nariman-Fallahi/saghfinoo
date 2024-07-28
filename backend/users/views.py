@@ -44,7 +44,7 @@ def verify_number(req):
             # todo: send code
             if settings.DEBUG and not settings.TESTING:
                 print("code:", code)
-            token = uuid.uuid4()
+            token = str(uuid.uuid4())
 
             auth_cache.set(number, {"delay":now+settings.NUMBER_DELAY, "token":token, "code":code, "tries":0,})
             
@@ -54,7 +54,7 @@ def verify_number(req):
             info = auth_cache.get(number, {})
             if info.get('tries', 0) >= 5:
                 return Response({"errors":{'code':"to manay tries"}, "code":codes.TO_MANNY_TRIES, "status":400})
-            
+
             if info.get('token', '') == '' or info.get('token', '') != serializer.data['token']:
                 return Response({"errors":{'code':"zero the code first"}, "code":codes.ZERO_CODE_FIRST, "status":400})
 

@@ -55,7 +55,7 @@ class VerifyNumberTests(APITestCase):
         self.assertEqual(resp.data['status'], 400, resp.data)
         self.assertEqual(resp.data['code'], codes.ZERO_CODE_FIRST, resp.data)
 
-    def test_right_code(self):
+    def test_success(self):
         data = {'number':self.number, 'code':0, 'token':''}
 
         resp = self.client.post(self.url, data)
@@ -196,7 +196,7 @@ class SignupTests(APITestCase):
     
         test_invalid_field(self, self.url, self.default_data)
 
-    def test_right(self):
+    def test_success(self):
         data = {'number':self.number, 'code':0, 'token':''}
         resp = self.client.post(self.verify_number_url, data)
         self.assertEqual(resp.data['status'], 200, resp.data)
