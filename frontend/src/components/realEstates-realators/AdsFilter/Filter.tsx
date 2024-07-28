@@ -1,6 +1,6 @@
 import { Button } from "@nextui-org/button";
 import Image from "next/image";
-import Select from "./Select";
+import Select from "../../Select";
 import { useState, useEffect } from "react";
 import ModalFilter from "./ModalMobile/ModalFilter";
 import { useGetRequest } from "@/ApiService";

@@ -232,3 +232,35 @@ export type contactInfoDataType = {
     landlineNumber: string | undefined;
   };
 };
+
+// Ad Posting Form Data Type
+export type AdPostingFormDataType = {
+  LocationDetails: {
+    Provinces: string;
+    provinceCities: string;
+    mainSt: string;
+    sideStreet: string;
+  },
+  DealType: {
+    typeOfTransaction: string;
+    propertyType: string;
+    deposit: number;
+    rent: number;
+  },
+  Specifications: {
+    area: number;
+    room: number;
+    floor: number;
+    numberFloors: number;
+  },
+  Amenities: {
+    elevator: number;
+    flooringMaterial: string;
+    typeBathroom: string;
+    coolingSystem: string;
+    heatingSystem: string;
+  },
+  AdditionalInformation: {
+    
+  }
+}

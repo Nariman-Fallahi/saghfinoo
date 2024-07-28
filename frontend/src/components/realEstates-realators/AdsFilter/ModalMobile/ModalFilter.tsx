@@ -7,7 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { getProvincesDataType } from "@/types/Type";
 import City from "../selection/City";
 import { getProvinceCitiesDataType } from "@/types/Type";
-import Select from "../Select";
+import Select from "../../../Select";
 import { useState } from "react";
 
 type ModalFilterType = {
@@ -48,33 +48,33 @@ export default function ModalFilter({
               <div className="w-full flex items-center flex-col mt-7">
                 <Image width={72} height={72} src="/icons/Logo.svg" alt="" />
                 <div className="mt-5 w-full flex gap-3 justify-between flex-wrap">
+                  <Select
+                    label="استان"
+                    ButtonText={
+                      filterValues.selectedProvince?.name
+                        ? filterValues.selectedProvince.name
+                        : "انتخاب استان"
+                    }
+                    component={<Province data={provincesData} />}
+                    onPress={() => handleSelectClick("province")}
+                    isOpen={openSelect === "province"}
+                    className="flex flex-col mt-1"
+                  />
+                  {filterValues.selectedProvince && (
                     <Select
-                      label="استان"
+                      label="شهر"
                       ButtonText={
-                        filterValues.selectedProvince?.name
-                          ? filterValues.selectedProvince.name
-                          : "انتخاب استان"
+                        filterValues.selectedCity
+                          ? filterValues.selectedCity
+                          : "انتخاب شهر"
                       }
-                      component={<Province data={provincesData} />}
-                      onPress={() => handleSelectClick("province")}
-                      isOpen={openSelect === "province"}
+                      component={<City data={provinceCitiesData} />}
+                      onPress={() => handleSelectClick("city")}
+                      isOpen={openSelect === "city"}
                       className="flex flex-col mt-1"
                     />
-                    {filterValues.selectedProvince && (
-                      <Select
-                        label="شهر"
-                        ButtonText={
-                          filterValues.selectedCity
-                            ? filterValues.selectedCity
-                            : "انتخاب شهر"
-                        }
-                        component={<City data={provinceCitiesData} />}
-                        onPress={() => handleSelectClick("city")}
-                        isOpen={openSelect === "city"}
-                        className="flex flex-col mt-1"
-                      />
-                    )}
-                  </div>
+                  )}
+                </div>
               </div>
             </ModalBody>
             <ModalFooter>
