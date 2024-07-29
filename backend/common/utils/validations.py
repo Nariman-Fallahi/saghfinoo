@@ -42,6 +42,17 @@ def validate_username(username: str):
 
     validate(username.lower(), valid_chars)
 
+def validate_choice_se(field_name, field_value, model):
+    try:
+        model.objects.get(id=field_value, key=field_name)
+    except model.DoesNotExist:
+        raise serializers.ValidationError({field_name:f'row with id={field_value} not found in {field_name}s'})
+
+def validate_integer(value):
+    try:
+        int(value)
+    except:
+        raise ValueError('invalid integer')
 
 def validate(string: str, valid_chars):
 
@@ -55,5 +66,5 @@ def validate_se(field_name, field_value, validate_func):
 
     try:
         validate_func(field_value)
-    except Exception as e:
+    except ValueError as e:
         raise serializers.ValidationError({field_name: str(e)})
