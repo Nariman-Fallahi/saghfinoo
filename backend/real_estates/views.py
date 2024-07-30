@@ -8,7 +8,7 @@ from PIL import Image
 from django.core.files.storage import default_storage
 from django.conf import settings
 
-from common.utils.permissions import IsOwner, IsAdmin, IsRealtor
+from common.utils.permissions import IsRealEstateOwner, IsAdmin, IsRealtor
 from common.utils.request import get_page_and_limit
 from common import codes
 
@@ -40,13 +40,19 @@ class CreateRealEstateAPIView(APIView):
 class EditRealEstateAPIView(APIView):
 
     serializer_class = RealEstateSerializer
-    permission_classes = [IsAuthenticated, OR(IsOwner, IsAdmin)]
+    permission_classes = [IsAuthenticated, IsRealEstateOwner | IsAdmin]
     authentication_classes = [JWTAuthentication]
 
-    def put(self, req):
+    def put(self, req, real_estate_id):
+        try:
+            real_estate = RealEstate.objects.get(id=real_estate_id)
+        except:
+            return Response({"errors":{"non-field-error":"real estate not found"}, 'status':404})
+        self.check_object_permissions(req, real_estate)
+
         serializer = self.serializer_class(data=req.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(id=real_estate_id)
             return Response({"msg":"done", 'status':200})
         return Response({"errors": serializer.errors, 'code':codes.INVALID_FIELD, 'status':400})
     #todo: user can enter same username in real estate office in edit
@@ -77,7 +83,7 @@ class SearchRealEstatesAPIView(APIView):
         pass
 
 class UploadRealEstateImageAPIView(APIView):
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
     
     def post(self, req, real_estate_id):
@@ -87,9 +93,9 @@ class UploadRealEstateImageAPIView(APIView):
 
         if Image.open(image).format not in ('PNG', 'JPEG'):
             return Response({"errors":{"image":"invalid image format (accepted formats: PNG, JPEG)"}})
-        
+    
         try:
-            re = RealEstate.objects.get(id=real_estate_id, owner=req.user)
+            re = RealEstate.objects.get(id=real_estate_id, owner__user=req.user)
         except RealEstate.DoesNotExist:
             return Response({'errors':{'non-field-error':'real estate not found'}, 'status':404})
 
