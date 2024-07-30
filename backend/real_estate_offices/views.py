@@ -2,13 +2,13 @@ import uuid
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated, OR
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from PIL import Image
 from django.core.files.storage import default_storage
 from django.conf import settings
 
-from common.utils.permissions import IsOwner, IsAdmin, IsRealtor
+from common.utils.permissions import IsRealEstateOfficeOwner, IsAdmin, IsRealtor
 from common.utils.request import get_page_and_limit
 from common import codes
 
@@ -38,13 +38,19 @@ class CreateRealEstateOfficeAPIView(APIView):
 class EditRealEstateOfficeAPIView(APIView):
 
     serializer_class = RealEstateOfficeSerializer
-    permission_classes = [IsAuthenticated, OR(IsOwner, IsAdmin)]
+    permission_classes = [IsAuthenticated, (IsRealEstateOfficeOwner| IsAdmin)]
     authentication_classes = [JWTAuthentication]
 
-    def put(self, req):
+    def put(self, req, real_estate_office_id):
+        try:
+            reo = RealEstateOffice.objects.get(id=real_estate_office_id)
+        except RealEstateOffice.DoesNotExist:
+            return Response({'errors':{'non-field-error':'real estate office not found'}, 'status':404})
+        self.check_object_permissions(req, reo)
+        
         serializer = self.serializer_class(data=req.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(id=real_estate_office_id)
             return Response({"msg":"done", 'status':200})
         return Response({"errors": serializer.errors, 'code':codes.INVALID_FIELD, 'status':400})
 
@@ -72,7 +78,7 @@ class GetRealEstateOfficeAPIView(APIView):
 
 
 class UploadRealEstateOfficeImageAPIView(APIView):
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated, IsRealEstateOfficeOwner]
     authentication_classes = [JWTAuthentication]
     
     def post(self, req):
@@ -103,7 +109,7 @@ class UploadRealEstateOfficeImageAPIView(APIView):
 
 
 class UploadRealEstateOfficeBGImageAPIView(APIView):
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated, IsRealEstateOfficeOwner]
     authentication_classes = [JWTAuthentication]
     
     def post(self, req):
