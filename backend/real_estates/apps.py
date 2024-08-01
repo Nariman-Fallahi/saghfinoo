@@ -7,7 +7,7 @@ class RealEstatesConfig(AppConfig):
 
     def ready(self) -> None:
 
-        if not settings.DEBUG:
+
             from .models import RealEstateChoice
             print('adding real estate choices')
             try:

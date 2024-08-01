@@ -7,27 +7,28 @@ from realtors.models import Realtor
 class RealEstateChoice(models.Model):
     key = models.CharField(max_length=50)
     value = models.CharField(max_length=50)
+    en_value = models.CharField(max_length=50)
 
     @classmethod
     def add_default_rows(cls):
         default = (
-            ('type', 'آپارتمان'),
-            ('type', 'ویلا'),
-            ('deal_type', 'خرید'),
-            ('deal_type', 'رهن و اجاره'),
-            ('deal_type', 'رهن کامل'),
-            ('deal_type', 'اجاره'),
-            ('wc_type', 'فرنگی'),
-            ('wc_type', 'ایرانی'),
-            ('cooling_system', 'کولر آبی'),
-            ('cooling_system', 'کولر گازی'),
-            ('heating_system', 'شوفاژ'),
-            ('heating_system', 'بخاری گازی'),
-            ('heating_system', 'بخاری برقی'),
-            ('heating_system', 'گرمایش از کف'),
-            ('floor_meterial', 'سرامیک'),
-            ('floor_meterial', 'چوب'),
-            ('floor_meterial', 'کاشی'),
+            ('type', 'آپارتمان', 'apartment'),
+            ('type', 'ویلا', 'villa'),
+            ('deal_type', 'خرید', 'buy'),
+            ('deal_type', 'رهن و اجاره', 'mortgage and rent'),
+            ('deal_type', 'رهن کامل', 'full mortgage'),
+            ('deal_type', 'اجاره', 'rent'),
+            ('wc_type', 'فرنگی', 'farhangi'),
+            ('wc_type', 'ایرانی', 'irani'),
+            ('cooling_system', 'کولر آبی', 'water cooler'),
+            ('cooling_system', 'کولر گازی', 'gas cooler'),
+            ('heating_system', 'شوفاژ', 'shoofazh'),
+            ('heating_system', 'بخاری گازی', 'gas heater'),
+            ('heating_system', 'بخاری برقی', 'electric heater'),
+            ('heating_system', 'گرمایش از کف', 'in-floor heating'),
+            ('floor_meterial', 'سرامیک', 'ceramic'),
+            ('floor_meterial', 'چوب', 'wood'),
+            ('floor_meterial', 'کاشی', 'tile'),
         )
 
         if RealEstateChoice.objects.count() == 0:

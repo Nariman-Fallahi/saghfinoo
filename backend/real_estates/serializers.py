@@ -41,12 +41,11 @@ class RealEstateSerializer(serializers.ModelSerializer):
     def validate(self, attrs): # todo
 
         validations.validate_se('city', attrs['city'], validations.validate_name)
-        validations.validate_se('zone', attrs['zone'], validations.validate_num)
         validations.validate_se('main_street', attrs['main_street'], validations.validate_name)
         validations.validate_se('sub_street', attrs['sub_street'], validations.validate_name)
-        validations.validate_choice_se('deal_type', attrs['deal_type'], RealEstateChoice)
-        validations.validate_choice_se('type', attrs['type'], RealEstateChoice)
-        deal_type = RealEstateChoice.objects.get(id=attrs['deal_type'])
+        validations.validate_choice_se('deal_type', attrs['deal_type'])
+        validations.validate_choice_se('type', attrs['type'])
+        deal_type = attrs['deal_type']
         if deal_type.en_value == 'buy':
             # mortgage_price and rent_price must be 0
             if attrs['mortgage_price'] != 0:
@@ -72,10 +71,10 @@ class RealEstateSerializer(serializers.ModelSerializer):
             if attrs['rent_price'] != 0:
                 raise serializers.ValidationError({'rent_price':'in full mortgage deal type this field must be zero'})
             
-        validations.validate_choice_se('wc_type', attrs['wc_type'], RealEstateChoice)
-        validations.validate_choice_se('cooling_system', attrs['cooling_system'], RealEstateChoice)
-        validations.validate_choice_se('floor_meterial', attrs['floor_meterial'], RealEstateChoice)
-        validations.validate_choice_se('heating_system', attrs['heating_system'], RealEstateChoice)
+        validations.validate_choice_se('wc_type', attrs['wc_type'])
+        validations.validate_choice_se('cooling_system', attrs['cooling_system'])
+        validations.validate_choice_se('floor_meterial', attrs['floor_meterial'])
+        validations.validate_choice_se('heating_system', attrs['heating_system'])
         validations.validate_se('description', attrs['description'], validations.validate_description)
 
         return super().validate(attrs)
