@@ -11,6 +11,7 @@ from django.conf import settings
 from common.utils.permissions import IsRealEstateOwner, IsAdmin, IsRealtor
 from common.utils.request import get_page_and_limit
 from common import codes
+from common.utils import validations
 
 from .serializers import RealEstateSerializer, RealEstatePreviewResponseSerializer, RealEstateResponseSerializer
 from .models import RealEstate, RealEstateImage, RealEstateChoice
@@ -33,7 +34,16 @@ class CreateRealEstateAPIView(APIView):
     
 
     def get(self, req):
-        recs = RealEstateChoice.objects.all().values('id','key', 'value')
+        key = req.query_params.get('key', '')
+        # validate key
+        try:
+            validations.validate_username(key)
+        except ValueError as e:
+            return Response({'errors':{'non-field-error':str(e)}})
+        if key == '':
+            recs = RealEstateChoice.objects.all().values('id','key', 'value')
+        else:
+            recs = RealEstateChoice.objects.filter(key=key).values('id', 'key', 'value')
         return Response({'data':recs, 'status':200})
 
 
