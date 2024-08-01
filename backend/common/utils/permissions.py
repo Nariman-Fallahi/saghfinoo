@@ -3,14 +3,10 @@ from rest_framework.permissions import BasePermission
 from . import realtor_model
 from real_estate_offices.models import RealEstateOffice
 
-class IsOwner(BasePermission):
+class IsRealEstateOfficeOwner(BasePermission):
 
-    def has_permission(self, request, view):
-        try:
-            request.real_estate_office = RealEstateOffice.objects.get(user=request.user)
-            return True
-        except RealEstateOffice.DoesNotExist:
-            return False
+    def has_object_permission(self, request, view, obj):
+        return obj.owner == request.user
             
     
 class IsAdmin(BasePermission):
@@ -19,7 +15,7 @@ class IsAdmin(BasePermission):
         return False
 
     def has_object_permission(self, request, view, obj):
-        return True
+        return False
         # todo: complete
 
 class IsRealtor(BasePermission):
@@ -31,3 +27,8 @@ class IsRealtor(BasePermission):
             return True
         except realtor_model.DoesNotExist:
             return False
+
+class IsRealEstateOwner(BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        return obj.owner.user == request.user

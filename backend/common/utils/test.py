@@ -6,19 +6,20 @@ auth_cache = caches['auth']
 from common import codes
 
 
-def test_invalid_field(self, url, data, invalid_chrs=None):
-    """default invalid chrs: #!@&/\)(*^%${[<>=+`~]})'\""""
+def test_invalid_field(self, url: str, data: dict, invalid_chars: dict, headers=None):
+    """data example: {"name":"test"} , invalid_chars example: {"name":"*"}
+    """
     
     default_data = data
     FIELDS = data.keys()
-    INVALID_CHARS = "#!@&/\\)(*^%${[<>=+`~]})'\""
-    if invalid_chrs:
-        INVALID_CHARS = invalid_chrs
     
     for field in FIELDS:
-        for char in INVALID_CHARS:
+        for char in invalid_chars[field]:
             data[field] = default_data[field] + char
-            resp = self.client.post(url, data)
+            if headers:
+                resp = self.client.post(url, data, headers=headers)
+            else:
+                resp = self.client.post(url, data)
             self.assertEqual(resp.data['status'], 400, f"Request data: {data} \nResponse data: {resp.data}")
             self.assertEqual(resp.data['code'], codes.INVALID_FIELD, resp.data)
                 
@@ -51,3 +52,8 @@ def login(self, number):
         self.assertEqual(resp.data['status'], 201, resp.data)
 
         return resp.data['access'], resp.data['refresh']
+
+def test_have_fields(self, data: dict, fields: list):
+     
+     for field in fields:
+          self.assertNotEqual(data.get(field, ''), '', data)
