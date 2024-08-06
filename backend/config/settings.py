@@ -62,7 +62,7 @@ INSTALLED_APPS = [
     'news',
     'realtors',
     'real_estate_offices',
-    'real_estates',
+    'advertisements',
     'users',
     'tools',
 ]
