@@ -45,7 +45,7 @@ urlpatterns = [
     path('api/v1/real-estate-offices/', include('real_estate_offices.urls')),
     path('api/v1/realtors/', include('realtors.urls')),
     path('api/v1/news/', include('news.urls')),
-    path('api/v1/real-estates/', include('real_estates.urls')),
+    path('api/v1/advertisements/', include('advertisements.urls')),
     path('api/v1/tools/', include('tools.urls')),
 ]
 

@@ -3,15 +3,15 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from common.utils.permissions import IsAdmin, IsRealtor
-from .models import RealEstate, RealEstateChoice
+from .models import Advertisement, AdvertisementChoice
 from common.utils import validations
 
-class RealEstateSerializer(serializers.ModelSerializer):
+class AdvertisementSerializer(serializers.ModelSerializer):
 
 
 
     class Meta:
-        model = RealEstate
+        model = Advertisement
         fields = [
             'city',
             'zone',
@@ -80,10 +80,10 @@ class RealEstateSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
 
 
-class RealEstateResponseSerializer(serializers.ModelSerializer):
+class AdvertisementResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = RealEstate
+        model = Advertisement
         fields = [
             'id',
             'owner__user__first_name',
@@ -124,10 +124,10 @@ class RealEstateResponseSerializer(serializers.ModelSerializer):
             'convertible',
         ]
 
-class RealEstatePreviewResponseSerializer(serializers.ModelSerializer):
+class AdvertisementPreviewResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = RealEstate
+        model = Advertisement
         fields = [
             'image_full_path',
             'deal_type__value',

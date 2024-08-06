@@ -28,7 +28,7 @@ class IsRealtor(BasePermission):
         except realtor_model.DoesNotExist:
             return False
 
-class IsRealEstateOwner(BasePermission):
+class IsAdvertisementOwner(BasePermission):
 
     def has_object_permission(self, request, view, obj):
         return obj.owner.user == request.user

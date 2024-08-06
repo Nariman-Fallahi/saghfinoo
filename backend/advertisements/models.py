@@ -4,7 +4,7 @@ from django.utils import timezone
 from realtors.models import Realtor
 
 
-class RealEstateChoice(models.Model):
+class AdvertisementChoice(models.Model):
     key = models.CharField(max_length=50)
     value = models.CharField(max_length=50)
     en_value = models.CharField(max_length=50)
@@ -31,15 +31,15 @@ class RealEstateChoice(models.Model):
             ('floor_meterial', 'کاشی', 'tile'),
         )
 
-        if RealEstateChoice.objects.count() == 0:
+        if AdvertisementChoice.objects.count() == 0:
             for key, value in default:
-                r = RealEstateChoice()
+                r = AdvertisementChoice()
                 r.key = key
                 r.value = value
                 r.save()
 
 
-class RealEstate(models.Model):
+class Advertisement(models.Model):
     owner = models.ForeignKey(Realtor, on_delete=models.CASCADE)
 
     is_confirmed = models.BooleanField(default=False)
@@ -54,8 +54,8 @@ class RealEstate(models.Model):
 
     meterage = models.IntegerField()
     
-    type = models.ForeignKey(RealEstateChoice, on_delete=models.PROTECT, related_name='type') # apartment or villa or ...
-    deal_type = models.ForeignKey(RealEstateChoice, on_delete=models.PROTECT, related_name='deal_type') # buy or rent+mortgage or full mortgage or rent
+    type = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='type') # apartment or villa or ...
+    deal_type = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='deal_type') # buy or rent+mortgage or full mortgage or rent
 
     mortgage_price = models.BigIntegerField()
     rent_price = models.BigIntegerField()
@@ -66,14 +66,14 @@ class RealEstate(models.Model):
     number_of_parkings = models.IntegerField()
     number_of_warehouses = models.IntegerField()
     number_of_wcs = models.IntegerField()
-    wc_type = models.ForeignKey(RealEstateChoice, on_delete=models.PROTECT, related_name='wc_type')
+    wc_type = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='wc_type')
     number_of_elevators = models.IntegerField()
     floor_number = models.IntegerField()
     total_number_of_floors = models.IntegerField()
 
-    heating_system = models.ForeignKey(RealEstateChoice, on_delete=models.PROTECT, related_name='heating_system')
-    cooling_system = models.ForeignKey(RealEstateChoice, on_delete=models.PROTECT, related_name='cooling_system')
-    floor_meterial = models.ForeignKey(RealEstateChoice, on_delete=models.PROTECT, related_name='floor_meterial')
+    heating_system = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='heating_system')
+    cooling_system = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='cooling_system')
+    floor_meterial = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='floor_meterial')
 
     description = models.CharField(max_length=1000)
 
@@ -86,8 +86,8 @@ class RealEstate(models.Model):
 
 
 
-class RealEstateImage(models.Model):
-    real_estate = models.ForeignKey(RealEstate, on_delete=models.PROTECT)
+class AdvertisementImage(models.Model):
+    advertisement = models.ForeignKey(Advertisement, on_delete=models.PROTECT)
 
     image = models.CharField(max_length=1000)
     image_full_path = models.CharField(max_length=1000)
