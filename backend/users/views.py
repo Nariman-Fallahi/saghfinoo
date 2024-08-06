@@ -13,13 +13,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from drf_yasg.utils import swagger_auto_schema
 from django.core.files.storage import default_storage
 
 from common import codes
-from .serializers import VerifyNumberSerializer, SignupSerializer, CustomTokenObtainPairSerializer, CustomUserResponseSerializer
+from .serializers import VerifyNumberSerializer, SignupSerializer, CustomTokenObtainPairSerializer, CustomUserResponseSerializer, ChangePasswordSerializer, UserSerializer
 from .models import CustomUser
-from .doc import verify_number_schema_responses
 
 auth_cache = caches['auth']
 
@@ -207,3 +205,29 @@ class UploadProfileImageAPIView(APIView):
         req.user.save()
 
         return Response({"msg":"done", 'status':200})
+    
+class EditUserAPIView(APIView):
+    permission_classes = IsAuthenticated
+    authentication_classes = JWTAuthentication
+
+    def put(self, req):
+        serializer = UserSerializer(data=req.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg':"done", 'status':200})
+        
+        return Response({"errors": serializer.errors, 'status':400})
+    
+class ChangePasswordAPIView(APIView):
+    permission_classes = IsAuthenticated
+    authentication_classes = JWTAuthentication
+
+    def post(self, req):
+        serializer = ChangePasswordSerializer(data=req.data)
+        if serializer.is_valid():
+            req.user.set_password(serializer.new_password)
+            req.user.save()
+            return Response({'msg':'done', 'status':200})
+        
+        return Response({'errors':serializer.errors, 'status':400})
+

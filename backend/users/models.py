@@ -11,6 +11,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=51)
     last_name = models.CharField(max_length=52)
     password = models.CharField(max_length=512)
+    email = models.EmailField(max_length=300, null=True)
 
     image = models.CharField(max_length=1000, default='')
     image_full_path = models.CharField(max_length=1000, default='')
