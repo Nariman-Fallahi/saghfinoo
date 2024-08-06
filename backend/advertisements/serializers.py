@@ -14,26 +14,25 @@ class AdvertisementSerializer(serializers.ModelSerializer):
         model = Advertisement
         fields = [
             'city',
-            'zone',
+            'province',
             'main_street',
-            'sub_street',
-            'deal_type',
-            'type',
-            'mortgage_price',
-            'rent_price',
-            'buying_price',
+            'side_street',
+            'type_of_transaction',
+            'property_type',
+            'desposit',
+            'rent',
             'convertible',
-            'meterage',
-            'number_of_rooms',
-            'floor_number',
-            'total_number_of_floors',
-            'number_of_parkings',
-            'number_of_wcs',
-            'number_of_warehouses',
-            'wc_type',
-            'number_of_elevators',
+            'area',
+            'room',
+            'floor',
+            'number_of_floors',
+            'parking',
+            'restroom',
+            'type_of_restroom',
+            'storage',
+            'elevator',
+            'flooring',
             'cooling_system',
-            'floor_meterial',
             'heating_system',
             'description',
         ]
@@ -42,38 +41,37 @@ class AdvertisementSerializer(serializers.ModelSerializer):
 
         validations.validate_se('city', attrs['city'], validations.validate_name)
         validations.validate_se('main_street', attrs['main_street'], validations.validate_name)
-        validations.validate_se('sub_street', attrs['sub_street'], validations.validate_name)
-        validations.validate_choice_se('deal_type', attrs['deal_type'])
-        validations.validate_choice_se('type', attrs['type'])
-        deal_type = attrs['deal_type']
-        if deal_type.en_value == 'buy':
-            # mortgage_price and rent_price must be 0
-            if attrs['mortgage_price'] != 0:
-                raise serializers.ValidationError({'mortgage_price':'in buying deal type this field must be zero'})
-            if attrs['rent_price'] != 0:
-                raise serializers.ValidationError({'rent_price':'in buying deal type this field must be zero'})
-        elif deal_type.en_value == 'rent':
-            # buying_price and mortgage_price must be 0
-            if attrs['buying_price'] != 0:
-                raise serializers.ValidationError({'buying_price':'in rent deal type this field must be zero'})
-            if attrs['mortgage_price'] != 0:
-                raise serializers.ValidationError({'mortgage_price':'in rent deal type this field must be zero'})
+        validations.validate_se('side_street', attrs['side_street'], validations.validate_name)
+        validations.validate_choice_se('type_of_transaction', attrs['type_of_transaction'])
+        validations.validate_choice_se('property_type', attrs['property_type'])
+        type_of_transaction = attrs['type_of_transaction']
+        
+        if type_of_transaction.en_value == 'rent':
+            # desposit must be 0
+            if attrs['desposit'] != 0:
+                raise serializers.ValidationError({'desposit':'in rent transaction, this field must be zero'})
+            if attrs['rent'] == 0:
+                raise serializers.ValidationError({'rent':'in rent and desposit transaction, this field cannot be zero'})
 
-        elif deal_type.en_value == 'rent and mortgage':
-            # buying_price must be zero
-            if attrs['buying_price'] != 0:
-                raise serializers.ValidationError({'buying_price':'in rent and mortgage deal type this field must be zero'})
 
-        elif deal_type.en_value == 'full mortgage':
-            # buying_price and rent_price must be zero
-            if attrs['buying_price'] != 0:
-                raise serializers.ValidationError({'rent_price':'in full mortgage deal type this field must be zero'})
-            if attrs['rent_price'] != 0:
-                raise serializers.ValidationError({'rent_price':'in full mortgage deal type this field must be zero'})
+        elif type_of_transaction.en_value == 'rent and desposit':
             
-        validations.validate_choice_se('wc_type', attrs['wc_type'])
+            if attrs['rent'] == 0:
+                raise serializers.ValidationError({'rent':'in rent and desposit transaction, this field cannot be zero'})
+            if attrs['desposit'] == 0:
+                raise serializers.ValidationError({'desposit':'in rent and desposit transaction, this field cannot be zero'})
+
+        elif type_of_transaction.en_value == 'full desposit':
+            # buying_price and rent_price must be zero
+            if attrs['rent'] != 0:
+                raise serializers.ValidationError({'rent':'in full disposit transaction, this field must be zero'})
+            if attrs['disposit'] == 0:
+                raise serializers.ValidationError({'disposit':'in full desposit transaction, this field cannot be zero'})
+
+            
+        validations.validate_choice_se('type_of_restroom', attrs['type_of_restroom'])
         validations.validate_choice_se('cooling_system', attrs['cooling_system'])
-        validations.validate_choice_se('floor_meterial', attrs['floor_meterial'])
+        validations.validate_choice_se('flooring', attrs['flooring'])
         validations.validate_choice_se('heating_system', attrs['heating_system'])
         validations.validate_se('description', attrs['description'], validations.validate_description)
 
@@ -98,25 +96,24 @@ class AdvertisementResponseSerializer(serializers.ModelSerializer):
             'modified_at',
             'city',
             'main_street',
-            'sub_street',
-            'zone',
-            'meterage',
-            'type__value',
-            'deal_type__value',
-            'mortgage_price',
-            'rent_price',
-            'buying_price',
-            'number_of_rooms',
-            'number_of_parkings',
-            'number_of_warehouses',
-            'number_of_wcs',
-            'wc_type__value',
-            'number_of_elevators',
-            'floor_number',
-            'total_number_of_floors',
+            'side_street',
+            'province',
+            'area',
+            'property_type__value',
+            'type_of_transaction__value',
+            'desposit',
+            'desposit',
+            'room',
+            'parking',
+            'storage',
+            'restroom',
+            'type_of_restroom__value',
+            'elevator',
+            'floor',
+            'number_of_floors',
             'heating_system__value',
             'cooling_system__value',
-            'floor_meterial__value',
+            'flooring__value',
             'description',
             'map_position',
             'number_of_views',
@@ -130,12 +127,12 @@ class AdvertisementPreviewResponseSerializer(serializers.ModelSerializer):
         model = Advertisement
         fields = [
             'image_full_path',
-            'deal_type__value',
-            'type__value',
-            'meterage',
+            'type_of_transaction__value',
+            'property_type__value',
+            'area',
             'city',
             'main_street',
-            'mortgage_price',
-            'rent_price',
+            'disposit',
+            'rent',
             'created_at',
         ]

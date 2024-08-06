@@ -47,37 +47,37 @@ class Advertisement(models.Model):
     created_at = models.DateField(default=timezone.now)
     modified_at = models.DateField(default=timezone.now)
 
+    province = models.CharField(max_length=50)
     city =models.CharField(max_length=50)
     main_street = models.CharField(max_length=50)
-    sub_street = models.CharField(max_length=50)
-    zone = models.IntegerField() # zone 1 or zone 2 or ...
+    side_street = models.CharField(max_length=50)
+    map_position = models.CharField(max_length=100, null=True)
 
-    meterage = models.IntegerField()
     
-    type = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='type') # apartment or villa or ...
-    deal_type = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='deal_type') # buy or rent+mortgage or full mortgage or rent
+    property_type = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='property_type') # apartment or villa or ...
+    type_of_transaction = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='type_of_transaction') # rent+mortgage or full mortgage or rent
 
-    mortgage_price = models.BigIntegerField()
-    rent_price = models.BigIntegerField()
+    disposit = models.BigIntegerField()
+    rent = models.BigIntegerField()
     convertible = models.BooleanField()
     buying_price = models.BigIntegerField()
 
-    number_of_rooms = models.IntegerField()
-    number_of_parkings = models.IntegerField()
-    number_of_warehouses = models.IntegerField()
-    number_of_wcs = models.IntegerField()
-    wc_type = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='wc_type')
-    number_of_elevators = models.IntegerField()
-    floor_number = models.IntegerField()
-    total_number_of_floors = models.IntegerField()
+    area = models.IntegerField()
+    room = models.IntegerField()
+    parking = models.IntegerField()
+    storage = models.IntegerField()
+    restroom = models.IntegerField()
+    type_of_restroom = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='type_of_restroom')
+    elevator = models.IntegerField()
+    floor = models.IntegerField() # floor number
+    number_of_floors = models.IntegerField() # total number of floors
 
     heating_system = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='heating_system')
     cooling_system = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='cooling_system')
-    floor_meterial = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='floor_meterial')
+    flooring = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='flooring')
 
     description = models.CharField(max_length=1000)
 
-    map_position = models.CharField(max_length=100)
 
     number_of_views = models.IntegerField(default=0)
     number_of_saves = models.IntegerField(default=0)
