@@ -87,4 +87,4 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ChangePasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(max_length=50)
-    old_password = serializers.CharField(max_length=50)
+    current_password = serializers.CharField(max_length=50)

@@ -142,8 +142,8 @@ def get_jwt_tokens_for_user(user):
 
 
 class AmIInAPIView(APIView):
-    permission_classes = IsAuthenticated
-    authentication_classes = JWTAuthentication
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
 
     def post(self, req):
         return Response({"msg":"You are in!", "status":200})
@@ -157,8 +157,8 @@ class AmIInAPIView(APIView):
 
 
 class GetUserInfoAPIView(APIView):
-    permission_classes = IsAuthenticated
-    authentication_classes = JWTAuthentication
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
     def get(self, req):
         s = CustomUserResponseSerializer(req.user)
         return Response({"data":s.data, "status":200})
@@ -185,8 +185,8 @@ class CustomTokenRefreshView(TokenRefreshView):
         return resp
 
 class UploadProfileImageAPIView(APIView):
-    permission_classes = IsAuthenticated
-    authentication_classes = JWTAuthentication
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
     def post(self, req):
         image = req.FILES.get('image', '')
         if image == '':
@@ -207,8 +207,8 @@ class UploadProfileImageAPIView(APIView):
         return Response({"msg":"done", 'status':200})
     
 class EditUserAPIView(APIView):
-    permission_classes = IsAuthenticated
-    authentication_classes = JWTAuthentication
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
 
     def put(self, req):
         serializer = UserSerializer(data=req.data)
@@ -219,13 +219,15 @@ class EditUserAPIView(APIView):
         return Response({"errors": serializer.errors, 'status':400})
     
 class ChangePasswordAPIView(APIView):
-    permission_classes = IsAuthenticated
-    authentication_classes = JWTAuthentication
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
 
     def post(self, req):
         serializer = ChangePasswordSerializer(data=req.data)
         if serializer.is_valid():
-            req.user.set_password(serializer.new_password)
+            if not req.user.check_password(serializer.data['current_password']):
+                return Response({'errors':{'current_password':'current password is incurrent'}, 'status':400})
+            req.user.set_password(serializer.data['new_password'])
             req.user.save()
             return Response({'msg':'done', 'status':200})
         
