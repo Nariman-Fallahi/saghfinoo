@@ -82,6 +82,8 @@ class RealEstate(models.Model):
     number_of_views = models.IntegerField(default=0)
     number_of_saves = models.IntegerField(default=0)
 
+    image_full_path = models.CharField(max_length=1000, default='') # primary image (also added in RealEstateImage)
+
 
 
 class RealEstateImage(models.Model):

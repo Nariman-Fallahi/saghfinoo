@@ -83,6 +83,8 @@ class GetRealEstateAPIView(APIView):
     def get(self, req, real_estate_id):
         try:
             reo = RealEstate.objects.values(*RealEstateResponseSerializer.Meta.fields).get(is_confirmed=True, id=real_estate_id)
+            reo['images'] = RealEstateImage.objects.filter(real_estate=reo['id']).values('image_full_path', 'id')
+            
             return Response({"data":reo, 'status':200})        
         except RealEstate.DoesNotExist:
             return Response({'status':404})
@@ -107,7 +109,7 @@ class UploadRealEstateImageAPIView(APIView):
         try:
             re = RealEstate.objects.get(id=real_estate_id, owner__user=req.user)
         except RealEstate.DoesNotExist:
-            return Response({'errors':{'non-field-error':'real estate not found'}, 'status':404})
+            return Response({'errors':{'non-field-error':'real estate not found or you not owner of that real estate'}, 'status':404})
 
         file_ext = image.name.split('.')[-1]
         file_name = f'{uuid.uuid4()}.{file_ext}'
@@ -115,11 +117,16 @@ class UploadRealEstateImageAPIView(APIView):
         if RealEstateImage.objects.filter(real_estate=re).count() >= 10:
             return Response({'error':{'non-field-error':'maximum image upload limit for real estate'}, 'status':400})
 
+
         rei = RealEstateImage()
         rei.real_estate = re
         rei.image = default_storage.save(f'real_estate_offices/{file_name}', image, max_length=1*1024*1024)
         rei.image_full_path = f'{settings.S3_ENDPOINT_URL_WITH_BUCKET}/{rei.image}'
         rei.save()
+
+        if re.image_full_path == '':
+            re.image_full_path = rei.image_full_path
+            re.save()
 
         return Response({"msg":"done", 'status':200})
 

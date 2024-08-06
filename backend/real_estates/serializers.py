@@ -85,7 +85,7 @@ class RealEstateResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = RealEstate
         fields = [
-            # images
+            'id',
             'owner__user__first_name',
             'owner__user__last_name',
             'owner__user__image_full_path',
@@ -129,7 +129,7 @@ class RealEstatePreviewResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = RealEstate
         fields = [
-            # image
+            'image_full_path',
             'deal_type__value',
             'type__value',
             'meterage',
