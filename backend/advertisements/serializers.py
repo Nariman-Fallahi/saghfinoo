@@ -102,7 +102,7 @@ class AdvertisementResponseSerializer(serializers.ModelSerializer):
             'property_type__value',
             'type_of_transaction__value',
             'desposit',
-            'desposit',
+            'rent',
             'room',
             'parking',
             'storage',
@@ -126,13 +126,14 @@ class AdvertisementPreviewResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Advertisement
         fields = [
+            'id',
             'image_full_path',
             'type_of_transaction__value',
             'property_type__value',
             'area',
             'city',
             'main_street',
-            'disposit',
+            'desposit',
             'rent',
             'created_at',
         ]

@@ -47,6 +47,9 @@ def validate_choice_se(field_name, field_value):
         raise serializers.ValidationError({field_name:f'{field_name} with id={field_value.id} not found'})
 
 def validate_integer(value):
+    """validate a string that have integer"""
+    if type(value) != str:
+        raise ValueError('invalid integer')
     try:
         int(value)
     except:

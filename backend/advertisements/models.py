@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.conf import settings
 
 from realtors.models import Realtor
 
@@ -44,8 +45,8 @@ class Advertisement(models.Model):
 
     is_confirmed = models.BooleanField(default=False)
     
-    created_at = models.DateField(default=timezone.now)
-    modified_at = models.DateField(default=timezone.now)
+    created_at = models.DateTimeField(default=lambda: timezone.now().strftime(settings.REST_FRAMEWORK['DATETIME_FORMAT']))
+    modified_at = models.DateTimeField(default=lambda: timezone.now().strftime(settings.REST_FRAMEWORK['DATETIME_FORMAT']))
 
     province = models.CharField(max_length=50)
     city =models.CharField(max_length=50)
@@ -57,10 +58,9 @@ class Advertisement(models.Model):
     property_type = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='property_type') # apartment or villa or ...
     type_of_transaction = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='type_of_transaction') # rent+mortgage or full mortgage or rent
 
-    disposit = models.BigIntegerField()
+    desposit = models.BigIntegerField()
     rent = models.BigIntegerField()
     convertible = models.BooleanField()
-    buying_price = models.BigIntegerField()
 
     area = models.IntegerField()
     room = models.IntegerField()

@@ -168,11 +168,11 @@ AUTH_USER_MODEL = 'users.CustomUser'
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -251,7 +251,8 @@ REST_FRAMEWORK ={
     },
 
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
-    'EXCEPTION_HANDLER': 'common.utils.error_handlers.custom_error_handler'
+    'EXCEPTION_HANDLER': 'common.utils.error_handlers.custom_error_handler',
+    'DATETIME_FORMAT': '%Y-%m-%d %H:%M',
 }
 
 SIMPLE_JWT = {
