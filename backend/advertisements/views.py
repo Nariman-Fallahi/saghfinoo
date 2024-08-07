@@ -93,18 +93,67 @@ class SearchAdvertisementsAPIView(APIView):
 
     def get(self, req):
         qp = req.query_params
-        queries = {'realtor':validations.validate_int, } # query_name:validation_function
-        ads = Advertisement.objects.values(*AdvertisementPreviewResponseSerializer.Meta.fields)
-        for field_name, validate_func in queries:
+        queries = {                             # query_name:validation_function
+            'owner':validations.validate_integer,
+            'room': validations.validate_integer,
+            'parking': validations.validate_integer,
+            'storage': validations.validate_integer,
+            'restroom': validations.validate_integer,
+            'type_of_restroom': validations.validate_integer,
+            'elevator': validations.validate_integer,
+            'floor': validations.validate_integer,
+            'cooling_system': validations.validate_integer,
+            'heating_system': validations.validate_integer,
+            'flooring': validations.validate_integer,
+            'province': validations.validate_name,
+            'property_type': validations.validate_integer,
+            'rent': validations.validate_integer,
+            'city':validations.validate_name,
+            'main_street': validations.validate_name,
+            'side_street': validations.validate_name,
+            'type_of_transaction': validations.validate_integer,
+            'desposit': validations.validate_integer,
+            'area': validations.validate_integer,
+            'number_of_floors': validations.validate_integer,
+        }
+        greater_than_exceptions = {
+            'room': 5,
+            'parking': 3,
+            'storage': 3,
+            'restroom': 4,
+            'elevator': 3,
+            'floor': 5,
+
+        } 
+        a = Advertisement.objects.get(id=177)
+        from django.utils import timezone
+        a.created_at = timezone.now().strftime(settings.REST_FRAMEWORK['DATETIME_FORMAT'])
+        a.save()
+        try:
+            page, limit = get_page_and_limit(req)
+        except Exception as e:
+            return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
+
+        kwargs = {
+            "is_confirmed": True
+        }
+
+        for field_name, validate_func in queries.items():
             value = qp.get(field_name, '')
             if value == '':
                 continue
             try:
                 validate_func(value)
             except ValueError as e:
-                return Response({'errors':{field_name:str(e)}})
+                return Response({'errors':{field_name:str(e)}, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
+            
+            ex = greater_than_exceptions.get(field_name, None)
+            if ex != None and ex <= int(value):
+                kwargs[f"{field_name}__gte"] = value
+            else:
+                kwargs[field_name] = value
 
-            ads = ads.filter(field_name=value)
+        ads = Advertisement.objects.values(*AdvertisementPreviewResponseSerializer.Meta.fields).filter(**kwargs)[page*limit: page*limit+limit]
 
         return Response({'data':ads, 'status':200})
 
