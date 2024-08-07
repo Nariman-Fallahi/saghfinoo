@@ -137,3 +137,17 @@ class AdvertisementPreviewResponseSerializer(serializers.ModelSerializer):
             'rent',
             'created_at',
         ]
+
+class RealtorAdvertisementPreviewResponseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Advertisement
+        fields = AdvertisementPreviewResponseSerializer.Meta.fields + ['is_confirmed']
+
+
+
+class RealtorAdvertisementResponseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Advertisement
+        fields = AdvertisementResponseSerializer.Meta.fields + ['is_confirmed']

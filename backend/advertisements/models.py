@@ -78,7 +78,7 @@ class Advertisement(models.Model):
     cooling_system = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='cooling_system')
     flooring = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='flooring')
 
-    description = models.CharField(max_length=1000)
+    description = models.CharField(max_length=1000, blank=True)
 
 
     number_of_views = models.IntegerField(default=0)
