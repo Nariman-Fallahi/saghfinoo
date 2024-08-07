@@ -39,14 +39,16 @@ class AdvertisementChoice(models.Model):
                 r.value = value
                 r.save()
 
+def tz():
+    return timezone.now().strftime(settings.REST_FRAMEWORK['DATETIME_FORMAT'])
 
 class Advertisement(models.Model):
     owner = models.ForeignKey(Realtor, on_delete=models.CASCADE)
 
     is_confirmed = models.BooleanField(default=False)
     
-    created_at = models.DateTimeField(default=lambda: timezone.now().strftime(settings.REST_FRAMEWORK['DATETIME_FORMAT']))
-    modified_at = models.DateTimeField(default=lambda: timezone.now().strftime(settings.REST_FRAMEWORK['DATETIME_FORMAT']))
+    created_at = models.DateTimeField(default=tz())
+    modified_at = models.DateTimeField(default=tz())
 
     province = models.CharField(max_length=50)
     city =models.CharField(max_length=50)
@@ -58,7 +60,7 @@ class Advertisement(models.Model):
     property_type = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='property_type') # apartment or villa or ...
     type_of_transaction = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='type_of_transaction') # rent+mortgage or full mortgage or rent
 
-    desposit = models.BigIntegerField()
+    deposit = models.BigIntegerField()
     rent = models.BigIntegerField()
     convertible = models.BooleanField()
 

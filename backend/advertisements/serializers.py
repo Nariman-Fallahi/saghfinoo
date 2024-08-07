@@ -19,7 +19,7 @@ class AdvertisementSerializer(serializers.ModelSerializer):
             'side_street',
             'type_of_transaction',
             'property_type',
-            'desposit',
+            'deposit',
             'rent',
             'convertible',
             'area',
@@ -48,25 +48,25 @@ class AdvertisementSerializer(serializers.ModelSerializer):
         
         if type_of_transaction.en_value == 'rent':
             # desposit must be 0
-            if attrs['desposit'] != 0:
-                raise serializers.ValidationError({'desposit':'in rent transaction, this field must be zero'})
+            if attrs['deposit'] != 0:
+                raise serializers.ValidationError({'deposit':'in rent transaction, this field must be zero'})
             if attrs['rent'] == 0:
                 raise serializers.ValidationError({'rent':'in rent and desposit transaction, this field cannot be zero'})
 
 
-        elif type_of_transaction.en_value == 'rent and desposit':
+        elif type_of_transaction.en_value == 'rent and deposit':
             
             if attrs['rent'] == 0:
-                raise serializers.ValidationError({'rent':'in rent and desposit transaction, this field cannot be zero'})
-            if attrs['desposit'] == 0:
-                raise serializers.ValidationError({'desposit':'in rent and desposit transaction, this field cannot be zero'})
+                raise serializers.ValidationError({'rent':'in rent and deposit transaction, this field cannot be zero'})
+            if attrs['deposit'] == 0:
+                raise serializers.ValidationError({'deposit':'in rent and deposit transaction, this field cannot be zero'})
 
-        elif type_of_transaction.en_value == 'full desposit':
+        elif type_of_transaction.en_value == 'full deposit':
             # buying_price and rent_price must be zero
             if attrs['rent'] != 0:
-                raise serializers.ValidationError({'rent':'in full disposit transaction, this field must be zero'})
-            if attrs['disposit'] == 0:
-                raise serializers.ValidationError({'disposit':'in full desposit transaction, this field cannot be zero'})
+                raise serializers.ValidationError({'rent':'in full deposit transaction, this field must be zero'})
+            if attrs['diposit'] == 0:
+                raise serializers.ValidationError({'deposit':'in full deposit transaction, this field cannot be zero'})
 
             
         validations.validate_choice_se('type_of_restroom', attrs['type_of_restroom'])
@@ -101,7 +101,7 @@ class AdvertisementResponseSerializer(serializers.ModelSerializer):
             'area',
             'property_type__value',
             'type_of_transaction__value',
-            'desposit',
+            'deposit',
             'rent',
             'room',
             'parking',
@@ -133,7 +133,7 @@ class AdvertisementPreviewResponseSerializer(serializers.ModelSerializer):
             'area',
             'city',
             'main_street',
-            'desposit',
+            'deposit',
             'rent',
             'created_at',
         ]
