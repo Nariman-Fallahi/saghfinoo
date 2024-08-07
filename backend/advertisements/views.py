@@ -13,7 +13,7 @@ from common.utils.request import get_page_and_limit
 from common import codes
 from common.utils import validations
 
-from .serializers import AdvertisementSerializer, AdvertisementPreviewResponseSerializer, AdvertisementResponseSerializer
+from .serializers import AdvertisementSerializer, AdvertisementPreviewResponseSerializer, AdvertisementResponseSerializer, RealtorAdvertisementPreviewResponseSerializer, RealtorAdvertisementResponseSerializer
 from .models import Advertisement, AdvertisementImage, AdvertisementChoice
 
 
@@ -157,7 +157,35 @@ class SearchAdvertisementsAPIView(APIView):
 
         return Response({'data':ads, 'status':200})
 
+class GetAllRealtorAdvertisementsAPIView(APIView):
+    """get a realtor ads. confirmed or not confirmed"""
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsRealtor]
 
+    def get(self, req):
+        try:
+            page, limit = get_page_and_limit(req)
+        except Exception as e:
+            return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
+        
+        reo = Advertisement.objects.filter(owner=req.realtor.id).values(*RealtorAdvertisementPreviewResponseSerializer.Meta.fields)[page*limit:page*limit+limit]
+        
+        return Response({'data':reo, 'status':200})
+    
+
+class GetRealtorAdvertisementAPIView(APIView):
+    """get a realtor ad. confrimed or not confirmed"""
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsRealtor]
+
+    def get(self, req, advertisement_id):
+        try:
+            reo = Advertisement.objects.values(*RealtorAdvertisementResponseSerializer.Meta.fields).get(id=advertisement_id, owner=req.realtor.id)
+            reo['images'] = AdvertisementImage.objects.filter(advertisement=reo['id']).values('image_full_path', 'id')
+            
+            return Response({"data":reo, 'status':200})
+        except Advertisement.DoesNotExist:
+            return Response({'status':404, 'errors':{'non-field-error': 'advertisement not found or you not owner of it'}})
 
 
 class UploadAdvertisementImageAPIView(APIView):
