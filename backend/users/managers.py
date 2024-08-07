@@ -12,4 +12,5 @@ class CustomUserManager(BaseUserManager):
         user = self.model(number=number, first_name='admin', last_name='admin')
         user.set_password(password)
         user.is_staff = True
+        user.activity_type = 'admin'
         return user

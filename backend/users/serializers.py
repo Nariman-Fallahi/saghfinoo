@@ -69,6 +69,22 @@ class CustomUserResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'number', 'image_full_path', 'created_at']
+        fields = ['first_name', 'last_name', 'number', 'image_full_path', 'created_at', 'email', 'activity_type']
 
 
+class UserSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = CustomUser
+        fields = ['first_name', 'last_name', 'email']
+
+    def validate(self, attrs):
+
+        validations.validate_se('first_name', attrs['first_name'], validations.validate_name)
+        validations.validate_se('last_name', attrs['last_name'], validations.validate_name)
+
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    new_password = serializers.CharField(max_length=50)
+    current_password = serializers.CharField(max_length=50)

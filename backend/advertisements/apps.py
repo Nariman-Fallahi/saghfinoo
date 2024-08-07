@@ -1,12 +1,15 @@
 from django.apps import AppConfig
 from django.conf import settings
 
+
 class RealEstatesConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'advertisements'
 
     def ready(self) -> None:
-
+            import random
+            if settings.DEBUG and random.random() > 0.1:
+                return
 
             from .models import AdvertisementChoice
             print('adding advertisement choices')

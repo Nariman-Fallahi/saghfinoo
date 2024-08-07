@@ -88,11 +88,28 @@ class GetAdvertisementAPIView(APIView):
             return Response({"data":reo, 'status':200})        
         except Advertisement.DoesNotExist:
             return Response({'status':404})
-        
+
 class SearchAdvertisementsAPIView(APIView):
 
     def get(self, req):
-        pass
+        qp = req.query_params
+        queries = {'realtor':validations.validate_int, } # query_name:validation_function
+        ads = Advertisement.objects.values(*AdvertisementPreviewResponseSerializer.Meta.fields)
+        for field_name, validate_func in queries:
+            value = qp.get(field_name, '')
+            if value == '':
+                continue
+            try:
+                validate_func(value)
+            except ValueError as e:
+                return Response({'errors':{field_name:str(e)}})
+
+            ads = ads.filter(field_name=value)
+
+        return Response({'data':ads, 'status':200})
+
+
+
 
 class UploadAdvertisementImageAPIView(APIView):
     permission_classes = [IsAuthenticated]
@@ -132,3 +149,11 @@ class UploadAdvertisementImageAPIView(APIView):
 
 
 
+class DeleteAllRealtorAdvertisementsAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsRealtor]
+    authentication_classes = [JWTAuthentication]
+
+    def post(self, req):
+        Advertisement.objects.delete(realtor=req.realtor.id)
+        return Response({'msg':'done', 'status':200})
+    
