@@ -9,4 +9,5 @@ urlpatterns = [
     path('get/<slug>', views.GetRealEstateOfficeAPIView.as_view(), name='get_real_estate_office'),
     path('upload-image', views.UploadRealEstateOfficeImageAPIView.as_view(), name='upload_real_estate_office_image'),
     path('upload-bg-image', views.UploadRealEstateOfficeBGImageAPIView.as_view(), name='upload_real_estate_office_bg_image'),
+    path('search', views.SearchRealEstateOfficesAPIView.as_view(), name='search_real_estate_office'),
 ]

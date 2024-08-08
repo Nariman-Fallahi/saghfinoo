@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.core.files.storage import default_storage
 from django.conf import settings
-
+from django.db.models import Q
 
 from common.utils.request import get_page_and_limit
 from common import codes
@@ -50,7 +50,39 @@ class GetRealtorAPIView(APIView):
             return Response({"data":reo, 'status':200})        
         except Realtor.DoesNotExist:
             return Response({'status':404})
+
+
+
+class SearchRealtorsAPIView(APIView):
+
+    def get(self, req):
+        qp = dict(req.query_params)
+        try:
+            page, limit = get_page_and_limit(req)
+        except Exception as e:
+            return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
+
+
+
+        if qp.get('city', '') != '':
+            if type(qp['city']) == list:
+                query = None
+                for c in qp['city']:
+                    if query:
+                        query |= Q(real_estate_office__city=c)
+                    else:
+                        query = Q(real_estate_office__city=c)
+            
+            
         
+        query &= Q(is_confirmed=True)
+
+        reo = Realtor.objects.values(*RealtorPreviewResponseSerializer.Meta.fields).filter(query)[page*limit: page*limit+limit]
+    
+        return Response({'data':reo, 'status':200})
+
+
+
 
 class UploadRealtorBGImageAPIView(APIView):
 
