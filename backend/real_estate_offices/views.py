@@ -11,6 +11,8 @@ from django.conf import settings
 from common.utils.permissions import IsRealEstateOfficeOwner, IsAdmin, IsRealtor
 from common.utils.request import get_page_and_limit
 from common import codes
+from common.utils import validations
+from django.db.models import Q
 
 from .serializers import RealEstateOfficeSerializer, RealEstateOfficePreviewResponseSerializer, RealEstateOfficeResponseSerializer
 from .models import RealEstateOffice
@@ -75,6 +77,35 @@ class GetRealEstateOfficeAPIView(APIView):
         except RealEstateOffice.DoesNotExist:
             return Response({'status':404})
         
+
+class SearchRealEstateOfficesAPIView(APIView):
+
+    def get(self, req):
+        qp = dict(req.query_params)
+        try:
+            page, limit = get_page_and_limit(req)
+        except Exception as e:
+            return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
+
+
+
+        if qp.get('city', '') != '':
+            if type(qp['city']) == list:
+                query = None
+                for c in qp['city']:
+                    if query:
+                        query |= Q(city=c)
+                    else:
+                        query = Q(city=c)
+            
+            
+        
+        query &= Q(is_confirmed=True)
+
+        reo = RealEstateOffice.objects.values(*RealEstateOfficePreviewResponseSerializer.Meta.fields).filter(query)[page*limit: page*limit+limit]
+    
+        return Response({'data':reo, 'status':200})
+
 
 
 class UploadRealEstateOfficeImageAPIView(APIView):
