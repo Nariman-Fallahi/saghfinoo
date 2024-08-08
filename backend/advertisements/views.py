@@ -227,7 +227,22 @@ class DeleteAllRealtorAdvertisementsAPIView(APIView):
     permission_classes = [IsAuthenticated, IsRealtor]
     authentication_classes = [JWTAuthentication]
 
-    def post(self, req):
+    def delete(self, req):
         Advertisement.objects.delete(realtor=req.realtor.id)
         return Response({'msg':'done', 'status':200})
     
+
+class DeleteAdvertisementAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsRealtor, IsAdvertisementOwner]
+    authentication_classes = [JWTAuthentication]
+
+    def delete(self, req, advertisement_id):
+        try:
+            ad = Advertisement.objects.get(id=advertisement_id)
+        except Advertisement.DoesNotExist:
+            return Response({'errors':{'non-field-error':'advertisement not found'}, 'status':404})
+
+        self.check_object_permissions(req, ad)
+
+        ad.delete()
+        return Response({'msg':'done', 'status':200})
