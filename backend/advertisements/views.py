@@ -228,7 +228,8 @@ class DeleteAllRealtorAdvertisementsAPIView(APIView):
     authentication_classes = [JWTAuthentication]
 
     def delete(self, req):
-        Advertisement.objects.delete(realtor=req.realtor.id)
+        AdvertisementImage.objects.filter(advertisement__owner=req.realtor.id).delete()
+        Advertisement.objects.filter(owner=req.realtor.id).delete()
         return Response({'msg':'done', 'status':200})
     
 
