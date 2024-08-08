@@ -13,26 +13,31 @@ class AdvertisementChoice(models.Model):
     @classmethod
     def add_default_rows(cls):
         default = (
-            ('type', 'آپارتمان', 'apartment'),
-            ('type', 'ویلا', 'villa'),
-            ('deal_type', 'خرید', 'buy'),
-            ('deal_type', 'رهن و اجاره', 'mortgage and rent'),
-            ('deal_type', 'رهن کامل', 'full mortgage'),
-            ('deal_type', 'اجاره', 'rent'),
-            ('wc_type', 'فرنگی', 'farhangi'),
-            ('wc_type', 'ایرانی', 'irani'),
+            ('property_type', 'آپارتمان', 'apartment'),
+            ('property_type', 'ویلا', 'villa'),
+            # ('type_of_transaction', 'خرید', 'buy'),
+            ('type_of_transaction', 'رهن و اجاره', 'rent and deposit'),
+            ('type_of_transaction', 'رهن کامل', 'full deposit'),
+            ('type_of_transaction', 'اجاره', 'rent'),
+            ('type_of_restroom', 'فرنگی', 'farhangi'),
+            ('type_of_restroom', 'ایرانی', 'irani'),
             ('cooling_system', 'کولر آبی', 'water cooler'),
-            ('cooling_system', 'کولر گازی', 'gas cooler'),
-            ('heating_system', 'شوفاژ', 'shoofazh'),
-            ('heating_system', 'بخاری گازی', 'gas heater'),
-            ('heating_system', 'بخاری برقی', 'electric heater'),
-            ('heating_system', 'گرمایش از کف', 'in-floor heating'),
-            ('floor_meterial', 'سرامیک', 'ceramic'),
-            ('floor_meterial', 'چوب', 'wood'),
-            ('floor_meterial', 'کاشی', 'tile'),
+            ('cooling_system', 'چیلر', 'chiller'),
+            ('cooling_system', 'اسپلیت', 'split'),
+            ('cooling_system', 'فن کوئل', 'fan koel'),
+            ('heating_system', 'شومینه', 'fireplace'),
+            ('heating_system', 'اسپلیت', 'split'),
+            ('heating_system', 'مرکزی', 'centeral'),
+            ('heating_system', 'از کف', 'in-floor'),
+            ('heating_system', 'رادیاتور', 'radiator'),
+            ('flooring', 'سرامیک', 'ceramic'),
+            ('flooring', 'سنگ', 'stone'),
+            ('flooring', 'پارکت', 'parquet'),
+            ('flooring', 'لمینت', 'laminate'),
+            ('flooring', 'موزائیک', 'mosaic'),
         )
 
-        if AdvertisementChoice.objects.count() == 0:
+        if AdvertisementChoice.objects.count() < len(default):
             for key, value in default:
                 r = AdvertisementChoice()
                 r.key = key

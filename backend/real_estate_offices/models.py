@@ -15,9 +15,10 @@ class RealEstateOffice(models.Model):
     sub_street = models.CharField(max_length=50)
 
     telegram = models.CharField(max_length=100)
-    instagram = models.CharField(max_length=100)
-    site = models.CharField(max_length=100)
-    linkedin = models.CharField(max_length=100)
+    whatsapp = models.CharField(max_length=100)
+    twitter = models.CharField(max_length=100)
+    facebook = models.CharField(max_length=100)
+    email = models.CharField(max_length=100)
 
     image = models.CharField(max_length=1000, default='')
     image_full_path = models.CharField(max_length=1000, default='')
