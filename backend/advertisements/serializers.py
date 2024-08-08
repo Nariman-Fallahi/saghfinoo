@@ -68,6 +68,8 @@ class AdvertisementSerializer(serializers.ModelSerializer):
             if attrs['diposit'] == 0:
                 raise serializers.ValidationError({'deposit':'in full deposit transaction, this field cannot be zero'})
 
+        else:
+            raise ValueError('type_of_transaction is set incurrectlly')
             
         validations.validate_choice_se('type_of_restroom', attrs['type_of_restroom'])
         validations.validate_choice_se('cooling_system', attrs['cooling_system'])

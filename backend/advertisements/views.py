@@ -28,8 +28,8 @@ class CreateAdvertisementAPIView(APIView):
     def post(self, req):
         serializer = self.serializer_class(data=req.data)
         if serializer.is_valid():
-            serializer.save(owner=req.realtor)
-            return Response({"msg": "done", 'status':200})
+            ad = serializer.save(owner=req.realtor)
+            return Response({"msg": "done", 'id':ad.id, 'status':200})
         return Response({"errors": serializer.errors, 'code':codes.INVALID_FIELD, 'status':400})
     
 
@@ -125,10 +125,7 @@ class SearchAdvertisementsAPIView(APIView):
             'floor': 5,
 
         } 
-        a = Advertisement.objects.get(id=177)
-        from django.utils import timezone
-        a.created_at = timezone.now().strftime(settings.REST_FRAMEWORK['DATETIME_FORMAT'])
-        a.save()
+
         try:
             page, limit = get_page_and_limit(req)
         except Exception as e:
