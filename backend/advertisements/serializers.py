@@ -68,6 +68,8 @@ class AdvertisementSerializer(serializers.ModelSerializer):
             if attrs['diposit'] == 0:
                 raise serializers.ValidationError({'deposit':'in full deposit transaction, this field cannot be zero'})
 
+        else:
+            raise ValueError('type_of_transaction is set incurrectlly')
             
         validations.validate_choice_se('type_of_restroom', attrs['type_of_restroom'])
         validations.validate_choice_se('cooling_system', attrs['cooling_system'])
@@ -151,3 +153,24 @@ class RealtorAdvertisementResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Advertisement
         fields = AdvertisementResponseSerializer.Meta.fields + ['is_confirmed']
+
+
+
+class UserSavedAdvertisementPreviewResponseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Advertisement
+        fields = [
+            'advertisement__id',
+            'advertisement__image_full_path',
+            'advertisement__type_of_transaction__value',
+            'advertisement__property_type__value',
+            'advertisement__area',
+            'advertisement__city',
+            'advertisement__main_street',
+            'advertisement__side_street',
+            'advertisement__deposit',
+            'advertisement__rent',
+            'advertisement__created_at',
+        ]
+

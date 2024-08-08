@@ -13,8 +13,8 @@ from common.utils.request import get_page_and_limit
 from common import codes
 from common.utils import validations
 
-from .serializers import AdvertisementSerializer, AdvertisementPreviewResponseSerializer, AdvertisementResponseSerializer, RealtorAdvertisementPreviewResponseSerializer, RealtorAdvertisementResponseSerializer
-from .models import Advertisement, AdvertisementImage, AdvertisementChoice
+from .serializers import AdvertisementSerializer, AdvertisementPreviewResponseSerializer, AdvertisementResponseSerializer, RealtorAdvertisementPreviewResponseSerializer, RealtorAdvertisementResponseSerializer, UserSavedAdvertisementPreviewResponseSerializer
+from .models import Advertisement, AdvertisementImage, AdvertisementChoice, SavedAdvertisement
 
 
 
@@ -28,8 +28,8 @@ class CreateAdvertisementAPIView(APIView):
     def post(self, req):
         serializer = self.serializer_class(data=req.data)
         if serializer.is_valid():
-            serializer.save(owner=req.realtor)
-            return Response({"msg": "done", 'status':200})
+            ad = serializer.save(owner=req.realtor)
+            return Response({"msg": "done", 'id':ad.id, 'status':200})
         return Response({"errors": serializer.errors, 'code':codes.INVALID_FIELD, 'status':400})
     
 
@@ -125,10 +125,7 @@ class SearchAdvertisementsAPIView(APIView):
             'floor': 5,
 
         } 
-        a = Advertisement.objects.get(id=177)
-        from django.utils import timezone
-        a.created_at = timezone.now().strftime(settings.REST_FRAMEWORK['DATETIME_FORMAT'])
-        a.save()
+
         try:
             page, limit = get_page_and_limit(req)
         except Exception as e:
@@ -230,7 +227,87 @@ class DeleteAllRealtorAdvertisementsAPIView(APIView):
     permission_classes = [IsAuthenticated, IsRealtor]
     authentication_classes = [JWTAuthentication]
 
-    def post(self, req):
-        Advertisement.objects.delete(realtor=req.realtor.id)
+    def delete(self, req):
+        AdvertisementImage.objects.filter(advertisement__owner=req.realtor.id).delete()
+        Advertisement.objects.filter(owner=req.realtor.id).delete()
         return Response({'msg':'done', 'status':200})
     
+
+class DeleteAdvertisementAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsRealtor, IsAdvertisementOwner]
+    authentication_classes = [JWTAuthentication]
+
+    def delete(self, req, advertisement_id):
+        try:
+            ad = Advertisement.objects.get(id=advertisement_id)
+        except Advertisement.DoesNotExist:
+            return Response({'errors':{'non-field-error':'advertisement not found'}, 'status':404})
+
+        self.check_object_permissions(req, ad)
+
+        ad.delete()
+        return Response({'msg':'done', 'status':200})
+    
+
+####################################     saved advertisements      ###################################################
+
+class SaveAdvertisementAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def post(self, req, advertisement_id):
+        # check is ad exist
+        try:
+            ad = Advertisement.objects.get(id=advertisement_id, is_confirmed=True)
+        except Advertisement.DoesNotExist:
+            return Response({'errors':{'non-field-error': 'advertisement not found'}, 'status':404})
+
+        # check ad is already saved
+        try:
+            SavedAdvertisement.objects.get(advertisement=advertisement_id, user=req.user.id)
+            return Response({'errors':{'non-field-error':'advertisement is already saved'}, 'code':codes.AD_ALREADY_SAVED, 'status':400})
+        except SavedAdvertisement.DoesNotExist:
+            pass
+        
+        sad = SavedAdvertisement()
+        sad.advertisement = ad
+        sad.user = req.user
+        sad.save()
+
+        return Response({'msg':'done', 'status':200})
+    
+
+class GetUserSavedAdvertisementAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def get(self, req):
+        try:
+            page, limit = get_page_and_limit(req)
+        except Exception as e:
+            return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
+        
+        ads = SavedAdvertisement.objects.filter(user=req.user.id).values(*UserSavedAdvertisementPreviewResponseSerializer.Meta.fields)[page*limit:page*limit+limit]
+
+        # remove advertisement__ from the keys
+        ads = list(ads)
+        for i in range(len(ads)):
+            for key in ads[i].keys():
+                new_key = key[len('advertisement__'):]
+                ads[i][new_key] = ads[i].pop(key)
+            
+        return Response({'data':ads, 'status':200})
+
+
+class DeleteSavedAdvertisementAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def delete(self, req, advertisement_id):
+        try:
+            sad = SavedAdvertisement.objects.get(advertisement=advertisement_id, user=req.user.id)
+        except SavedAdvertisement.DoesNotExist:
+            return Response({'errors':{'non-field-error':'this advertisement not saved'}, 'code':codes.AD_NOT_SAVED, 'status':400})
+        
+        sad.delete()
+        return Response({'msg':'done', 'status':200})
