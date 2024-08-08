@@ -3,7 +3,9 @@ from django.utils import timezone
 from django.conf import settings
 
 from realtors.models import Realtor
+from users.models import CustomUser
 
+from common.utils.database import formated_datetime_now
 
 class AdvertisementChoice(models.Model):
     key = models.CharField(max_length=50)
@@ -44,16 +46,14 @@ class AdvertisementChoice(models.Model):
                 r.value = value
                 r.save()
 
-def tz():
-    return timezone.now().strftime(settings.REST_FRAMEWORK['DATETIME_FORMAT'])
 
 class Advertisement(models.Model):
     owner = models.ForeignKey(Realtor, on_delete=models.CASCADE)
 
     is_confirmed = models.BooleanField(default=False)
     
-    created_at = models.DateTimeField(default=tz())
-    modified_at = models.DateTimeField(default=tz())
+    created_at = models.DateTimeField(default=formated_datetime_now)
+    modified_at = models.DateTimeField(default=formated_datetime_now)
 
     province = models.CharField(max_length=50)
     city =models.CharField(max_length=50)
@@ -98,3 +98,10 @@ class AdvertisementImage(models.Model):
 
     image = models.CharField(max_length=1000)
     image_full_path = models.CharField(max_length=1000)
+
+
+class SavedAdvertisement(models.Model):
+    advertisement = models.ForeignKey(Advertisement, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+
+    created_at = models.DateTimeField(default=formated_datetime_now)

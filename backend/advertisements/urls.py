@@ -13,4 +13,8 @@ urlpatterns = [
     path('get-for-realtor/<int:advertisement_id>', views.GetRealtorAdvertisementAPIView.as_view(), name='get_realtor_advertisement'),
     path('delete-all-for-realtor', views.DeleteAllRealtorAdvertisementsAPIView.as_view(), name='delete_all_realtor_advertisements'),
     path('delete/<int:advertisement_id>', views.DeleteAdvertisementAPIView.as_view(), name='delete_advertisement'),
+
+    path('save/<int:advertisement_id>', views.SaveAdvertisementAPIView.as_view(), name='save_advertisement'),
+    path('delete-saved/<int:advertisement_id>', views.DeleteSavedAdvertisementAPIView.as_view(), name='delete_saved_advertisement'),
+    path('get-all-user-saved', views.GetUserSavedAdvertisementAPIView.as_view(), name='get_all_user_saved_advertisement'),
 ]

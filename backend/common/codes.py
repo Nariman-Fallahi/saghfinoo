@@ -27,3 +27,8 @@ USER_IS_NOT_REO_OWNER = 'user_is_not_reo_owner'
 
 USER_IS_NOT_REALTOR = 'user_is_not_realtor'
 REALTOR_NOT_CONFIRMED = 'realtor_not_confirmed'
+
+# advertisements
+
+AD_ALREADY_SAVED = 'ad_already_saved'
+AD_NOT_SAVED = 'ad_not_saved'
