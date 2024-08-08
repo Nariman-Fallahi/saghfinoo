@@ -264,6 +264,9 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME_LATE_USER': timedelta(days=30), 
 }
 
+if DEBUG:
+    SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'] = timedelta(days=7)
+
 # django debug toolbar
 INTERNAL_IPS = ['127.0.0.1']
 
