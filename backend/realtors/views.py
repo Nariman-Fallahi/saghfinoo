@@ -13,9 +13,11 @@ from django.db.models import Q
 from common.utils.request import get_page_and_limit
 from common import codes
 from common.utils import validations
+from common.utils.permissions import IsAdmin, IsOwner
+from common.utils.database import formated_datetime_now
 
-from .serializers import RealtorSerializer, RealtorResponseSerializer, RealtorPreviewResponseSerializer
-from .models import Realtor
+from .serializers import RealtorSerializer, RealtorResponseSerializer, RealtorPreviewResponseSerializer, CommentSerializer, CommentResponseSerializer
+from .models import Realtor, Comment
 
 
 class CreateRealtor(APIView):
@@ -37,7 +39,7 @@ class GetAllRealtorAPIView(APIView):
     def get(self, req):
         try:
             page, limit = get_page_and_limit(req)
-        except Exception as e:
+        except ValueError as e:
             return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
         
         reo = Realtor.objects.filter(is_confirmed=True).values(*RealtorPreviewResponseSerializer.Meta.fields)[page*limit:page*limit+limit]
@@ -61,7 +63,7 @@ class SearchRealtorsAPIView(APIView):
         qp = dict(req.query_params)
         try:
             page, limit = get_page_and_limit(req)
-        except Exception as e:
+        except ValueError as e:
             return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
 
             
@@ -130,3 +132,111 @@ class UploadRealtorBGImageAPIView(APIView):
             realtor.save()
 
             return Response({"msg":"done", 'status':200})
+    
+
+#####################################  comment ################################################
+
+class CreateCommentAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def post(self, req, realtor_id):
+        serializer = CommentSerializer(data=req.data)
+        if serializer.is_valid():
+            try:
+                realtor = Realtor.objects.get(id=realtor_id)
+            except Realtor.DoesNotExist:
+                return Response({'errors':{'non-field-error':'realtor not found'}, 'status':404})
+
+            comment = serializer.save(owner=req.user, realtor=realtor)
+            increase_realtor_score(comment.score, comment.realtor)
+            return Response({'msg':'done', 'status':200})
+        
+        return Response({'errors':serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})
+    
+class EditCommentAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def put(self, req, comment_id):
+        serializer = CommentSerializer(data=req.data)
+        if serializer.is_valid():
+            try:
+                comment = Comment.objects.get(id=comment_id)
+            except Comment.DoesNotExist:
+                return Response({'errors':{'non-field-error':'comment not found'}, 'status':404}) 
+
+            old_score = comment.score
+
+            comment.description = serializer.data['description']
+            comment.score = serializer.data['score']
+            comment.modified_at = formated_datetime_now()
+            comment.save()
+
+            edit_realtor_score(old_score, comment.score, comment.realtor)
+
+            return Response({'msg':'done', 'status':200})
+        
+        return Response({'errors':serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})
+    
+class GetAllRealtorCommentsAPIView(APIView):
+
+    def get(self, req, realtor_id):
+        try:
+            page, limit = get_page_and_limit(req, default_limit=4)
+        except ValueError as e:
+            return Response({'errors': e.dict, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
+        
+        comments = Comment.objects.filter(realtor=realtor_id).values(*CommentResponseSerializer.Meta.fields).order_by('-created_at')[page*limit:page*limit+limit]
+        return Response({'data':comments, 'status':200})
+    
+class DeleteCommentAPIVew(APIView):
+    permission_classes = [IsAuthenticated, IsOwner|IsAdmin]
+    authentication_classes = [JWTAuthentication]
+
+    def delete(self, req, comment_id):
+        try:
+            comment = Comment.objects.get(id=comment_id)
+        except Comment.DoesNotExist:
+            return Response({'errors':{'non-field-error':'comment not found'}, 'status':404})
+        
+        self.check_object_permissions(req, comment)
+        print('deleteing --------------------------')
+        comment.delete()
+
+        decrease_realtor_score(comment.score, comment.realtor)
+
+        return Response({'msg':'done', 'status':200})
+
+
+def increase_realtor_score(score, realtor):
+    realtor.score_sum += score
+    realtor.score_num += 1
+    realtor.score = round(realtor.score_sum/realtor.score_num, 1)
+    realtor.save()
+
+
+def edit_realtor_score(old_score, new_score, realtor):
+    realtor.score_sum += new_score-old_score
+    if realtor.score_num == 0:
+        realtor.score = settings.REALTOR_DEFAULT_SCORE
+        realtor.score_sum = 0
+        realtor.save()
+        return
+
+    realtor.score = round(realtor.score_sum/realtor.score_num, 1)
+    realtor.save()
+
+
+def decrease_realtor_score(score, realtor):
+    """on deleting comment"""
+    realtor.score_sum -= score
+    realtor.score_num -= 1
+    if realtor.score_num == 0:
+        realtor.score = settings.REALTOR_DEFAULT_SCORE
+        realtor.score_sum = 0
+        realtor.save()
+        return
+
+    realtor.score = round(realtor.score_sum/realtor.score_num, 1)
+    realtor.save()
