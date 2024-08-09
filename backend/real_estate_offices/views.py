@@ -81,6 +81,7 @@ class GetRealEstateOfficeAPIView(APIView):
 class SearchRealEstateOfficesAPIView(APIView):
 
     def get(self, req):
+        """search?city=something1&city=something2"""
         qp = dict(req.query_params)
         try:
             page, limit = get_page_and_limit(req)
@@ -110,8 +111,9 @@ class SearchRealEstateOfficesAPIView(APIView):
             query = Q(is_confirmed=True)
 
         reo = RealEstateOffice.objects.values(*RealEstateOfficePreviewResponseSerializer.Meta.fields).filter(query)[page*limit: page*limit+limit]
+        total_pages = RealEstateOffice.objects.filter(query).count()/limit
     
-        return Response({'data':reo, 'status':200})
+        return Response({'data':reo, 'total_pages':total_pages, 'status':200})
 
         
 
