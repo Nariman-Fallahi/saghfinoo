@@ -91,7 +91,7 @@ class SearchRealEstateOfficesAPIView(APIView):
         if qp.get('city', '') != '':
             if type(qp['city']) == list:
                 for c in qp['city']:
-                    if c == '':
+                    if c == '' or c == '"':
                         continue
                     try:
                         validations.validate_name(c)
