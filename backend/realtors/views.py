@@ -81,8 +81,8 @@ class SearchRealtorsAPIView(APIView):
         else:
             query = Q(is_confirmed=True)
 
-        if req.query_params.get('realestate_username', '') != '':
-            query &= Q(real_estate_office__username=req.query_params['realestate_username'])
+        if req.query_params.get('reo_username', '') != '':
+            query &= Q(real_estate_office__username=req.query_params['reo_username'])
 
         reo = Realtor.objects.values(*RealtorPreviewResponseSerializer.Meta.fields).filter(query)[page*limit: page*limit+limit]
     
