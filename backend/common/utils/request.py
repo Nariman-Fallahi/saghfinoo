@@ -1,11 +1,11 @@
 
 
-def get_page_and_limit(request):
-    """riase error if page was not found or invalid. and if limit was invalid"""
+def get_page_and_limit(request, default_limit=21):
+    """riase error if page was not found in query params or invalid. and if limit was invalid"""
     try:
         page = int(request.query_params['page'])
     except KeyError:
-        e = KeyError("page not found in query params")
+        e = ValueError("page not found in query params")
         e.dict = {'page': "page not found in query params"}
         raise e
     except:
@@ -14,7 +14,7 @@ def get_page_and_limit(request):
         raise e
 
     try:
-        limit = int(request.query_params.get('limit', 21))
+        limit = int(request.query_params.get('limit', default_limit))
     except:
         e = ValueError("invalid limit")
         e.dict = {'limit':'invalid limit'}
