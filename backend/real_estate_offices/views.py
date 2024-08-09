@@ -87,12 +87,12 @@ class SearchRealEstateOfficesAPIView(APIView):
         except Exception as e:
             return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
 
-
-
         query = None
         if qp.get('city', '') != '':
             if type(qp['city']) == list:
                 for c in qp['city']:
+                    if c == '':
+                        continue
                     try:
                         validations.validate_name(c)
                     except ValueError as e:
