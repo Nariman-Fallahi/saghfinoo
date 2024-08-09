@@ -89,9 +89,9 @@ class SearchRealEstateOfficesAPIView(APIView):
 
 
 
+        query = None
         if qp.get('city', '') != '':
             if type(qp['city']) == list:
-                query = None
                 for c in qp['city']:
                     if query:
                         query |= Q(city=c)
@@ -99,8 +99,10 @@ class SearchRealEstateOfficesAPIView(APIView):
                         query = Q(city=c)
             
             
-        
-        query &= Q(is_confirmed=True)
+        if query:
+            query &= Q(is_confirmed=True)
+        else:
+            query = Q(is_confirmed=True)
 
         reo = RealEstateOffice.objects.values(*RealEstateOfficePreviewResponseSerializer.Meta.fields).filter(query)[page*limit: page*limit+limit]
     
