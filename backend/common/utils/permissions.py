@@ -1,7 +1,6 @@
 from rest_framework.permissions import BasePermission
 
-from . import realtor_model
-from real_estate_offices.models import RealEstateOffice
+from realtors.models import Realtor
 
 class IsRealEstateOfficeOwner(BasePermission):
 
@@ -22,13 +21,19 @@ class IsRealtor(BasePermission):
     
     def has_permission(self, request, view):
         try:
-            realtor = realtor_model.objects.get(user=request.user, is_confirmed=True)
+            realtor = Realtor.objects.get(user=request.user, is_confirmed=True)
             request.realtor = realtor
             return True
-        except realtor_model.DoesNotExist:
+        except Realtor.DoesNotExist:
             return False
 
 class IsAdvertisementOwner(BasePermission):
 
     def has_object_permission(self, request, view, obj):
         return obj.owner.user == request.user
+    
+
+class IsOwner(BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        return obj.owner == request.user
