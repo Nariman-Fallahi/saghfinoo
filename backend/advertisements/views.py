@@ -71,7 +71,7 @@ class GetAllAdvertisementsAPIView(APIView):
     def get(self, req):
         try:
             page, limit = get_page_and_limit(req)
-        except Exception as e:
+        except ValueError as e:
             return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
         
         reo = Advertisement.objects.filter(is_confirmed=True).values(*AdvertisementPreviewResponseSerializer.Meta.fields)[page*limit:page*limit+limit]
@@ -128,7 +128,7 @@ class SearchAdvertisementsAPIView(APIView):
 
         try:
             page, limit = get_page_and_limit(req)
-        except Exception as e:
+        except ValueError as e:
             return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
 
         kwargs = {
@@ -162,7 +162,7 @@ class GetAllRealtorAdvertisementsAPIView(APIView):
     def get(self, req):
         try:
             page, limit = get_page_and_limit(req)
-        except Exception as e:
+        except ValueError as e:
             return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
         
         reo = Advertisement.objects.filter(owner=req.realtor.id).values(*RealtorAdvertisementPreviewResponseSerializer.Meta.fields)[page*limit:page*limit+limit]
@@ -284,7 +284,7 @@ class GetUserSavedAdvertisementAPIView(APIView):
     def get(self, req):
         try:
             page, limit = get_page_and_limit(req)
-        except Exception as e:
+        except ValueError as e:
             return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
         
         ads = SavedAdvertisement.objects.filter(user=req.user.id).values(*UserSavedAdvertisementPreviewResponseSerializer.Meta.fields)[page*limit:page*limit+limit]

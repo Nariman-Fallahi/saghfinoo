@@ -62,7 +62,7 @@ class GetAllRealEstateOfficeAPIView(APIView):
     def get(self, req):
         try:
             page, limit = get_page_and_limit(req)
-        except Exception as e:
+        except ValueError as e:
             return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
         
         reo = RealEstateOffice.objects.filter(is_confirmed=True).values(*RealEstateOfficePreviewResponseSerializer.Meta.fields)[page*limit:page*limit+limit]
@@ -86,7 +86,7 @@ class SearchRealEstateOfficesAPIView(APIView):
         qp = dict(req.query_params)
         try:
             page, limit = get_page_and_limit(req)
-        except Exception as e:
+        except ValueError as e:
             return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
 
         query = None
