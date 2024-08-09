@@ -1,4 +1,5 @@
 import uuid
+import math
 from PIL import Image
 
 from rest_framework.response import Response
@@ -98,7 +99,7 @@ class SearchRealtorsAPIView(APIView):
             query &= Q(real_estate_office__username=req.query_params['reo_username'])
 
         reo = Realtor.objects.values(*RealtorPreviewResponseSerializer.Meta.fields).filter(query)[page*limit: page*limit+limit]
-        total_pages = Realtor.objects.filter(query).count()/limit
+        total_pages = math.ceil(Realtor.objects.filter(query).count()/limit)
         
     
         return Response({'data':reo, 'total_pages':total_pages, 'status':200})

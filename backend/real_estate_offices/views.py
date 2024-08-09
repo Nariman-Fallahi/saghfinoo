@@ -1,3 +1,4 @@
+import math
 import uuid
 
 from rest_framework.response import Response
@@ -111,7 +112,7 @@ class SearchRealEstateOfficesAPIView(APIView):
             query = Q(is_confirmed=True)
 
         reo = RealEstateOffice.objects.values(*RealEstateOfficePreviewResponseSerializer.Meta.fields).filter(query)[page*limit: page*limit+limit]
-        total_pages = RealEstateOffice.objects.filter(query).count()/limit
+        total_pages = math.ceil(RealEstateOffice.objects.filter(query).count()/limit)
     
         return Response({'data':reo, 'total_pages':total_pages, 'status':200})
 
