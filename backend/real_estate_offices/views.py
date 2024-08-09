@@ -93,6 +93,11 @@ class SearchRealEstateOfficesAPIView(APIView):
         if qp.get('city', '') != '':
             if type(qp['city']) == list:
                 for c in qp['city']:
+                    try:
+                        validations.validate_name(c)
+                    except ValueError as e:
+                        return Response({'errors':{'city':c}})
+                    
                     if query:
                         query |= Q(city=c)
                     else:
@@ -108,6 +113,7 @@ class SearchRealEstateOfficesAPIView(APIView):
     
         return Response({'data':reo, 'status':200})
 
+        
 
 
 class UploadRealEstateOfficeImageAPIView(APIView):
