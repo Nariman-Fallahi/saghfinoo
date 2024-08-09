@@ -11,6 +11,7 @@ from django.db.models import Q
 
 from common.utils.request import get_page_and_limit
 from common import codes
+from common.utils import validations
 
 from .serializers import RealtorSerializer, RealtorResponseSerializer, RealtorPreviewResponseSerializer
 from .models import Realtor
@@ -62,6 +63,7 @@ class SearchRealtorsAPIView(APIView):
         except Exception as e:
             return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
 
+            
 
 
         query = None
@@ -79,10 +81,12 @@ class SearchRealtorsAPIView(APIView):
         else:
             query = Q(is_confirmed=True)
 
+        if req.query_params.get('realestate_username', '') != '':
+            query &= Q(real_estate_office__username=req.query_params['realestate_username'])
+
         reo = Realtor.objects.values(*RealtorPreviewResponseSerializer.Meta.fields).filter(query)[page*limit: page*limit+limit]
     
         return Response({'data':reo, 'status':200})
-
 
 
 
