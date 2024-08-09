@@ -98,7 +98,7 @@ class SearchRealEstateOfficesAPIView(APIView):
                     try:
                         validations.validate_name(c)
                     except ValueError as e:
-                        return Response({'errors':{'city':c}})
+                        return Response({'errors':{'city':str(e)}, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
                     
                     if query:
                         query |= Q(city=c)

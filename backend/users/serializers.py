@@ -3,6 +3,7 @@ from .models import CustomUser
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from common.utils import validations
+from common import codes
 
 class VerifyNumberSerializer(serializers.Serializer):
     code = serializers.IntegerField()
@@ -72,7 +73,7 @@ class CustomUserResponseSerializer(serializers.ModelSerializer):
         fields = ['first_name', 'last_name', 'number', 'image_full_path', 'created_at', 'email', 'activity_type']
 
 
-class UserSerializer(serializers.ModelSerializer):
+class CustomUserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = CustomUser
@@ -82,6 +83,9 @@ class UserSerializer(serializers.ModelSerializer):
 
         validations.validate_se('first_name', attrs['first_name'], validations.validate_name)
         validations.validate_se('last_name', attrs['last_name'], validations.validate_name)
+        
+        return super().validate(attrs)
+
 
 
 

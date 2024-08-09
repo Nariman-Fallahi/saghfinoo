@@ -16,7 +16,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.core.files.storage import default_storage
 
 from common import codes
-from .serializers import VerifyNumberSerializer, SignupSerializer, CustomTokenObtainPairSerializer, CustomUserResponseSerializer, ChangePasswordSerializer, UserSerializer
+from .serializers import VerifyNumberSerializer, SignupSerializer, CustomTokenObtainPairSerializer, CustomUserResponseSerializer, ChangePasswordSerializer, CustomUserSerializer
 from .models import CustomUser
 
 auth_cache = caches['auth']
@@ -211,9 +211,12 @@ class EditUserAPIView(APIView):
     authentication_classes = [JWTAuthentication]
 
     def put(self, req):
-        serializer = UserSerializer(data=req.data)
+        serializer = CustomUserSerializer(data=req.data)
         if serializer.is_valid():
-            serializer.save()
+            req.user.first_name = serializer.data['first_name']
+            req.user.last_name = serializer.data['last_name']
+            req.user.email = serializer.data['email']
+            req.user.save()
             return Response({'msg':"done", 'status':200})
         
         return Response({"errors": serializer.errors, 'status':400})
