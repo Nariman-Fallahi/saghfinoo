@@ -76,7 +76,7 @@ class SearchRealtorsAPIView(APIView):
                     try:
                         validations.validate_name(c)
                     except ValueError as e:
-                        return Response({'erorrs':{'city':e}, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
+                        return Response({'erorrs':{'city':str(e)}, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
                     
                     if query:
                         query |= Q(real_estate_office__city=c)
@@ -94,7 +94,7 @@ class SearchRealtorsAPIView(APIView):
             try:
                 validations.validate_username(reou)
             except ValueError as e:
-                return Response({'errors':{'reo_username':e}, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
+                return Response({'errors':{'reo_username':str(e)}, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
                 
             query &= Q(real_estate_office__username=req.query_params['reo_username'])
 
