@@ -284,3 +284,6 @@ if not TESTING:
 
 # delay between two OTP code request for same number
 NUMBER_DELAY = timedelta(minutes=1, seconds=30)
+
+
+REALTOR_DEFAULT_SCORE = 4

@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from common.utils.permissions import IsAdmin, IsRealtor
-from .models import Advertisement, AdvertisementChoice
+from .models import Advertisement, AdvertisementImage
 from common.utils import validations
 
 class AdvertisementSerializer(serializers.ModelSerializer):
@@ -174,3 +174,9 @@ class UserSavedAdvertisementPreviewResponseSerializer(serializers.ModelSerialize
             'advertisement__created_at',
         ]
 
+
+class AdvertisementImageResponseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = AdvertisementImage
+        fields = ['id', 'image_full_path']

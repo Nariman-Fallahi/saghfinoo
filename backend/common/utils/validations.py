@@ -59,7 +59,7 @@ def validate(string: str, valid_chars):
 
     for c in string:
         if c not in valid_chars:
-            raise ValueError('invalid character: '+c)
+            raise ValueError(f'invalid character: {c}')
             
 
 def validate_se(field_name, field_value, validate_func):
