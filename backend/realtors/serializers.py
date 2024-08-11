@@ -7,13 +7,27 @@ class RealtorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Realtor
-        fields = ['description', 'number', 'landline_number']
+        fields = [
+            'description', 
+            'number', 
+            'landline_number',
+            'telegram',
+            'whatsapp',
+            'twitter',
+            'facebook',
+            'email',
+        ]
 
     def validate(self, attrs):
 
         validations.validate_se('description', attrs['description'], validations.validate_description)
         validations.validate_se('number', attrs['number'], validations.validate_number)
         validations.validate_se('landline_number', attrs['landline_number'], validations.validate_landline_number)
+        validations.validate_se('telegram', attrs['telegram'], validations.validate_username)
+        validations.validate_se('whatsapp', attrs['whatsapp'], validations.validate_username)
+        validations.validate_se('twitter', attrs['twitter'], validations.validate_username)
+        validations.validate_se('facebook', attrs['facebook'], validations.validate_username)
+        validations.validate_se('email', attrs['email'], validations.validate_username)
 
         return super().validate(attrs)
 
@@ -21,7 +35,23 @@ class RealtorResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Realtor
-        fields = ['user__first_name', 'user__last_name', 'user__image_full_path', 'bg_image_full_path', 'score', 'number_of_active_ads', 'description', 'number', 'landline_number', 'real_estate_office__name', 'real_estate_office__username']
+        fields = [
+            'user__first_name',
+            'user__last_name',
+            'user__image_full_path',
+            'bg_image_full_path',
+            'score',
+            'number_of_active_ads',
+            'description', 'number', 
+            'landline_number', 
+            'telegram',
+            'whatsapp',
+            'twitter',
+            'facebook',
+            'email',
+            'real_estate_office__name', 
+            'real_estate_office__username',
+        ]
 
 
 
@@ -29,7 +59,15 @@ class RealtorPreviewResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Realtor
-        fields = ['id', 'user__first_name', 'user__last_name', 'user__image_full_path', 'score', 'real_estate_office__name', 'real_estate_office__username']
+        fields = [
+            'id', 
+            'user__first_name', 
+            'user__last_name', 
+            'user__image_full_path', 
+            'score', 
+            'real_estate_office__name', 
+            'real_estate_office__username'
+        ]
 
 
 class CommentSerializer(serializers.ModelSerializer):

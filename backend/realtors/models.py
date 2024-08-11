@@ -12,6 +12,12 @@ class Realtor(models.Model):
     is_confirmed_by_real_estate_office = models.BooleanField(default=False) # must confirmed by real estate office owner
     is_confirmed = models.BooleanField(default=False) # must confirmed by admin
 
+    telegram = models.CharField(max_length=100)
+    whatsapp = models.CharField(max_length=100)
+    twitter = models.CharField(max_length=100)
+    facebook = models.CharField(max_length=100)
+    email = models.CharField(max_length=100)
+
     score = models.FloatField(default=settings.REALTOR_DEFAULT_SCORE)
     number_of_active_ads = models.PositiveIntegerField(default=0)
 
