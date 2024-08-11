@@ -8,12 +8,12 @@ from PIL import Image
 from django.core.files.storage import default_storage
 from django.conf import settings
 
-from common.utils.permissions import IsAdvertisementOwner, IsAdmin, IsRealtor
+from common.utils.permissions import IsAdvertisementOwner, IsAdmin, IsRealtor, IsOwner
 from common.utils.request import get_page_and_limit
 from common import codes
 from common.utils import validations
 
-from .serializers import AdvertisementSerializer, AdvertisementPreviewResponseSerializer, AdvertisementResponseSerializer, RealtorAdvertisementPreviewResponseSerializer, RealtorAdvertisementResponseSerializer, UserSavedAdvertisementPreviewResponseSerializer
+from .serializers import AdvertisementSerializer, AdvertisementPreviewResponseSerializer, AdvertisementResponseSerializer, RealtorAdvertisementPreviewResponseSerializer, RealtorAdvertisementResponseSerializer, UserSavedAdvertisementPreviewResponseSerializer, AdvertisementImageResponseSerializer
 from .models import Advertisement, AdvertisementImage, AdvertisementChoice, SavedAdvertisement
 
 
@@ -83,7 +83,7 @@ class GetAdvertisementAPIView(APIView):
     def get(self, req, advertisement_id):
         try:
             reo = Advertisement.objects.values(*AdvertisementResponseSerializer.Meta.fields).get(is_confirmed=True, id=advertisement_id)
-            reo['images'] = AdvertisementImage.objects.filter(advertisement=reo['id']).values('image_full_path', 'id')
+            reo['images'] = AdvertisementImage.objects.filter(advertisement=reo['id']).values(*AdvertisementImageResponseSerializer.Meta.fields)
             
             return Response({"data":reo, 'status':200})        
         except Advertisement.DoesNotExist:
@@ -178,7 +178,7 @@ class GetRealtorAdvertisementAPIView(APIView):
     def get(self, req, advertisement_id):
         try:
             reo = Advertisement.objects.values(*RealtorAdvertisementResponseSerializer.Meta.fields).get(id=advertisement_id, owner=req.realtor.id)
-            reo['images'] = AdvertisementImage.objects.filter(advertisement=reo['id']).values('image_full_path', 'id')
+            reo['images'] = AdvertisementImage.objects.filter(advertisement=reo['id']).values(*AdvertisementImageResponseSerializer.Meta.fields)
             
             return Response({"data":reo, 'status':200})
         except Advertisement.DoesNotExist:
@@ -211,7 +211,7 @@ class UploadAdvertisementImageAPIView(APIView):
 
         rei = AdvertisementImage()
         rei.advertisement = re
-        rei.image = default_storage.save(f'real_estate_offices/{file_name}', image, max_length=1*1024*1024)
+        rei.image = default_storage.save(f'advertisements/{file_name}', image, max_length=1*1024*1024)
         rei.image_full_path = f'{settings.S3_ENDPOINT_URL_WITH_BUCKET}/{rei.image}'
         rei.save()
 
@@ -220,6 +220,49 @@ class UploadAdvertisementImageAPIView(APIView):
             re.save()
 
         return Response({"msg":"done", 'status':200})
+
+
+class DeleteAdvertisementUploadedImageAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsOwner]
+    authentication_classes = [ JWTAuthentication]
+
+    def delete(self, req, image_id):
+        try:
+            image = AdvertisementImage.objects.get(id=image_id)
+        except AdvertisementImage.DoesNotExist:
+            return Response({'errors':{"non-field-error":'image not found'}, 'status':404})
+        
+        self.check_object_permissions(req, image.advertisement)
+
+        default_storage.delete(image.image)
+
+        return Response({'msg':'done', 'status':200})
+
+
+class SetAdvertisementPrimaryImageAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsAdvertisementOwner | IsAdmin]
+    authentication_classes = [JWTAuthentication]
+
+    def post(self, req, advertisement_id, image_id):
+        try:
+            ad = Advertisement.objects.get(id=advertisement_id)
+            image = AdvertisementImage.objects.get(id=image_id)
+        except Advertisement.DoesNotExist:
+            return Response({'errors':{'non-field-error':'advertisement not found'}, 'status':404})
+        except AdvertisementImage.DoesNotExist:
+            return Response({'errors':{"non-field-error":'image not found'}, 'status':404})
+
+        self.check_object_permissions(req, ad)
+        
+        if image.advertisement != ad:
+            return Response({'errors':{'image':'this image is not for this advertisement'}})
+        
+        ad.image_full_path = image.image_full_path
+        ad.save()
+
+        return Response({'msg':'done', 'status':200})
+
+
 
 
 
@@ -245,6 +288,10 @@ class DeleteAdvertisementAPIView(APIView):
 
         self.check_object_permissions(req, ad)
 
+        images = AdvertisementImage.objects.filter(advertisement__id=advertisement_id)
+        for image in images:
+            default_storage.delete(image.image)
+        images.delete()
         ad.delete()
         return Response({'msg':'done', 'status':200})
     
