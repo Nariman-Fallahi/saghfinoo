@@ -183,7 +183,7 @@ class GetAllRealtorCommentsAPIView(APIView):
 
     def get(self, req, realtor_id):
         try:
-            page, limit = get_page_and_limit(req, default_limit=4)
+            page, limit = get_page_and_limit(req, default_limit=16)
         except ValueError as e:
             return Response({'errors': e.dict, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
         
