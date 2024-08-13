@@ -14,7 +14,7 @@ from common.utils.request import get_page_and_limit
 from common import codes
 from common.utils import validations
 from common.utils.permissions import IsAdmin, IsOwner
-from common.utils.database import formated_datetime_now
+from common.utils.database import formated_datetime_now, ScoreManager
 
 from .serializers import RealtorSerializer, RealtorResponseSerializer, RealtorPreviewResponseSerializer, CommentSerializer, CommentResponseSerializer
 from .models import Realtor, Comment
@@ -149,7 +149,7 @@ class CreateCommentAPIView(APIView):
                 return Response({'errors':{'non-field-error':'realtor not found'}, 'status':404})
 
             comment = serializer.save(owner=req.user, realtor=realtor)
-            increase_realtor_score(comment.score, comment.realtor)
+            ScoreManager.increase_realtor_score(comment.score, comment.realtor)
             return Response({'msg':'done', 'status':200})
         
         return Response({'errors':serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})
@@ -173,7 +173,7 @@ class EditCommentAPIView(APIView):
             comment.modified_at = formated_datetime_now()
             comment.save()
 
-            edit_realtor_score(old_score, comment.score, comment.realtor)
+            ScoreManager.edit_realtor_score(old_score, comment.score, comment.realtor)
 
             return Response({'msg':'done', 'status':200})
         
@@ -204,39 +204,6 @@ class DeleteCommentAPIVew(APIView):
         print('deleteing --------------------------')
         comment.delete()
 
-        decrease_realtor_score(comment.score, comment.realtor)
+        ScoreManager.decrease_realtor_score(comment.score, comment.realtor)
 
         return Response({'msg':'done', 'status':200})
-
-
-def increase_realtor_score(score, realtor):
-    realtor.score_sum += score
-    realtor.score_num += 1
-    realtor.score = round(realtor.score_sum/realtor.score_num, 1)
-    realtor.save()
-
-
-def edit_realtor_score(old_score, new_score, realtor):
-    realtor.score_sum += new_score-old_score
-    if realtor.score_num == 0:
-        realtor.score = settings.REALTOR_DEFAULT_SCORE
-        realtor.score_sum = 0
-        realtor.save()
-        return
-
-    realtor.score = round(realtor.score_sum/realtor.score_num, 1)
-    realtor.save()
-
-
-def decrease_realtor_score(score, realtor):
-    """on deleting comment"""
-    realtor.score_sum -= score
-    realtor.score_num -= 1
-    if realtor.score_num == 0:
-        realtor.score = settings.REALTOR_DEFAULT_SCORE
-        realtor.score_sum = 0
-        realtor.save()
-        return
-
-    realtor.score = round(realtor.score_sum/realtor.score_num, 1)
-    realtor.save()
