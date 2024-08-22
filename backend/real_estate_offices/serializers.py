@@ -16,9 +16,10 @@ class RealEstateOfficeSerializer(serializers.ModelSerializer):
             'sub_street', 
             'number', 
             'landline_number',
-            'site',
-            'linkedin',
-            'instagram',
+            'twitter',
+            'email',
+            'facebook',
+            'whatsapp',
             'telegram',
         ]
 
@@ -32,10 +33,11 @@ class RealEstateOfficeSerializer(serializers.ModelSerializer):
         validations.validate_se('sub_street', attrs['sub_street'], validations.validate_name)
         validations.validate_se('number', attrs['number'], validations.validate_number)
         validations.validate_se('landline_number', attrs['landline_number'], validations.validate_landline_number)
-        validations.validate_se('site', attrs['site'], validations.validate_username)
-        validations.validate_se('linkedin', attrs['linkedin'], validations.validate_username)
+        validations.validate_se('twitter', attrs['twitter'], validations.validate_username)
+        validations.validate_se('email', attrs['email'], validations.validate_username)
         validations.validate_se('telegram', attrs['telegram'], validations.validate_username)
-        validations.validate_se('instagram', attrs['instagram'], validations.validate_username)
+        validations.validate_se('facebook', attrs['facebook'], validations.validate_username)
+        validations.validate_se('whatsapp', attrs['whatsapp'], validations.validate_username)
 
         return super().validate(attrs)
 
