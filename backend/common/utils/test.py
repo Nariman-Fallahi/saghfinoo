@@ -5,15 +5,17 @@ auth_cache = caches['auth']
 
 from common import codes
 
+from realtors.models import Realtor
+from real_estate_offices.models import RealEstateOffice
 
-def test_invalid_field(self, url: str, data: dict, invalid_chars: dict, headers=None):
+def test_invalid_field(self, url: str, data: dict, invalid_chars: dict, headers: dict):
     """data example: {"name":"test"} , invalid_chars example: {"name":"*"}
     """
     
     default_data = data
-    FIELDS = data.keys()
+    fields = invalid_chars.keys()
     
-    for field in FIELDS:
+    for field in fields:
         for char in invalid_chars[field]:
             data[field] = default_data[field] + char
             if headers:
@@ -26,6 +28,7 @@ def test_invalid_field(self, url: str, data: dict, invalid_chars: dict, headers=
 
 def login(self, number):
     
+        """login or signup (if not already) and returns acesss, refresh"""
         # login
 
         data = {'number':number, 'password':'1234'}
@@ -56,4 +59,59 @@ def login(self, number):
 def test_have_fields(self, data: dict, fields: list):
      
      for field in fields:
-          self.assertNotEqual(data.get(field, ''), '', data)
+          self.assertNotEqual(data.get(field, ''), '', f'field: {field}, data: {data}')
+
+
+class NumberGenerator:
+    _number = 9000000000
+
+    @classmethod
+    def get_number(cls):
+        cls._number = cls._number + 1
+        return f'0{cls._number}'
+    
+
+def create_realtor(self, number, headers):
+        # create Realtor
+        data = {
+            'description':'test is test', 
+            'number':'09120120102', 
+            'landline_number':'0211287821', 
+            'telegram':'test',
+            'whatsapp': 'test',
+            'twitter': 'test',
+            'facebook': 'tset',
+            'email': 'test@test.com'
+            }
+        resp = self.client.post(reverse('create_realtor'), data, headers=headers)
+        self.assertEqual(resp.data['status'], 200, resp.data)
+
+        # confirm the realtor
+        realtor = Realtor.objects.get(user__number=number)
+        realtor.is_confirmed = True
+        realtor.save()
+
+def create_real_estate_office(self, headers):
+        default_data = {
+                'name': 'test',
+                'description': 'tset test',
+                'username': 'test',
+                'city':'test',
+                'main_street': 'test',
+                'sub_street': 'test',
+                'number': '09121211212',
+                'landline_number': '021938493849849',
+                'whatsapp': 'test.ir',
+                'twitter': 'test',
+                'facebook':'test',
+                'email':'test',
+                'telegram': 'test',
+        }
+
+        resp = self.client.post(reverse('create_real_estate_office'), default_data, headers=headers)
+        self.assertEqual(resp.data['status'], 200, resp.data)
+
+        # confirm real estate office
+        reo = RealEstateOffice.objects.get(id=resp.data['id'])
+        reo.is_confirmed = True
+        reo.save()
