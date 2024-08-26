@@ -92,7 +92,7 @@ export default function Menu() {
         <Image
           width={72}
           height={32}
-          className="md:w-[85px] md:h-[45px] lg:w-[131px] lg:h-[63px]"
+          className="md:w-[77px] md:h-[37px] lg:w-[131px] lg:h-[63px]"
           src="/icons/Logo.svg"
           alt=""
         />
@@ -111,7 +111,7 @@ export default function Menu() {
         size={sizeBtn}
         variant="light"
         className="p-1 px-2 border border-red-600 text-[12px] font-medium
-       rounded-[8px] text-red-600 md:text-sm md:rounded-[0.35rem]"
+       rounded-[8px] text-red-600 md:text-[12.7px] md:p-0 lg:text-sm md:rounded-[0.35rem]"
       >
         ثبت آگهی
       </Button>
@@ -123,8 +123,6 @@ export default function Menu() {
       <MobileMenu
         NavigationMenu={navigationMenu}
         userInfoData={data}
-        dataStatus={status}
-        fetchStatus={fetchStatus}
         iconMenu={iconMenu()}
         AdPostingBtn={AdPostingBtn()}
         isLogin={isLogin}
@@ -133,7 +131,6 @@ export default function Menu() {
         NavigationMenu={navigationMenu}
         userInfoData={data}
         dataStatus={status}
-        fetchStatus={fetchStatus}
         iconMenu={iconMenu()}
         currentPath={currentPath}
         AdPostingBtn={AdPostingBtn()}

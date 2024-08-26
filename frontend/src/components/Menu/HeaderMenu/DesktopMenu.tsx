@@ -13,7 +13,6 @@ type desktopMenuType = {
   NavigationMenu: navigationMenuType;
   userInfoData: userInfoDataType | undefined;
   dataStatus: "error" | "success" | "pending";
-  fetchStatus: FetchStatus;
   iconMenu: JSX.Element;
   currentPath: string;
   AdPostingBtn: JSX.Element;
@@ -24,7 +23,6 @@ export default function DesktopMenu({
   NavigationMenu,
   userInfoData,
   dataStatus,
-  fetchStatus,
   iconMenu,
   currentPath,
   AdPostingBtn,
@@ -36,10 +34,10 @@ export default function DesktopMenu({
   return (
     <div className="w-full justify-center hidden md:flex">
       <nav
-        className="w-[88%] bg-white fixed p-3 flex justify-between items-center
+        className="w-[93%] lg:w-[88%] bg-white fixed p-3 flex justify-between items-center
          shadow rounded-2xl mt-6 z-50"
       >
-        <ul className="flex items-center text-sm lg:text-[20px]">
+        <ul className="flex items-center text-sm lg:text-xl">
           {iconMenu}
           {NavigationMenu.map((item, index) => {
             return (
@@ -77,16 +75,21 @@ export default function DesktopMenu({
           {isLogin && (
             <Button
               variant="light"
-              className="text-sm rounded-[0.35rem] ml-3 lg:ml-8"
+              className="text-[13px] rounded-[0.35rem] ml-2 lg:ml-8"
               onPress={() => router.push("/userProfile/EditingInformation")}
             >
               <Image
-                width={30}
-                height={30}
-                src="/icons/profile-circle.svg"
-                alt=""
+                width={28}
+                height={28}
+                className="rounded-full h-7 lg:w-9 lg:h-9"
+                src={
+                  userInfoData?.data.image_full_path
+                    ? userInfoData?.data.image_full_path
+                    : "/icons/profile-circle.svg"
+                }
+                alt="User Profile"
               />
-              <p className="ml-2 cursor-pointer">{`${userInfoData?.data.first_name} ${userInfoData?.data.last_name}`}</p>
+              <p className="ml-2 cursor-pointer lg:text-sm">{`${userInfoData?.data.first_name} ${userInfoData?.data.last_name}`}</p>
             </Button>
           )}
 

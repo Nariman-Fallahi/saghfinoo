@@ -1,19 +1,16 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@nextui-org/button";
 import { navigationMenuType } from "@/types/Type";
 import { useModalStore } from "@/store/Register";
 import Link from "next/link";
 import { userInfoDataType } from "@/types/Type";
-import { FetchStatus } from "@tanstack/react-query";
 import { useRouter } from "next-nprogress-bar";
 
 type mobileMenuType = {
   NavigationMenu: navigationMenuType;
   userInfoData: userInfoDataType | undefined;
-  dataStatus: "error" | "success" | "pending";
-  fetchStatus: FetchStatus;
   iconMenu: JSX.Element;
   AdPostingBtn: JSX.Element;
   isLogin: boolean;
@@ -22,13 +19,11 @@ type mobileMenuType = {
 export default function MobileMenu({
   NavigationMenu,
   userInfoData,
-  dataStatus,
-  fetchStatus,
   iconMenu,
   AdPostingBtn,
   isLogin,
 }: mobileMenuType) {
-  const [openMenu, setOpenMenu] = useState<boolean>();
+  const [openMenu, setOpenMenu] = useState<boolean | null>(null);
   const { setOpen } = useModalStore();
   const router = useRouter();
 
@@ -39,6 +34,14 @@ export default function MobileMenu({
       router.push("/userProfile/EditingInformation");
     }
   };
+
+  useEffect(() => {
+    if (openMenu && typeof window !== "undefined") {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [openMenu]);
 
   return (
     <>
@@ -60,7 +63,7 @@ export default function MobileMenu({
       </nav>
 
       <div
-        className={`absolute w-full h-screen bg-white hidden z-50 top-0 ${
+        className={`absolute w-full h-screen bg-white hidden z-50 top-0 overflow-y-auto ${
           openMenu ? "openMenu" : "closeMenu"
         }`}
       >
@@ -76,7 +79,7 @@ export default function MobileMenu({
                 width={24}
                 height={24}
                 src="/icons/close-circle.svg"
-                alt=""
+                alt="User Profile"
               />
             </Button>
           </div>
@@ -86,10 +89,15 @@ export default function MobileMenu({
             className="w-full bg-gray-100 px-2 py-5 mt-4 flex items-center"
           >
             <Image
-              width={isLogin ? 30 : 20}
-              height={isLogin ? 30 : 20}
-              src="/icons/profile-circle.svg"
+              width={isLogin ? 36 : 20}
+              height={isLogin ? 36 : 20}
+              src={
+                userInfoData?.data.image_full_path
+                  ? userInfoData?.data.image_full_path
+                  : "/icons/profile-circle.svg"
+              }
               alt=""
+              className="rounded-full h-9"
             />{" "}
             {isLogin && (
               <Image
