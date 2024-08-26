@@ -7,12 +7,16 @@ import { useModalStore } from "@/store/Register";
 import Link from "next/link";
 import { userInfoDataType } from "@/types/Type";
 import { FetchStatus } from "@tanstack/react-query";
+import { useRouter } from "next-nprogress-bar";
 
 type mobileMenuType = {
   NavigationMenu: navigationMenuType;
   userInfoData: userInfoDataType | undefined;
   dataStatus: "error" | "success" | "pending";
   fetchStatus: FetchStatus;
+  iconMenu: JSX.Element;
+  AdPostingBtn: JSX.Element;
+  isLogin: boolean;
 };
 
 export default function MobileMenu({
@@ -20,13 +24,19 @@ export default function MobileMenu({
   userInfoData,
   dataStatus,
   fetchStatus,
+  iconMenu,
+  AdPostingBtn,
+  isLogin,
 }: mobileMenuType) {
   const [openMenu, setOpenMenu] = useState<boolean>();
   const { setOpen } = useModalStore();
+  const router = useRouter();
 
   const ClickRegister = () => {
-    if (dataStatus === "pending" && fetchStatus === "idle") {
+    if (!isLogin) {
       setOpen(true);
+    } else {
+      router.push("/userProfile/EditingInformation");
     }
   };
 
@@ -45,15 +55,8 @@ export default function MobileMenu({
         >
           <Image width={24} height={24} src="/icons/menu.svg" alt="" />
         </Button>
-        <Image width={72} height={32} src="/icons/Logo.svg" alt="" />
-        <Button
-          size="sm"
-          variant="light"
-          className="p-1 px-2 border border-red-600 text-[12px] font-medium
-           rounded-[8px] text-red-600"
-        >
-          ثبت آگهی
-        </Button>
+        {iconMenu}
+        {AdPostingBtn}
       </nav>
 
       <div
@@ -83,12 +86,12 @@ export default function MobileMenu({
             className="w-full bg-gray-100 px-2 py-5 mt-4 flex items-center"
           >
             <Image
-              width={dataStatus === "success" ? 30 : 20}
-              height={dataStatus === "success" ? 30 : 20}
+              width={isLogin ? 30 : 20}
+              height={isLogin ? 30 : 20}
               src="/icons/profile-circle.svg"
               alt=""
             />{" "}
-            {dataStatus === "success" && (
+            {isLogin && (
               <Image
                 width={20}
                 height={20}
@@ -98,11 +101,11 @@ export default function MobileMenu({
               />
             )}
             <p className="mr-2 text-xs">
-              {dataStatus === "success"
+              {isLogin
                 ? `${userInfoData?.data.first_name} ${userInfoData?.data.last_name}`
                 : "ورود یا ثبت نام"}
             </p>
-            {dataStatus === "success" && (
+            {isLogin && (
               <Image
                 width={20}
                 height={20}

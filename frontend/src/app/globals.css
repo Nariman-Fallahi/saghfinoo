@@ -8,8 +8,7 @@ h2,
 h3,
 h4,
 h5,
-h6,
-span {
+h6 {
   cursor: default;
   direction: rtl;
 }
@@ -52,11 +51,36 @@ span {
   }
 }
 
+.swiper-button-prev:after,
+.swiper-button-next:after {
+  font-size: 25px !important;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 999px !important;
+  background-color: #ffffff !important;
+  padding: 3px !important;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
+}
+
+.swiper-button-prev:active,
+.swiper-button-next:active {
+  background-color: #f8f8f8 !important;
+}
+
+.swiper-button-prev.swiper-button-disabled,
+.swiper-button-next.swiper-button-disabled {
+  display: none !important;
+}
+
 #nprogress .bar {
   border-radius: 20px !important;
 }
 
-.directionRTL {
+.rtl {
   direction: rtl;
 }
 
@@ -88,4 +112,15 @@ span {
 
 .selectBtn::-webkit-scrollbar-thumb:active {
   background: #555;
+}
+
+.react-select__menu,
+.react-select__menu-list,
+.react-select__option,
+.react-select__indicators {
+  background-color: red !important;
+}
+
+.blueShadow {
+  box-shadow: 0px 0px 0px 3px rgba(47, 128, 237, 0.19) !important;
 }

@@ -12,7 +12,7 @@ export default function Stepper({ count, activeStep }: StepperType) {
       {Array.from({ length: count }, (_, i) => (
         <li
           key={i}
-          className={`flex w-full items-center ${
+          className={`flex ${i === 5 ? "md:w-0" : "w-full"} items-center ${
             i < activeStep ? "text-[#F66262]" : "text-gray-500"
           } ${
             i < count - 1
@@ -28,10 +28,22 @@ export default function Stepper({ count, activeStep }: StepperType) {
             } rounded-full lg:h-12 lg:w-12 shrink-0`}
           >
             {i < activeStep - 1 && (
-              <Image width={17} height={17} src="/icons/tick.svg" alt="" />
+              <Image
+                width={17}
+                height={17}
+                className="md:w-6 md:h-6"
+                src="/icons/tick.svg"
+                alt=""
+              />
             )}
             {i === activeStep - 1 && (
-              <Image width={18} height={18} src="/icons/Eliipse.svg" alt="" />
+              <Image
+                width={18}
+                height={18}
+                className="md:w-6 md:h-6"
+                src="/icons/Eliipse.svg"
+                alt=""
+              />
             )}
           </span>
         </li>

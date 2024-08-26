@@ -6,7 +6,7 @@ export default function S_Comments() {
     <div
       key={index}
       className="!w-[242px] p-2 flex flex-col shadow
-    rounded-2xl border border-[#EDEDED] pb-3 md:items-center md:p-7"
+       rounded-2xl border border-[#EDEDED] pb-3 md:items-center md:p-7 mr-3"
     >
       <div className="flex md:flex-col md:items-center">
         <Skeleton

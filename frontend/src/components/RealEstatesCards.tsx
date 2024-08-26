@@ -1,71 +1,66 @@
 "use client";
 import Image from "next/image";
 import { Button } from "@nextui-org/button";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { allrealEstateOfficesDataType } from "@/types/Type";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useRouter } from "next-nprogress-bar";
 import { isMobile } from "@/constant/Constants";
-import ViewMoreBtn from "./realEstates-realators/ViewMoreBtn";
 import { SetStateAction } from "react";
+import PaginationComponent from "./Pagination";
+import { scrollToTop } from "@/constant/Constants";
 
 type RealEstatesCardsType = {
-  data: { data: allrealEstateOfficesDataType[] } | undefined;
+  data:
+    | { data: allrealEstateOfficesDataType[]; total_pages: number }
+    | undefined;
+  pageNumber: number;
   setPageNumber: (value: SetStateAction<number>) => void;
   status: "error" | "success" | "pending";
 };
 
 export default function RealEstatesCards({
   data,
+  pageNumber,
   setPageNumber,
   status,
 }: RealEstatesCardsType) {
-  const [completeData, setCompleteData] =
-    useState<allrealEstateOfficesDataType[]>();
-  const [buttonActive, setButtonActive] = useState<boolean>(true);
   const router = useRouter();
 
-  // This code causes the data from the previous page to be merged with the new page.
   useEffect(() => {
-    if (status === "success" && data) {
-      setCompleteData((prevState) => {
-        if (Array.isArray(prevState)) {
-          return [...prevState, ...data.data];
-        }
-        return [...data.data];
-      });
-    }
-  }, [data, status]);
+    scrollToTop();
+  }, [pageNumber]);
 
-  // This code removes the "Load more" button when there is no more data remaining.
-  const hasMore = data?.data.length === 21;
   return (
     <>
       <div className="w-full flex flex-wrap p-3 justify-between md:p-5">
-        {status === "pending"
-          ? Array.from({ length: 9 }).map((_, index) => (
-              <div
-                key={index}
-                className="w-[48%] shadow rounded-2xl flex flex-col p-2 items-center text-xs
-                md:w-[30%] border border-[#E1E1E1] mt-6"
-              >
-                <Skeleton circle width={60} height={60} className="mt-2" />
+        {status === "pending" &&
+          Array.from({ length: 9 }).map((_, index) => (
+            <div
+              key={index}
+              className="w-[48%] shadow rounded-2xl flex flex-col p-2 items-center text-xs
+              md:w-[30%] border border-[#E1E1E1] mt-6"
+            >
+              <Skeleton circle width={60} height={60} className="mt-2" />
 
-                <Skeleton
-                  width={100}
-                  height={25}
-                  className="mt-4 md:!w-[150px]"
-                />
-                <Skeleton
-                  width={150}
-                  height={20}
-                  count={4}
-                  className="mt-2 md:!w-[200px]"
-                />
-              </div>
-            ))
-          : completeData?.map((item, index) => (
+              <Skeleton
+                width={100}
+                height={25}
+                className="mt-4 md:!w-[150px]"
+              />
+              <Skeleton
+                width={150}
+                height={20}
+                count={4}
+                className="mt-2 md:!w-[200px]"
+              />
+            </div>
+          ))}
+
+        {data?.data && data?.data.length >= 1 && (
+          <>
+            {data.data?.map((item, index) => (
               <div
                 onClick={() =>
                   isMobile
@@ -102,7 +97,7 @@ export default function RealEstatesCards({
                   )}
                 </div>
                 <p className="mt-2 text-[#717171] md:text-lg">
-                  {item.main_street}، {item.sub_street}
+                  {item.city}، {item.main_street}، {item.sub_street}
                 </p>
                 <p className="mt-2 text-[#717171] md:text-lg">
                   میزان رضایت مندی: {item.score} از 5
@@ -134,15 +129,15 @@ export default function RealEstatesCards({
                 </Button>
               </div>
             ))}
-      </div>
 
-      {buttonActive && status !== "pending" && status === "success" && (
-        <ViewMoreBtn
-          hasMore={hasMore}
-          setButtonActive={setButtonActive}
-          setPageNumber={setPageNumber}
-        />
-      )}
+            <PaginationComponent
+              totalPages={data.total_pages}
+              pageNumber={pageNumber}
+              setPageNumber={setPageNumber}
+            />
+          </>
+        )}
+      </div>
     </>
   );
 }

@@ -7,13 +7,17 @@ import Link from "next/link";
 import { userInfoDataType } from "@/types/Type";
 import { Spinner } from "@nextui-org/spinner";
 import { FetchStatus } from "@tanstack/react-query";
-import { getCookie } from "cookies-next";
+import { useRouter } from "next-nprogress-bar";
 
 type desktopMenuType = {
   NavigationMenu: navigationMenuType;
   userInfoData: userInfoDataType | undefined;
   dataStatus: "error" | "success" | "pending";
   fetchStatus: FetchStatus;
+  iconMenu: JSX.Element;
+  currentPath: string;
+  AdPostingBtn: JSX.Element;
+  isLogin: boolean;
 };
 
 export default function DesktopMenu({
@@ -21,9 +25,13 @@ export default function DesktopMenu({
   userInfoData,
   dataStatus,
   fetchStatus,
+  iconMenu,
+  currentPath,
+  AdPostingBtn,
+  isLogin,
 }: desktopMenuType) {
   const { setOpen } = useModalStore();
-  const access = getCookie("access");
+  const router = useRouter();
 
   return (
     <div className="w-full justify-center hidden md:flex">
@@ -32,19 +40,17 @@ export default function DesktopMenu({
          shadow rounded-2xl mt-6 z-50"
       >
         <ul className="flex items-center text-sm lg:text-[20px]">
-          <Image
-            width={85}
-            height={45}
-            src="/icons/Logo.svg"
-            alt=""
-            className="lg:w-[131px] lg:h-[63px]"
-          />
+          {iconMenu}
           {NavigationMenu.map((item, index) => {
             return (
               <Link
                 href={item.link}
                 key={index}
-                className="mr-4 lg:mr-6 cursor-pointer hover:text-red-600"
+                className={`mr-4 lg:mr-6 cursor-pointer hover:text-red-600 flex flex-col relative ${
+                  currentPath === item.link
+                    ? "after:bg-red-500 after:h-[3px] after:w-full after:content-[''] after:absolute after:mt-7 after:rounded text-red-500"
+                    : null
+                }`}
               >
                 {item.title}
               </Link>
@@ -52,13 +58,13 @@ export default function DesktopMenu({
           })}
         </ul>
         <ul className="flex items-center">
-          {dataStatus === "pending" && fetchStatus !== "idle" && (
+          {dataStatus === "pending" && (
             <div className="ml-10 lg:ml-24">
               <Spinner size="sm" color="danger" />
             </div>
           )}
 
-          {dataStatus === "pending" && fetchStatus === "idle" && (
+          {dataStatus !== "pending" && !isLogin && (
             <Button
               onPress={() => setOpen(true)}
               variant="light"
@@ -68,10 +74,11 @@ export default function DesktopMenu({
             </Button>
           )}
 
-          {dataStatus === "success" && (
+          {isLogin && (
             <Button
               variant="light"
               className="text-sm rounded-[0.35rem] ml-3 lg:ml-8"
+              onPress={() => router.push("/userProfile/EditingInformation")}
             >
               <Image
                 width={30}
@@ -83,13 +90,7 @@ export default function DesktopMenu({
             </Button>
           )}
 
-          <Button
-            variant="light"
-            className="p-1 px-2 border border-red-600 text-sm rounded-[0.35rem]
-             text-red-600 lg:text-sm"
-          >
-            ثبت آگهی
-          </Button>
+          {AdPostingBtn}
         </ul>
       </nav>
     </div>

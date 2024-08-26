@@ -10,11 +10,14 @@ const config: Config = {
     "./node_modules/@nextui-org/theme/dist/components/modal.js",
     "./node_modules/@nextui-org/theme/dist/components/checkbox.js",
     "./node_modules/@nextui-org/theme/dist/components/spinner.js",
+    "./node_modules/@nextui-org/theme/dist/components/pagination.js",
   ],
-  plugins: [nextui({
-    layout: {
-      disabledOpacity: "0.3",
-    }
-  })],
+  plugins: [
+    nextui({
+      layout: {
+        disabledOpacity: "0.3",
+      },
+    }),
+  ],
 };
 export default config;

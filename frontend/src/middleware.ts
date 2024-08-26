@@ -15,36 +15,32 @@ export async function middleware(req: NextRequest) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          refresh: refresh,
-        }),
+        body: JSON.stringify({ refresh }),
       });
       if (response.ok) {
         const data = await response.json();
-        if (data.access) {
+        if (data.access && refresh) {
           setCookie("access", data.access, { res, req, maxAge: data.expire });
         } else {
-          if (url.pathname !== "/newUser") {
-            return NextResponse.redirect(new URL("/newUser", req.url));
-          }
+          return NextResponse.redirect(new URL("/newUser", req.url));
         }
+      } else {
+        return NextResponse.redirect(new URL("/newUser", req.url));
       }
     } catch {
       return NextResponse.redirect(new URL("/newUser", req.url));
     }
-  } else if (access && refresh && url.pathname !== "/proUser") {
-    // return NextResponse.redirect(new URL("/proUser", req.url));
-  } else if (
-    url.pathname === "/" &&
-    access === undefined &&
-    refresh === undefined
-  ) {
-    return NextResponse.redirect(new URL("/newUser", req.url));
-  } else if (url.pathname === "/proUser" && refresh === undefined) {
-    return NextResponse.redirect(new URL("/newUser", req.url));
-  } else if (url.pathname === "newUser" && refresh) {
-    // return NextResponse.redirect(new URL("/proUser", req.url));
-  } else if (url.pathname === "/" && refresh === undefined) {
+  }
+
+  const protectedPaths = [
+    "/",
+    "/proUser",
+    "/adPosting",
+    "/userProfile/EditingInformation",
+    "/userProfile/MyAds",
+    "/userProfile/SavedAds",
+  ];
+  if (protectedPaths.includes(url.pathname) && (!access || !refresh)) {
     return NextResponse.redirect(new URL("/newUser", req.url));
   }
 

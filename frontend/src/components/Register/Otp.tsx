@@ -1,6 +1,16 @@
 import OtpInput from "react-otp-input";
-import { OtpType } from "@/types/Type";
 import Image from "next/image";
+
+type OtpType = {
+  otp: string;
+  setOtp: (value: string) => void;
+  handleFocus: (index: number) => void;
+  handleBlur: () => void;
+  focusedInput: number | null;
+  time: number;
+  setTime: (value: number) => void;
+  handleSendPhoneNumber: () => void;
+};
 
 export default function Otp({
   otp,
@@ -10,14 +20,14 @@ export default function Otp({
   focusedInput,
   time,
   setTime,
-  btnSendPhoneNumber,
+  handleSendPhoneNumber,
 }: OtpType) {
   const minutes = Math.floor(time / 60);
   const seconds = time % 60;
 
   const ResubmitCode = () => {
     setTime(90);
-    btnSendPhoneNumber();
+    handleSendPhoneNumber();
   };
 
   return (
@@ -46,7 +56,7 @@ export default function Otp({
         )}
       />
 
-      <div className="flex mt-4 w-full directionRTL items-stretch text-xs md:text-sm">
+      <div className="flex mt-4 w-full rtl items-stretch text-xs md:text-sm">
         {time > 0 && (
           <>
             <Image

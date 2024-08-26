@@ -9,10 +9,20 @@ import { Api } from "@/ApiService";
 import { useGetRequest } from "@/ApiService";
 import { useState } from "react";
 import { userInfoDataType } from "@/types/Type";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { Button } from "@nextui-org/button";
+import { useRouter } from "next-nprogress-bar";
+import { isMobile } from "@/constant/Constants";
+import { useSizeBtn } from "@/store/Size";
+import { ErrorNotification } from "@/notification/Error";
 
 export default function Menu() {
   const access = getCookie("access");
-  const [enabled, setEnabled] = useState<boolean>(false);
+  const router = useRouter();
+  const currentPath = usePathname();
+  const { sizeBtn } = useSizeBtn();
   const { data, status, fetchStatus } = useGetRequest<userInfoDataType>({
     url: Api.GetUserInfo,
     key: ["getUserInfo"],
@@ -20,10 +30,12 @@ export default function Menu() {
       Authorization: `Bearer ${access}`,
     },
     staleTime: 5 * 1000 * 60,
-    enabled: enabled,
+    enabled: true,
   });
 
-  const navigationMenu: navigationMenuType = [
+  const isLogin: boolean = !!access && !!data?.data && status === "success";
+
+  const baseMenu: navigationMenuType = [
     {
       title: "اجاره",
       icon: "/icons/house.svg",
@@ -42,7 +54,7 @@ export default function Menu() {
     {
       title: "مشاورین املاک",
       icon: "/icons/people.svg",
-      link: "",
+      link: "/realators",
     },
     {
       title: "اخبار روز",
@@ -51,11 +63,60 @@ export default function Menu() {
     },
   ];
 
-  useEffect(() => {
-    if (access !== undefined) {
-      setEnabled(true);
-    }
-  }, [access]);
+  const loggedIn =
+    isMobile && isLogin
+      ? [
+          {
+            title: "ایجاد آگهی",
+            icon: "/icons/add-circle.svg",
+            link: "/adPosting",
+          },
+          {
+            title: "آگهی های من",
+            icon: "/icons/receipt-text.svg",
+            link: "",
+          },
+          {
+            title: "آگهی های ذخیره شده",
+            icon: "/icons/save.svg",
+            link: "",
+          },
+        ]
+      : [];
+
+  const navigationMenu = [...loggedIn, ...baseMenu];
+
+  const iconMenu = () => {
+    return (
+      <Link href={access ? "/proUser" : "newUser"}>
+        <Image
+          width={72}
+          height={32}
+          className="md:w-[85px] md:h-[45px] lg:w-[131px] lg:h-[63px]"
+          src="/icons/Logo.svg"
+          alt=""
+        />
+      </Link>
+    );
+  };
+
+  const AdPostingBtn = () => {
+    return (
+      <Button
+        onPress={() =>
+          isLogin
+            ? router.push("/adPosting")
+            : ErrorNotification("ابتدا وارد حساب کاربری خود شوید.")
+        }
+        size={sizeBtn}
+        variant="light"
+        className="p-1 px-2 border border-red-600 text-[12px] font-medium
+       rounded-[8px] text-red-600 md:text-sm md:rounded-[0.35rem]"
+      >
+        ثبت آگهی
+      </Button>
+    );
+  };
 
   return (
     <>
@@ -64,12 +125,19 @@ export default function Menu() {
         userInfoData={data}
         dataStatus={status}
         fetchStatus={fetchStatus}
+        iconMenu={iconMenu()}
+        AdPostingBtn={AdPostingBtn()}
+        isLogin={isLogin}
       />
       <DesktopMenu
         NavigationMenu={navigationMenu}
         userInfoData={data}
         dataStatus={status}
         fetchStatus={fetchStatus}
+        iconMenu={iconMenu()}
+        currentPath={currentPath}
+        AdPostingBtn={AdPostingBtn()}
+        isLogin={isLogin}
       />
       <Register />
     </>

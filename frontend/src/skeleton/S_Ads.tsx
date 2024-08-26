@@ -3,7 +3,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { isMobile } from "@/constant/Constants";
 
 export default function S_Ads() {
-  return Array.from({ length: isMobile ? 2 : 3 }).map((_, index) => (
+  return Array.from({ length: isMobile ? 4 : 6 }).map((_, index) => (
     <div
       key={index}
       className="w-[156px] h-[196px] flex flex-col border border-[#E1E1E1]

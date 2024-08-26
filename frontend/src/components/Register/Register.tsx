@@ -2,18 +2,18 @@
 import { Modal, ModalContent, ModalBody } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
 import Image from "next/image";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Otp from "./Otp";
 import PhoneNumber from "./PhoneNumber";
 import { RegisterStatusValue } from "@/constant/Constants";
-import SignUp from "./signUp/SignUp";
+import SignUp from "./SignUp";
 import { ErrorNotification } from "@/notification/Error";
 import { Spinner } from "@nextui-org/spinner";
 import { Success } from "@/notification/Success";
 import { useModalStore } from "@/store/Register";
 import { useRegisterStatus } from "@/store/Register";
 import { setCookie } from "cookies-next";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
 import { Api } from "@/ApiService";
 import { usePostRequest } from "@/ApiService";
 import { LoginDataType } from "@/types/Type";
@@ -22,9 +22,8 @@ import { isMobile } from "@/constant/Constants";
 export default function Register() {
   const router = useRouter();
   const { isOpen, setOpen } = useModalStore();
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<number>();
   const [isSelected, setIsSelected] = useState<boolean>(false);
-  const [inputErr, setInputErr] = useState<boolean>(false);
   const [otp, setOtp] = useState<string>("");
   const [focusedInput, setFocusedInput] = useState<number | null>(null);
   const [token, setToken] = useState<string>("");
@@ -32,7 +31,7 @@ export default function Register() {
   const [time, setTime] = useState<number>(90);
   const { mutate, isSuccess, data, isPending } = usePostRequest<LoginDataType>({
     url: Api.verifynumber,
-    key: "verifynumber",
+    key: "verifyNumber",
   });
 
   // constants
@@ -63,19 +62,10 @@ export default function Register() {
     setFocusedInput(null);
   };
 
-  const btnSendPhoneNumber = () => {
+  const handleSendPhoneNumber = (phoneNumber?: number) => {
     if (isSelected) {
-      if (
-        phoneNumber !== "" &&
-        phoneNumber.length === 11 &&
-        phoneNumber[0] === "0" &&
-        phoneNumber[1] === "9"
-      ) {
-        setInputErr(false);
-        mutate({ number: phoneNumber, code: 0, token: "" });
-      } else {
-        setInputErr(true);
-      }
+      mutate({ number: phoneNumber, code: 0, token: "" });
+      setPhoneNumber(phoneNumber);
     }
   };
 
@@ -88,6 +78,8 @@ export default function Register() {
       }, 1000);
 
       return () => clearInterval(intervalId);
+    } else if (data && data.code === "number_delay") {
+      ErrorNotification("لطفا بعد تلاش کنید.");
     }
   }, [isSuccess, data, setRegisterStatus]);
 
@@ -129,7 +121,7 @@ export default function Register() {
 
   const EditMN = () => {
     setRegisterStatus(RegisterStatusValue.status1);
-    setPhoneNumber("");
+    setPhoneNumber(undefined);
   };
 
   return (
@@ -141,10 +133,7 @@ export default function Register() {
       <ModalContent>
         <>
           <ModalBody className="overflow-y-auto">
-            <div
-              className="mt-5 w-full flex flex-col items-center pb-3"
-              style={{ direction: "ltr" }}
-            >
+            <div className="mt-5 w-full flex flex-col items-center pb-3 ltr">
               {registerStatus == RegisterStatusValue.status1 ||
                 (registerStatus == RegisterStatusValue.status2 && (
                   <Image
@@ -180,12 +169,10 @@ export default function Register() {
 
               {registerStatus === RegisterStatusValue.status1 && (
                 <PhoneNumber
-                  phoneNumber={phoneNumber}
                   setPhoneNumber={setPhoneNumber}
-                  inputErr={inputErr}
                   isSelected={isSelected}
                   setIsSelected={setIsSelected}
-                  btnSendPhoneNumber={btnSendPhoneNumber}
+                  handleSendPhoneNumber={handleSendPhoneNumber}
                   isPendingVerifyNumber={isPending}
                 />
               )}
@@ -200,7 +187,7 @@ export default function Register() {
                     focusedInput={focusedInput}
                     time={time}
                     setTime={setTime}
-                    btnSendPhoneNumber={btnSendPhoneNumber}
+                    handleSendPhoneNumber={handleSendPhoneNumber}
                   />
                   <Button
                     className="mt-[64px] w-full rounded-lg p-2 bg-[#CB1B1B]

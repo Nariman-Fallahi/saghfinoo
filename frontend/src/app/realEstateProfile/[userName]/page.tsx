@@ -8,15 +8,16 @@ import { realEstateOfficesType } from "@/types/Type";
 import ErrNoData from "@/components/ErrNoData";
 
 // Components
-import Info from "@/components/realEstates-realators/Info";
-import ModalREA from "@/components/realEstates-realators/modal/ModalREA";
+import Info from "@/components/RealEstates-Realators/Info";
+import ModalREA from "@/components/RealEstates-Realators/modal/ModalREA";
 import Consultants from "@/components/Consultants";
-import Ads from "@/components/realEstates-realators/Ads";
-import Comments from "@/components/realEstates-realators/Comments";
+import Ads from "@/components/RealEstates-Realators/Ads";
+import Comments from "@/components/RealEstates-Realators/Comments";
 
 export default function Page() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const params = useParams();
+
   const { data, isPending, isError } = useGetRequest<realEstateOfficesType>({
     url: `${Api.GetRealEstateOffices}${params.userName}`,
     key: ["getRealEstateOffices", JSON.stringify(params.userName)],
@@ -26,9 +27,9 @@ export default function Page() {
 
   console.log(data);
 
-  if (isError || (data?.status !== 200 && !isPending)) {
-    return <ErrNoData />;
-  }
+  // if (isError || (data?.status !== 200 && !isPending)) {
+  //   return <ErrNoData />;
+  // }
 
   return (
     <>
@@ -38,7 +39,7 @@ export default function Page() {
         data={{
           titleContactInfoBtn: "تماس با ما",
           name: `املاک ${data?.data.name}`,
-          userImg: data?.data.image_full_path,
+          profileIcon: data?.data.image_full_path,
           bgUserImg: data?.data.bg_image_full_path,
           score: data?.data.score,
           description: data?.data.description,
@@ -49,22 +50,19 @@ export default function Page() {
       <ModalREA
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        contactInfoData={{
-          profileIcon: data?.data.image_full_path,
-          name: `املاک ${data?.data.name}`,
+        data={{
+          profileIcon: data?.data.bg_image_full_path,
+          name: data?.data.name,
           number: {
             phoneNumber: data?.data.number,
             landlineNumber: data?.data.landline_number,
           },
-        }}
-        shareData={{
           socialNetwork: {
-            telegram: data?.data.telegram,
-            // TODO اضافه کردن سایر مقادیر
+            //TODO Add SocialNetwork
           },
         }}
       />
-      <Consultants />
+      <Consultants userName={params.userName} />
       <Ads />
       <Comments />
     </>

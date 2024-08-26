@@ -41,3 +41,39 @@ export const ScoreReasonData = {
     "برخورد مناسب",
   ],
 };
+
+export const isPersian = (text: string) => {
+  const persian = /^[\u0600-\u06FF\s]+$/;
+  return persian.test(text);
+};
+
+export const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+};
+
+export const numberToPersian = (number: number) => {
+  return new Intl.NumberFormat("fa-IR").format(number);
+};
+
+export const numberWithCommas = (
+  number: number | string | undefined
+): string => {
+  const str = (number ?? "").toString().replace(/[^\d]/g, "");
+
+  if (str === "") {
+    return "";
+  }
+
+  return str.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
+export const removeCommas = (input: string): string => {
+  return input.replace(/,/g, "");
+};
+
+export const TextError = ({ text }: { text: string | undefined }) => {
+  return <p className="text-xs lg:text-sm mt-3 text-red-500 text-right w-full">{text}</p>;
+};

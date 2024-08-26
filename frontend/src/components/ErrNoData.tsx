@@ -7,6 +7,7 @@ export default function ErrNoData() {
         width={200}
         height={200}
         className="md:!w-[300px] md:!h-[300px] lg:!w-[450px] lg:!h-[400px]"
+        sizes="(min-width: 768px) 300px, 300px, (min-width: 1024px) 450px, 400px"
         src="/icons/err404.svg"
         alt="Error 404"
       />
