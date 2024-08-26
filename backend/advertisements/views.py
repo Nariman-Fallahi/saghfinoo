@@ -95,6 +95,7 @@ class SearchAdvertisementsAPIView(APIView):
         qp = req.query_params
         queries = {                             # query_name:validation_function
             'owner':validations.validate_integer,
+            'reo_username': validations.validate_username,
             'room': validations.validate_integer,
             'parking': validations.validate_integer,
             'storage': validations.validate_integer,
@@ -126,6 +127,14 @@ class SearchAdvertisementsAPIView(APIView):
 
         } 
 
+        different_fields_name = {
+            'reo_username': 'owner__real_estate_office__username'
+        }
+
+        for key in req.query_params:
+            if key not in list(queries.keys()) + ['page', 'limit']:
+                return Response({'errors':{key:'this key not found'}, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
+
         try:
             page, limit = get_page_and_limit(req)
         except ValueError as e:
@@ -137,6 +146,7 @@ class SearchAdvertisementsAPIView(APIView):
 
         for field_name, validate_func in queries.items():
             value = qp.get(field_name, '')
+            field_name = different_fields_name.get(field_name, field_name)
             if value == '':
                 continue
             try:
