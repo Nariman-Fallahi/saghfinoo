@@ -113,3 +113,10 @@ class SavedAdvertisement(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(default=formated_datetime_now)
+
+
+class AdvertisementVideo(models.Model):
+    advertisement = models.ForeignKey(Advertisement, on_delete=models.PROTECT)
+
+    video = models.CharField(max_length=1000)
+    video_full_path = models.CharField(max_length=1000) 

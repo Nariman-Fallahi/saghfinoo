@@ -7,14 +7,15 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from PIL import Image
 from django.core.files.storage import default_storage
 from django.conf import settings
+# import magic
 
 from common.utils.permissions import IsAdvertisementOwner, IsAdmin, IsRealtor, IsOwner
 from common.utils.request import get_page_and_limit
 from common import codes
 from common.utils import validations
 
-from .serializers import AdvertisementSerializer, AdvertisementPreviewResponseSerializer, AdvertisementResponseSerializer, RealtorAdvertisementPreviewResponseSerializer, RealtorAdvertisementResponseSerializer, UserSavedAdvertisementPreviewResponseSerializer, AdvertisementImageResponseSerializer
-from .models import Advertisement, AdvertisementImage, AdvertisementChoice, SavedAdvertisement
+from .serializers import AdvertisementSerializer, AdvertisementPreviewResponseSerializer, AdvertisementResponseSerializer, RealtorAdvertisementPreviewResponseSerializer, RealtorAdvertisementResponseSerializer, UserSavedAdvertisementPreviewResponseSerializer, AdvertisementImageResponseSerializer, AdvertisementVideoResponseSerializer
+from .models import Advertisement, AdvertisementImage, AdvertisementChoice, SavedAdvertisement, AdvertisementVideo
 
 
 
@@ -84,6 +85,7 @@ class GetAdvertisementAPIView(APIView):
         try:
             reo = Advertisement.objects.values(*AdvertisementResponseSerializer.Meta.fields).get(is_confirmed=True, id=advertisement_id)
             reo['images'] = AdvertisementImage.objects.filter(advertisement=reo['id']).values(*AdvertisementImageResponseSerializer.Meta.fields)
+            reo['videos'] = AdvertisementVideo.objects.filter(advertisement=reo['id']).values(*AdvertisementVideoResponseSerializer.Meta.fields)
             
             return Response({"data":reo, 'status':200})        
         except Advertisement.DoesNotExist:
@@ -221,7 +223,7 @@ class GetRealtorAdvertisementAPIView(APIView):
 
 
 class UploadAdvertisementImageAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAdvertisementOwner]
     authentication_classes = [JWTAuthentication]
     
     def post(self, req, advertisement_id):
@@ -230,18 +232,20 @@ class UploadAdvertisementImageAPIView(APIView):
             return Response({'errors':{'image':'image not sent'}})
 
         if Image.open(image).format not in ('PNG', 'JPEG'):
-            return Response({"errors":{"image":"invalid image format (accepted formats: PNG, JPEG)"}})
+            return Response({"errors":{"image":"invalid image format (accepted formats: PNG, JPEG)"}, 'status':400, 'code':codes.INVALID_FILE_FORMAT})
     
         try:
-            re = Advertisement.objects.get(id=advertisement_id, owner__user=req.user)
+            re = Advertisement.objects.get(id=advertisement_id)
         except Advertisement.DoesNotExist:
-            return Response({'errors':{'non-field-error':'real estate not found or you not owner of that real estate'}, 'status':404})
+            return Response({'errors':{'non-field-error':'real estate not found'}, 'status':404})
+
+        self.check_object_permissions(req, re)
 
         file_ext = image.name.split('.')[-1]
         file_name = f'{uuid.uuid4()}.{file_ext}'
 
-        if AdvertisementImage.objects.filter(advertisement=re).count() >= 10:
-            return Response({'error':{'non-field-error':'maximum image upload limit for real estate'}, 'status':400})
+        if AdvertisementImage.objects.filter(advertisement=re).count() + AdvertisementVideo.objects.filter(advertisement=re).count() >= settings.ADVERTISEMENT_MEDIA_LIMIT:
+            return Response({'error':{'non-field-error':'maximum image and video upload limit'}, 'status':400, 'code':codes.MAX_LIMIT_EXCEEDED})
 
 
         rei = AdvertisementImage()
@@ -306,7 +310,15 @@ class DeleteAllRealtorAdvertisementsAPIView(APIView):
     authentication_classes = [JWTAuthentication]
 
     def delete(self, req):
-        AdvertisementImage.objects.filter(advertisement__owner=req.realtor.id).delete()
+        images = AdvertisementImage.objects.filter(advertisement__owner=req.realtor.id)
+        for image in images:
+            default_storage.delete(image.image)
+        images.delete()
+        videos = AdvertisementVideo.objects.filter(advertisement__owner=req.realtor.id)
+        for video in videos:
+            default_storage.delete(video.video)
+        videos.delete()
+        
         Advertisement.objects.filter(owner=req.realtor.id).delete()
         return Response({'msg':'done', 'status':200})
     
@@ -323,10 +335,17 @@ class DeleteAdvertisementAPIView(APIView):
 
         self.check_object_permissions(req, ad)
 
+        # delete images and videos
         images = AdvertisementImage.objects.filter(advertisement__id=advertisement_id)
         for image in images:
             default_storage.delete(image.image)
         images.delete()
+
+        videos = AdvertisementVideo.objects.filter(advertisement__owner=req.realtor.id)
+        for video in videos:
+            default_storage.delete(video.video)
+        videos.delete()
+        
         ad.delete()
         return Response({'msg':'done', 'status':200})
     
@@ -357,6 +376,7 @@ class SaveAdvertisementAPIView(APIView):
         sad.save()
 
         return Response({'msg':'done', 'status':200})
+        
     
 
 class GetUserSavedAdvertisementAPIView(APIView):
@@ -393,3 +413,42 @@ class DeleteSavedAdvertisementAPIView(APIView):
         
         sad.delete()
         return Response({'msg':'done', 'status':200})
+    
+
+
+class UploadAdvertisementVideoAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsAdvertisementOwner]
+    authentication_classes = [JWTAuthentication]
+
+    def post(self, req, advertisement_id):
+
+        video = req.FILES.get('video', None)
+        if not video:
+            return Response({'errors':{'video':'video field not found'}, 'status':400})
+
+        try:
+            re = Advertisement.objects.get(id=advertisement_id)
+        except Advertisement.DoesNotExist:
+            return Response({'errors':{'non-field-error':'real estate not found'}, 'status':404})
+
+        self.check_object_permissions(req, re)
+
+        file_ext = video.name.split('.')[-1]
+        file_name = f'{uuid.uuid4()}.{file_ext}'
+        
+
+        if AdvertisementImage.objects.filter(advertisement=re).count() + AdvertisementVideo.objects.filter(advertisement=re).count() >= settings.ADVERTISEMENT_MEDIA_LIMIT:
+            return Response({'errors':{'non-field-error':'maximum image and video upload limit'}, 'status':400, 'code':codes.MAX_LIMIT_EXCEEDED})
+
+
+        rev = AdvertisementVideo()
+        rev.advertisement = re
+        rev.video = default_storage.save(f'advertisements/{file_name}', video, max_length=50*1024*1024)
+        rev.video_full_path = f'{settings.S3_ENDPOINT_URL_WITH_BUCKET}/{rev.video}'
+        rev.save()
+
+        return Response({"msg":"done", 'status':200})
+
+
+class DeleteAdvertisementVideoAPIView(APIView):
+    pass

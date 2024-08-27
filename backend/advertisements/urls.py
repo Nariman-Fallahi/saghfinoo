@@ -7,14 +7,18 @@ urlpatterns = [
     path('get-all', views.GetAllAdvertisementsAPIView.as_view(), name='get_all_advertisements'),
     path('get/<advertisement_id>', views.GetAdvertisementAPIView.as_view(), name='get_advertisement'),
     path('search', views.SearchAdvertisementsAPIView.as_view(), name='search_advertisements'),
-    path('upload-image/<int:advertisement_id>', views.UploadAdvertisementImageAPIView.as_view(), name='upload_advertisement_image'),
     path('edit/<int:advertisement_id>', views.EditAdvertisementAPIView.as_view(), name='edit_advertisement'),
     path('get-all-for-realtor', views.GetAllRealtorAdvertisementsAPIView.as_view(), name='get_all_realtor_advertisements'),
     path('get-for-realtor/<int:advertisement_id>', views.GetRealtorAdvertisementAPIView.as_view(), name='get_realtor_advertisement'),
     path('delete-all-for-realtor', views.DeleteAllRealtorAdvertisementsAPIView.as_view(), name='delete_all_realtor_advertisements'),
     path('delete/<int:advertisement_id>', views.DeleteAdvertisementAPIView.as_view(), name='delete_advertisement'),
+    
+    path('upload-image/<int:advertisement_id>', views.UploadAdvertisementImageAPIView.as_view(), name='upload_advertisement_image'),
     path('set-primary-image/<int:advertisement_id>/<int:image_id>', views.SetAdvertisementPrimaryImageAPIView.as_view(), name='set_advertisement_primary_image'),
     path('delete-image/<int:image_id>', views.DeleteAdvertisementUploadedImageAPIView.as_view(), name='delete_advertisement_uploaded_image'),
+
+    path('upload-video/<int:advertisement_id>', views.UploadAdvertisementVideoAPIView.as_view(), name='upload_advertisement_video'),
+    path('delete-video/<int:video_id>', views.DeleteAdvertisementVideoAPIView.as_view(), name='delete_advertisement_video'),
 
     path('save/<int:advertisement_id>', views.SaveAdvertisementAPIView.as_view(), name='save_advertisement'),
     path('delete-saved/<int:advertisement_id>', views.DeleteSavedAdvertisementAPIView.as_view(), name='delete_saved_advertisement'),
