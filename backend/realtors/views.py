@@ -16,8 +16,8 @@ from common.utils import validations
 from common.utils.permissions import IsAdmin, IsOwner
 from common.utils.database import formated_datetime_now, ScoreManager
 
-from .serializers import RealtorSerializer, RealtorResponseSerializer, RealtorPreviewResponseSerializer, CommentSerializer, CommentResponseSerializer
-from .models import Realtor, Comment
+from .serializers import RealtorSerializer, RealtorResponseSerializer, RealtorPreviewResponseSerializer, CommentSerializer, CommentResponseSerializer, CommentScoreReasonResponseSerializer
+from .models import Realtor, Comment, CommentScoreReason
 
 
 class CreateRealtor(APIView):
@@ -209,3 +209,21 @@ class DeleteCommentAPIVew(APIView):
         ScoreManager.decrease_obj_score(comment.score, comment.realtor)
 
         return Response({'msg':'done', 'status':200})
+    
+class GetAllCommentScoreReasonAPIView(APIView):
+    
+    def get(self, req):
+        
+        score = req.query_params.get('score', 0)
+        try:
+            validations.validate_integer(score)
+        except ValueError as v:
+            return Response({'errors':{'score':str(v)}, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
+
+        if score:
+            csrs = CommentScoreReason.objects.filter(score=score).values(*CommentScoreReasonResponseSerializer.Meta.fields)
+        else:
+            csrs = CommentScoreReason.objects.all().values(*CommentScoreReasonResponseSerializer.Meta.fields)
+
+        return Response({'data':csrs,'status':200})
+

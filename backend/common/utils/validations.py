@@ -48,6 +48,9 @@ def validate_choice_se(field_name, field_value):
 
 def validate_integer(value):
     """validate a string that have integer"""
+    if type(value) == int:
+        return
+    
     if type(value) != str:
         raise ValueError('invalid integer')
     try:

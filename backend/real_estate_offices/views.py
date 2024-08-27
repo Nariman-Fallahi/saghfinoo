@@ -16,8 +16,8 @@ from common import codes
 from common.utils import validations
 from django.db.models import Q
 
-from .serializers import RealEstateOfficeSerializer, RealEstateOfficePreviewResponseSerializer, RealEstateOfficeResponseSerializer, CommentResponseSerializer, CommentSerializer
-from .models import RealEstateOffice, Comment
+from .serializers import RealEstateOfficeSerializer, RealEstateOfficePreviewResponseSerializer, RealEstateOfficeResponseSerializer, CommentResponseSerializer, CommentSerializer, CommentScoreReasonResponseSerializer
+from .models import RealEstateOffice, Comment, CommentScoreReason
 
 
 
@@ -262,3 +262,22 @@ class DeleteCommentAPIVew(APIView):
         ScoreManager.decrease_obj_score(comment.score, comment.real_estate_office)
 
         return Response({'msg':'done', 'status':200})
+
+
+class GetAllCommentScoreReasonAPIView(APIView):
+    
+    def get(self, req):
+        
+        score = req.query_params.get('score', 0)
+        try:
+            validations.validate_integer(score)
+        except ValueError as v:
+            return Response({'errors':{'score':str(v)}, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
+
+        if score:
+            csrs = CommentScoreReason.objects.filter(score=score).values(*CommentScoreReasonResponseSerializer.Meta.fields)
+        else:
+            csrs = CommentScoreReason.objects.all().values(*CommentScoreReasonResponseSerializer.Meta.fields)
+
+        return Response({'data':csrs,'status':200})
+

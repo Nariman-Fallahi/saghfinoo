@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from common.utils import validations
-from .models import Realtor, Comment
+from .models import Realtor, Comment, CommentScoreReason
 
 class RealtorSerializer(serializers.ModelSerializer):
 
@@ -97,3 +97,10 @@ class CommentResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['id', 'owner__first_name', 'owner__last_name', 'owner__image_full_path', 'score', 'description', 'score_reason__name']
+
+
+class CommentScoreReasonResponseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CommentScoreReason
+        fields = ['id', 'name', 'score']

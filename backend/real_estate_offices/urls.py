@@ -16,4 +16,7 @@ urlpatterns = [
     path('comment/get-all/<int:real_estate_office_id>', views.GetAllCommentsAPIView.as_view(), name='get_all_comments_for_real_estate_office'),
     path('comment/delete/<int:comment_id>', views.DeleteCommentAPIVew.as_view(), name='delete_comment_for_real_estate_office'),
 
+    path('comment/get-all-score-reasons', views.GetAllCommentScoreReasonAPIView.as_view(), name='get_all_comment_score_reasons_for_real_estate_office'),
+
+
 ]
