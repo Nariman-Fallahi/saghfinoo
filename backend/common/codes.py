@@ -3,6 +3,8 @@
 
 INVALID_QUERY_PARAM = 'invalid_query_param'
 INVALID_FIELD = 'invalid_field'
+INVALID_FILE_FORMAT = 'invalid_file_format'
+MAX_LIMIT_EXCEEDED = 'max_limit_exceeded'
 
 # Users
 
