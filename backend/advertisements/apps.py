@@ -8,7 +8,7 @@ class RealEstatesConfig(AppConfig):
 
     def ready(self) -> None:
             import random
-            if settings.DEBUG and random.random() > 0.1:
+            if not settings.DEBUG:
                 return
 
             from .models import AdvertisementChoice
