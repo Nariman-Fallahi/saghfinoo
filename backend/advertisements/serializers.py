@@ -180,3 +180,11 @@ class AdvertisementImageResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdvertisementImage
         fields = ['id', 'image_full_path']
+
+
+
+class AdvertisementVideoResponseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = AdvertisementImage
+        fields = ['id', 'video_full_path']

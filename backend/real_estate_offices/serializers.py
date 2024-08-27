@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from common.utils import validations
-from .models import RealEstateOffice
+from .models import RealEstateOffice, Comment, CommentScoreReason
 
 class RealEstateOfficeSerializer(serializers.ModelSerializer):
     
@@ -83,3 +83,39 @@ class RealEstateOfficePreviewResponseSerializer(serializers.ModelSerializer):
             'image_full_path',
             'blue_tick',
         ]
+
+
+
+
+class CommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+        fields = ['score', 'description', 'score_reason']
+
+    def validate(self, attrs):
+
+        validations.validate_se('description', attrs['description'], validations.validate_description)
+        if attrs['score'] > 5 or attrs['score'] < 0:
+            raise serializers.ValidationError({'score':'score must be 0 <= score <= 5'})
+        
+        if attrs['score'] != round(attrs['score'], 1):
+            raise serializers.ValidationError({'score': 'only one digit alowed'})
+
+        if attrs['score_reason'].score != attrs['score']:
+            raise serializers.ValidationError({'score_reason':'this score reason is not valid for score='+str(attrs['score'])})
+
+        return super().validate(attrs)
+
+class CommentResponseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'owner__first_name', 'owner__last_name', 'owner__image_full_path', 'score', 'description', 'score_reason__name']
+
+
+class CommentScoreReasonResponseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CommentScoreReason
+        fields = ['id', 'name', 'score']

@@ -41,6 +41,14 @@ class AdvertisementChoice(models.Model):
 
         if AdvertisementChoice.objects.count() < len(default):
             for key, value in default:
+                
+                # continue if already exist
+                try:
+                    AdvertisementChoice.get(key=key, value=value)
+                    continue
+                except AdvertisementChoice.DoesNotExist:
+                    pass
+
                 r = AdvertisementChoice()
                 r.key = key
                 r.value = value
@@ -105,3 +113,10 @@ class SavedAdvertisement(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(default=formated_datetime_now)
+
+
+class AdvertisementVideo(models.Model):
+    advertisement = models.ForeignKey(Advertisement, on_delete=models.PROTECT)
+
+    video = models.CharField(max_length=1000)
+    video_full_path = models.CharField(max_length=1000) 

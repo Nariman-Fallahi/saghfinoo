@@ -7,16 +7,15 @@ class RealEstatesConfig(AppConfig):
     name = 'advertisements'
 
     def ready(self) -> None:
-            import random
-            if settings.DEBUG and random.random() > 0.1:
-                return
+            
+            if not settings.DEBUG:
 
-            from .models import AdvertisementChoice
-            print('adding advertisement choices')
-            try:
-                AdvertisementChoice.add_default_rows()
-            except Exception as e:
-                print(e)
-            print('done')
+                from .models import AdvertisementChoice
+                print('adding advertisement choices')
+                try:
+                    AdvertisementChoice.add_default_rows()
+                except Exception as e:
+                    print(e)
+                print('done')
 
-            return super().ready()
+                return super().ready()

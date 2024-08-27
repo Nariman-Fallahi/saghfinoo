@@ -10,4 +10,13 @@ urlpatterns = [
     path('upload-image', views.UploadRealEstateOfficeImageAPIView.as_view(), name='upload_real_estate_office_image'),
     path('upload-bg-image', views.UploadRealEstateOfficeBGImageAPIView.as_view(), name='upload_real_estate_office_bg_image'),
     path('search', views.SearchRealEstateOfficesAPIView.as_view(), name='search_real_estate_office'),
+
+    path('comment/create/<int:real_estate_office_id>', views.CreateCommentAPIView.as_view(), name='create_comment_for_real_estate_office'),
+    path('comment/edit/<int:comment_id>', views.EditCommentAPIView.as_view(), name='edit_comment_for_real_estate_office'),
+    path('comment/get-all/<int:real_estate_office_id>', views.GetAllCommentsAPIView.as_view(), name='get_all_comments_for_real_estate_office'),
+    path('comment/delete/<int:comment_id>', views.DeleteCommentAPIVew.as_view(), name='delete_comment_for_real_estate_office'),
+
+    path('comment/get-all-score-reasons', views.GetAllCommentScoreReasonAPIView.as_view(), name='get_all_comment_score_reasons_for_real_estate_office'),
+
+
 ]

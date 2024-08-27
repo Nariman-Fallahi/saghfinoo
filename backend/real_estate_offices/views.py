@@ -9,14 +9,15 @@ from PIL import Image
 from django.core.files.storage import default_storage
 from django.conf import settings
 
-from common.utils.permissions import IsRealEstateOfficeOwner, IsAdmin, IsRealtor
+from common.utils.permissions import IsRealEstateOfficeOwner, IsAdmin, IsRealtor, IsOwner
 from common.utils.request import get_page_and_limit
+from common.utils.database import formated_datetime_now, ScoreManager
 from common import codes
 from common.utils import validations
 from django.db.models import Q
 
-from .serializers import RealEstateOfficeSerializer, RealEstateOfficePreviewResponseSerializer, RealEstateOfficeResponseSerializer
-from .models import RealEstateOffice
+from .serializers import RealEstateOfficeSerializer, RealEstateOfficePreviewResponseSerializer, RealEstateOfficeResponseSerializer, CommentResponseSerializer, CommentSerializer, CommentScoreReasonResponseSerializer
+from .models import RealEstateOffice, Comment, CommentScoreReason
 
 
 
@@ -177,3 +178,106 @@ class UploadRealEstateOfficeBGImageAPIView(APIView):
         reo.save()
 
         return Response({"msg":"done", 'status':200})
+
+
+
+#####################################  comment ################################################
+
+class CreateCommentAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def post(self, req, real_estate_office_id):
+        serializer = CommentSerializer(data=req.data)
+        if serializer.is_valid():
+            try:
+                reo = RealEstateOffice.objects.get(id=real_estate_office_id)
+            except RealEstateOffice.DoesNotExist:
+                return Response({'errors':{'non-field-error':'real estate office not found'}, 'status':404})
+
+            comment = serializer.save(owner=req.user, real_estate_office=reo)
+
+            comment.real_estate_office.number_of_comments += 1
+            comment.real_estate_office.save()
+
+            ScoreManager.increase_obj_score(comment.score, comment.real_estate_office)
+            return Response({'msg':'done', 'status':200})
+        
+        return Response({'errors':serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})
+    
+class EditCommentAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsOwner]
+    authentication_classes = [JWTAuthentication]
+
+    def put(self, req, comment_id):
+        serializer = CommentSerializer(data=req.data)
+        if serializer.is_valid():
+            try:
+                comment = Comment.objects.get(id=comment_id)
+            except Comment.DoesNotExist:
+                return Response({'errors':{'non-field-error':'comment not found'}, 'status':404}) 
+
+            self.check_object_permissions(req, comment)
+
+            old_score = comment.score
+
+            comment.description = serializer.data['description']
+            comment.score = serializer.data['score']
+            comment.modified_at = formated_datetime_now()
+            comment.save()
+
+            ScoreManager.edit_obj_score(old_score, comment.score, comment.real_estate_office)
+
+            return Response({'msg':'done', 'status':200})
+        
+        return Response({'errors':serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})
+    
+class GetAllCommentsAPIView(APIView):
+
+    def get(self, req, real_estate_office_id):
+        try:
+            page, limit = get_page_and_limit(req, default_limit=16)
+        except ValueError as e:
+            return Response({'errors': e.dict, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
+        
+        comments = Comment.objects.filter(real_estate_office=real_estate_office_id).values(*CommentResponseSerializer.Meta.fields).order_by('-created_at')[page*limit:page*limit+limit]
+        return Response({'data':comments, 'status':200})
+    
+class DeleteCommentAPIVew(APIView):
+    permission_classes = [IsAuthenticated, IsOwner|IsAdmin]
+    authentication_classes = [JWTAuthentication]
+
+    def delete(self, req, comment_id):
+        try:
+            comment = Comment.objects.get(id=comment_id)
+        except Comment.DoesNotExist:
+            return Response({'errors':{'non-field-error':'comment not found'}, 'status':404})
+        
+        self.check_object_permissions(req, comment)
+        comment.delete()
+
+        comment.real_estate_office.number_of_comments -= 1
+        comment.real_estate_office.save()
+
+        ScoreManager.decrease_obj_score(comment.score, comment.real_estate_office)
+
+        return Response({'msg':'done', 'status':200})
+
+
+class GetAllCommentScoreReasonAPIView(APIView):
+    
+    def get(self, req):
+        
+        score = req.query_params.get('score', 0)
+        try:
+            validations.validate_integer(score)
+        except ValueError as v:
+            return Response({'errors':{'score':str(v)}, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
+
+        if score:
+            csrs = CommentScoreReason.objects.filter(score=score).values(*CommentScoreReasonResponseSerializer.Meta.fields)
+        else:
+            csrs = CommentScoreReason.objects.all().values(*CommentScoreReasonResponseSerializer.Meta.fields)
+
+        return Response({'data':csrs,'status':200})
+

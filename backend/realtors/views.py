@@ -16,8 +16,8 @@ from common.utils import validations
 from common.utils.permissions import IsAdmin, IsOwner
 from common.utils.database import formated_datetime_now, ScoreManager
 
-from .serializers import RealtorSerializer, RealtorResponseSerializer, RealtorPreviewResponseSerializer, CommentSerializer, CommentResponseSerializer
-from .models import Realtor, Comment
+from .serializers import RealtorSerializer, RealtorResponseSerializer, RealtorPreviewResponseSerializer, CommentSerializer, CommentResponseSerializer, CommentScoreReasonResponseSerializer
+from .models import Realtor, Comment, CommentScoreReason
 
 
 class CreateRealtor(APIView):
@@ -149,13 +149,13 @@ class CreateCommentAPIView(APIView):
                 return Response({'errors':{'non-field-error':'realtor not found'}, 'status':404})
 
             comment = serializer.save(owner=req.user, realtor=realtor)
-            ScoreManager.increase_realtor_score(comment.score, comment.realtor)
+            ScoreManager.increase_obj_score(comment.score, comment.realtor)
             return Response({'msg':'done', 'status':200})
         
         return Response({'errors':serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})
     
 class EditCommentAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
     authentication_classes = [JWTAuthentication]
 
     def put(self, req, comment_id):
@@ -166,6 +166,8 @@ class EditCommentAPIView(APIView):
             except Comment.DoesNotExist:
                 return Response({'errors':{'non-field-error':'comment not found'}, 'status':404}) 
 
+            self.check_object_permissions(req, comment)
+
             old_score = comment.score
 
             comment.description = serializer.data['description']
@@ -173,7 +175,7 @@ class EditCommentAPIView(APIView):
             comment.modified_at = formated_datetime_now()
             comment.save()
 
-            ScoreManager.edit_realtor_score(old_score, comment.score, comment.realtor)
+            ScoreManager.edit_obj_score(old_score, comment.score, comment.realtor)
 
             return Response({'msg':'done', 'status':200})
         
@@ -201,9 +203,27 @@ class DeleteCommentAPIVew(APIView):
             return Response({'errors':{'non-field-error':'comment not found'}, 'status':404})
         
         self.check_object_permissions(req, comment)
-        print('deleteing --------------------------')
+        
         comment.delete()
 
-        ScoreManager.decrease_realtor_score(comment.score, comment.realtor)
+        ScoreManager.decrease_obj_score(comment.score, comment.realtor)
 
         return Response({'msg':'done', 'status':200})
+    
+class GetAllCommentScoreReasonAPIView(APIView):
+    
+    def get(self, req):
+        
+        score = req.query_params.get('score', 0)
+        try:
+            validations.validate_integer(score)
+        except ValueError as v:
+            return Response({'errors':{'score':str(v)}, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
+
+        if score:
+            csrs = CommentScoreReason.objects.filter(score=score).values(*CommentScoreReasonResponseSerializer.Meta.fields)
+        else:
+            csrs = CommentScoreReason.objects.all().values(*CommentScoreReasonResponseSerializer.Meta.fields)
+
+        return Response({'data':csrs,'status':200})
+
