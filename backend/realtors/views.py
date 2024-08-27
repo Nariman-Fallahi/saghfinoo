@@ -149,13 +149,13 @@ class CreateCommentAPIView(APIView):
                 return Response({'errors':{'non-field-error':'realtor not found'}, 'status':404})
 
             comment = serializer.save(owner=req.user, realtor=realtor)
-            ScoreManager.increase_realtor_score(comment.score, comment.realtor)
+            ScoreManager.increase_obj_score(comment.score, comment.realtor)
             return Response({'msg':'done', 'status':200})
         
         return Response({'errors':serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})
     
 class EditCommentAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
     authentication_classes = [JWTAuthentication]
 
     def put(self, req, comment_id):
@@ -166,6 +166,8 @@ class EditCommentAPIView(APIView):
             except Comment.DoesNotExist:
                 return Response({'errors':{'non-field-error':'comment not found'}, 'status':404}) 
 
+            self.check_object_permissions(req, comment)
+
             old_score = comment.score
 
             comment.description = serializer.data['description']
@@ -173,7 +175,7 @@ class EditCommentAPIView(APIView):
             comment.modified_at = formated_datetime_now()
             comment.save()
 
-            ScoreManager.edit_realtor_score(old_score, comment.score, comment.realtor)
+            ScoreManager.edit_obj_score(old_score, comment.score, comment.realtor)
 
             return Response({'msg':'done', 'status':200})
         
@@ -201,9 +203,9 @@ class DeleteCommentAPIVew(APIView):
             return Response({'errors':{'non-field-error':'comment not found'}, 'status':404})
         
         self.check_object_permissions(req, comment)
-        print('deleteing --------------------------')
+        
         comment.delete()
 
-        ScoreManager.decrease_realtor_score(comment.score, comment.realtor)
+        ScoreManager.decrease_obj_score(comment.score, comment.realtor)
 
         return Response({'msg':'done', 'status':200})

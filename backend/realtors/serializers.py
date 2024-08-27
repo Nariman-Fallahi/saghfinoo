@@ -75,7 +75,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ['score', 'description']
+        fields = ['score', 'description', 'score_reason']
 
     def validate(self, attrs):
 
@@ -86,10 +86,14 @@ class CommentSerializer(serializers.ModelSerializer):
         if attrs['score'] != round(attrs['score'], 1):
             raise serializers.ValidationError({'score': 'only one digit alowed'})
 
+        if attrs['score_reason'].score != attrs['score']:
+            raise serializers.ValidationError({'score_reason':'this score reason is not valid for score='+str(attrs['score'])})
+
+
         return super().validate(attrs)
 
 class CommentResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ['id', 'owner__first_name', 'owner__last_name', 'owner__image_full_path', 'score', 'description']
+        fields = ['id', 'owner__first_name', 'owner__last_name', 'owner__image_full_path', 'score', 'description', 'score_reason__name']
