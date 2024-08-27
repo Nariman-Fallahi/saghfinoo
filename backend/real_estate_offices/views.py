@@ -34,8 +34,8 @@ class CreateRealEstateOfficeAPIView(APIView):
                 reo = RealEstateOffice.objects.get(owner=req.user)
                 return Response({'errors':{"user":"user is already owner of "+reo.name}, 'code':codes.USER_IS_ALREADY_REO_OWNER, 'status':400})
             except RealEstateOffice.DoesNotExist:
-                serializer.save(owner=req.realtor.user)
-                return Response({"msg": "done", 'status':200})
+                reo = serializer.save(owner=req.realtor.user)
+                return Response({"msg": "done", 'status':200, 'id': reo.id})
         return Response({"errors": serializer.errors, 'code':codes.INVALID_FIELD, 'status':400})
     
 class EditRealEstateOfficeAPIView(APIView):

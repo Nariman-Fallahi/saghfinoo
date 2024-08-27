@@ -27,7 +27,6 @@ class RealtorSerializer(serializers.ModelSerializer):
         validations.validate_se('whatsapp', attrs['whatsapp'], validations.validate_username)
         validations.validate_se('twitter', attrs['twitter'], validations.validate_username)
         validations.validate_se('facebook', attrs['facebook'], validations.validate_username)
-        validations.validate_se('email', attrs['email'], validations.validate_username)
 
         return super().validate(attrs)
 
@@ -51,6 +50,7 @@ class RealtorResponseSerializer(serializers.ModelSerializer):
             'email',
             'real_estate_office__name', 
             'real_estate_office__username',
+            'blue_tick',
         ]
 
 
@@ -66,7 +66,8 @@ class RealtorPreviewResponseSerializer(serializers.ModelSerializer):
             'user__image_full_path', 
             'score', 
             'real_estate_office__name', 
-            'real_estate_office__username'
+            'real_estate_office__username',
+            'blue_tick'
         ]
 
 

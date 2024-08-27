@@ -30,7 +30,7 @@ class CreateRealtor(APIView):
         if serializer.is_valid():
             serializer.save(user=req.user)
             return Response({"msg":"done", 'status':200})
-        return Response({"errors":serializer.errors, 'status':400})
+        return Response({"errors":serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})
     
 
 

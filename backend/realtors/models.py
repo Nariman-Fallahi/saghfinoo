@@ -16,10 +16,12 @@ class Realtor(models.Model):
     whatsapp = models.CharField(max_length=100)
     twitter = models.CharField(max_length=100)
     facebook = models.CharField(max_length=100)
-    email = models.CharField(max_length=100)
+    email = models.EmailField()
 
     score = models.FloatField(default=settings.REALTOR_DEFAULT_SCORE)
     number_of_active_ads = models.PositiveIntegerField(default=0)
+
+    blue_tick = models.BooleanField(default=False)
 
     bg_image = models.CharField(max_length=1000, default='') # background image
     bg_image_full_path = models.CharField(max_length=1000, default='')
@@ -38,12 +40,40 @@ class Realtor(models.Model):
         return self.user.first_name +' '+ self.user.last_name +', '+ reo
     
 
+class CommentScoreReason(models.Model):
+    name = models.CharField(max_length=50)
+    score = models.IntegerField()
+
+    @classmethod
+    def add_default_row(cls):
+        defaults = (
+            (),
+
+        )
+
+        for name, score in defaults:
+            try:
+                # not save if already exist
+                CommentScoreReason.objects.get(name=name, score=score)
+                continue
+            except CommentScoreReason.DoesNotExist:
+                pass
+
+            csr = CommentScoreReason()
+            csr.name = name
+            csr.score = score
+            csr.save()
+
+
+
 class Comment(models.Model):
     realtor = models.ForeignKey(Realtor, on_delete=models.CASCADE)
     owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     score = models.FloatField()
+    score_reason = models.ForeignKey(CommentScoreReason,on_delete=models.PROTECT)
     description = models.CharField(max_length=200)
 
     created_at = models.DateTimeField(default=formated_datetime_now)
     modified_at = models.DateTimeField(default=formated_datetime_now)
+

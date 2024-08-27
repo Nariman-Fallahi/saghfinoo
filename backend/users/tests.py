@@ -4,14 +4,15 @@ from rest_framework.test import APITestCase
 from common import codes
 from django.core.cache import caches
 
-from common.utils.test import test_invalid_field
+from common.utils.test import test_invalid_field, login, test_have_fields, NumberGenerator
+from common.utils import characters
 
 auth_cache = caches['auth']
 
 class VerifyNumberTests(APITestCase):
     def setUp(self):
         self.url = reverse('verify_number')
-        self.number = "09111111111"
+        self.number = NumberGenerator.get_number()
 
     # def test_number_multiple_code_request(self):
     #     data = {'number':self.number, "code":0}
@@ -143,7 +144,7 @@ class VerifyNumberTests(APITestCase):
 
 class SignupTests(APITestCase):
     def setUp(self):
-        self.number = '09111111112'
+        self.number = NumberGenerator.get_number()
         self.url = reverse('signup')
         self.verify_number_url = reverse('verify_number')
         self.default_data = {'number':self.number, 'first_name': 'abc', 'last_name':'abc', 'token': 'a', 'password': 'abc'}
@@ -194,7 +195,11 @@ class SignupTests(APITestCase):
 
     def test_invalid_field(self):
     
-        test_invalid_field(self, self.url, self.default_data)
+        test_invalid_field(self, self.url, self.default_data, {
+            'number' : characters.NUMBER_INVALID_CHARS,
+            'first_name': characters.NAME_INVALID_CHARS,
+            'last_name': characters.NAME_INVALID_CHARS,
+        }, {})
 
     def test_success(self):
         data = {'number':self.number, 'code':0, 'token':''}
@@ -211,4 +216,23 @@ class SignupTests(APITestCase):
         # signup
         data2 = {'number':self.number, 'first_name':'abc', 'last_name':'abc', 'password':'1234', 'token': data['token']}
         resp = self.client.post(self.url, data2)
+        
+
+class GetUserInfoAPIViewTests(APITestCase):
+    def setUp(self) -> None:
+        self.number = NumberGenerator.get_number()
+        self.url = reverse('get_user_info')
+
+        access, refresh = login(self, self.number)
+        self.headers = {'Authorization':'Bearer '+access}
+
+
+    def test_success(self):
+
+        resp = self.client.get(self.url, headers=self.headers)
+        self.assertEqual(resp.data['status'], 200, resp.data)
+        self.assertNotEqual(resp.data.get('data', ''), '', resp.data)
+        test_have_fields(self, resp.data['data'], ['first_name', 'last_name', 'number', 'image_full_path', 'created_at', 'email', 'activity_type'])
+
+
         

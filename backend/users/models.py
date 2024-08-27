@@ -13,8 +13,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     password = models.CharField(max_length=512)
     email = models.EmailField(max_length=300, null=True, unique=True)
 
-    image = models.CharField(max_length=1000, default='')
-    image_full_path = models.CharField(max_length=1000, default='')
+    image = models.CharField(max_length=1000, null=True)
+    image_full_path = models.CharField(max_length=1000, null=True)
 
     is_active = models.BooleanField(default=True)
     permisions = models.CharField(max_length=53, default='')

@@ -22,3 +22,10 @@ if len(PERSIAN_CHARS) != 32:
 
 if len(ENGLISH_CHARS) != 26:
     print(f"ERROR: invalid length of ENGLISH_CHARS: {len(ENGLISH_CHARS)}")
+
+
+# for tests
+NAME_INVALID_CHARS = list('!@#$%^&*()-=+_[]{}\\|\'";:.,></?')+ENGLISH_NUMBERS+PERSIAN_NUMBERS
+USERNAME_INVALID_CHARS = list('@!#$%^&*(){}[]\\|\'":;?/><.,')
+DESCRIPTION_INVALID_CHARS = list('<>{}[]\\|')
+NUMBER_INVALID_CHARS = PERSIAN_CHARS + ENGLISH_CHARS + PERSIAN_SIGNS + ENGLISH_SIGNS + list('{}[]\\|-_()=+/?')
