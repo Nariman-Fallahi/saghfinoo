@@ -19,7 +19,14 @@ class Province(models.Model):
         if Province.objects.all().count() != len(provinces):
 
             print('setting up provinces')
-            for province in provinces:                    
+            for province in provinces:   
+                # continue if already exist
+                try:
+                    Province.objects.get(name=province)
+                    continue                 
+                except Province.DoesNotExist:
+                    pass
+
                 print(f'saving "{province["name"]}"')
                 p = Province.objects.filter(name=province['name'])
                 if len(p) == 0:
@@ -45,8 +52,18 @@ class City(models.Model):
         cities = json.load(urlopen(cities_url, timeout=20))
 
         if Province.objects.all().count() != len(cities):
+            
+
             print('saving up cities')
             for city in cities:
+            
+                # continue if already exist
+                try:
+                    City.objects.get(name=city)
+                    continue                 
+                except City.DoesNotExist:
+                    pass
+            
                 print(f'setting up {city["name"]}')
                 c = City.objects.filter(name=city['name'])
                 if len(c) == 0:

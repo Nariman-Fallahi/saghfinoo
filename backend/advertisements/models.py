@@ -41,6 +41,14 @@ class AdvertisementChoice(models.Model):
 
         if AdvertisementChoice.objects.count() < len(default):
             for key, value in default:
+                
+                # continue if already exist
+                try:
+                    AdvertisementChoice.get(key=key, value=value)
+                    continue
+                except AdvertisementChoice.DoesNotExist:
+                    pass
+
                 r = AdvertisementChoice()
                 r.key = key
                 r.value = value
