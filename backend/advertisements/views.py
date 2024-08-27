@@ -30,6 +30,12 @@ class CreateAdvertisementAPIView(APIView):
         serializer = self.serializer_class(data=req.data)
         if serializer.is_valid():
             ad = serializer.save(owner=req.realtor)
+
+            ad.owner.number_of_active_ads += 1
+            ad.owner.save()
+            ad.owner.real_estate_office.number_of_active_ads += 1
+            ad.owner.real_estate_office.save()
+
             return Response({"msg": "done", 'id':ad.id, 'status':200})
         return Response({"errors": serializer.errors, 'code':codes.INVALID_FIELD, 'status':400})
     
@@ -320,6 +326,13 @@ class DeleteAllRealtorAdvertisementsAPIView(APIView):
         videos.delete()
         
         Advertisement.objects.filter(owner=req.realtor.id).delete()
+        
+        req.realtor.real_estate_office.number_of_active_ads -= req.realtor.number_of_active_ads
+        req.realtor.real_estate_office.save()
+
+        req.realtor.number_of_active_ads = 0
+        req.realtor.save()
+
         return Response({'msg':'done', 'status':200})
     
 
@@ -346,7 +359,15 @@ class DeleteAdvertisementAPIView(APIView):
             default_storage.delete(video.video)
         videos.delete()
         
+
+        ad.owner.real_estate_office.number_of_active_ads -= 1
+        ad.owner.real_estate_office.save()
+
+        ad.owner.number_of_active_ads -= 1
+        ad.owner.save()
+
         ad.delete()
+
         return Response({'msg':'done', 'status':200})
     
 
