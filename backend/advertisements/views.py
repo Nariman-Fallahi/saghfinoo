@@ -113,9 +113,13 @@ class SearchAdvertisementsAPIView(APIView):
             'main_street': validations.validate_name,
             'side_street': validations.validate_name,
             'type_of_transaction': validations.validate_integer,
-            'desposit': validations.validate_integer,
+            'deposit': validations.validate_integer,
             'area': validations.validate_integer,
             'number_of_floors': validations.validate_integer,
+            'deposit_from': validations.validate_integer,
+            'deposit_to': validations.validate_integer,
+            'rent_from': validations.validate_integer,
+            'rent_to': validations.validate_integer,
         }
         greater_than_exceptions = {
             'room': 5,
@@ -128,9 +132,20 @@ class SearchAdvertisementsAPIView(APIView):
         } 
 
         different_fields_name = {
-            'reo_username': 'owner__real_estate_office__username'
+            'reo_username': 'owner__real_estate_office__username',
         }
 
+        ranged_fields_from = {
+            'deposit_from':'deposit',
+            'rent_from':'rent'
+        }
+
+        ranged_fields_to = {
+            'deposit_to':'deposit',
+            'rent_to':'rent'
+        }
+
+        # check query param keys is allowed
         for key in req.query_params:
             if key not in list(queries.keys()) + ['page', 'limit']:
                 return Response({'errors':{key:'this key not found'}, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
@@ -144,9 +159,9 @@ class SearchAdvertisementsAPIView(APIView):
             "is_confirmed": True
         }
 
-        for field_name, validate_func in queries.items():
-            value = qp.get(field_name, '')
-            field_name = different_fields_name.get(field_name, field_name)
+        for real_field_name, validate_func in queries.items():
+            value = qp.get(real_field_name, '')
+            field_name = different_fields_name.get(real_field_name, real_field_name)
             if value == '':
                 continue
             try:
@@ -155,11 +170,21 @@ class SearchAdvertisementsAPIView(APIView):
                 return Response({'errors':{field_name:str(e)}, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
             
             ex = greater_than_exceptions.get(field_name, None)
+            rg = ranged_fields_from.get(field_name, False) or ranged_fields_to.get(field_name, False)
+
             if ex != None and ex <= int(value):
                 kwargs[f"{field_name}__gte"] = value
+            elif rg:
+                from_field_name = ranged_fields_from.get(field_name, None)
+                if from_field_name:
+                    kwargs[f'{from_field_name}__gte'] = value
+                
+                to_field_name = ranged_fields_to.get(field_name, None)
+                if to_field_name:
+                    kwargs[f'{to_field_name}__lte'] = value
             else:
                 kwargs[field_name] = value
-
+        
         ads = Advertisement.objects.values(*AdvertisementPreviewResponseSerializer.Meta.fields).filter(**kwargs)[page*limit: page*limit+limit]
 
         return Response({'data':ads, 'status':200})

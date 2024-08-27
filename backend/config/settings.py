@@ -277,7 +277,7 @@ if not TESTING:
     ]
 
     MIDDLEWARE = [
-        'middleware.debug_tool.DebugTool',
+        # 'middleware.debug_tool.DebugTool',
         'debug_toolbar.middleware.DebugToolbarMiddleware',
         *MIDDLEWARE,
     ]
