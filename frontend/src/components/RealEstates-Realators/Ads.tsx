@@ -6,6 +6,7 @@ import Filter from "./AdsFilter/Filter";
 import { Button } from "@nextui-org/button";
 import { useState } from "react";
 import { AdsFilterDataType } from "@/types/Type";
+import PaginationComponent from "../Pagination";
 
 export type ProvinceType =
   | { name: string | undefined; id: number | undefined }
@@ -24,24 +25,12 @@ export default function Ads() {
           <Skeleton width={100} height={20} className="md:!w-[250px]" />
         </div>
       ) : (
-        <Filter
-        filterData={filterData}
-         setFilterData={setFilterData}
-        />
+        <Filter filterData={filterData} setFilterData={setFilterData} />
       )}
 
       <AdsCart />
 
-      {!isloading && (
-        <div className="w-full flex justify-center">
-          <Button
-            className="bg-[#CB1B1B] text-xs font-medium w-[156px] h-[32px] mt-12
-           text-white lg:text-sm lg:mt-24 lg:w-[328px] rounded-lg lg:h-[40px]"
-          >
-            مشاهده بیشتر
-          </Button>
-        </div>
-      )}
+      <PaginationComponent  />
     </div>
   );
 }

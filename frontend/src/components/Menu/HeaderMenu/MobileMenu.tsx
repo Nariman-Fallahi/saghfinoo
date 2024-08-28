@@ -92,7 +92,7 @@ export default function MobileMenu({
               width={isLogin ? 36 : 20}
               height={isLogin ? 36 : 20}
               src={
-                userInfoData?.data.image_full_path ||
+               isLogin && userInfoData?.data.image_full_path ||
                 "/icons/profile-circle.svg"
               }
               alt=""

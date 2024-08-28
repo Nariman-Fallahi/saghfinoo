@@ -104,9 +104,11 @@ export default function Register() {
         setCookie("access", data.access, {
           maxAge: data.expire,
           sameSite: "strict",
+          secure: process.env.NODE_ENV === "production",
         });
         setCookie("refresh", data.refresh, {
           sameSite: "strict",
+          secure: process.env.NODE_ENV === "production",
         });
         console.log(data);
         setRegisterStatus(RegisterStatusValue.status1);

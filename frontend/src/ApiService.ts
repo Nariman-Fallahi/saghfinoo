@@ -5,34 +5,47 @@ import { useGetRequestType } from "./types/Type";
 import axios from "axios";
 
 export enum Api {
-  verifynumber = "http://127.0.0.1:8000/api/v1/users/verify-number",
-  CompleteSignup = "http://127.0.0.1:8000/api/v1/users/complete-signup",
-  Refresh = "http://127.0.0.1:8000/api/v1/users/token/refresh",
-  GetUserInfo = "http://127.0.0.1:8000/api/v1/users/get-user-info",
-  GetAllRealEstateOffices = "http://127.0.0.1:8000/api/v1/real-estate-offices/search?page=",
-  GetRealEstateOffices = "http://127.0.0.1:8000/api/v1/real-estate-offices/get/",
-  GetProvinces = "http://127.0.0.1:8000/api/v1/tools/get-provinces",
-  GetProvinceCities = "http://127.0.0.1:8000/api/v1/tools/get-province-cities/",
-  GetAllRealtor = "http://127.0.0.1:8000/api/v1/realtors/search?page=",
-  GetRealtor = "http://127.0.0.1:8000/api/v1/realtors/get/",
-  GetSelectionData = "http://127.0.0.1:8000/api/v1/advertisements/create?key=",
-  UploadImageFile = "http://127.0.0.1:8000/api/v1/advertisements/upload-image/",
-  AdPosting = "http://127.0.0.1:8000/api/v1/advertisements/create",
-  DeleteAllMyAds = "http://127.0.0.1:8000/api/v1/advertisements/delete-all-for-realtor",
-  GetAllMyAds = "http://127.0.0.1:8000/api/v1/advertisements/get-all-for-realtor?page=",
-  DeleteMyAds = "http://127.0.0.1:8000/api/v1/advertisements/delete/",
-  EditUserProfile = "http://127.0.0.1:8000/api/v1/users/edit-user",
-  UploadProfileImage = "http://127.0.0.1:8000/api/v1/users/upload-profile-image",
-  ChangePassword = "http://127.0.0.1:8000/api/v1/users/change-password",
-  CreateRealtorsComment = "http://127.0.0.1:8000/api/v1/realtors/comment/create/",
-  GetRealtorComments = "http://127.0.0.1:8000/api/v1/realtors/comment/get-all/",
-  GetRealEstateConsultants = "http://127.0.0.1:8000/api/v1/realtors/search?reo_username=",
-  GetAllScoreReasons = "http://127.0.0.1:8000/api/v1/realtors/comment/get-all-score-reasons?",
-  GetAllReportReasonsRealEstate = "http://127.0.0.1:8000/api/v1/real-estate-offices/report/get-all-reasons",
-  GetAllReportReasonsRealtors = "http://127.0.0.1:8000/api/v1/realtors/report/get-all-reasons",
-  CreateReportRealtors = "http://127.0.0.1:8000/api/v1/realtors/report/create",
-  CreateReportRealEstate = "http://127.0.0.1:8000/api/v1/real-estate-offices/report/create",
+  // users Api
+  verifynumber = "/api/v1/users/verify-number",
+  CompleteSignup = "/api/v1/users/complete-signup",
+  ChangePassword = "/api/v1/users/change-password",
+  EditUserProfile = "/api/v1/users/edit-user",
+  Refresh = "/api/v1/users/token/refresh",
+  GetUserInfo = "/api/v1/users/get-user-info",
+  UploadProfileImage = "/api/v1/users/upload-profile-image",
+
+  // real-estate-offices Api
+  GetAllRealEstateOffices = "/api/v1/real-estate-offices/search?page=",
+  GetRealEstateOffices = "/api/v1/real-estate-offices/get/",
+  GetAllReportReasonsRealEstate = "/api/v1/real-estate-offices/report/get-all-reasons",
+  CreateReportRealEstate = "/api/v1/real-estate-offices/report/create",
+
+  // realtors Api
+  GetRealEstateConsultants = "/api/v1/realtors/search?reo_username=",
+  GetAllRealtor = "/api/v1/realtors/search?page=",
+  GetRealtor = "/api/v1/realtors/get/",
+  CreateRealtorsComment = "/api/v1/realtors/comment/create/",
+  GetRealtorComments = "/api/v1/realtors/comment/get-all/",
+  GetAllScoreReasons = "/api/v1/realtors/comment/get-all-score-reasons?",
+  GetAllReportReasonsRealtors = "/api/v1/realtors/report/get-all-reasons",
+  CreateReportRealtors = "/api/v1/realtors/report/create",
+
+  // advertisements Api
+  GetSelectionData = "/api/v1/advertisements/create?key=",
+  UploadImageFile = "/api/v1/advertisements/upload-image/",
+  DeleteAllMyAds = "/api/v1/advertisements/delete-all-for-realtor",
+  AdPosting = "/api/v1/advertisements/create",
+  GetAllMyAds = "/api/v1/advertisements/get-all-for-realtor?page=",
+  DeleteMyAds = "/api/v1/advertisements/delete/",
+
+  // tools Api
+  GetProvinces = "/api/v1/tools/get-provinces",
+  GetProvinceCities = "/api/v1/tools/get-province-cities/",
 }
+
+const axiosInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+});
 
 // PostRequest
 export const usePostRequest = <dataType>({
@@ -46,7 +59,7 @@ export const usePostRequest = <dataType>({
   return useMutation({
     mutationKey: [key],
     mutationFn: async (data: dataType) => {
-      const response = await axios({
+      const response = await axiosInstance({
         url: url,
         method: method ? method : "POST",
         headers: headers,
@@ -76,7 +89,7 @@ export const useGetRequest = <dataType>({
   return useQuery<dataType>({
     queryKey: key,
     queryFn: async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         url: url,
         method: "GET",
         headers: headers,
