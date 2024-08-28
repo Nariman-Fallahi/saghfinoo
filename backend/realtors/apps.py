@@ -9,7 +9,11 @@ class RealtorConfig(AppConfig):
     def ready(self):
         if not settings.DEBUG:
             try:
-                from .models import CommentScoreReason
+                from .models import CommentScoreReason, ReportReason
+                
                 CommentScoreReason.add_default_row()
+
+                ReportReason.add_default_row()
+
             except Exception as e:
-                print("EEROR in adding CommentScoreReason: "+str(e))
+                print("EEROR in realtors: "+str(e))

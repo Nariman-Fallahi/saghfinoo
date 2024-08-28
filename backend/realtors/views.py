@@ -16,8 +16,8 @@ from common.utils import validations
 from common.utils.permissions import IsAdmin, IsOwner
 from common.utils.database import formated_datetime_now, ScoreManager
 
-from .serializers import RealtorSerializer, RealtorResponseSerializer, RealtorPreviewResponseSerializer, CommentSerializer, CommentResponseSerializer, CommentScoreReasonResponseSerializer
-from .models import Realtor, Comment, CommentScoreReason
+from .serializers import RealtorSerializer, RealtorResponseSerializer, RealtorPreviewResponseSerializer, CommentSerializer, CommentResponseSerializer, CommentScoreReasonResponseSerializer, ReportSerializer, ReportReasonResponseSerializer
+from .models import Realtor, Comment, CommentScoreReason, ReportReason
 
 
 class CreateRealtor(APIView):
@@ -227,3 +227,23 @@ class GetAllCommentScoreReasonAPIView(APIView):
 
         return Response({'data':csrs,'status':200})
 
+
+######################## report ##################################
+
+class CreateReportAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def post(self, req):
+        serializer = ReportSerializer(data=req.data)
+        if serializer.is_valid():
+            serializer.save(user=req.user)
+            return Response({'msg':'done', 'status':200})
+        
+        return Response({'errors':serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})
+    
+class GetAllReportReasonsAPIView(APIView):
+    
+    def get(self, req):
+        reasons = ReportReason.objects.all().values(*ReportReasonResponseSerializer.Meta.fields)
+        return Response({'data':reasons, 'status':200})

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from common.utils import validations
-from .models import Realtor, Comment, CommentScoreReason
+from .models import Realtor, Comment, CommentScoreReason, Report, ReportReason
 
 class RealtorSerializer(serializers.ModelSerializer):
 
@@ -104,3 +104,23 @@ class CommentScoreReasonResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommentScoreReason
         fields = ['id', 'name', 'score']
+
+
+class ReportSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Report
+        fields = ['report_reason', 'description']
+
+    def validate(self, attrs):
+        
+        validations.validate_se('description', attrs['description'], validations.validate_description)
+
+        return super().validate(attrs)
+
+
+class ReportReasonResponseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ReportReason
+        fields = ['id', 'name']
