@@ -1,48 +1,42 @@
 import Image from "next/image";
 import { Button } from "@nextui-org/button";
-import { isMobile, ScoreReasonData } from "@/constant/Constants";
-import { useState, Fragment, useEffect } from "react";
-import { usePostRequest } from "@/ApiService";
+import { isMobile } from "@/constant/Constants";
+import { useEffect } from "react";
+import { usePostRequest, useGetRequest } from "@/ApiService";
 import { Api } from "@/ApiService";
-import { getCookie } from "cookies-next";
-import { DataModalREA } from "@/types/Type";
+import { DataModalREA, ScoreReasonsType } from "@/types/Type";
 import { Spinner } from "@nextui-org/spinner";
 import { Success } from "@/notification/Success";
 import { ErrorNotification } from "@/notification/Error";
-import { useCallback } from "react";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { TextError } from "@/constant/Constants";
+import UserIcon from "./UserIcon";
+import { CookieValueTypes } from "cookies-next";
 
 type ScoreModalType = {
   data: DataModalREA;
   id: string | string[] | undefined;
   onClose: () => void;
+  access: CookieValueTypes;
 };
 
-type ScoreBtnType = {
-  number: 1 | 2 | 3 | 4 | 5;
-  scoreValue: number;
-  setScoreValue: React.Dispatch<React.SetStateAction<1 | 2 | 3 | 4 | 5>>;
-  setScoreReasonValue: React.Dispatch<React.SetStateAction<string | undefined>>;
+type Inputs = {
+  score: number;
+  score_reason: number | undefined;
+  description: CookieValueTypes;
 };
 
-export default function ScoreModal({ data, id, onClose }: ScoreModalType) {
-  const [scoreValue, setScoreValue] = useState<1 | 2 | 3 | 4 | 5>(1);
-  const [scoreReasonValue, setScoreReasonValue] = useState<string | undefined>(
-    undefined
-  );
-  const [commentText, setCommentText] = useState<string | undefined>(undefined);
-  const [textErr, setTextErr] = useState<string | null>(null);
-  const [isActiveBtn, setIsActiveBtn] = useState(false);
-
-  const access = getCookie("access");
-
+export default function ScoreModal({
+  data,
+  id,
+  onClose,
+  access,
+}: ScoreModalType) {
   const {
     mutate,
     isPending,
     data: createRealtorsCommentData,
-  } = usePostRequest<{
-    score: number;
-    description: string;
-  }>({
+  } = usePostRequest<Inputs>({
     url: `${Api.CreateRealtorsComment}${id}`,
     key: "createRealtorsComment",
     headers: {
@@ -50,61 +44,34 @@ export default function ScoreModal({ data, id, onClose }: ScoreModalType) {
     },
   });
 
-  const ScoreBtn = useCallback(
-    ({
-      number,
-      scoreValue,
-      setScoreValue,
-      setScoreReasonValue,
-    }: ScoreBtnType) => {
-      return (
-        <Button
-          size={isMobile ? "sm" : "md"}
-          variant={number <= scoreValue ? "faded" : "bordered"}
-          onPress={() => {
-            setScoreValue(number);
-            setScoreReasonValue(undefined);
-          }}
-          className="ml-2 border"
-        >
-          {number}
-        </Button>
-      );
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    control,
+    formState: { errors },
+  } = useForm<Inputs>({
+    defaultValues: {
+      score: 1,
+      score_reason: undefined,
+      description: "",
     },
-    []
-  );
+    mode: "onChange",
+  });
 
-  const scoreReasonBtn = (value: string) => {
-    return (
-      <Button
-        variant={scoreReasonValue === value ? "flat" : "bordered"}
-        size={isMobile ? "sm" : "md"}
-        className="w-[48%] mt-3 border"
-        radius="sm"
-        onPress={() => setScoreReasonValue(value)}
-      >
-        {value}
-      </Button>
-    );
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    mutate(data);
   };
 
-  // const isDisabled = !commentText || !scoreReasonValue || !commentText;
-  useEffect(() => {
-    if (!commentText || !scoreReasonValue || textErr) {
-      setIsActiveBtn(false);
-    } else {
-      setIsActiveBtn(true);
-    }
-  }, [commentText, scoreReasonValue, textErr]);
-
-  const handleCreateScore = () => {
-    if (commentText) {
-      mutate({
-        score: scoreValue,
-        description: commentText,
-      });
-    }
-  };
+  const { data: scoreReasonsData } = useGetRequest<{
+    data: ScoreReasonsType[];
+  }>({
+    url: `${Api.GetAllScoreReasons}score=${watch("score")}`,
+    key: ["getAllScoreReasons", JSON.stringify(watch("score"))],
+    enabled: true,
+    staleTime: 10 * 60 * 1000,
+  });
 
   useEffect(() => {
     if (createRealtorsCommentData && createRealtorsCommentData.msg === "done") {
@@ -119,111 +86,93 @@ export default function ScoreModal({ data, id, onClose }: ScoreModalType) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createRealtorsCommentData]);
 
-  useEffect(() => {
-    if (commentText && commentText?.length > 220) {
-      setTextErr("وارد کردن بیشتر از 220 کاراکتر مجاز نمیباشد.");
-    } else {
-      setTextErr(null);
-    }
-  }, [commentText]);
-
   return (
-    <div className="w-full flex flex-col items-center mt-4">
-      <Image
-        width={87}
-        height={87}
-        src={data.profileIcon ? data.profileIcon : "/icons/profile-circle.svg"}
-        alt=""
-        className="rounded-full"
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full flex flex-col items-center mt-4"
+    >
+      <UserIcon
+        src={data.profileIcon || "/icons/profile-circle.svg"}
+        userName={data.name}
       />
-
-      <h3 className="mt-3 font-bold">{data.name}</h3>
 
       <p className="mt-6 text-sm text-center">
         با ثبت امتیاز مشاور در بهبود فعالیت سایت به ما کمک کنید.
       </p>
 
       <div className="flex w-full justify-center mt-3 ltr mr-2">
-        <ScoreBtn
-          number={1}
-          scoreValue={scoreValue}
-          setScoreValue={setScoreValue}
-          setScoreReasonValue={setScoreReasonValue}
-        />
-        <ScoreBtn
-          number={2}
-          scoreValue={scoreValue}
-          setScoreValue={setScoreValue}
-          setScoreReasonValue={setScoreReasonValue}
-        />
-        <ScoreBtn
-          number={3}
-          scoreValue={scoreValue}
-          setScoreValue={setScoreValue}
-          setScoreReasonValue={setScoreReasonValue}
-        />
-        <ScoreBtn
-          number={4}
-          scoreValue={scoreValue}
-          setScoreValue={setScoreValue}
-          setScoreReasonValue={setScoreReasonValue}
-        />
-        <ScoreBtn
-          number={5}
-          scoreValue={scoreValue}
-          setScoreValue={setScoreValue}
-          setScoreReasonValue={setScoreReasonValue}
-        />
+        {[1, 2, 3, 4, 5].map((number) => (
+          <Button
+            key={number}
+            size={isMobile ? "sm" : "md"}
+            variant={number <= watch("score") ? "faded" : "bordered"}
+            onPress={() => {
+              setValue("score", number);
+              setValue("score_reason", undefined);
+            }}
+            className="ml-2 border"
+          >
+            {number}
+          </Button>
+        ))}
       </div>
 
       <p className="text-sm mt-4">لطفا دلیل این امتیاز را انتخاب کنید</p>
 
       <div className="flex w-full justify-between flex-wrap">
-        {scoreValue === 1 &&
-          ScoreReasonData.reasonsForWeak.map((item, index) => {
-            return <Fragment key={index}>{scoreReasonBtn(item)}</Fragment>;
-          })}
-
-        {scoreValue === 2 &&
-          ScoreReasonData.reasonsForWeak.map((item, index) => {
-            return <Fragment key={index}>{scoreReasonBtn(item)}</Fragment>;
-          })}
-
-        {scoreValue === 3 &&
-          ScoreReasonData.reasonsForAverage.map((item, index) => {
-            return <Fragment key={index}>{scoreReasonBtn(item)}</Fragment>;
-          })}
-
-        {scoreValue === 4 &&
-          ScoreReasonData.reasonsForExcellent.map((item, index) => {
-            return <Fragment key={index}>{scoreReasonBtn(item)}</Fragment>;
-          })}
-
-        {scoreValue === 5 &&
-          ScoreReasonData.reasonsForExcellent.map((item, index) => {
-            return <Fragment key={index}>{scoreReasonBtn(item)}</Fragment>;
-          })}
+        {scoreReasonsData?.data?.map((item) => (
+          <Controller
+            key={item.id}
+            name="score_reason"
+            control={control}
+            rules={{
+              required: "لطفا دلیل امتیاز خود را انتخاب کنید",
+            }}
+            render={({ field: { onChange } }) => (
+              <Button
+                variant={
+                  watch("score_reason") === item.id ? "flat" : "bordered"
+                }
+                size={isMobile ? "sm" : "md"}
+                className="w-[48%] mt-3 border"
+                radius="sm"
+                onPress={() => {
+                  onChange(item.id);
+                }}
+              >
+                {item.name}
+              </Button>
+            )}
+          />
+        ))}
       </div>
+
+      <TextError text={errors.score_reason?.message} />
 
       <textarea
         className="w-full p-3 text-sm resize-none h-28 border border-[#E1E1E1] mt-3
            outline-none rounded md:text-base"
         placeholder="لطفا نظر خود را درباره این مشاور بنویسید."
-        onChange={(e) => setCommentText(e.target.value)}
+        {...register("description", {
+          required: "وارد کردن توضیحات ضرروری میباشد",
+          maxLength: {
+            value: 220,
+            message: "وارد کردن بیشتر از 220 کاراکتر مجاز نمیباشد.",
+          },
+        })}
       ></textarea>
 
-      <p className="w-full text-red-500 text-xs mt-2">{textErr}</p>
+      <TextError text={errors.description?.message} />
 
       <Button
         className="mt-3 bg-[#CB1B1B] text-white px-3 w-1/2"
         size={isMobile ? "sm" : "md"}
-        isDisabled={!isActiveBtn}
-        onClick={handleCreateScore}
+        type="submit"
         isLoading={isPending}
         spinner={<Spinner color="white" size="sm" />}
       >
         {isPending ? "" : "ثبت امتیاز"}
       </Button>
-    </div>
+    </form>
   );
 }

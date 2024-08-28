@@ -74,8 +74,7 @@ export default function Comments({
 
   return (
     <div className="w-full flex flex-col mt-8 p-4 md:mt-14 md:p-8">
-      <Title title="نظرات کاربران " />
-
+      <Title title="نظرات کاربران " /> 2
       <div className="mt-4 md:mt-8">
         <Swiper
           ref={swiperRef}
@@ -107,9 +106,8 @@ export default function Comments({
                           className="rounded-full md:w-[60px] md:h-[60px]"
                           sizes="(min-width: 768px) 60px, 60px"
                           src={
-                            item.owner__image_full_path
-                              ? item.owner__image_full_path
-                              : "/icons/profile-circle.svg"
+                            item.owner__image_full_path ||
+                            "/icons/profile-circle.svg"
                           }
                           alt="Profile Image"
                         />

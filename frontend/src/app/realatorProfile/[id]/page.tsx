@@ -57,6 +57,7 @@ export default function RealatorProfile() {
         id={params.id}
         isOpen={isOpen}
         onOpenChange={onOpenChange}
+        page="realator"
         data={{
           profileIcon: realtorData?.data.user__image_full_path,
           name: `${realtorData?.data.user__first_name} ${realtorData?.data.user__last_name}`,

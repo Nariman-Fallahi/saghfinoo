@@ -5,18 +5,14 @@ import "react-loading-skeleton/dist/skeleton.css";
 import Filter from "./AdsFilter/Filter";
 import { Button } from "@nextui-org/button";
 import { useState } from "react";
-import { ActionMeta, SingleValue } from "react-select";
+import { AdsFilterDataType } from "@/types/Type";
 
 export type ProvinceType =
   | { name: string | undefined; id: number | undefined }
   | undefined;
 
 export default function Ads() {
-  const [province, setProvince] = useState<ProvinceType>(undefined);
-  const [city, setCity] = useState<string | undefined>(undefined);
-  const [price, setPrice] = useState();
-
-  console.log(city);
+  const [filterData, setFilterData] = useState<AdsFilterDataType>();
 
   const isloading = false; //TODO Delete
   return (
@@ -29,10 +25,8 @@ export default function Ads() {
         </div>
       ) : (
         <Filter
-          province={province}
-          city={city}
-          setCity={setCity}
-          setProvince={setProvince}
+        filterData={filterData}
+         setFilterData={setFilterData}
         />
       )}
 

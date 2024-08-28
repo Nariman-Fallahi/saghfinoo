@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
 import { AdPostingFormDataType } from "@/types/Type";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { inputStyle, Title } from "../AdFormContainer";
-import { TextError } from "@/constant/Constants";
+import { inputStyle } from "../AdFormContainer";
+import { TextError, SelectTitle } from "@/constant/Constants";
 import BtnSubmit from "../BtnSubmit";
 
 type SpecificationsType = {
@@ -44,7 +44,7 @@ export default function Specifications({
       className="w-full flex flex-wrap justify-between mt-3"
     >
       <div className="md:w-[48%] flex flex-col">
-        <Title text="متراژ (متر مربع)" />
+        <SelectTitle text="متراژ (متر مربع)" />
         <input
           className={inputStyle}
           type="number"
@@ -57,7 +57,7 @@ export default function Specifications({
       </div>
 
       <div className="md:w-[48%] flex flex-col">
-        <Title text="اتاق" />
+        <SelectTitle text="اتاق" />
         <input
           className={inputStyle}
           type="number"
@@ -70,7 +70,7 @@ export default function Specifications({
       </div>
 
       <div className="md:w-[48%] flex flex-col">
-        <Title text="طبقه" />
+        <SelectTitle text="طبقه" />
         <input
           className={inputStyle}
           type="number"
@@ -83,7 +83,7 @@ export default function Specifications({
       </div>
 
       <div className="md:w-[48%] flex flex-col">
-        <Title text="تعداد طبقات" />
+        <SelectTitle text="تعداد طبقات" />
         <input
           className={inputStyle}
           type="number"

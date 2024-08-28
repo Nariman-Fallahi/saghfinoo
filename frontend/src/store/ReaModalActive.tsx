@@ -1,9 +1,9 @@
 import create from "zustand";
 
 interface ActiveModalName {
-  activeModalName: "ContactInfo" | "Share" | "Score" | undefined;
+  activeModalName: "ContactInfo" | "Share" | "Score" | "Report" | undefined;
   setActiveModalName: (
-    val: "ContactInfo" | "Share" | "Score" | undefined
+    val: "ContactInfo" | "Share" | "Score" | "Report" | undefined
   ) => void;
 }
 

@@ -79,9 +79,7 @@ export default function Consultants({ userName }: ConsultantsType) {
                     className="rounded-full md:w-[120px] md:h-[120px]"
                     sizes="(min-width: 768px) 120px, 120px"
                     src={
-                      item.user__image_full_path
-                        ? item.user__image_full_path
-                        : "/icons/profile-circle.svg"
+                      item.user__image_full_path || "/icons/profile-circle.svg"
                     }
                     alt="profileIcon"
                   />

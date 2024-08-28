@@ -1,36 +1,50 @@
 import { Button } from "@nextui-org/button";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction, Dispatch } from "react";
 import ModalFilter from "./ModalMobile/ModalFilter";
 import { useGetRequest } from "@/ApiService";
 import { Api } from "@/ApiService";
 import Skeleton from "react-loading-skeleton";
-import { getProvincesType } from "@/types/Type";
+import {
+  AdsFilterDataType,
+  getProvincesType,
+  SelectionDataType,
+} from "@/types/Type";
 import { getProvinceCitiesType } from "@/types/Type";
 import { useSizeBtn } from "@/store/Size";
 import Select, { components, MenuProps } from "react-select";
-import { ProvinceType } from "../Ads";
-import { numberWithCommas } from "@/constant/Constants";
-import { removeCommas } from "@/constant/Constants";
+import Input from "./Input";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { getCookie } from "cookies-next";
+
+export type InputsType = {
+  city: string;
+  propertyType: number;
+  priceMin: number;
+  priceMax: number;
+  metreMin: number;
+  metreMax: number;
+};
 
 type FilterType = {
-  province: ProvinceType;
-  setProvince: (value: ProvinceType) => void;
-  city: string | undefined;
-  setCity: (value: string | undefined) => void;
+  setFilterData: Dispatch<SetStateAction<AdsFilterDataType | undefined>>;
+  filterData: AdsFilterDataType | undefined;
 };
 
 //TODO Add Api
-//TODO Add removeCommas
 
-export default function Filter({
-  city,
-  setCity,
-  province,
-  setProvince,
-}: FilterType) {
+export const SelectStyle = {
+  control: (state: { menuIsOpen: any }) =>
+    `!cursor-pointer text-sm lg:text-base ${
+      state.menuIsOpen ? "blueShadow" : ""
+    }`,
+  menu: () => "!w-[70%] md:!w-full text-sm md:text-[15.5px] lg:text-base",
+};
+
+export default function Filter({ filterData, setFilterData }: FilterType) {
   const [openFilterModal, setOpenFilterModal] = useState<boolean>(false);
   const [openMenuPrice, setOpenMenuPrice] = useState<boolean>(false);
+  const access = getCookie("access");
   const [optionsCitiesData, setOptionsCitiesData] = useState<
     | {
         value: string;
@@ -56,15 +70,37 @@ export default function Filter({
     status: citiesStatus,
     refetch,
   } = useGetRequest<{ data: getProvinceCitiesType[] }>({
-    url: `${Api.GetProvinceCities}${province?.id}`,
-    key: ["getCities", JSON.stringify(province?.id)],
+    url: `${Api.GetProvinceCities}${filterData?.province?.id}`,
+    key: ["getCities", JSON.stringify(filterData?.province?.id)],
     enabled: false,
     staleTime: 10 * 60 * 1000,
   });
 
+  const { data: propertyTypeData } = useGetRequest<{
+    data: SelectionDataType[];
+  }>({
+    url: `${Api.GetSelectionData}property_type`,
+    key: ["getPropertyType"],
+    enabled: true,
+    staleTime: 10 * 60 * 1000,
+    headers: {
+      Authorization: `Bearer ${access}`,
+    },
+  });
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    trigger,
+    formState: { errors },
+  } = useForm<InputsType>();
+
+  const onSubmit: SubmitHandler<InputsType> = (data) => {};
+
   useEffect(() => {
     refetch();
-  }, [refetch, province]);
+  }, [refetch, filterData?.province?.id]);
 
   const optionsProvincesData = provincesData?.data.map((item) => ({
     value: item.id,
@@ -72,7 +108,7 @@ export default function Filter({
   }));
 
   useEffect(() => {
-    if (province) {
+    if (filterData?.province) {
       setOptionsCitiesData(
         citiesData?.data.map((item) => ({
           value: item.name,
@@ -80,51 +116,43 @@ export default function Filter({
         }))
       );
     }
-  }, [citiesData?.data, province]);
+  }, [citiesData?.data, filterData?.province]);
+
+  console.log(propertyTypeData);
+
+  const optionPropertyTypeData = propertyTypeData?.data.map((item) => ({
+    value: item.id,
+    label: item.value,
+  }));
 
   // PriceSelectionCustomMenu
 
   const PriceSelectionCustomMenu = (props: MenuProps) => {
-    const [price, setPrice] = useState<{ price1?: string; price2?: string }>();
-
     return (
       <components.Menu {...props}>
-        <div
-          className="flex flex-col w-full text-sm"
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col w-full text-center"
           onMouseDown={(e) => e.stopPropagation()}
           onTouchStart={(e) => e.stopPropagation()}
           onKeyDown={(e) => e.stopPropagation()}
+          onClick={() => setOpenMenuPrice(true)}
         >
-          <div className="flex">
-            <span className="p-[9px] bg-red-500 text-white rounded-tr">از</span>
-            <input
-              className="w-full outline-none px-2"
-              placeholder="200,000"
-              type="text"
-              value={price?.price1}
-              onChange={(e) =>
-                setPrice({ price1: numberWithCommas(e.target.value) })
-              }
-            />
-            <span className="p-2 text-[#ADADAD]">تومان</span>
-          </div>
-
-          <div className="flex">
-            <span className="p-[8.5px] bg-red-500 text-white">تا</span>
-            <input
-              className="w-full outline-none px-2"
-              placeholder="100,000"
-              type="text"
-              value={price?.price2}
-              onChange={(e) =>
-                setPrice({ price2: numberWithCommas(e.target.value) })
-              }
-            />
-            <span className="p-2 text-[#ADADAD]">تومان</span>
-          </div>
+          <Input
+            title=""
+            displayMode="column"
+            register={register}
+            nameMin="priceMin"
+            nameMax="priceMax"
+            placeholder={{ min: "۲۰۰,۰۰۰", max: "۴۰۰,۰۰۰" }}
+            unit="تومان"
+            rules={{ required: "لطفا مقادیر را وارد کنید" }}
+            error={errors.priceMin?.message || errors.priceMax?.message}
+          />
 
           <div className="w-full flex justify-between pb-3 gap-3 px-4">
             <Button
+              type="submit"
               className="w-1/2 mt-3 bg-[#CB1B1B] !rounded"
               size="sm"
               radius="sm"
@@ -143,7 +171,7 @@ export default function Filter({
               بستن
             </Button>
           </div>
-        </div>
+        </form>
       </components.Menu>
     );
   };
@@ -177,67 +205,64 @@ export default function Filter({
           </Button>
           {/* Desktop */}
           <div className="hidden md:flex items-center mt-6 w-full gap-4">
-            <Select
-              placeholder="انتخاب استان"
-              onChange={(newValue) =>
-                setProvince({ name: newValue?.label, id: newValue?.value })
-              }
-              options={optionsProvincesData}
-              styles={{
-                control: (baseStyles, state) => ({
-                  ...baseStyles,
-                  boxShadow: state.menuIsOpen
-                    ? "0px 0px 0px 3px rgba(47, 128, 237, 0.19)"
-                    : "",
-                  cursor: "pointer",
-                  width: "180px",
-                }),
-              }}
-            />
+            <div className="w-44">
+              <Select
+                placeholder="انتخاب استان"
+                onChange={(newValue) =>
+                  setFilterData((prevState) => ({
+                    province: {
+                      ...prevState,
+                      value: newValue?.label,
+                      id: newValue?.value,
+                    },
+                  }))
+                }
+                options={optionsProvincesData}
+                classNames={SelectStyle}
+              />
+            </div>
 
-            <Select
-              placeholder="انتخاب شهرستان"
-              onChange={(newValue) => setCity(newValue?.value)}
-              options={optionsCitiesData}
-              isDisabled={!citiesData?.data}
-              styles={{
-                control: (baseStyles, state) => ({
-                  ...baseStyles,
-                  boxShadow: state.menuIsOpen
-                    ? "0px 0px 0px 3px rgba(47, 128, 237, 0.19)"
-                    : "",
-                  cursor: "pointer",
-                  width: "180px",
-                }),
-              }}
-            />
+            <div className="w-44">
+              <Select
+                placeholder="انتخاب شهرستان"
+                onChange={(newValue) =>
+                  setFilterData((prevState) => ({
+                    ...prevState,
+                    city: newValue?.value,
+                  }))
+                }
+                options={optionsCitiesData}
+                isDisabled={!citiesData?.data}
+                classNames={SelectStyle}
+              />
+            </div>
 
-            <Select
-              components={{ Menu: PriceSelectionCustomMenu }}
-              options={[]}
-              placeholder="انتخاب قیمت"
-              isSearchable={false}
-              menuIsOpen={openMenuPrice}
-              onMenuOpen={() => setOpenMenuPrice(true)}
-              styles={{
-                control: (baseStyles, state) => ({
-                  ...baseStyles,
-                  boxShadow: state.menuIsOpen
-                    ? "0px 0px 0px 3px rgba(47, 128, 237, 0.19)"
-                    : "",
-                  cursor: "pointer",
-                  width: "180px",
-                }),
-                menu: (provided) => ({
-                  ...provided,
-                  width: "230px",
-                }),
-              }}
-            />
+            <div className="w-44">
+              <Select
+                components={{ Menu: PriceSelectionCustomMenu }}
+                options={[]}
+                placeholder="انتخاب قیمت"
+                isSearchable={false}
+                menuIsOpen={openMenuPrice}
+                onMenuOpen={() => setOpenMenuPrice(true)}
+                classNames={SelectStyle}
+                styles={{
+                  menu: (provided) => ({
+                    ...provided,
+                    width: "230px !important",
+                  }),
+                }}
+              />
+            </div>
           </div>
           <ModalFilter
             openFilterModal={openFilterModal}
             setOpenFilterModal={setOpenFilterModal}
+            optionPropertyTypeData={optionPropertyTypeData}
+            optionsCitiesData={optionsCitiesData}
+            optionsProvincesData={optionsProvincesData}
+            filterData={filterData}
+            setFilterData={setFilterData}
           />
         </>
       )}

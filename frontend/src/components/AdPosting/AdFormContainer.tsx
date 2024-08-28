@@ -21,18 +21,10 @@ import Amenities from "./levels/Amenities";
 import AdditionalInformation from "./levels/AdditionalInformation";
 import UploadMedia from "./levels/UploadMedia";
 
-export const Title = ({ text }: { text: string }) => {
-  return (
-    <label className="text-sm md:text-base lg:text-lg text-[#353535] mt-5 pb-2">
-      {text}
-    </label>
-  );
-};
-
 export const inputStyle =
   "text-xs md:text-sm p-2 border border-[#ADADAD] rounded outline-none md:p-[8.7px]";
 
-export const selectStyle = {
+export const SelectStyle = {
   control: (state: { menuIsOpen: any }) =>
     `text-xs md:text-sm !cursor-pointer !border-[#adadad] ${
       state.menuIsOpen ? "blueShadow" : ""
@@ -51,12 +43,9 @@ export default function AdFormContainer() {
   const [formStage, setFormStage] = useState<number>(1);
   const [formData, setFormData] = useState<AdPostingFormDataType>();
   // To prevent multiple modal from opening at the same time
-  const [selectedStatusOpen, setSelectedStatusOpen] = useState<string>("");
   const { sizeBtn } = useSizeBtn();
-  const [statusNextBtn, setStatusNextBtn] = useState<boolean>(false);
   const [files, setFiles] = useState<(File | null)[]>([]);
   const [idForm, setIdForm] = useState<number | undefined>(undefined);
-  const [isErr, setIsErr] = useState<boolean>(false);
 
   const access = getCookie("access");
   const router = useRouter();
@@ -163,15 +152,6 @@ export default function AdFormContainer() {
         Authorization: `Bearer ${access}`,
       },
     });
-
-  useEffect(() => {
-    if (
-      selectedStatusOpen !== "provinces" &&
-      selectedStatusOpen !== "provinceCities"
-    ) {
-      refetch();
-    }
-  }, [refetch, selectedStatusOpen]);
 
   useEffect(() => {
     switch (formStage) {

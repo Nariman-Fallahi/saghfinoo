@@ -1,18 +1,19 @@
-import { AdPostingFormDataType, optionAdFormType } from "@/types/Type";
+import { AdPostingFormDataType, optionType } from "@/types/Type";
 import { Dispatch, SetStateAction } from "react";
 import Select from "react-select";
-import { inputStyle, selectStyle, Title } from "../AdFormContainer";
+import { inputStyle } from "../AdFormContainer";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { TextError } from "@/constant/Constants";
+import { TextError, SelectTitle } from "@/constant/Constants";
+import { SelectStyle } from "../AdFormContainer";
 import BtnSubmit from "../BtnSubmit";
 
 type AmenitiesType = {
   setFormData: Dispatch<SetStateAction<AdPostingFormDataType | undefined>>;
   setFormStage: Dispatch<SetStateAction<number>>;
-  optionsFlooring: optionAdFormType;
-  optionsTypeOfRestroom: optionAdFormType;
-  optionsCoolingSystem: optionAdFormType;
-  optionsHeatingSystem: optionAdFormType;
+  optionsFlooring: optionType;
+  optionsTypeOfRestroom: optionType;
+  optionsCoolingSystem: optionType;
+  optionsHeatingSystem: optionType;
 };
 
 type Inputs = {
@@ -63,7 +64,7 @@ export default function Amenities({
         className="w-full flex flex-wrap justify-between mt-3"
       >
         <div className="md:w-[48%] flex flex-col">
-          <Title text="پارکینگ" />
+          <SelectTitle text="پارکینگ" />
           <input
             type="number"
             className={inputStyle}
@@ -76,7 +77,7 @@ export default function Amenities({
         </div>
 
         <div className="md:w-[48%] flex flex-col">
-          <Title text="انباری" />
+          <SelectTitle text="انباری" />
           <input
             type="number"
             className={inputStyle}
@@ -89,7 +90,7 @@ export default function Amenities({
         </div>
 
         <div className="md:w-[48%] flex flex-col">
-          <Title text="آسانسور" />
+          <SelectTitle text="آسانسور" />
           <input
             type="number"
             className={inputStyle}
@@ -102,7 +103,7 @@ export default function Amenities({
         </div>
 
         <div className="w-[48%] flex flex-col">
-          <Title text="جنس کف" />
+          <SelectTitle text="جنس کف" />
           <Controller
             name="flooring"
             control={control}
@@ -117,7 +118,7 @@ export default function Amenities({
                 onChange={(option) => {
                   onChange(option?.value);
                 }}
-                classNames={selectStyle}
+                classNames={SelectStyle}
               />
             )}
           />
@@ -125,7 +126,7 @@ export default function Amenities({
         </div>
 
         <div className="md:w-[48%] flex flex-col">
-          <Title text="سرویس بهداستی" />
+          <SelectTitle text="سرویس بهداستی" />
           <input
             type="number"
             className={inputStyle}
@@ -138,7 +139,7 @@ export default function Amenities({
         </div>
 
         <div className="w-[48%] flex flex-col">
-          <Title text="نوع سرویس بهداشتی" />
+          <SelectTitle text="نوع سرویس بهداشتی" />
           <Controller
             name="typeOfRestroom"
             control={control}
@@ -153,7 +154,7 @@ export default function Amenities({
                 onChange={(option) => {
                   onChange(option?.value);
                 }}
-                classNames={selectStyle}
+                classNames={SelectStyle}
               />
             )}
           />
@@ -163,7 +164,7 @@ export default function Amenities({
         </div>
 
         <div className="w-[48%] flex flex-col">
-          <Title text="سیستم سرمایش" />
+          <SelectTitle text="سیستم سرمایش" />
           <Controller
             name="coolingSystem"
             control={control}
@@ -178,7 +179,7 @@ export default function Amenities({
                 onChange={(option) => {
                   onChange(option?.value);
                 }}
-                classNames={selectStyle}
+                classNames={SelectStyle}
               />
             )}
           />
@@ -188,7 +189,7 @@ export default function Amenities({
         </div>
 
         <div className="w-[48%] flex flex-col">
-          <Title text="سیستم گرمایش" />
+          <SelectTitle text="سیستم گرمایش" />
           <Controller
             name="heatingSystem"
             control={control}
@@ -203,7 +204,7 @@ export default function Amenities({
                 onChange={(option) => {
                   onChange(option?.value);
                 }}
-                classNames={selectStyle}
+                classNames={SelectStyle}
               />
             )}
           />

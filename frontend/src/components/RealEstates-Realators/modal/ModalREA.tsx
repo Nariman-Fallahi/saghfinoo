@@ -6,12 +6,15 @@ import ShareModal from "./ShareModal";
 import ContactInfoModal from "./ContactInfoModal";
 import ScoreModal from "./ScoreModal";
 import { useState, useEffect } from "react";
+import ReportModal from "./ReportModal";
+import { getCookie } from "cookies-next";
 
 type ModalREAType = {
   isOpen: boolean;
   onOpenChange: (value: boolean) => void;
   data: DataModalREA;
   id?: string | string[];
+  page: "realEstate" | "realator";
 };
 
 export default function ModalREA({
@@ -19,19 +22,28 @@ export default function ModalREA({
   onOpenChange,
   data,
   id,
+  page,
 }: ModalREAType) {
   const { activeModalName } = useActiveModalName();
   const [sizeModal, setSizeModal] = useState<"sm" | "md" | "xl" | "full">();
+  const access = getCookie("access");
 
   useEffect(() => {
-    if (isMobile && activeModalName !== "Score") {
-      setSizeModal("sm");
-    } else if (!isMobile && activeModalName !== "Score") {
-      setSizeModal("md");
-    } else if (isMobile && activeModalName === "Score") {
-      setSizeModal("full");
-    } else if (!isMobile && activeModalName === "Score") {
-      setSizeModal("xl");
+    // if (isMobile && activeModalName !== "Score") {
+    //   setSizeModal("sm");
+    // } else if (!isMobile && activeModalName !== "Score") {
+    //   setSizeModal("md");
+    // } else if (
+    //   (isMobile && activeModalName === "Score")
+    // ) {
+    //   setSizeModal("full");
+    // } else if (!isMobile && activeModalName === "Score") {
+    //   setSizeModal("xl");
+    // }
+    if (activeModalName === "Score" || activeModalName === "Report") {
+      setSizeModal(isMobile ? "full" : "xl");
+    } else {
+      setSizeModal(isMobile ? "sm" : "md");
     }
   }, [activeModalName]);
 
@@ -40,8 +52,7 @@ export default function ModalREA({
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       size={sizeModal}
-      placement="center"
-      className="overflow-y-auto"
+      className=" max-h-screen overflow-y-auto"
     >
       <ModalContent>
         {(onClose) => (
@@ -54,7 +65,22 @@ export default function ModalREA({
               {/* {activeModalName === "Share" && <ShareModal data={data} />} */}
 
               {activeModalName === "Score" && (
-                <ScoreModal data={data} id={id} onClose={onClose} />
+                <ScoreModal
+                  data={data}
+                  id={id}
+                  onClose={onClose}
+                  access={access}
+                />
+              )}
+
+              {activeModalName === "Report" && (
+                <ReportModal
+                  access={access}
+                  data={data}
+                  id={id}
+                  onClose={onClose}
+                  page={page}
+                />
               )}
             </ModalBody>
           </>

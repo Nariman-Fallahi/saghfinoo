@@ -46,7 +46,7 @@ export default function DesktopMenu({
                 key={index}
                 className={`mr-4 lg:mr-6 cursor-pointer hover:text-red-600 flex flex-col relative ${
                   currentPath === item.link
-                    ? "after:bg-red-500 after:h-[3px] after:w-full after:content-[''] after:absolute after:mt-7 after:rounded text-red-500"
+                    ? "after:bg-red-500 after:h-[3px] after:w-full after:content-[''] after:absolute after:mt-8 after:rounded text-red-500"
                     : null
                 }`}
               >
@@ -83,9 +83,8 @@ export default function DesktopMenu({
                 height={28}
                 className="rounded-full h-7 lg:w-9 lg:h-9"
                 src={
-                  userInfoData?.data.image_full_path
-                    ? userInfoData?.data.image_full_path
-                    : "/icons/profile-circle.svg"
+                  userInfoData?.data.image_full_path ||
+                  "/icons/profile-circle.svg"
                 }
                 alt="User Profile"
               />

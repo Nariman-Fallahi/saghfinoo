@@ -6,12 +6,11 @@ import { useEffect, useState } from "react";
 import { AdPostingFormDataType } from "@/types/Type";
 import { Dispatch, SetStateAction } from "react";
 import Select from "react-select";
-import { Title } from "../AdFormContainer";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { TextError } from "@/constant/Constants";
+import { TextError, SelectTitle } from "@/constant/Constants";
 import { inputStyle } from "../AdFormContainer";
-import { selectStyle } from "../AdFormContainer";
 import BtnSubmit from "../BtnSubmit";
+import { SelectStyle } from "../AdFormContainer";
 
 type LocationDetails = {
   setFormData: Dispatch<SetStateAction<AdPostingFormDataType | undefined>>;
@@ -110,7 +109,7 @@ export default function LocationDetails({
       className="w-full flex flex-wrap justify-between mt-3"
     >
       <div className="md:w-[48%] flex flex-col">
-        <Title text="انتخاب استان" />
+        <SelectTitle text="انتخاب استان" />
         <Controller
           name="province"
           control={control}
@@ -127,7 +126,7 @@ export default function LocationDetails({
                 onChange(option?.label);
                 setSelectedProvince(option?.value);
               }}
-              classNames={selectStyle}
+              classNames={SelectStyle}
             />
           )}
         />
@@ -135,7 +134,7 @@ export default function LocationDetails({
       </div>
 
       <div className="md:w-[48%] flex flex-col">
-        <Title text="انتخاب شهرستان" />
+        <SelectTitle text="انتخاب شهرستان" />
         <Controller
           name="city"
           control={control}
@@ -150,7 +149,7 @@ export default function LocationDetails({
               isLoading={CitiesDataPending}
               isDisabled={!CitiesData?.data}
               onChange={(option) => onChange(option?.value)}
-              classNames={selectStyle}
+              classNames={SelectStyle}
             />
           )}
         />
@@ -158,7 +157,7 @@ export default function LocationDetails({
       </div>
 
       <div className="md:w-[48%] flex flex-col">
-        <Title text="خیابان اصلی" />
+        <SelectTitle text="خیابان اصلی" />
         <input
           className={inputStyle}
           placeholder="جزییات آدرس را وارد کنید"
@@ -174,7 +173,7 @@ export default function LocationDetails({
       </div>
 
       <div className="md:w-[48%] flex flex-col">
-        <Title text="خیابان فرعی / کوچه" />
+        <SelectTitle text="خیابان فرعی / کوچه" />
         <input
           className={inputStyle}
           placeholder="جزییات آدرس را وارد کنید"

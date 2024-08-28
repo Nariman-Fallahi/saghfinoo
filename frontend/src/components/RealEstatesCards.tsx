@@ -75,11 +75,7 @@ export default function RealEstatesCards({
                   width={50}
                   height={50}
                   className="rounded-full mt-2 md:w-[80px] md:h-[80px]"
-                  src={
-                    item.image_full_path
-                      ? item.image_full_path
-                      : "/icons/archive-minus.svg"
-                  }
+                  src={item.image_full_path || "/icons/archive-minus.svg"}
                   alt=""
                 />
                 <div className="flex items-center mt-4 ">

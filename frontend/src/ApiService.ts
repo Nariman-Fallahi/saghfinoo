@@ -27,6 +27,11 @@ export enum Api {
   CreateRealtorsComment = "http://127.0.0.1:8000/api/v1/realtors/comment/create/",
   GetRealtorComments = "http://127.0.0.1:8000/api/v1/realtors/comment/get-all/",
   GetRealEstateConsultants = "http://127.0.0.1:8000/api/v1/realtors/search?reo_username=",
+  GetAllScoreReasons = "http://127.0.0.1:8000/api/v1/realtors/comment/get-all-score-reasons?",
+  GetAllReportReasonsRealEstate = "http://127.0.0.1:8000/api/v1/real-estate-offices/report/get-all-reasons",
+  GetAllReportReasonsRealtors = "http://127.0.0.1:8000/api/v1/realtors/report/get-all-reasons",
+  CreateReportRealtors = "http://127.0.0.1:8000/api/v1/realtors/report/create",
+  CreateReportRealEstate = "http://127.0.0.1:8000/api/v1/real-estate-offices/report/create",
 }
 
 // PostRequest

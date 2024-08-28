@@ -2,16 +2,17 @@ import { AdPostingFormDataType } from "@/types/Type";
 import { Dispatch } from "react";
 import { SetStateAction } from "react";
 import Select from "react-select";
-import { optionAdFormType } from "@/types/Type";
-import { inputStyle, selectStyle, Title } from "../AdFormContainer";
+import { optionType } from "@/types/Type";
+import { inputStyle } from "../AdFormContainer";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { TextError } from "@/constant/Constants";
+import { TextError, SelectTitle } from "@/constant/Constants";
 import BtnSubmit from "../BtnSubmit";
+import { SelectStyle } from "../AdFormContainer";
 
 type DealType = {
   formData: AdPostingFormDataType | undefined;
   setFormData: Dispatch<SetStateAction<AdPostingFormDataType | undefined>>;
-  optionsTypeOfTransaction: optionAdFormType;
+  optionsTypeOfTransaction: optionType;
   setFormStage: Dispatch<SetStateAction<number>>;
 };
 
@@ -52,7 +53,7 @@ export default function DealType({
       className="w-full flex flex-wrap justify-between mt-3"
     >
       <div className="w-[48%] flex flex-col">
-        <Title text="نوع معامله" />
+        <SelectTitle text="نوع معامله" />
         <Controller
           name="typeOfTransaction"
           control={control}
@@ -67,7 +68,7 @@ export default function DealType({
               onChange={(option) => {
                 onChange(option?.value);
               }}
-              classNames={selectStyle}
+              classNames={SelectStyle}
             />
           )}
         />
@@ -77,7 +78,7 @@ export default function DealType({
       </div>
 
       <div className="w-[48%] flex flex-col">
-        <Title text="نوع ملک" />
+        <SelectTitle text="نوع ملک" />
         <Controller
           name="propertyType"
           control={control}
@@ -92,7 +93,7 @@ export default function DealType({
               onChange={(option) => {
                 onChange(option?.value);
               }}
-              classNames={selectStyle}
+              classNames={SelectStyle}
             />
           )}
         />
@@ -102,7 +103,7 @@ export default function DealType({
       </div>
 
       <div className="md:w-[48%] flex flex-col">
-        <Title text="رهن" />
+        <SelectTitle text="رهن" />
         <input
           className={inputStyle}
           type="number"
@@ -123,7 +124,7 @@ export default function DealType({
       </div>
 
       <div className="md:w-[48%] flex flex-col">
-        <Title text="اجاره" />
+        <SelectTitle text="اجاره" />
         <input
           type="number"
           className={inputStyle}

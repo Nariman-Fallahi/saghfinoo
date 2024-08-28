@@ -73,20 +73,25 @@ export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
     }
   }, []);
 
-  const ClickContactInfoBtn = () => {
+  const handleContactInfoBtn = () => {
     onOpen();
     setActiveModalName("ContactInfo");
   };
 
-  const ClickShareBtn = () => {
+  const handleShareBtn = () => {
     onOpen();
     setActiveModalName("Share");
     setActiveMore(false);
   };
 
-  const RegisterScoreBtn = () => {
+  const handleRegisterScoreBtn = () => {
     onOpen();
     setActiveModalName("Score");
+  };
+
+  const handleViolationReport = () => {
+    onOpen();
+    setActiveModalName("Report");
   };
 
   return (
@@ -102,7 +107,7 @@ export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
             width={1000}
             height={500}
             quality={100}
-            src={data?.bgUserImg ? data.bgUserImg : "/icons/Banner.png"}
+            src={data?.bgUserImg || "/icons/Banner.png"}
             alt=""
           />
         )}
@@ -122,7 +127,7 @@ export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
            md:-mt-[100px] md:mr-8"
         >
           <Image
-            src={data.profileIcon ? data.profileIcon : "/icons/noneImage.svg"}
+            src={data.profileIcon || "/icons/noneImage.svg"}
             alt=""
             width={60}
             height={60}
@@ -177,30 +182,30 @@ export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
 
               {activeMore && (
                 <div
-                  className="w-[150px] h-[120px] bg-white absolute mt-10 z-20 rounded-lg
+                  className="w-[150px] h-[140px] bg-white absolute mt-10 z-20 rounded-lg
                    border-[#E1E1E1] border flex flex-col overflow-y-auto selectBtn"
                 >
                   <ActiveMoreBtn
                     title="ذخیره"
-                    onPress={ClickContactInfoBtn}
+                    onPress={handleContactInfoBtn}
                     icon="/icons/save.svg"
                   />
 
                   <ActiveMoreBtn
                     title="اشتراک گذاری"
-                    onPress={ClickShareBtn}
+                    onPress={handleShareBtn}
                     icon="/icons/export.svg"
                   />
 
                   <ActiveMoreBtn
                     title="امتیاز دهی به مشاور"
-                    onPress={RegisterScoreBtn}
+                    onPress={handleRegisterScoreBtn}
                     icon="/icons/like-dislike.svg"
                   />
 
                   <ActiveMoreBtn
                     title="گزارش"
-                    onPress={ClickShareBtn}
+                    onPress={handleViolationReport}
                     icon="/icons/warning-2.svg"
                   />
                 </div>
@@ -234,7 +239,7 @@ export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
                     variant="light"
                     radius="full"
                     className="mr-2"
-                    onPress={ClickShareBtn}
+                    onPress={handleShareBtn}
                   >
                     <Image
                       width={24}
@@ -302,7 +307,7 @@ export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
               color="danger"
               radius="sm"
               size={sizeBtn}
-              onClick={ClickContactInfoBtn}
+              onClick={handleContactInfoBtn}
             >
               {data.titleContactInfoBtn}
             </Button>
@@ -321,7 +326,7 @@ export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
                 <p className="">چه امتیازی به {data.name} میدی؟</p>
 
                 <Button
-                  onPress={RegisterScoreBtn}
+                  onPress={handleRegisterScoreBtn}
                   radius="sm"
                   className="bg-[#CB1B1B] text-white w-1/2 mt-2"
                 >
@@ -340,7 +345,12 @@ export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
           {isPending ? (
             <Skeleton width={70} className="md:!w-[120px]" />
           ) : (
-            <Button variant="light" radius="sm" className="mt-2">
+            <Button
+              variant="light"
+              radius="sm"
+              className="mt-2"
+              onPress={handleViolationReport}
+            >
               <Image width={24} height={24} src="/icons/warning-2.svg" alt="" />
               <span className="cursor-pointer">گزارش تخلف</span>
             </Button>

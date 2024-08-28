@@ -32,7 +32,7 @@ export default function ContactInfoModal({ data }: ContactInfoModalType) {
       <Image
         width={84}
         height={84}
-        src={data?.profileIcon ? data.profileIcon : "/icons/profile-circle.svg"}
+        src={data?.profileIcon || "/icons/profile-circle.svg"}
         alt=""
         className="md:w-[120px] md:h-[120px]"
         sizes="(min-width: 768px) 120px, 120px"

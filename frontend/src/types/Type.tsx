@@ -220,7 +220,7 @@ export type SelectionDataType = {
   key: string;
 };
 
-export type optionAdFormType =
+export type optionType =
   | {
       value: number;
       label: string;
@@ -272,4 +272,23 @@ export type CommentType = {
   owner__image_full_path: string;
   score: number;
   description: string;
+  score_reason: string;
+};
+
+export type AdsFilterDataType = {
+  province?: { value?: string; id?: number };
+  city?: string;
+  price?: { min: number; max: number };
+  metre?: { min: number; max: number };
+};
+
+export type ScoreReasonsType = {
+  id: number;
+  name: string;
+  score: number;
+};
+
+export type ReportModaltDataType = {
+  id: number;
+  name: string;
 };

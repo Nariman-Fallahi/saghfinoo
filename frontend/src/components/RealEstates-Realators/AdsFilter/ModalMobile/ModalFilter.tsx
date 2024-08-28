@@ -1,38 +1,59 @@
 import { Modal, ModalContent, ModalBody, ModalFooter } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
 import Image from "next/image";
-import Province from "../selection/Province";
-import { useFilterValue } from "@/store/ReaFilter";
-import { useQueryClient } from "@tanstack/react-query";
-import { getProvincesType } from "@/types/Type";
-import City from "../selection/City";
-import { getProvinceCitiesType } from "@/types/Type";
-import OptionalSelection from "../../../OptionalSelection";
-import { useState } from "react";
+import { AdsFilterDataType, optionType } from "@/types/Type";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { TextError, SelectTitle } from "@/constant/Constants";
+import Select from "react-select";
+import { ProvinceType } from "../../Ads";
+import { SelectStyle } from "../Filter";
+import { Dispatch, SetStateAction } from "react";
+import Input from "../Input";
+import { InputsType } from "../Filter";
 
 type ModalFilterType = {
   openFilterModal: boolean;
   setOpenFilterModal: (value: boolean) => void;
+  filterData: AdsFilterDataType | undefined;
+  setFilterData: Dispatch<SetStateAction<AdsFilterDataType | undefined>>;
+  optionsProvincesData:
+    | {
+        value: number;
+        label: string;
+      }[]
+    | undefined;
+  optionsCitiesData:
+    | {
+        value: string;
+        label: string;
+      }[]
+    | undefined;
+  optionPropertyTypeData: optionType;
 };
 
 export default function ModalFilter({
   openFilterModal,
   setOpenFilterModal,
+  optionsProvincesData,
+  optionsCitiesData,
+  optionPropertyTypeData,
+  filterData,
+  setFilterData,
 }: ModalFilterType) {
-  const { filterValues } = useFilterValue();
-  const queryClient = useQueryClient();
-  const [openSelect, setOpenSelect] = useState<null | string>(null);
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<InputsType>();
 
-  const provincesData: { data: getProvincesType[] } | undefined =
-    queryClient.getQueryData(["getProvinces"]);
-
-  const provinceCitiesData: { data: getProvinceCitiesType[] } | undefined =
-    queryClient.getQueryData(["getProvinceCities"]);
-
-  //  this ensures that only one dropdown  is open at a time,
-  // preventing both dropdowns from being open simultaneously.
-  const handleSelectClick = (title: string) => {
-    setOpenSelect(openSelect === title ? null : title);
+  const onSubmit: SubmitHandler<InputsType> = (data) => {
+    setFilterData((prevState) => ({
+      ...prevState,
+      city: data.city,
+      price: { min: data.priceMin, max: data.priceMax },
+      metre: { min: data.metreMin, max: data.metreMax },
+    }));
   };
 
   return (
@@ -40,51 +61,133 @@ export default function ModalFilter({
       isOpen={openFilterModal}
       onClose={() => setOpenFilterModal(false)}
       size="full"
+      isKeyboardDismissDisabled
     >
       <ModalContent>
         {(onClose) => (
           <>
-            <ModalBody>
+            <ModalBody className="overflow-y-auto pb-8">
               <div className="w-full flex items-center flex-col mt-7">
-                <Image width={72} height={72} src="/icons/Logo.svg" alt="" />
-                <div className="mt-5 w-full flex gap-3 justify-between flex-wrap">
-                  <OptionalSelection
-                    label="استان"
-                    ButtonText={
-                      filterValues.selectedProvince?.name
-                        ? filterValues.selectedProvince.name
-                        : "انتخاب استان"
-                    }
-                    component={<Province data={provincesData} />}
-                    onPress={() => handleSelectClick("province")}
-                    isOpen={openSelect === "province"}
-                    className="flex flex-col mt-1"
-                  />
-                  {filterValues.selectedProvince && (
-                    <OptionalSelection
-                      label="شهر"
-                      ButtonText={
-                        filterValues.selectedCity
-                          ? filterValues.selectedCity
-                          : "انتخاب شهر"
-                      }
-                      component={<City data={provinceCitiesData} />}
-                      onPress={() => handleSelectClick("city")}
-                      isOpen={openSelect === "city"}
-                      className="flex flex-col mt-1"
+                <Image width={105} height={105} src="/icons/Logo.svg" alt="" />
+                <form
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="mt-5 w-full flex gap-3 justify-between flex-wrap"
+                >
+                  <div className="w-full flex flex-col">
+                    <SelectTitle text="انتخاب استان" />
+                    <Select
+                      placeholder="استان خود را انتخاب کنید"
+                      options={optionsProvincesData}
+                      onChange={(option) => {
+                        setFilterData((...prevState) => ({
+                          ...prevState,
+                          province: {
+                            value: option?.label,
+                            id: option?.value,
+                          },
+                        }));
+                      }}
+                      classNames={SelectStyle}
                     />
-                  )}
-                </div>
+                  </div>
+
+                  <div className="w-full flex flex-col">
+                    <SelectTitle text="انتخاب شهرستان" />
+                    <Controller
+                      name="city"
+                      control={control}
+                      rules={{
+                        required: filterData?.province?.id ? true : false,
+                      }}
+                      render={({ field: { onChange, name } }) => (
+                        <Select
+                          inputId={name}
+                          placeholder="شهرستان خود را انتخاب کنید"
+                          isDisabled={filterData?.province?.id ? false : true}
+                          options={optionsCitiesData}
+                          onChange={(option) => {
+                            onChange(option?.label);
+                          }}
+                          classNames={SelectStyle}
+                        />
+                      )}
+                    />
+                    {errors.city && (
+                      <TextError text="لطفا شهرستان خود را انتخاب کنید" />
+                    )}
+                  </div>
+
+                  <div className="w-full flex flex-col">
+                    <SelectTitle text="نوع ملک" />
+                    <Controller
+                      name="propertyType"
+                      control={control}
+                      render={({ field: { onChange, name } }) => (
+                        <Select
+                          inputId={name}
+                          placeholder="نوع ملک را انتخاب کنید"
+                          options={optionPropertyTypeData}
+                          onChange={(option) => {
+                            onChange(option?.value);
+                          }}
+                          classNames={SelectStyle}
+                        />
+                      )}
+                    />
+                    {errors.propertyType && (
+                      <TextError text="لطفا نوع ملک را انتخاب کنید" />
+                    )}
+                  </div>
+
+                  <Input
+                    title="قیمت"
+                    displayMode="row"
+                    error={errors.priceMin?.message || errors.priceMax?.message}
+                    nameMin="priceMin"
+                    nameMax="priceMax"
+                    register={register}
+                    placeholder={{ min: "۲۰۰,۰۰۰", max: "۴۰۰,۰۰۰" }}
+                    unit="تومان"
+                  />
+
+                  <Input
+                    title="متر"
+                    nameMin="metreMin"
+                    nameMax="metreMax"
+                    displayMode="row"
+                    error={errors.metreMin?.message || errors.metreMax?.message}
+                    register={register}
+                    placeholder={{ min: "۱۲۰", max: "۲۰۰" }}
+                    unit="متر"
+                    
+                  />
+
+                  <div className="w-[-webkit-fill-available] bg-white bottom-0 absolute p-3 flex justify-between">
+                    <Button
+                      size="sm"
+                      variant="bordered"
+                      onPress={onClose}
+                      className="w-[48%] border"
+                    >
+                      حذف فیلترها
+                    </Button>
+                    <Button
+                      className="text-white bg-[#CB1B1B] w-[48%]"
+                      size="sm"
+                      type="submit"
+                      // onPress={() => {
+                      //   onClose;
+                      //   handleSubmit(onSubmit);
+                      // alert('کلسک شد')
+                      // }}
+                    >
+                      جست‌جو
+                    </Button>
+                  </div>
+                </form>
               </div>
             </ModalBody>
-            <ModalFooter>
-              <Button color="danger" variant="light" onPress={onClose}>
-                حذف فیلترها
-              </Button>
-              <Button color="primary" onPress={onClose}>
-                اعمال فیلتر
-              </Button>
-            </ModalFooter>
+            <ModalFooter></ModalFooter>
           </>
         )}
       </ModalContent>
