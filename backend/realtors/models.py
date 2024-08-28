@@ -100,3 +100,31 @@ class Comment(models.Model):
     created_at = models.DateTimeField(default=formated_datetime_now)
     modified_at = models.DateTimeField(default=formated_datetime_now)
 
+
+class ReportReason(models.Model):
+    name = models.CharField(max_length=50)
+    @classmethod
+    def add_default_row(cls):
+        defaults = (
+            'اطلاعات کاربر اشتباه',
+            'کلاه بردار',
+        )
+
+        for name in defaults:
+            try:
+                # not save if already exist
+                ReportReason.objects.get(name=name)
+                continue
+            except ReportReason.DoesNotExist:
+                pass
+
+            r = ReportReason()
+            r.name = name
+            r.save()
+
+
+class Report(models.Model):
+    report_reason = models.ForeignKey(ReportReason, on_delete=models.PROTECT)
+    user = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, related_name='realtor_report_user')
+
+    description = models.CharField(max_length=500)

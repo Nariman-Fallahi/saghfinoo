@@ -10,11 +10,13 @@ class RealEstateOfficesConfig(AppConfig):
 
         if not settings.DEBUG:
             try:
-                from .models import CommentScoreReason
+                from .models import CommentScoreReason, ReportReason
                 CommentScoreReason.add_default_row()
 
+                ReportReason.add_default_row()
+
             except Exception as e:
-                print('ERROR in adding real estate office comment score reason: '+str(e))
+                print('ERROR in adding real estate office: '+str(e))
 
 
         return super().ready()

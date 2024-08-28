@@ -16,8 +16,8 @@ from common import codes
 from common.utils import validations
 from django.db.models import Q
 
-from .serializers import RealEstateOfficeSerializer, RealEstateOfficePreviewResponseSerializer, RealEstateOfficeResponseSerializer, CommentResponseSerializer, CommentSerializer, CommentScoreReasonResponseSerializer
-from .models import RealEstateOffice, Comment, CommentScoreReason
+from .serializers import RealEstateOfficeSerializer, RealEstateOfficePreviewResponseSerializer, RealEstateOfficeResponseSerializer, CommentResponseSerializer, CommentSerializer, CommentScoreReasonResponseSerializer, ReportReasonResponseSerializer, ReportSerializer
+from .models import RealEstateOffice, Comment, CommentScoreReason, ReportReason
 
 
 
@@ -281,3 +281,25 @@ class GetAllCommentScoreReasonAPIView(APIView):
 
         return Response({'data':csrs,'status':200})
 
+
+
+
+######################## report ##################################
+
+class CreateReportAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def post(self, req):
+        serializer = ReportSerializer(data=req.data)
+        if serializer.is_valid():
+            serializer.save(user=req.user)
+            return Response({'msg':'done', 'status':200})
+        
+        return Response({'errors':serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})
+    
+class GetAllReportReasonsAPIView(APIView):
+    
+    def get(self, req):
+        reasons = ReportReason.objects.all().values(*ReportReasonResponseSerializer.Meta.fields)
+        return Response({'data':reasons, 'status':200})
