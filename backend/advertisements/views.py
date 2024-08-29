@@ -29,11 +29,14 @@ class CreateAdvertisementAPIView(APIView):
     authentication_classes = [JWTAuthentication]
     
     def get_permissions(self):
+
         if self.request.method == "GET":
             return [AllowAny()]
         return super().get_permissions()
 
     def post(self, req):
+        """Create advertisement"""
+
         serializer = self.serializer_class(data=req.data)
         if serializer.is_valid():
             ad = serializer.save(owner=req.realtor)
@@ -47,6 +50,22 @@ class CreateAdvertisementAPIView(APIView):
         return Response({"errors": serializer.errors, 'code':codes.INVALID_FIELD, 'status':400})
     
     def get(self, req):
+        """Search advertisements
+            valid query params: owner: int, reo_username(real estate office username): string, room: int, parking: int,
+                                storage: int, restroom: int, type_of_transaction: int, elevator: int, floor: int, cooling_system: int,
+                                heating_system: int, flooring: int, province: string, property_type: int, rent: int, city: string,
+                                main_street: string, side_street: string, type_of_transaction: int, deposit: int, area: int, number_of_floors: int,
+                                deposit_from: int, deposit_to: int, rent_from: int, rent_to: int
+                                
+            equal or greater than values:
+                                room: 5,
+                                parking: 3,
+                                storage: 3,
+                                restroom: 4,
+                                elevator: 3,
+                                floor: 5
+                    
+        """
         qp = req.query_params
         queries = {                             # query_name:validation_function
             'owner':validations.validate_integer,
@@ -150,6 +169,8 @@ class CreateAdvertisementAPIView(APIView):
 class GetAllAdvertisementChoicesAPIView(APIView):
 
     def get(self, req):
+        """Get all advertisement choices
+            search by key example: ?key=property_type"""
         key = req.query_params.get('key', '')
         # validate key
         try:
@@ -178,6 +199,8 @@ class GetEditDeleteAdvertisementAPIView(APIView):
         return super().get_permissions()
 
     def put(self, req, advertisement_id):
+        """edit one advertisemebt by id"""
+
         try:
             ad = Advertisement.objects.get(id=advertisement_id)
         except:
@@ -192,6 +215,8 @@ class GetEditDeleteAdvertisementAPIView(APIView):
         return Response({"errors": serializer.errors, 'code':codes.INVALID_FIELD, 'status':400})
 
     def delete(self, req, advertisement_id):
+        """delete one advertisement by id"""
+
         try:
             ad = Advertisement.objects.get(id=advertisement_id)
         except Advertisement.DoesNotExist:
@@ -222,7 +247,7 @@ class GetEditDeleteAdvertisementAPIView(APIView):
         return Response({'msg':'done', 'status':200})
     
     def get(self, req, advertisement_id):
-        
+        """Get one advertisement by id"""
         try:
             ad = Advertisement.objects.get(is_confirmed=True, id=advertisement_id)
 
@@ -247,6 +272,7 @@ class GetAllRealtorAdvertisementsAPIView(APIView):
     permission_classes = [IsAuthenticated, IsRealtor]
 
     def get(self, req):
+
         try:
             page, limit = get_page_and_limit(req)
         except ValueError as e:
@@ -262,7 +288,7 @@ class GetAllRealtorAdvertisementsAPIView(APIView):
     
 
 class GetRealtorAdvertisementAPIView(APIView):
-    """get a realtor ad. confrimed or not confirmed"""
+    """get a realtor ad by id. confrimed or not confirmed"""
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsRealtor]
 
@@ -283,6 +309,8 @@ class UploadAdvertisementImageAPIView(APIView):
     authentication_classes = [JWTAuthentication]
     
     def post(self, req, advertisement_id):
+        """upload advertisement image.
+            input: "form-data" with "image" field"""
         image = req.FILES.get('image', '')
         if image == '':
             return Response({'errors':{'image':'image not sent'}})
@@ -322,6 +350,7 @@ class DeleteAdvertisementUploadedImageAPIView(APIView):
     authentication_classes = [ JWTAuthentication]
 
     def delete(self, req, image_id):
+        """delete advertisement image by image id"""
         try:
             image = AdvertisementImage.objects.get(id=image_id)
         except AdvertisementImage.DoesNotExist:
@@ -366,6 +395,7 @@ class DeleteAllRealtorAdvertisementsAPIView(APIView):
     authentication_classes = [JWTAuthentication]
 
     def delete(self, req):
+        """delete all realtor advertisements"""
         images = AdvertisementImage.objects.filter(advertisement__owner=req.realtor.id)
         for image in images:
             default_storage.delete(image.image)
@@ -391,6 +421,8 @@ class UploadAdvertisementVideoAPIView(APIView):
     authentication_classes = [JWTAuthentication]
 
     def post(self, req, advertisement_id):
+        """upload video for advertisement
+            input: "form-data" with "video" field"""
 
         video = req.FILES.get('video', None)
         if not video:
@@ -432,6 +464,7 @@ class SaveUnsaveAdvertisementAPIView(APIView):
     authentication_classes = [JWTAuthentication]
 
     def post(self, req, advertisement_id):
+        """save advertisement"""
         # check is ad exist
         try:
             ad = Advertisement.objects.get(id=advertisement_id, is_confirmed=True)
@@ -453,6 +486,7 @@ class SaveUnsaveAdvertisementAPIView(APIView):
         return Response({'msg':'done', 'status':200})
         
     def delete(self, req, advertisement_id):
+        """unsave advertisement"""
         try:
             sad = SavedAdvertisement.objects.get(advertisement=advertisement_id, user=req.user.id)
         except SavedAdvertisement.DoesNotExist:
@@ -469,6 +503,7 @@ class GetUserSavedAdvertisementAPIView(APIView):
     authentication_classes = [JWTAuthentication]
 
     def get(self, req):
+        """get saved advertisements"""
         try:
             page, limit = get_page_and_limit(req)
         except ValueError as e:
