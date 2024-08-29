@@ -182,7 +182,7 @@ class GetAllAdvertisementChoicesAPIView(APIView):
         else:
             recs = AdvertisementChoice.objects.filter(key=key)
 
-        recs = AdvertisementChoiceResponseSerializer(recs)
+        recs = AdvertisementChoiceResponseSerializer(recs, many=True)
         return Response({'data':recs.data, 'status':200})
 
 
