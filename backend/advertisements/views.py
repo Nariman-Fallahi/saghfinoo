@@ -1,4 +1,5 @@
 import uuid
+import math
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -141,8 +142,9 @@ class CreateAdvertisementAPIView(APIView):
         
         ads = Advertisement.objects.filter(**kwargs)[page*limit: page*limit+limit]
         ads = AdvertisementPreviewResponseSerializer(ads, many=True)
+        total_pages = math.ceil(Advertisement.objects.filter(**kwargs).count()/limit)
 
-        return Response({'data':ads.data, 'status':200})
+        return Response({'data':ads.data, 'totalPages':total_pages, 'status':200})
     
 
 class GetAllAdvertisementChoicesAPIView(APIView):
@@ -252,8 +254,11 @@ class GetAllRealtorAdvertisementsAPIView(APIView):
         
         ads = Advertisement.objects.filter(owner=req.realtor.id)[page*limit:page*limit+limit]
         ads = AdvertisementPreviewResponseSerializer(ads, many=True)
+
+        total_pages = math.ceil(Advertisement.objects.filter(owner=req.realtor.id).count()/limit)
+
         
-        return Response({'data':ads.data, 'status':200})
+        return Response({'data':ads.data, 'totalPages': total_pages, 'status':200})
     
 
 class GetRealtorAdvertisementAPIView(APIView):
@@ -469,13 +474,9 @@ class GetUserSavedAdvertisementAPIView(APIView):
         except ValueError as e:
             return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
         
-        ads = SavedAdvertisement.objects.filter(user=req.user.id).values(*UserSavedAdvertisementPreviewResponseSerializer.Meta.fields)[page*limit:page*limit+limit]
+        ads = SavedAdvertisement.objects.filter(user=req.user.id)[page*limit:page*limit+limit]
+        ads = UserSavedAdvertisementPreviewResponseSerializer(ads, many=True).data
 
-        # remove advertisement__ from the keys
-        ads = list(ads)
-        for i in range(len(ads)):
-            for key in ads[i].keys():
-                new_key = key[len('advertisement__'):]
-                ads[i][new_key] = ads[i].pop(key)
+        total_pages = math.ceil(SavedAdvertisement.objects.filter(user=req.user.id).count()/limit)
             
-        return Response({'data':ads, 'status':200})
+        return Response({'data':ads, 'totalPages':total_pages, 'status':200})
