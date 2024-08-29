@@ -3,7 +3,7 @@ import uuid
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from PIL import Image
 from django.core.files.storage import default_storage
@@ -21,7 +21,7 @@ from .models import RealEstateOffice, Comment, CommentScoreReason, ReportReason
 
 
 
-class CreateRealEstateOfficeAPIView(APIView):
+class CreateSearchRealEstateOfficeAPIView(APIView):
     """after create, real estate office must be confirmed by admin"""
 
     serializer_class = RealEstateOfficeSerializer
@@ -29,6 +29,7 @@ class CreateRealEstateOfficeAPIView(APIView):
     authentication_classes = [JWTAuthentication]
 
     def post(self, req):
+        """create real estate office"""
         serializer = self.serializer_class(data=req.data)
         if serializer.is_valid():
             try:
@@ -39,51 +40,12 @@ class CreateRealEstateOfficeAPIView(APIView):
                 return Response({"msg": "done", 'status':200, 'id': reo.id})
         return Response({"errors": serializer.errors, 'code':codes.INVALID_FIELD, 'status':400})
     
-class EditRealEstateOfficeAPIView(APIView):
-
-    serializer_class = RealEstateOfficeSerializer
-    permission_classes = [IsAuthenticated, (IsRealEstateOfficeOwner| IsAdmin)]
-    authentication_classes = [JWTAuthentication]
-
-    def put(self, req, real_estate_office_id):
-        try:
-            reo = RealEstateOffice.objects.get(id=real_estate_office_id)
-        except RealEstateOffice.DoesNotExist:
-            return Response({'errors':{'non-field-error':'real estate office not found'}, 'status':404})
-        self.check_object_permissions(req, reo)
-        
-        serializer = self.serializer_class(data=req.data)
-        if serializer.is_valid():
-            serializer.save(id=real_estate_office_id)
-            return Response({"msg":"done", 'status':200})
-        return Response({"errors": serializer.errors, 'code':codes.INVALID_FIELD, 'status':400})
-
-class GetAllRealEstateOfficeAPIView(APIView):
-
     def get(self, req):
-        try:
-            page, limit = get_page_and_limit(req)
-        except ValueError as e:
-            return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
-        
-        reo = RealEstateOffice.objects.filter(is_confirmed=True).values(*RealEstateOfficePreviewResponseSerializer.Meta.fields)[page*limit:page*limit+limit]
-        
-        return Response({'data':reo, 'status':200})
-    
-class GetRealEstateOfficeAPIView(APIView):
-    """get real estate office by username"""
-    def get(self, req, slug):
-        try:
-            reo = RealEstateOfficeResponseSerializer(RealEstateOffice.objects.get(is_confirmed=True, username=slug))
-            return Response({"data":reo.data, 'status':200})        
-        except RealEstateOffice.DoesNotExist:
-            return Response({'status':404})
-        
+        """ Search for real estate office
 
-class SearchRealEstateOfficesAPIView(APIView):
+            two city example: ?city=something1&city=something2
+        """
 
-    def get(self, req):
-        """search?city=something1&city=something2"""
         qp = dict(req.query_params)
         try:
             page, limit = get_page_and_limit(req)
@@ -112,19 +74,58 @@ class SearchRealEstateOfficesAPIView(APIView):
         else:
             query = Q(is_confirmed=True)
 
-        reo = RealEstateOffice.objects.values(*RealEstateOfficePreviewResponseSerializer.Meta.fields).filter(query)[page*limit: page*limit+limit]
+        reo = RealEstateOffice.objects.filter(query)[page*limit: page*limit+limit]
+        reo = RealEstateOfficePreviewResponseSerializer(reo, many=True).data
         total_pages = math.ceil(RealEstateOffice.objects.filter(query).count()/limit)
     
         return Response({'data':reo, 'total_pages':total_pages, 'status':200})
 
+
+class GetEditDeleteRealEstateOfficeAPIView(APIView):
+
+    serializer_class = RealEstateOfficeSerializer
+    permission_classes = [IsAuthenticated, (IsRealEstateOfficeOwner| IsAdmin)]
+    authentication_classes = [JWTAuthentication]
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [AllowAny()]
+        return super().get_permissions()
+
+    def put(self, req, realestateoffice_username):
+        """Edit real estate office"""
+
+        try:
+            reo = RealEstateOffice.objects.get(username=realestateoffice_username)
+        except RealEstateOffice.DoesNotExist:
+            return Response({'errors':{'non-field-error':'real estate office not found'}, 'status':404})
+        self.check_object_permissions(req, reo)
         
+        serializer = self.serializer_class(data=req.data)
+        if serializer.is_valid():
+            serializer.save(id=realestateoffice_username)# TODO: fix save
+            return Response({"msg":"done", 'status':200})
+        return Response({"errors": serializer.errors, 'code':codes.INVALID_FIELD, 'status':400})
 
+    def get(self, req, realestateoffice_username):
+        """Get one real estate office by its username"""
 
-class UploadRealEstateOfficeImageAPIView(APIView):
-    permission_classes = [IsAuthenticated, IsRealEstateOfficeOwner]
+        try:
+            reo = RealEstateOfficeResponseSerializer(RealEstateOffice.objects.get(is_confirmed=True, username=realestateoffice_username))
+        except RealEstateOffice.DoesNotExist:
+            return Response({'status':404})
+
+        return Response({"data":reo.data, 'status':200})        
+
+    def delete(self, req, realestateoffice_username):
+        return Response({'msg':'not impelemented yet'}) # TODO:
+    
+
+class UploadDeleteRealEstateOfficeImageAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsOwner]
     authentication_classes = [JWTAuthentication]
     
-    def post(self, req):
+    def post(self, req, realestateoffice_username):
         image = req.FILES.get('image', '')
         if image == '':
             return Response({'errors':{'image':'image not sent'}})
@@ -133,9 +134,11 @@ class UploadRealEstateOfficeImageAPIView(APIView):
             return Response({"errors":{"image":"invalid image format (accepted formats: PNG, JPEG)"}})
         
         try:
-            reo = RealEstateOffice.objects.get(owner=req.user)
+            reo = RealEstateOffice.objects.get(username=realestateoffice_username)
         except RealEstateOffice.DoesNotExist:
-            return Response({'errors':{'user':'user not owner of any real estate office'}, 'code':codes.USER_IS_NOT_REO_OWNER, 'status':404})
+            return Response({'errors':{'non-field-error':'real estate office not found'}, 'status':404})
+        
+        self.check_object_permissions(req, reo)
 
         file_ext = image.name.split('.')[-1]
         file_name = f'{uuid.uuid4()}.{file_ext}'
@@ -149,13 +152,17 @@ class UploadRealEstateOfficeImageAPIView(APIView):
         return Response({"msg":"done", 'status':200})
 
 
+    def delete(self, req, realestateoffice_username):
+        return Response({'msg':'not impelemented yet'}) # TODO:
+    
 
 
-class UploadRealEstateOfficeBGImageAPIView(APIView):
-    permission_classes = [IsAuthenticated, IsRealEstateOfficeOwner]
+class UploadDeleteRealEstateOfficeBGImageAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsOwner]
     authentication_classes = [JWTAuthentication]
     
-    def post(self, req):
+    def post(self, req, realestateoffice_username):
+        
         image = req.FILES.get('image', '')
         if image == '':
             return Response({'errors':{'image':'image not sent'}})
@@ -164,9 +171,11 @@ class UploadRealEstateOfficeBGImageAPIView(APIView):
             return Response({"errors":{"image":"invalid image format (accepted formats: PNG, JPEG)"}})
         
         try:
-            reo = RealEstateOffice.objects.get(owner=req.user)
+            reo = RealEstateOffice.objects.get(username=realestateoffice_username)
         except RealEstateOffice.DoesNotExist:
-            return Response({'errors':{'user':'user not owner of any real estate office'}, 'code':codes.USER_IS_NOT_REO_OWNER, 'status':404})
+            return Response({'errors':{'non-field-error':'real estate office not found'}, 'status':404})
+        
+        self.check_object_permissions(reo)
 
         file_ext = image.name.split('.')[-1]
         file_name = f'{uuid.uuid4()}.{file_ext}'
@@ -179,19 +188,29 @@ class UploadRealEstateOfficeBGImageAPIView(APIView):
 
         return Response({"msg":"done", 'status':200})
 
+    def delete(self, req, realestateoffice_username):
+        return Response({'msg':'not impelemented yet'}) # TODO:
+
 
 
 #####################################  comment ################################################
 
-class CreateCommentAPIView(APIView):
+class CreateGetAllCommentAPIView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
-    def post(self, req, real_estate_office_id):
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [AllowAny()]
+        return super().get_permissions()
+
+    def post(self, req, realestateoffice_username):
+        """Create comment for real estate office"""
+
         serializer = CommentSerializer(data=req.data)
         if serializer.is_valid():
             try:
-                reo = RealEstateOffice.objects.get(id=real_estate_office_id)
+                reo = RealEstateOffice.objects.get(username=realestateoffice_username)
             except RealEstateOffice.DoesNotExist:
                 return Response({'errors':{'non-field-error':'real estate office not found'}, 'status':404})
 
@@ -204,12 +223,27 @@ class CreateCommentAPIView(APIView):
             return Response({'msg':'done', 'status':200})
         
         return Response({'errors':serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})
+
+    def get(self, req, realestateoffice_username):
+        """Get all real estate office comments"""
+
+        try:
+            page, limit = get_page_and_limit(req, default_limit=16)
+        except ValueError as e:
+            return Response({'errors': e.dict, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
+        
+        comments = Comment.objects.filter(real_estate_office__username=realestateoffice_username).order_by('-created_at')[page*limit:page*limit+limit]
+        comments = CommentResponseSerializer(comments, many=True).data
+        return Response({'data':comments, 'status':200})
     
-class EditCommentAPIView(APIView):
+    
+class EditDeleteCommentAPIView(APIView):
     permission_classes = [IsAuthenticated, IsOwner]
     authentication_classes = [JWTAuthentication]
 
-    def put(self, req, comment_id):
+    def put(self, req, realestateoffice_username, comment_id):
+        """Edit real estate office comment"""
+
         serializer = CommentSerializer(data=req.data)
         if serializer.is_valid():
             try:
@@ -232,22 +266,9 @@ class EditCommentAPIView(APIView):
         
         return Response({'errors':serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})
     
-class GetAllCommentsAPIView(APIView):
+    def delete(self, req, realestateoffice_username, comment_id):
+        """Delete real estate office comment"""
 
-    def get(self, req, real_estate_office_id):
-        try:
-            page, limit = get_page_and_limit(req, default_limit=16)
-        except ValueError as e:
-            return Response({'errors': e.dict, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
-        
-        comments = Comment.objects.filter(real_estate_office=real_estate_office_id).values(*CommentResponseSerializer.Meta.fields).order_by('-created_at')[page*limit:page*limit+limit]
-        return Response({'data':comments, 'status':200})
-    
-class DeleteCommentAPIVew(APIView):
-    permission_classes = [IsAuthenticated, IsOwner|IsAdmin]
-    authentication_classes = [JWTAuthentication]
-
-    def delete(self, req, comment_id):
         try:
             comment = Comment.objects.get(id=comment_id)
         except Comment.DoesNotExist:
@@ -266,7 +287,10 @@ class DeleteCommentAPIVew(APIView):
 
 class GetAllCommentScoreReasonAPIView(APIView):
     
-    def get(self, req):
+    def get(self, req, realestateoffice_username):
+        """Get all Score Reasons for comments
+        
+        filter by score exampe: ?score=1"""
         
         score = req.query_params.get('score', 0)
         try:
@@ -275,9 +299,11 @@ class GetAllCommentScoreReasonAPIView(APIView):
             return Response({'errors':{'score':str(v)}, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
 
         if score:
-            csrs = CommentScoreReason.objects.filter(score=score).values(*CommentScoreReasonResponseSerializer.Meta.fields)
+            csrs = CommentScoreReason.objects.filter(score=score)
         else:
-            csrs = CommentScoreReason.objects.all().values(*CommentScoreReasonResponseSerializer.Meta.fields)
+            csrs = CommentScoreReason.objects.all()
+
+        csrs = CommentScoreReasonResponseSerializer(csrs, many=True).data
 
         return Response({'data':csrs,'status':200})
 
@@ -290,14 +316,15 @@ class CreateReportAPIView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
-    def post(self, req, real_estate_office_id):
+    def post(self, req, realestateoffice_username):
+        """Create Report for real estate office"""
         serializer = ReportSerializer(data=req.data)
         if serializer.is_valid():
             try:
-                reo = RealEstateOffice.objects.get(id=real_estate_office_id)
+                reo = RealEstateOffice.objects.get(username=realestateoffice_username)
             except RealEstateOffice.DoesNotExist:
                 return Response({'errors':{'non-field-error':'real estate office not found'}, 'status':404})
-                
+
             serializer.save(user=req.user, real_estate_office=reo)
             return Response({'msg':'done', 'status':200})
         
@@ -305,6 +332,8 @@ class CreateReportAPIView(APIView):
     
 class GetAllReportReasonsAPIView(APIView):
     
-    def get(self, req):
-        reasons = ReportReason.objects.all().values(*ReportReasonResponseSerializer.Meta.fields)
+    def get(self, req, realestateoffice_username):
+        """Get all Report Reasons"""
+        reasons = ReportReason.objects.all()
+        reasons = ReportReasonResponseSerializer(reasons, many=True).data
         return Response({'data':reasons, 'status':200})
