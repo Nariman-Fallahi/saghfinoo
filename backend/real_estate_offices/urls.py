@@ -19,6 +19,6 @@ urlpatterns = [
     path('comment/get-all-score-reasons', views.GetAllCommentScoreReasonAPIView.as_view(), name='get_all_comment_score_reasons_for_real_estate_office'),
 
 
-    path('report/create', views.CreateReportAPIView.as_view(), name='create_real_estate_office_report'),
+    path('report/create/<int:real_estate_office_id>', views.CreateReportAPIView.as_view(), name='create_real_estate_office_report'),
     path('report/get-all-reasons', views.GetAllReportReasonsAPIView.as_view(), name='get_all_real_estate_office_report_reasons'),
 ]

@@ -290,10 +290,15 @@ class CreateReportAPIView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
-    def post(self, req):
+    def post(self, req, real_estate_office_id):
         serializer = ReportSerializer(data=req.data)
         if serializer.is_valid():
-            serializer.save(user=req.user)
+            try:
+                reo = RealEstateOffice.objects.get(id=real_estate_office_id)
+            except RealEstateOffice.DoesNotExist:
+                return Response({'errors':{'non-field-error':'real estate office not found'}, 'status':404})
+                
+            serializer.save(user=req.user, real_estate_office=reo)
             return Response({'msg':'done', 'status':200})
         
         return Response({'errors':serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})

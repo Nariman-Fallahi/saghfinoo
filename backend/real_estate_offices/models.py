@@ -129,6 +129,7 @@ class ReportReason(models.Model):
 
 
 class Report(models.Model):
+    real_estate_office = models.ForeignKey(RealEstateOffice, on_delete=models.DO_NOTHING)
     report_reason = models.ForeignKey(ReportReason, on_delete=models.PROTECT)
     user = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, related_name='realestateoffice_report_user')
 
