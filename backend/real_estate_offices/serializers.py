@@ -141,7 +141,7 @@ class CommentResponseSerializer(serializers.ModelSerializer):
             },
             'score': instance.score, 
             'description': instance.description, 
-            'score_reason': instance.score_reason.name,
+            'scoreReason': instance.score_reason.name,
         }
 
     
