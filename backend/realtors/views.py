@@ -234,10 +234,15 @@ class CreateReportAPIView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
-    def post(self, req):
+    def post(self, req, realtor_id):
         serializer = ReportSerializer(data=req.data)
         if serializer.is_valid():
-            serializer.save(user=req.user)
+            try:
+                realtor = Realtor.objects.get(id=realtor_id)
+            except Realtor.DoesNotExist:
+                return Response({'errors':{'non-field-error':'realtor not exist'}, 'status':404})
+                
+            serializer.save(user=req.user, realtor=realtor)
             return Response({'msg':'done', 'status':200})
         
         return Response({'errors':serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})
