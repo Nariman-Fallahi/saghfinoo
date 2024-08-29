@@ -83,6 +83,16 @@ class AdvertisementSerializer(serializers.ModelSerializer):
 
         return super().validate(attrs)
 
+    def to_internal_value(self, data):
+        data['main_street'] = data.get('mainStreet', None)
+        data['side_street'] = data.get('sideStreet', None)
+        data['type_of_transaction'] = data.get('typeOfTransaction', None)
+        data['property_type'] = data.get('propertyType', None)
+        data['number_of_floors'] = data.get('numberOfFloors', None)
+        data['type_of_restroom'] = data.get('typeOfRestroom', None)
+        data['cooling_system'] = data.get('coolingSystem', None)
+        data['heating_system'] = data.get('heatingSystem', None)
+        return super().to_internal_value(data)
 
 
 class UserSavedAdvertisementPreviewResponseSerializer(serializers.ModelSerializer):
@@ -209,7 +219,7 @@ class RealtorAdvertisementPreviewResponseSerializer(serializers.ModelSerializer)
 
     def to_representation(self, instance):
         data = AdvertisementResponseSerializer().to_representation(instance)
-        data['is_confirmed'] = instance.is_confirmed
+        data['isConfirmed'] = instance.is_confirmed
         return data
 
 class RealtorAdvertisementResponseSerializer(serializers.ModelSerializer):
@@ -219,5 +229,5 @@ class RealtorAdvertisementResponseSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = AdvertisementPreviewResponseSerializer().to_representation(instance)
-        data['is_confirmed'] = instance.is_confirmed
+        data['isConfirmed'] = instance.is_confirmed
         return data
