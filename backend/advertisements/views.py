@@ -220,7 +220,7 @@ class GetEditDeleteAdvertisementAPIView(APIView):
         try:
             ad = Advertisement.objects.get(id=advertisement_id)
         except Advertisement.DoesNotExist:
-            return Response({'errors':{'non-field-error':'advertisement not found'}, 'status':404})
+            return Response({'errors':{'non-field-error':'advertisement not found'}, 'status':404, 'code':codes.OBJ_NOT_FOUND})
 
         self.check_object_permissions(req, ad)
 
@@ -261,10 +261,10 @@ class GetEditDeleteAdvertisementAPIView(APIView):
             ad['images'] = AdvertisementImageResponseSerializer(AdvertisementImage.objects.filter(advertisement=ad['id']), many=True).data
             ad['videos'] = AdvertisementVideoResponseSerializer(AdvertisementVideo.objects.filter(advertisement=ad['id']), many=True).data
             
-            return Response({"data":ad, 'status':200})        
         except Advertisement.DoesNotExist:
-            return Response({'status':404})
+            return Response({'status':404, 'code':codes.OBJ_NOT_FOUND})
         
+        return Response({"data":ad, 'status':200})        
 
 class GetAllRealtorAdvertisementsAPIView(APIView):
     """get a realtor ads. confirmed or not confirmed"""
@@ -290,19 +290,20 @@ class GetAllRealtorAdvertisementsAPIView(APIView):
 class GetRealtorAdvertisementAPIView(APIView):
     """get a realtor ad by id. confrimed or not confirmed"""
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, IsRealtor]
+    permission_classes = [IsAuthenticated, IsRealtor, IsAdvertisementOwner]
 
     def get(self, req, advertisement_id):
         try:
-            ad = Advertisement.objects.get(id=advertisement_id, owner=req.realtor.id)
+            ad = Advertisement.objects.get(id=advertisement_id)
+            self.check_object_permissions(req, ad)
             ad = AdvertisementResponseSerializer(ad).data
             ad['images'] = AdvertisementImageResponseSerializer(AdvertisementImage.objects.filter(advertisement=ad['id']), many=True).data
             ad['videos'] = AdvertisementVideoResponseSerializer(AdvertisementVideo.objects.filter(advertisement=ad['id']), many=True).data
             
-            return Response({"data":ad, 'status':200})
         except Advertisement.DoesNotExist:
-            return Response({'status':404, 'errors':{'non-field-error': 'advertisement not found or you not owner of it'}})
+            return Response({'status':404, 'errors':{'non-field-error': 'advertisement not found'}, 'code':codes.OBJ_NOT_FOUND})
 
+        return Response({"data":ad, 'status':200})
 
 class UploadAdvertisementImageAPIView(APIView):
     permission_classes = [IsAuthenticated, IsAdvertisementOwner]
@@ -321,7 +322,7 @@ class UploadAdvertisementImageAPIView(APIView):
         try:
             re = Advertisement.objects.get(id=advertisement_id)
         except Advertisement.DoesNotExist:
-            return Response({'errors':{'non-field-error':'real estate not found'}, 'status':404})
+            return Response({'errors':{'non-field-error':'real estate not found'}, 'status':404, 'code':codes.OBJ_NOT_FOUND})
 
         self.check_object_permissions(req, re)
 
@@ -354,7 +355,7 @@ class DeleteAdvertisementUploadedImageAPIView(APIView):
         try:
             image = AdvertisementImage.objects.get(id=image_id)
         except AdvertisementImage.DoesNotExist:
-            return Response({'errors':{"non-field-error":'image not found'}, 'status':404})
+            return Response({'errors':{"non-field-error":'image not found'}, 'status':404, 'code':codes.OBJ_NOT_FOUND})
         
         self.check_object_permissions(req, image.advertisement)
 
@@ -372,9 +373,9 @@ class SetAdvertisementPrimaryImageAPIView(APIView):
             ad = Advertisement.objects.get(id=advertisement_id)
             image = AdvertisementImage.objects.get(id=image_id)
         except Advertisement.DoesNotExist:
-            return Response({'errors':{'non-field-error':'advertisement not found'}, 'status':404})
+            return Response({'errors':{'non-field-error':'advertisement not found'}, 'status':404, 'code':codes.OBJ_NOT_FOUND})
         except AdvertisementImage.DoesNotExist:
-            return Response({'errors':{"non-field-error":'image not found'}, 'status':404})
+            return Response({'errors':{"non-field-error":'image not found'}, 'status':404, 'code':codes.OBJ_NOT_FOUND})
 
         self.check_object_permissions(req, ad)
         
@@ -431,7 +432,7 @@ class UploadAdvertisementVideoAPIView(APIView):
         try:
             re = Advertisement.objects.get(id=advertisement_id)
         except Advertisement.DoesNotExist:
-            return Response({'errors':{'non-field-error':'real estate not found'}, 'status':404})
+            return Response({'errors':{'non-field-error':'real estate not found'}, 'status':404, 'code':codes.OBJ_NOT_FOUND})
 
         self.check_object_permissions(req, re)
 
@@ -469,7 +470,7 @@ class SaveUnsaveAdvertisementAPIView(APIView):
         try:
             ad = Advertisement.objects.get(id=advertisement_id, is_confirmed=True)
         except Advertisement.DoesNotExist:
-            return Response({'errors':{'non-field-error': 'advertisement not found'}, 'status':404})
+            return Response({'errors':{'non-field-error': 'advertisement not found'}, 'status':404, 'code':codes.OBJ_NOT_FOUND})
 
         # check ad is already saved
         try:

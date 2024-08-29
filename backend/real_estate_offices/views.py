@@ -98,7 +98,7 @@ class GetEditDeleteRealEstateOfficeAPIView(APIView):
         try:
             reo = RealEstateOffice.objects.get(username=realestateoffice_username)
         except RealEstateOffice.DoesNotExist:
-            return Response({'errors':{'non-field-error':'real estate office not found'}, 'status':404})
+            return Response({'errors':{'non-field-error':'real estate office not found'}, 'code':codes.OBJ_NOT_FOUND, 'status':404})
         self.check_object_permissions(req, reo)
         
         serializer = self.serializer_class(data=req.data)
@@ -113,7 +113,7 @@ class GetEditDeleteRealEstateOfficeAPIView(APIView):
         try:
             reo = RealEstateOfficeResponseSerializer(RealEstateOffice.objects.get(is_confirmed=True, username=realestateoffice_username))
         except RealEstateOffice.DoesNotExist:
-            return Response({'status':404})
+            return Response({'status':404, 'code':codes.OBJ_NOT_FOUND})
 
         return Response({"data":reo.data, 'status':200})        
 
@@ -136,7 +136,7 @@ class UploadDeleteRealEstateOfficeImageAPIView(APIView):
         try:
             reo = RealEstateOffice.objects.get(username=realestateoffice_username)
         except RealEstateOffice.DoesNotExist:
-            return Response({'errors':{'non-field-error':'real estate office not found'}, 'status':404})
+            return Response({'errors':{'non-field-error':'real estate office not found'}, 'status':404, 'code':codes.OBJ_NOT_FOUND})
         
         self.check_object_permissions(req, reo)
 
@@ -173,7 +173,7 @@ class UploadDeleteRealEstateOfficeBGImageAPIView(APIView):
         try:
             reo = RealEstateOffice.objects.get(username=realestateoffice_username)
         except RealEstateOffice.DoesNotExist:
-            return Response({'errors':{'non-field-error':'real estate office not found'}, 'status':404})
+            return Response({'errors':{'non-field-error':'real estate office not found'}, 'status':404, 'code':codes.OBJ_NOT_FOUND})
         
         self.check_object_permissions(reo)
 
@@ -212,7 +212,7 @@ class CreateGetAllCommentAPIView(APIView):
             try:
                 reo = RealEstateOffice.objects.get(username=realestateoffice_username)
             except RealEstateOffice.DoesNotExist:
-                return Response({'errors':{'non-field-error':'real estate office not found'}, 'status':404})
+                return Response({'errors':{'non-field-error':'real estate office not found'}, 'status':404, 'code': codes.OBJ_NOT_FOUND})
 
             comment = serializer.save(owner=req.user, real_estate_office=reo)
 
@@ -249,7 +249,7 @@ class EditDeleteCommentAPIView(APIView):
             try:
                 comment = Comment.objects.get(id=comment_id)
             except Comment.DoesNotExist:
-                return Response({'errors':{'non-field-error':'comment not found'}, 'status':404}) 
+                return Response({'errors':{'non-field-error':'comment not found'}, 'status':404, 'code': codes.OBJ_NOT_FOUND}) 
 
             self.check_object_permissions(req, comment)
 
@@ -272,7 +272,7 @@ class EditDeleteCommentAPIView(APIView):
         try:
             comment = Comment.objects.get(id=comment_id)
         except Comment.DoesNotExist:
-            return Response({'errors':{'non-field-error':'comment not found'}, 'status':404})
+            return Response({'errors':{'non-field-error':'comment not found'}, 'status':404, 'code':codes.OBJ_NOT_FOUND})
         
         self.check_object_permissions(req, comment)
         comment.delete()
@@ -323,7 +323,7 @@ class CreateReportAPIView(APIView):
             try:
                 reo = RealEstateOffice.objects.get(username=realestateoffice_username)
             except RealEstateOffice.DoesNotExist:
-                return Response({'errors':{'non-field-error':'real estate office not found'}, 'status':404})
+                return Response({'errors':{'non-field-error':'real estate office not found'}, 'status':404, 'code':codes.OBJ_NOT_FOUND})
 
             serializer.save(user=req.user, real_estate_office=reo)
             return Response({'msg':'done', 'status':200})
