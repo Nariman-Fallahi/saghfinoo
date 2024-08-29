@@ -3,22 +3,17 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('create', views.CreateRealEstateOfficeAPIView.as_view(), name='create_real_estate_office'),
-    path('edit/<int:real_estate_office_id>', views.EditRealEstateOfficeAPIView.as_view(), name='eidit_real_estate_office'),
-    path('get-all', views.GetAllRealEstateOfficeAPIView.as_view(), name='get_all_real_estate_offices'),
-    path('get/<slug>', views.GetRealEstateOfficeAPIView.as_view(), name='get_real_estate_office'),
-    path('upload-image', views.UploadRealEstateOfficeImageAPIView.as_view(), name='upload_real_estate_office_image'),
-    path('upload-bg-image', views.UploadRealEstateOfficeBGImageAPIView.as_view(), name='upload_real_estate_office_bg_image'),
-    path('search', views.SearchRealEstateOfficesAPIView.as_view(), name='search_real_estate_office'),
+    path('', views.CreateSearchRealEstateOfficeAPIView.as_view(), name='create_real_estate_office'),
 
-    path('comment/create/<int:real_estate_office_id>', views.CreateCommentAPIView.as_view(), name='create_comment_for_real_estate_office'),
-    path('comment/edit/<int:comment_id>', views.EditCommentAPIView.as_view(), name='edit_comment_for_real_estate_office'),
-    path('comment/get-all/<int:real_estate_office_id>', views.GetAllCommentsAPIView.as_view(), name='get_all_comments_for_real_estate_office'),
-    path('comment/delete/<int:comment_id>', views.DeleteCommentAPIVew.as_view(), name='delete_comment_for_real_estate_office'),
+    path('<realestateoffice_username>', views.GetEditDeleteRealEstateOfficeAPIView.as_view(), name='get_edit_delete_real_estate_office'),
+    path('<realestateoffice_username>/image', views.UploadDeleteRealEstateOfficeImageAPIView.as_view(), name='upload_delete_real_estate_office_image'),
+    path('<realestateoffice_username>/bg-image', views.UploadDeleteRealEstateOfficeBGImageAPIView.as_view(), name='upload_delete_real_estate_office_bg_image'),
 
-    path('comment/get-all-score-reasons', views.GetAllCommentScoreReasonAPIView.as_view(), name='get_all_comment_score_reasons_for_real_estate_office'),
+    path('<realestateoffice_username>/comments/<int:comment_id>', views.EditDeleteCommentAPIView.as_view(), name='edit_delete_comment_for_real_estate_office'),
+    path('<realestateoffice_username>/comments/score-reasons', views.GetAllCommentScoreReasonAPIView.as_view(), name='getall_comment_score_reasons_for_real_estate_office'),
+    path('<realestateoffice_username>/comments', views.CreateGetAllCommentAPIView.as_view(), name='create_getall_comment_for_real_estate_office'),
 
-
-    path('report/create/<int:real_estate_office_id>', views.CreateReportAPIView.as_view(), name='create_real_estate_office_report'),
-    path('report/get-all-reasons', views.GetAllReportReasonsAPIView.as_view(), name='get_all_real_estate_office_report_reasons'),
+    
+    path('<realestateoffice_username>/report', views.CreateReportAPIView.as_view(), name='create_real_estate_office_report'),
+    path('<realestateoffice_username>/report/reasons', views.GetAllReportReasonsAPIView.as_view(), name='get_all_real_estate_office_report_reasons'),
 ]
