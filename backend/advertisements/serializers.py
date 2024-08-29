@@ -92,17 +92,17 @@ class UserSavedAdvertisementPreviewResponseSerializer(serializers.ModelSerialize
 
     def to_representation(self, instance):
         return {
-            'id':instance.id,
-            'imageFullPath':instance.image_full_path,
-            'typeOfTransaction':instance.type_of_transaction.value,
-            'propertyType':instance.property_type.value,
-            'area': instance.area,
-            'city': instance.city,
-            'mainStreet': instance.main_street,
-            'side_street': instance.side_street,
-            'deposit': instance.deposit,
-            'rent': instance.rent,
-            'createdAt': instance.created_at,
+            'id':instance.advertisement.id,
+            'imageFullPath':instance.advertisement.image_full_path,
+            'typeOfTransaction':instance.advertisement.type_of_transaction.value,
+            'propertyType':instance.advertisement.property_type.value,
+            'area': instance.advertisement.area,
+            'city': instance.advertisement.city,
+            'mainStreet': instance.advertisement.main_street,
+            'side_street': instance.advertisement.side_street,
+            'deposit': instance.advertisement.deposit,
+            'rent': instance.advertisement.rent,
+            'createdAt': instance.advertisement.created_at,
         }
 
 class AdvertisementImageResponseSerializer(serializers.ModelSerializer):
