@@ -41,6 +41,12 @@ class RealEstateOfficeSerializer(serializers.ModelSerializer):
 
         return super().validate(attrs)
 
+    def to_internal_value(self, data):
+        data['main_street'] = data.get("mainStreet", None)
+        data['sub_street'] = data.get("subStreet", None)
+        data['landline_number'] = data.get("landlineNumber", None)
+        return super().to_internal_value(data)
+
 class RealEstateOfficeResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -110,6 +116,14 @@ class CommentSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({'reason':'this score reason is not valid for score='+str(attrs['score'])})
 
         return super().validate(attrs)
+
+    def to_internal_value(self, data):
+        data = {
+            'score': data['score'],
+            'description': data['description'],
+            'score_reason': data.get('scoreReason', None)
+        }
+        return super().to_internal_value(data)
 
 class CommentResponseSerializer(serializers.ModelSerializer):
 
