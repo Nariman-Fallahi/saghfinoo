@@ -3,8 +3,12 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from common.utils.permissions import IsAdmin, IsRealtor
-from .models import Advertisement, AdvertisementImage
+from .models import Advertisement, AdvertisementImage, AdvertisementChoice
 from common.utils import validations
+from realtors.models import Realtor
+from users.models import CustomUser
+from real_estate_offices.models import RealEstateOffice
+
 
 class AdvertisementSerializer(serializers.ModelSerializer):
 
@@ -65,7 +69,7 @@ class AdvertisementSerializer(serializers.ModelSerializer):
             # buying_price and rent_price must be zero
             if attrs['rent'] != 0:
                 raise serializers.ValidationError({'rent':'in full deposit transaction, this field must be zero'})
-            if attrs['diposit'] == 0:
+            if attrs['deposit'] == 0:
                 raise serializers.ValidationError({'deposit':'in full deposit transaction, this field cannot be zero'})
 
         else:
@@ -80,111 +84,140 @@ class AdvertisementSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
 
 
-class AdvertisementResponseSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Advertisement
-        fields = [
-            'id',
-            'owner__user__first_name',
-            'owner__user__last_name',
-            'owner__user__image_full_path',
-            'owner__score',
-            'owner__number_of_active_ads',
-            'owner__real_estate_office__username',
-            'owner__real_estate_office__name',
-            'owner__real_estate_office__image_full_path',
-            'created_at',
-            'modified_at',
-            'city',
-            'main_street',
-            'side_street',
-            'province',
-            'area',
-            'property_type__value',
-            'type_of_transaction__value',
-            'deposit',
-            'rent',
-            'room',
-            'parking',
-            'storage',
-            'restroom',
-            'type_of_restroom__value',
-            'elevator',
-            'floor',
-            'number_of_floors',
-            'heating_system__value',
-            'cooling_system__value',
-            'flooring__value',
-            'description',
-            'map_position',
-            'number_of_views',
-            'number_of_saves',
-            'convertible',
-        ]
-
-class AdvertisementPreviewResponseSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Advertisement
-        fields = [
-            'id',
-            'image_full_path',
-            'type_of_transaction__value',
-            'property_type__value',
-            'area',
-            'city',
-            'main_street',
-            'deposit',
-            'rent',
-            'created_at',
-        ]
-
-class RealtorAdvertisementPreviewResponseSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Advertisement
-        fields = AdvertisementPreviewResponseSerializer.Meta.fields + ['is_confirmed']
-
-
-
-class RealtorAdvertisementResponseSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Advertisement
-        fields = AdvertisementResponseSerializer.Meta.fields + ['is_confirmed']
-
-
 
 class UserSavedAdvertisementPreviewResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Advertisement
-        fields = [
-            'advertisement__id',
-            'advertisement__image_full_path',
-            'advertisement__type_of_transaction__value',
-            'advertisement__property_type__value',
-            'advertisement__area',
-            'advertisement__city',
-            'advertisement__main_street',
-            'advertisement__side_street',
-            'advertisement__deposit',
-            'advertisement__rent',
-            'advertisement__created_at',
-        ]
 
+    def to_representation(self, instance):
+        return {
+            'id':instance.id,
+            'imageFullPath':instance.image_full_path,
+            'typeOfTransaction':instance.type_of_transaction.value,
+            'propertyType':instance.property_type.value,
+            'area': instance.area,
+            'city': instance.city,
+            'mainStreet': instance.main_street,
+            'side_street': instance.side_street,
+            'deposit': instance.deposit,
+            'rent': instance.rent,
+            'createdAt': instance.created_at,
+        }
 
 class AdvertisementImageResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AdvertisementImage
-        fields = ['id', 'image_full_path']
 
-
+    def to_representation(self, instance):
+        return {'id':instance.id, 'imageFullPath':instance.image_full_path}
 
 class AdvertisementVideoResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AdvertisementImage
-        fields = ['id', 'video_full_path']
+
+    def to_representation(self, instance):
+        return {'id':instance.id, 'videoFullPath':instance.video_full_path}    
+
+class AdvertisementChoiceResponseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AdvertisementChoice
+        fields = ['id', 'key', 'value']
+
+
+class AdvertisementResponseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Advertisement
+        fields = [
+            
+        ]
+
+    def to_representation(self, instance):
+        return {
+            'owner':{
+                'score':instance.owner.score, 
+                'numberOfActiveAds': instance.owner.number_of_active_ads,
+                'user': {
+                    'firstName':instance.owner.user.first_name, 
+                    'lastName':instance.owner.user.last_name, 
+                    'imageFullPath':instance.owner.user.image_full_path
+                },
+                'realEstateOffice':{
+                    'username': instance.owner.real_estate_office.username,
+                    'name': instance.owner.real_estate_office.name,
+                    'imageFullPath': instance.owner.real_estate_office.image_full_path,
+                },
+            },
+
+            'id': instance.id,
+            'createdAt': instance.created_at,
+            'modifiedAt': instance.modified_at,
+            'city': instance.city,
+            'mainStreet': instance.main_street,
+            'sideStreet': instance.side_street,
+            'province': instance.province,
+            'area': instance.area,
+            'propertyType':instance.property_type.value,
+            'typeOfTransaction': instance.type_of_transaction.value,
+            'deposit': instance.deposit,
+            'rent': instance.rent,
+            'room':instance.room,
+            'parking':instance.parking,
+            'storage':instance.storage,
+            'restroom':instance.restroom,
+            'typeOfRestroom': instance.type_of_restroom.value,
+            'elevator': instance.elevator,
+            'floor':instance.floor,
+            'numberOfFloors': instance.number_of_floors,
+            'heatingSystem':instance.heating_system.value,
+            'coolingsystem':instance.cooling_system.value,
+            'flooring': instance.flooring.value,
+            'description':instance.description,
+            'mapPosition':instance.map_position,
+            'numberOfViews':instance.number_of_views,
+            'numberOfSaves':instance.number_of_saves,
+            'convertible':instance.convertible,
+        }
+
+class AdvertisementPreviewResponseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Advertisement
+
+    def to_representation(self, instance):
+        return {
+            'id':instance.id,
+            'imageFullPath':instance.image_full_path,
+            'typeOfTransaction':instance.type_of_transaction.value,
+            'propertyType':instance.property_type.value,
+            'area': instance.area,
+            'city': instance.city,
+            'mainStreet': instance.main_street,
+            'sideStreet': instance.side_street,
+            'deposit': instance.deposit,
+            'rent': instance.rent,
+            'createdAt': instance.created_at,
+        }
+
+class RealtorAdvertisementPreviewResponseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Advertisement
+
+    def to_representation(self, instance):
+        data = AdvertisementResponseSerializer().to_representation(instance)
+        data['is_confirmed'] = instance.is_confirmed
+        return data
+
+class RealtorAdvertisementResponseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Advertisement
+
+    def to_representation(self, instance):
+        data = AdvertisementPreviewResponseSerializer().to_representation(instance)
+        data['is_confirmed'] = instance.is_confirmed
+        return data

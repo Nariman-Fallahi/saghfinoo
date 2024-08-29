@@ -99,6 +99,33 @@ class Advertisement(models.Model):
 
     image_full_path = models.CharField(max_length=1000, default='') # primary image (also added in RealEstateImage)
 
+    def fill_from_dict(self, data: dict):
+        self.province = data['province']
+        self.city = data['city']
+        self.main_street = data['main_street']
+        self.side_street = data['side_street']
+        # self.map_position = data['map_position']
+        self.property_type_id = data['property_type']
+        self.type_of_transaction_id = data['type_of_transaction']
+        self.deposit = data['deposit']
+        self.rent = data['rent']
+        self.convertible = data['convertible']
+        self.area = data['area']
+        self.room = data['room']
+        self.parking = data['parking']
+        self.storage = data['storage']
+        self.restroom = data['restroom']
+        self.type_of_restroom_id = data['type_of_restroom']
+        self.elevator = data['elevator']
+        self.floor = data['floor']
+        self.number_of_floors = data['number_of_floors']
+        self.heating_system_id = data['heating_system']
+        self.cooling_system_id = data['cooling_system']
+        self.flooring_id = data['flooring']
+        self.description = data['description']
+        
+
+
 
 
 class AdvertisementImage(models.Model):
