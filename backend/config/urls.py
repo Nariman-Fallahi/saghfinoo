@@ -42,10 +42,10 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema_redoc_ui'),
 
     path('api/v1/users/', include("users.urls")),
-    path('api/v1/real-estate-offices/', include('real_estate_offices.urls')),
+    path('api/v1/reos/', include('real_estate_offices.urls')),
     path('api/v1/realtors/', include('realtors.urls')),
     path('api/v1/news/', include('news.urls')),
-    path('api/v1/advertisements/', include('advertisements.urls')),
+    path('api/v1/ads/', include('advertisements.urls')),
     path('api/v1/tools/', include('tools.urls')),
 ]
 
