@@ -20,6 +20,7 @@ from django.conf import settings
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework.permissions import AllowAny
+from .views import json404, json500
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -33,7 +34,8 @@ schema_view = get_schema_view(
     permission_classes=[AllowAny] # todo replace with IsAdmin
 )
 
-
+handler404 = json404
+handler500 = json500
 
 urlpatterns = [
     path('admin/', admin.site.urls),
