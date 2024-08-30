@@ -10,6 +10,7 @@ from .serializers import ProvinceResponseSerializer, CityResposnseSerializer
 class GetProvincesAPIView(APIView):
 
     def get(self, req):
+        """Get all provinces"""
         provinces = Province.objects.all().values(*ProvinceResponseSerializer.Meta.fields)
         return Response({'data':provinces, 'status':200})
     
@@ -17,6 +18,7 @@ class GetProvincesAPIView(APIView):
 class GetProvinceCitiesAPIView(APIView):
 
     def get(self, req, province_id):
+        """Get province cities"""
         try:
             province_id = int(province_id)
         except:
@@ -30,9 +32,9 @@ class SearchCitiesAPIVew(APIView):
     def get(self, req):
         """search cities
         
-            example: ?city=test"""
+            example: ?name=test"""
         
-        city = req.query_params.get('city', None)
+        city = req.query_params.get('name', None)
         if city:
             try:
                 validations.validate_name(city)
