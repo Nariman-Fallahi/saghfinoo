@@ -28,6 +28,11 @@ class CreateSearchRealEstateOfficeAPIView(APIView):
     permission_classes = [IsAuthenticated, IsRealtor]
     authentication_classes = [JWTAuthentication]
 
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return super().get_permissions()
+
     def post(self, req):
         """create real estate office"""
         serializer = self.serializer_class(data=req.data)
