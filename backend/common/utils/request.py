@@ -5,19 +5,19 @@ def get_page_and_limit(request, default_limit=21):
     try:
         page = int(request.query_params['page'])
     except KeyError:
-        e = ValueError("page not found in query params")
-        e.dict = {'page': "page not found in query params"}
+        e = ValueError("page is required in query params")
+        e.dict = {'page': "page is required in query params"}
         raise e
     except:
-        e = ValueError("invalid page")
-        e.dict = {'page':"invalid page"}
+        e = ValueError("invalid query param page")
+        e.dict = {'page':"invalid query param page"}
         raise e
 
     try:
         limit = int(request.query_params.get('limit', default_limit))
     except:
-        e = ValueError("invalid limit")
-        e.dict = {'limit':'invalid limit'}
+        e = ValueError("invalid query param limit")
+        e.dict = {'limit':'invalid query param limit'}
         raise e
     
     return page-1, limit
