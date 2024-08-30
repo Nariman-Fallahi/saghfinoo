@@ -7,7 +7,7 @@ class RealtorConfig(AppConfig):
     name = 'realtors'
 
     def ready(self):
-        if not settings.DEBUG:
+        if settings.SAVE_DEFAULT_VALUES:
             try:
                 from .models import CommentScoreReason, ReportReason
                 
