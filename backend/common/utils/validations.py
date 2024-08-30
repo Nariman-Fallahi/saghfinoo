@@ -29,18 +29,18 @@ def validate_landline_number(landline_number: str):
 def validate_name(name: str):
     valid_chars = characters.NAME_CHARS
 
-    validate(name.lower(), valid_chars)
+    validate(name, valid_chars)
         
 def validate_description(description: str):
     valid_chars = characters.DESCRIPTION_CHARS
 
-    validate(description.lower(), valid_chars)
+    validate(description, valid_chars)
         
 
 def validate_username(username: str):
     valid_chars = characters.USERNAME_CHARS
 
-    validate(username.lower(), valid_chars)
+    validate(username, valid_chars)
 
 def validate_choice_se(field_name, field_value):
     if field_value.key != field_name:
@@ -59,8 +59,10 @@ def validate_integer(value):
         raise ValueError('invalid integer')
 
 def validate(string: str, valid_chars):
-
-    for c in string:
+    if type(string) != str:
+        raise ValueError('invalid string')
+ 
+    for c in string.lower():
         if c not in valid_chars:
             raise ValueError(f'invalid character: {c}')
             
