@@ -18,6 +18,10 @@ class Realtor(models.Model):
     facebook = models.CharField(max_length=100)
     email = models.EmailField()
 
+    description = models.CharField(max_length=200)
+    number = models.CharField(max_length=11)
+    landline_number = models.CharField(max_length=50)
+
     score = models.FloatField(default=settings.REALTOR_DEFAULT_SCORE)
     number_of_active_ads = models.PositiveIntegerField(default=0)
 
@@ -26,9 +30,6 @@ class Realtor(models.Model):
     bg_image = models.CharField(max_length=1000, default='') # background image
     bg_image_full_path = models.CharField(max_length=1000, default='')
 
-    description = models.CharField(max_length=200)
-    number = models.CharField(max_length=11)
-    landline_number = models.CharField(max_length=50)
 
     score_num = models.PositiveIntegerField(default=0)
     score_sum = models.PositiveBigIntegerField(default=0)
@@ -39,6 +40,15 @@ class Realtor(models.Model):
             reo = self.real_estate_office.name
         return self.user.first_name +' '+ self.user.last_name +', '+ reo
     
+    def fill_from_dict(self, data: dict):
+        self.telegram = data['telegram']
+        self.whatsapp = data['whatsapp']
+        self.twitter = data['twitter']
+        self.facebook = data['facebook']
+        self.email = data['email']
+        self.description = data['description']
+        self.number = data['number']
+        self.landline_number = data['landline_number']
 
 class CommentScoreReason(models.Model):
     name = models.CharField(max_length=50)
@@ -125,7 +135,7 @@ class ReportReason(models.Model):
 
 class Report(models.Model):
     realtor = models.ForeignKey(Realtor, on_delete=models.DO_NOTHING)
-    report_reason = models.ForeignKey(ReportReason, on_delete=models.PROTECT)
+    reason = models.ForeignKey(ReportReason, on_delete=models.PROTECT)
     user = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, related_name='realtor_report_user')
 
     description = models.CharField(max_length=500)

@@ -30,28 +30,41 @@ class RealtorSerializer(serializers.ModelSerializer):
 
         return super().validate(attrs)
 
+    def to_internal_value(self, data):
+        data['landline_number'] = data.get('landlineNumber', None)
+        return super().to_internal_value(data)
+
 class RealtorResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Realtor
-        fields = [
-            'user__first_name',
-            'user__last_name',
-            'user__image_full_path',
-            'bg_image_full_path',
-            'score',
-            'number_of_active_ads',
-            'description', 'number', 
-            'landline_number', 
-            'telegram',
-            'whatsapp',
-            'twitter',
-            'facebook',
-            'email',
-            'real_estate_office__name', 
-            'real_estate_office__username',
-            'blue_tick',
-        ]
+      
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.id,
+            'user':{
+                'firstName': instance.user.first_name,
+                'lastName': instance.user.last_name,
+                'imageFullPath': instance.user.image_full_path,
+            },
+            'bgImageFullPath': instance.bg_image_full_path,
+            'score': instance.score,
+            'numberOfActiveAds':instance.number_of_active_ads,
+            'description': instance.description,
+            'number': instance.number,
+            'landlineNumber': instance.landline_number,
+            'telegram': instance.telegram,
+            'whatsapp': instance.whatsapp,
+            'twitter': instance.twitter,
+            'facebook': instance.facebook,
+            'email': instance.email,
+            'blueTick': instance.blue_tick,
+            'realEstateOffice': {
+                'name': instance.real_estate_office.name,
+                'username': instance.real_estate_office.username,
+            },
+        }
 
 
 
@@ -59,16 +72,22 @@ class RealtorPreviewResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Realtor
-        fields = [
-            'id', 
-            'user__first_name', 
-            'user__last_name', 
-            'user__image_full_path', 
-            'score', 
-            'real_estate_office__name', 
-            'real_estate_office__username',
-            'blue_tick'
-        ]
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.id,
+            'user':{
+                'firstName': instance.user.first_name,
+                'lastName': instance.user.last_name,
+                'imageFullPath': instance.user.image_full_path,
+            },
+            'score': instance.score,
+            'blueTick': instance.blue_tick,
+            'realEstateOffice': {
+                'name': instance.real_estate_office.name,
+                'username': instance.real_estate_office.username,
+            },
+        }
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -92,12 +111,34 @@ class CommentSerializer(serializers.ModelSerializer):
 
         return super().validate(attrs)
 
+    def to_internal_value(self, data):
+        data = {
+            'score': data.get('score', None),
+            'description': data.get('description', None),
+            'score_reason': data.get('scoreReason', None)
+        }
+        return super().to_internal_value(data)
+
+
 class CommentResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ['id', 'owner__first_name', 'owner__last_name', 'owner__image_full_path', 'score', 'description', 'score_reason__name']
 
+    def to_representation(self, instance):
+        return {
+            'id': instance.id,
+            'owner':{
+                'firstName': instance.owner.first_name,
+                'lastName': instance.owner.last_name,
+                'imageFullPath': instance.owner.image_full_path,
+            },
+            'score': instance.score, 
+            'description': instance.description, 
+            'scoreReason': instance.score_reason.name,
+        }
+
+    
 
 class CommentScoreReasonResponseSerializer(serializers.ModelSerializer):
 
@@ -110,7 +151,7 @@ class ReportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Report
-        fields = ['report_reason', 'description']
+        fields = ['reason', 'description']
 
     def validate(self, attrs):
         

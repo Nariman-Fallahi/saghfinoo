@@ -13,7 +13,7 @@ from django.db.models import Q
 from common.utils.request import get_page_and_limit
 from common import codes
 from common.utils import validations
-from common.utils.permissions import IsAdmin, IsOwner
+from common.utils.permissions import IsAdmin, IsOwner, IsRealtor
 from common.utils.database import formated_datetime_now, ScoreManager
 
 from .serializers import RealtorSerializer, RealtorResponseSerializer, RealtorPreviewResponseSerializer, CommentSerializer, CommentResponseSerializer, CommentScoreReasonResponseSerializer, ReportSerializer, ReportReasonResponseSerializer
@@ -77,6 +77,7 @@ class CreateSearchRealtor(APIView):
                 return Response({'errors':{'reo_username':str(e)}, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
                 
             query &= Q(real_estate_office__username=req.query_params['reo_username'])
+            query &= Q(is_confirmed_by_real_estate_office=True)
 
         realtors = Realtor.objects.filter(query)[page*limit: page*limit+limit]
         realtors = RealtorPreviewResponseSerializer(realtors, many=True).data
@@ -87,6 +88,8 @@ class CreateSearchRealtor(APIView):
 
 
 class GetEditDeleteRealtorAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsRealtor]
+    authentication_classes = [JWTAuthentication]
 
     def get_permissions(self):
         if self.request.method == 'GET':
@@ -103,18 +106,14 @@ class GetEditDeleteRealtorAPIView(APIView):
         return Response({"data":realtor, 'status':200})        
 
     def put(self, req, realtor_id):
-        serializer = RealtorSerializer(req.data)
+        serializer = RealtorSerializer(data=req.data)
         if serializer.is_valid():
-            
-            try:
-                reo = Realtor.objects.values(*RealtorResponseSerializer.Meta.fields).get(is_confirmed=True, id=realtor_id)
-            except Realtor.DoesNotExist:
-                return Response({'status':404, 'code':codes.OBJ_NOT_FOUND})
 
-
-            reo.fill_from_dict(serializer.data)
-            
-            return Response({'data':''})
+            req.realtor.fill_from_dict(serializer.data)
+            req.realtor.save()
+            return Response({'msg':'done', 'status':200})
+        
+        return Response({'errors':serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})
 
 
 
@@ -163,7 +162,18 @@ class CreateGetAllCommentAPIView(APIView):
             return Response({'msg':'done', 'status':200})
         
         return Response({'errors':serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})
-    
+
+    def get(self, req, realtor_id):
+        try:
+            page, limit = get_page_and_limit(req, default_limit=16)
+        except ValueError as e:
+            return Response({'errors': e.dict, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
+        
+        comments = Comment.objects.filter(realtor=realtor_id).order_by('-created_at')[page*limit:page*limit+limit]
+        comments = CommentResponseSerializer(comments, many=True).data
+        return Response({'data':comments, 'status':200})
+
+
 class EditDeleteCommentAPIView(APIView):
     permission_classes = [IsAuthenticated, IsOwner]
     authentication_classes = [JWTAuthentication]
@@ -191,21 +201,6 @@ class EditDeleteCommentAPIView(APIView):
         
         return Response({'errors':serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})
     
-class GetAllRealtorCommentsAPIView(APIView):
-
-    def get(self, req, realtor_id):
-        try:
-            page, limit = get_page_and_limit(req, default_limit=16)
-        except ValueError as e:
-            return Response({'errors': e.dict, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
-        
-        comments = Comment.objects.filter(realtor=realtor_id).values(*CommentResponseSerializer.Meta.fields).order_by('-created_at')[page*limit:page*limit+limit]
-        return Response({'data':comments, 'status':200})
-    
-class DeleteCommentAPIVew(APIView):
-    permission_classes = [IsAuthenticated, IsOwner|IsAdmin]
-    authentication_classes = [JWTAuthentication]
-
     def delete(self, req, comment_id):
         try:
             comment = Comment.objects.get(id=comment_id)
@@ -231,9 +226,11 @@ class GetAllCommentScoreReasonAPIView(APIView):
             return Response({'errors':{'score':str(v)}, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
 
         if score:
-            csrs = CommentScoreReason.objects.filter(score=score).values(*CommentScoreReasonResponseSerializer.Meta.fields)
+            csrs = CommentScoreReason.objects.filter(score=score)
         else:
-            csrs = CommentScoreReason.objects.all().values(*CommentScoreReasonResponseSerializer.Meta.fields)
+            csrs = CommentScoreReason.objects.all()
+
+        csrs = CommentScoreReasonResponseSerializer(csrs, many=True).data
 
         return Response({'data':csrs,'status':200})
 
@@ -260,5 +257,6 @@ class CreateReportAPIView(APIView):
 class GetAllReportReasonsAPIView(APIView):
     
     def get(self, req):
-        reasons = ReportReason.objects.all().values(*ReportReasonResponseSerializer.Meta.fields)
+        reasons = ReportReason.objects.all()
+        reasons = ReportReasonResponseSerializer(reasons, many=True).data
         return Response({'data':reasons, 'status':200})
