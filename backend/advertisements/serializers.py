@@ -44,11 +44,11 @@ class AdvertisementSerializer(serializers.ModelSerializer):
     def validate(self, attrs): # todo
 
         validations.validate_se('city', attrs['city'], validations.validate_name)
-        validations.validate_se('main_street', attrs['main_street'], validations.validate_name)
-        validations.validate_se('side_street', attrs['side_street'], validations.validate_name)
-        validations.validate_choice_se('type_of_transaction', attrs['type_of_transaction'])
-        validations.validate_choice_se('property_type', attrs['property_type'])
-        type_of_transaction = attrs['type_of_transaction']
+        validations.validate_se('mainStreet', attrs['main_street'], validations.validate_name)
+        validations.validate_se('sideStreet', attrs['side_street'], validations.validate_name)
+        validations.validate_choice_se('typeOfTransaction', attrs['type_of_transaction'])
+        validations.validate_choice_se('propertyType', attrs['property_type'])
+        type_of_transaction = attrs['typeOfTransaction']
         
         if type_of_transaction.en_value == 'rent':
             # desposit must be 0
@@ -73,12 +73,12 @@ class AdvertisementSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({'deposit':'in full deposit transaction, this field cannot be zero'})
 
         else:
-            raise ValueError('type_of_transaction is set incurrectlly')
+            raise ValueError('typeOfTransaction is set incurrectlly')
             
-        validations.validate_choice_se('type_of_restroom', attrs['type_of_restroom'])
-        validations.validate_choice_se('cooling_system', attrs['cooling_system'])
+        validations.validate_choice_se('typeOfRestroom', attrs['type_of_restroom'])
+        validations.validate_choice_se('coolingSystem', attrs['cooling_system'])
         validations.validate_choice_se('flooring', attrs['flooring'])
-        validations.validate_choice_se('heating_system', attrs['heating_system'])
+        validations.validate_choice_se('heatingSystem', attrs['heating_system'])
         validations.validate_se('description', attrs['description'], validations.validate_description)
 
         return super().validate(attrs)

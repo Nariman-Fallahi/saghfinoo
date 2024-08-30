@@ -119,8 +119,8 @@ class CommentSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data):
         data = {
-            'score': data['score'],
-            'description': data['description'],
+            'score': data.get('score', None),
+            'description': data.get('description', None),
             'score_reason': data.get('scoreReason', None)
         }
         return super().to_internal_value(data)
@@ -141,7 +141,7 @@ class CommentResponseSerializer(serializers.ModelSerializer):
             },
             'score': instance.score, 
             'description': instance.description, 
-            'score_reason': instance.score_reason.name,
+            'scoreReason': instance.score_reason.name,
         }
 
     

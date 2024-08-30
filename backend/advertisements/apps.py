@@ -8,7 +8,7 @@ class RealEstatesConfig(AppConfig):
 
     def ready(self) -> None:
             
-            if not settings.DEBUG:
+            if settings.SAVE_DEFAULT_VALUES:
 
                 from .models import AdvertisementChoice
                 print('adding advertisement choices')

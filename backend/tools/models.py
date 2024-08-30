@@ -16,7 +16,7 @@ class Province(models.Model):
         provices_url = "https://raw.githubusercontent.com/sajaddp/list-of-cities-in-iran/main/json/provinces.json"
         provinces = json.load(urlopen(provices_url, timeout=20))
       
-        if Province.objects.all().count() != len(provinces):
+        if Province.objects.all().count() < len(provinces):
 
             print('setting up provinces')
             for province in provinces:   
@@ -51,7 +51,7 @@ class City(models.Model):
         cities_url = "https://raw.githubusercontent.com/sajaddp/list-of-cities-in-iran/main/json/cities.json"
         cities = json.load(urlopen(cities_url, timeout=20))
 
-        if Province.objects.all().count() != len(cities):
+        if Province.objects.all().count() < len(cities):
             
 
             print('saving up cities')

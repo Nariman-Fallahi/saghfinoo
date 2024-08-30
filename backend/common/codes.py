@@ -6,6 +6,8 @@ INVALID_FIELD = 'invalid_field'
 INVALID_FILE_FORMAT = 'invalid_file_format'
 MAX_LIMIT_EXCEEDED = 'max_limit_exceeded'
 OBJ_NOT_FOUND = 'obj_not_found'
+PAGE_NOT_FOUND = 'page_not_found'
+SERVER_ERROR = 'server_error'
 # Users
 
 NUMBER_DELAY = 'number_delay'
