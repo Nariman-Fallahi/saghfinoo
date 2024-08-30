@@ -8,7 +8,7 @@ class RealEstateOfficesConfig(AppConfig):
 
     def ready(self) -> None:
 
-        if not settings.DEBUG:
+        if settings.SAVE_DEFAULT_VALUES:
             try:
                 from .models import CommentScoreReason, ReportReason
                 CommentScoreReason.add_default_row()

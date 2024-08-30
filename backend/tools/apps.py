@@ -7,7 +7,7 @@ class ToolsConfig(AppConfig):
 
     def ready(self) -> None:
         
-        if not settings.DEBUG:
+        if settings.SAVE_DEFAULT_VALUES:
             # get provinces and citics and save to database
             from .models import Province, City
 
