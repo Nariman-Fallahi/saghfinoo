@@ -31,4 +31,16 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self) -> str:
         return self.first_name+' '+self.last_name+', '+self.number
     
+    def fill_from_dict(self, data: dict):
+        """this fields with be filled: first_name, last_name
+            number and email are optional fields
+            password will not change
+        """
+
+        self.number = data.get('number', self.number)
+        self.email = data.get('email', self.email)
+
+        self.first_name = data['first_name']
+        self.last_name = data['last_name']
+
 

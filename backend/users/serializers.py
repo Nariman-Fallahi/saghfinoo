@@ -33,11 +33,19 @@ class SignupSerializer(serializers.ModelSerializer):
         validations.validate_se('first_name', attrs['first_name'], validations.validate_name)
         validations.validate_se('last_name', attrs['last_name'], validations.validate_name)
 
+
         if "'" in attrs.get('token'):
             raise serializers.ValidationError({'token': "invalid token c"})
 
 
         return super().validate(attrs)
+    
+
+    def to_internal_value(self, data):
+        data['first_name'] = data.get('first_name', None)
+        data['last_name'] = data.get('last_name', None)
+        return super().to_internal_value(data)
+
 
 class SigninSerializer(serializers.Serializer):
     number = serializers.CharField(max_length=11)
@@ -72,6 +80,15 @@ class CustomUserResponseSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ['first_name', 'last_name', 'number', 'image_full_path', 'created_at', 'email', 'activity_type']
 
+    def to_representation(self, instance):
+        return {
+            'firstName': instance.first_name,
+            'lastName': instance.last_name,
+            'imageFullPath': instance.image_full_path,
+            'RigisteredAt': instance.created_at,
+            'email': instance.email,
+            'activityType': instance.activity_type
+        }
 
 class CustomUserSerializer(serializers.ModelSerializer):
     
@@ -85,6 +102,11 @@ class CustomUserSerializer(serializers.ModelSerializer):
         validations.validate_se('last_name', attrs['last_name'], validations.validate_name)
         
         return super().validate(attrs)
+
+    def to_internal_value(self, data):
+        data['first_name'] = data.get('first_name', None)
+        data['last_name'] = data.get('last_name', None)
+        return super().to_internal_value(data)
 
 
 

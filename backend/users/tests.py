@@ -86,7 +86,7 @@ class VerifyNumberTests(APITestCase):
         self.assertEqual(resp.data['code'], codes.COMPLETE_SIGNUP, resp.data)
         
         # signup
-        data2 = {'number':self.number, 'first_name':'abc', 'last_name':'abc', 'password':'1234', 'token': data['token']}
+        data2 = {'number':self.number, 'firstName':'abc', 'lastName':'abc', 'password':'1234', 'token': data['token']}
         resp = self.client.post(reverse('signup'), data2)
         self.assertEqual(resp.data['status'], 201, resp.data)
 
@@ -147,7 +147,7 @@ class SignupTests(APITestCase):
         self.number = NumberGenerator.get_number()
         self.url = reverse('signup')
         self.verify_number_url = reverse('verify_number')
-        self.default_data = {'number':self.number, 'first_name': 'abc', 'last_name':'abc', 'token': 'a', 'password': 'abc'}
+        self.default_data = {'number':self.number, 'firstName': 'abc', 'lastName':'abc', 'token': 'a', 'password': 'abc'}
         
 
     def test_without_verify_number(self):
@@ -170,7 +170,7 @@ class SignupTests(APITestCase):
         self.assertEqual(resp.data['code'], codes.COMPLETE_SIGNUP, resp.data)
         
         # signup
-        data2 = {'number':self.number, 'first_name':'abc', 'last_name':'abc', 'password':'1234', 'token': data['token']}
+        data2 = {'number':self.number, 'firstName':'abc', 'lastName':'abc', 'password':'1234', 'token': data['token']}
         resp = self.client.post(self.url, data2)
         # token = resp.data['token']
         self.assertEqual(resp.data['status'], 201, resp.data)
@@ -187,7 +187,7 @@ class SignupTests(APITestCase):
         self.assertEqual(resp.data['code'], codes.LOGIN_DONE, resp.data)
         
         # signup
-        data2 = {'number':self.number, 'first_name':'abc', 'last_name':'abc', 'password':'1234', 'token': data['token']}
+        data2 = {'number':self.number, 'firstName':'abc', 'lastName':'abc', 'password':'1234', 'token': data['token']}
         resp = self.client.post(self.url, data2)
         # token = resp.data['token']
         self.assertEqual(resp.data['status'], 400, resp.data)
@@ -197,8 +197,8 @@ class SignupTests(APITestCase):
     
         test_invalid_field(self, self.url, self.default_data, {
             'number' : characters.NUMBER_INVALID_CHARS,
-            'first_name': characters.NAME_INVALID_CHARS,
-            'last_name': characters.NAME_INVALID_CHARS,
+            'firstName': characters.NAME_INVALID_CHARS,
+            'lastName': characters.NAME_INVALID_CHARS,
         }, {})
 
     def test_success(self):
@@ -214,7 +214,7 @@ class SignupTests(APITestCase):
         self.assertEqual(resp.data['code'], codes.COMPLETE_SIGNUP, resp.data)
         
         # signup
-        data2 = {'number':self.number, 'first_name':'abc', 'last_name':'abc', 'password':'1234', 'token': data['token']}
+        data2 = {'number':self.number, 'firstName':'abc', 'lastName':'abc', 'password':'1234', 'token': data['token']}
         resp = self.client.post(self.url, data2)
         
 
@@ -232,7 +232,7 @@ class GetUserInfoAPIViewTests(APITestCase):
         resp = self.client.get(self.url, headers=self.headers)
         self.assertEqual(resp.data['status'], 200, resp.data)
         self.assertNotEqual(resp.data.get('data', ''), '', resp.data)
-        test_have_fields(self, resp.data['data'], ['first_name', 'last_name', 'number', 'image_full_path', 'created_at', 'email', 'activity_type'])
+        test_have_fields(self, resp.data['data'], ['firstName', 'lastName', 'number', 'imageFullPath', 'createdAt', 'email', 'activityType'])
 
 
         
