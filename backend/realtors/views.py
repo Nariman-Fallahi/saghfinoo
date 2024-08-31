@@ -149,7 +149,13 @@ class CreateGetAllCommentAPIView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return super().get_permissions()
+
     def post(self, req, realtor_id):
+        """Create comment for realtor"""
         serializer = CommentSerializer(data=req.data)
         if serializer.is_valid():
             try:
@@ -164,6 +170,7 @@ class CreateGetAllCommentAPIView(APIView):
         return Response({'errors':serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})
 
     def get(self, req, realtor_id):
+        """Get Realtor comments by page"""
         try:
             page, limit = get_page_and_limit(req, default_limit=16)
         except ValueError as e:
