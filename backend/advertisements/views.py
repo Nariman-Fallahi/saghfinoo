@@ -159,7 +159,7 @@ class CreateAdvertisementAPIView(APIView):
             else:
                 kwargs[field_name] = value
         
-        ads = Advertisement.objects.filter(**kwargs)[page*limit: page*limit+limit]
+        ads = Advertisement.objects.filter(**kwargs).order_by('-created_at')[page*limit: page*limit+limit]
         ads = AdvertisementPreviewResponseSerializer(ads, many=True)
         total_pages = math.ceil(Advertisement.objects.filter(**kwargs).count()/limit)
 
