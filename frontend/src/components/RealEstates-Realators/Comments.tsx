@@ -74,69 +74,89 @@ export default function Comments({
 
   return (
     <div className="w-full flex flex-col mt-8 p-4 md:mt-14 md:p-8">
-      <Title title="نظرات کاربران " /> 2
-      <div className="mt-4 md:mt-8">
-        <Swiper
-          ref={swiperRef}
-          navigation={true}
-          modules={[Navigation]}
-          slidesPerView={"auto"}
-          spaceBetween={20}
-          loop={false}
-          freeMode={true}
-          className="w-full"
-        >
-          {status === "pending" && isSkeleton ? (
-            <div className="flex justify-between">
-              <S_Comments />
-            </div>
-          ) : (
-            <>
-              {completeData?.map((item) => {
-                return (
-                  <SwiperSlide className="mb-1 !w-fit" key={item.id}>
-                    <div
-                      className="!w-[242px] h-[125px] md:h-[250px] p-2 flex flex-col shadow relative
+      <Title title="نظرات کاربران " />
+
+      {status === "success" && completeData && completeData.length <= 1 && (
+        <div className="flex flex-col items-center mt-5 w-full">
+          <Image
+            width={130}
+            height={130}
+            className="md:w-52 md:h-52 lg:w-56 lg:h-56"
+            src="/icons/NoDataPage.svg"
+            alt="NO Data"
+          />
+          <p className="text-sm md:text-base lg:text-lg">
+            متاسفانه نظری برای نمایش یافت نشد ):
+          </p>
+        </div>
+      )}
+
+      {completeData && completeData.length >= 1 && (
+        <div className="mt-4 md:mt-8">
+          <Swiper
+            ref={swiperRef}
+            navigation={true}
+            modules={[Navigation]}
+            slidesPerView={"auto"}
+            spaceBetween={20}
+            loop={false}
+            freeMode={true}
+            centeredSlides={false}
+            initialSlide={0}
+            className="w-full"
+          >
+            {status === "pending" && isSkeleton ? (
+              <div className="flex justify-between">
+                <S_Comments />
+              </div>
+            ) : (
+              <>
+                {completeData?.map((item) => {
+                  return (
+                    <SwiperSlide className="mb-1 !w-fit" key={item.id}>
+                      <div
+                        className="!w-[242px] h-[125px] md:h-[250px] p-2 flex flex-col shadow relative
                        rounded-2xl border border-[#EDEDED] pb-3 md:items-center md:p-5"
-                    >
-                      <div className="flex md:flex-col md:items-center">
-                        <Image
-                          width={38}
-                          height={38}
-                          className="rounded-full md:w-[60px] md:h-[60px]"
-                          sizes="(min-width: 768px) 60px, 60px"
-                          src={
-                            item.owner__image_full_path ||
-                            "/icons/profile-circle.svg"
-                          }
-                          alt="Profile Image"
-                        />
-                        <div className="flex flex-col mr-3 md:mr-0 md:items-center">
-                          <p className="text-xs md:text-sm md:mt-3 line-clamp-1">
-                            {`${item.owner__first_name} ${item.owner__last_name}`}
-                          </p>
-                          <p
-                            className="w-max text-xs mt-2 pb-[2px] border-b border-red-500 md:text-sm md:mt-3
-                           md:w-fit"
-                          >
-                            {`${numberToPersian(item.score)} از ۵`}
-                          </p>
-                        </div>
-                      </div>
-                      <p
-                        style={{ overflowWrap: "break-word" }}
-                        className="mt-2 text-xs md:text-sm line-clamp-3 md:text-center justify-between"
                       >
-                        {item.description}
-                      </p>
-                    </div>
-                  </SwiperSlide>
-                );
-              })}
-            </>
-          )}
-        </Swiper>
-      </div>
+                        <div className="flex md:flex-col md:items-center">
+                          <Image
+                            width={38}
+                            height={38}
+                            className="rounded-full md:w-[60px] md:h-[60px]"
+                            sizes="(min-width: 768px) 60px, 60px"
+                            src={
+                              item.owner__image_full_path ||
+                              "/icons/profile-circle.svg"
+                            }
+                            alt="Profile Image"
+                          />
+                          <div className="flex flex-col mr-3 md:mr-0 md:items-center">
+                            <p className="text-xs md:text-sm md:mt-3 line-clamp-1">
+                              {`${item.owner__first_name} ${item.owner__last_name}`}
+                            </p>
+                            <p
+                              className="w-max text-xs mt-2 pb-[2px] border-b border-red-500 md:text-sm md:mt-3
+                           md:w-fit"
+                            >
+                              {`${numberToPersian(item.score)} از ۵`}
+                            </p>
+                          </div>
+                        </div>
+                        <p
+                          style={{ overflowWrap: "break-word" }}
+                          className="mt-2 text-xs md:text-sm line-clamp-3 md:text-center justify-between"
+                        >
+                          {item.description}
+                        </p>
+                      </div>
+                    </SwiperSlide>
+                  );
+                })}
+              </>
+            )}
+          </Swiper>
+        </div>
+      )}
     </div>
   );
 }

@@ -31,17 +31,18 @@ export default function ReportModal({
   page,
   access,
 }: ReportModalType) {
-  const { data: reportReasonsData } = useGetRequest<{
-    data: ReportModaltDataType[];
-  }>({
-    url:
-      page === "realEstate"
-        ? Api.GetAllReportReasonsRealEstate
-        : Api.GetAllReportReasonsRealtors,
-    key: ["getReportData"],
-    enabled: true,
-    staleTime: 10 * 60 * 1000,
-  });
+  const { data: reportReasonsData, isPending: reportReasonsPending } =
+    useGetRequest<{
+      data: ReportModaltDataType[];
+    }>({
+      url:
+        page === "realEstate"
+          ? `${Api.Reos}/${id}/report/reasons`
+          : Api.GetAllReportReasonsRealtors,
+      key: ["getReportData"],
+      enabled: true,
+      staleTime: 10 * 60 * 1000,
+    });
 
   const {
     mutate,
@@ -50,8 +51,8 @@ export default function ReportModal({
   } = usePostRequest({
     url:
       page === "realEstate"
-        ? Api.CreateReportRealEstate
-        : Api.CreateReportRealtors,
+        ? `${Api.CreateReportRealEstate}${id}`
+        : `${Api.realtors}/{id}/report`,
     key: "createReport",
     headers: {
       Authorization: `Bearer ${access}`,
@@ -95,6 +96,12 @@ export default function ReportModal({
       <p className="text-sm mt-4">لطفا دلیل گزارش خود را انتخاب کنید</p>
 
       <div className="flex w-full justify-between flex-wrap mt-4">
+        {reportReasonsPending && (
+          <div className="mt-3 w-full flex justify-center">
+            <Spinner size="sm" color="danger" />
+          </div>
+        )}
+
         {reportReasonsData?.data?.map((item) => (
           <Controller
             key={item.id}

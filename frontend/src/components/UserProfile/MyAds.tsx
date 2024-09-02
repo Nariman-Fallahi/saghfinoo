@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { Success } from "@/notification/Success";
 import { ErrorNotification } from "@/notification/Error";
 import { useGetRequest } from "@/ApiService";
-import { MyAdsDataType } from "@/types/Type";
+import { AdsDataType } from "@/types/Type";
 import { getCookie } from "cookies-next";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -39,7 +39,7 @@ export default function MyAds() {
     data: deleteAdsData,
     isPending: deleteAdsPending,
   } = usePostRequest({
-    url: `${Api.DeleteMyAds}${adDeleteId}`,
+    url: `${Api.Ad}/${adDeleteId}`,
     key: "deleteAds",
     method: "DELETE",
     headers: {
@@ -47,17 +47,15 @@ export default function MyAds() {
     },
   });
 
-  const { data, isPending, refetch } = useGetRequest<{ data: MyAdsDataType[] }>(
-    {
-      url: `${Api.GetAllMyAds}${pageNumber}`,
-      key: ["getALlMyAds", JSON.stringify(pageNumber)],
-      enabled: true,
-      staleTime: 10 * 60 * 1000,
-      headers: {
-        Authorization: `Bearer ${access}`,
-      },
-    }
-  );
+  const { data, isPending, refetch } = useGetRequest<{ data: AdsDataType[] }>({
+    url: `${Api.GetAllMyAds}?page=${pageNumber}`,
+    key: ["getALlMyAds", pageNumber.toString()],
+    enabled: true,
+    staleTime: 10 * 60 * 1000,
+    headers: {
+      Authorization: `Bearer ${access}`,
+    },
+  });
 
   const clickDeleteAds = (id: number) => {
     setAdDeleteId(id);

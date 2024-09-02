@@ -89,12 +89,12 @@ export type userInfoDataType = {
   };
 };
 
-export type getProvincesType = {
+export type ProvincesType = {
   id: number;
   name: string;
 };
 
-export type getProvinceCitiesType = {
+export type CitiesType = {
   name: string;
 };
 
@@ -107,61 +107,76 @@ export type allrealEstateOfficesDataType = {
   name: string;
   username: string;
   city: string;
-  main_street: string;
-  sub_street: string;
+  mainStreet: string;
+  subStreet: string;
   score: number;
-  number_of_active_ads: number;
-  number_of_comments: number;
-  image_full_path?: string;
-  blue_tick: boolean;
+  numberOfActiveAds: number;
+  numberOfComments: number;
+  imageFullPath?: string;
+  blueTick: boolean;
 };
 
 export type realEstateOfficesType = {
-  data: {
-    name: string;
-    description: string;
-    username: string;
-    city: string;
-    main_street: string;
-    sub_street: string;
-    number: string;
-    landline_number: string;
-    score: number;
-    number_of_active_ads: number;
-    number_of_comments: number;
-    image_full_path?: string;
-    site: string;
-    linkedin: string;
-    telegram: string;
-    instagram: string;
-    blue_tick: boolean;
-    bg_image_full_path?: string;
-  };
-  status: number;
+  name: string;
+  description: string;
+  username: string;
+  city: string;
+  mainStreet: string;
+  subStreet: string;
+  number: string;
+  landlineNumber: string;
+  score: number;
+  numberOfActiveAds: number;
+  numberOfComments: number;
+  imageFullPath?: string;
+  twitter: string;
+  whatsapp: string;
+  facebook: string;
+  telegram: string;
+  email: string;
+  site: string;
+  blueTick: boolean;
+  bgImageFullPath?: string;
 };
 
 export type allRealtorDataType = {
-  id: number;
-  user__first_name: string;
-  user__last_name: string;
-  user__image_full_path: string;
+  id: string;
+  user: {
+    firstName: string;
+    lastName: string;
+    imageFullPath: string;
+  };
   score: number;
-  real_estate_office__name: string;
-  real_estate_office__username: string;
+  blueTick: boolean;
+  realEstateOffice: {
+    name: string;
+    username: string;
+  };
 };
 
-export type realtorDataType = {
-  user__first_name: string;
-  user__last_name: string;
-  user__image_full_path: string;
-  bg_image_full_path: string;
+export type RealtorDataType = {
+  id: number;
+  user: {
+    firstName: string;
+    lastName: string;
+    imageFullPath: string;
+  };
+  bgImageFullPath: string;
   score: number;
-  number_of_active_ads: number;
+  numberOfActiveAds: number;
   description: string;
   number: string;
-  landline_number: string;
-  real_estate_office__name: string;
-  real_estate_office__username: string;
+  landlineNumber: string;
+  telegram: string;
+  whatsapp: string;
+  twitter: string;
+  facebook: string;
+  email: string;
+  blueTick: boolean;
+  realEstateOffice: {
+    name: string;
+    username: string;
+  };
 };
 
 export type DataModalREA = {
@@ -172,11 +187,11 @@ export type DataModalREA = {
     landlineNumber: string | undefined;
   };
   socialNetwork: {
-    telegram?: string;
-    whatsapp?: string;
-    x?: string;
-    facebook?: string;
-    email?: string;
+    twitter: string | undefined;
+    whatsapp: string | undefined;
+    facebook: string | undefined;
+    telegram: string | undefined;
+    email: string | undefined;
   };
 };
 
@@ -252,17 +267,17 @@ export type AdPostingApi = {
   description: string | undefined;
 };
 
-export type MyAdsDataType = {
+export type AdsDataType = {
   id: number;
-  image_full_path: string;
-  type_of_transaction__value: string;
-  property_type__value: string;
+  imageFullPath: string;
+  typeOfTransaction: string;
+  propertyType: string;
   area: number;
   city: string;
-  main_street: string;
+  mainStreet: string;
   deposit: number;
   rent: number;
-  is_confirmed: boolean;
+  // is_confirmed: boolean;
 };
 
 export type CommentType = {
@@ -278,7 +293,8 @@ export type CommentType = {
 export type AdsFilterDataType = {
   province?: { value?: string; id?: number };
   city?: string;
-  price?: { min: number; max: number };
+  rentalPrice?: { min: number; max: number };
+  depositPrice?: { min: number; max: number };
   metre?: { min: number; max: number };
 };
 

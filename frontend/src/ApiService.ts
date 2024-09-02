@@ -14,33 +14,26 @@ export enum Api {
   GetUserInfo = "/api/v1/users/get-user-info",
   UploadProfileImage = "/api/v1/users/upload-profile-image",
 
-  // real-estate-offices Api
-  GetAllRealEstateOffices = "/api/v1/real-estate-offices/search?page=",
-  GetRealEstateOffices = "/api/v1/real-estate-offices/get/",
-  GetAllReportReasonsRealEstate = "/api/v1/real-estate-offices/report/get-all-reasons",
-  CreateReportRealEstate = "/api/v1/real-estate-offices/report/create",
+  // reos Api
+  Reos = "/api/v1/reos",
+  CreateReportRealEstate = "/api/v1/reos/report/create/",
 
   // realtors Api
-  GetRealEstateConsultants = "/api/v1/realtors/search?reo_username=",
-  GetAllRealtor = "/api/v1/realtors/search?page=",
-  GetRealtor = "/api/v1/realtors/get/",
-  CreateRealtorsComment = "/api/v1/realtors/comment/create/",
-  GetRealtorComments = "/api/v1/realtors/comment/get-all/",
-  GetAllScoreReasons = "/api/v1/realtors/comment/get-all-score-reasons?",
-  GetAllReportReasonsRealtors = "/api/v1/realtors/report/get-all-reasons",
-  CreateReportRealtors = "/api/v1/realtors/report/create",
+  realtors = "/api/v1/realtors",
 
-  // advertisements Api
-  GetSelectionData = "/api/v1/advertisements/create?key=",
-  UploadImageFile = "/api/v1/advertisements/upload-image/",
-  DeleteAllMyAds = "/api/v1/advertisements/delete-all-for-realtor",
-  AdPosting = "/api/v1/advertisements/create",
-  GetAllMyAds = "/api/v1/advertisements/get-all-for-realtor?page=",
-  DeleteMyAds = "/api/v1/advertisements/delete/",
+  // GetRealEstateConsultants = "/api/v1/realtors/search?reo_username=",
+  GetAllScoreReasons = "/api/v1/realtors/comments/score-reasons",
+  GetAllReportReasonsRealtors = "/api/v1/realtors/report/reasons",
+
+  // ads Api
+  Ad = "/api/v1/ads",
+  GetSelectionData = "/api/v1/ads/choices",
+  DeleteAllMyAds = "/api/v1/ads/self-all",
+  GetAllMyAds = "/api/v1/ads/self",
 
   // tools Api
-  GetProvinces = "/api/v1/tools/get-provinces",
-  GetProvinceCities = "/api/v1/tools/get-province-cities/",
+  GetProvinces_Cities = "/api/v1/tools/provinces",
+  SearchCity = "/api/v1/tools/cities",
 }
 
 const axiosInstance = axios.create({

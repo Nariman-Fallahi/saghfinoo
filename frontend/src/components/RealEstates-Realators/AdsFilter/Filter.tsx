@@ -7,21 +7,23 @@ import { Api } from "@/ApiService";
 import Skeleton from "react-loading-skeleton";
 import {
   AdsFilterDataType,
-  getProvincesType,
+  ProvincesType,
   SelectionDataType,
 } from "@/types/Type";
-import { getProvinceCitiesType } from "@/types/Type";
-import { useSizeBtn } from "@/store/Size";
-import Select, { components, MenuProps } from "react-select";
-import Input from "./Input";
+import { CitiesType } from "@/types/Type";
+import Select, { MenuProps } from "react-select";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { getCookie } from "cookies-next";
+import SelectionCustomMenu from "./SelectionCustomMenu";
+import { isMobile } from "@/constant/Constants";
 
 export type InputsType = {
   city: string;
   propertyType: number;
-  priceMin: number;
-  priceMax: number;
+  rentalPriceMin: number;
+  rentalPriceMax: number;
+  depositPriceMin: number;
+  depositPriceMax: number;
   metreMin: number;
   metreMax: number;
 };
@@ -31,11 +33,11 @@ type FilterType = {
   filterData: AdsFilterDataType | undefined;
 };
 
-//TODO Add Api
+export type OpenCustomMenu = "rent" | "deposit" | "metre" | null;
 
 export const SelectStyle = {
   control: (state: { menuIsOpen: any }) =>
-    `!cursor-pointer text-sm lg:text-base ${
+    `!cursor-pointer text-xs lg:text-base ${
       state.menuIsOpen ? "blueShadow" : ""
     }`,
   menu: () => "!w-[70%] md:!w-full text-sm md:text-[15.5px] lg:text-base",
@@ -43,7 +45,7 @@ export const SelectStyle = {
 
 export default function Filter({ filterData, setFilterData }: FilterType) {
   const [openFilterModal, setOpenFilterModal] = useState<boolean>(false);
-  const [openMenuPrice, setOpenMenuPrice] = useState<boolean>(false);
+  const [openCustomMenu, setOpenCustomMenu] = useState<OpenCustomMenu>(null);
   const access = getCookie("access");
   const [optionsCitiesData, setOptionsCitiesData] = useState<
     | {
@@ -52,34 +54,30 @@ export default function Filter({ filterData, setFilterData }: FilterType) {
       }[]
     | undefined
   >();
-  // const { filterValues, setFilterValues } = useFilterValue();
-  const { sizeBtn } = useSizeBtn();
   // Get provinces
   const { data: provincesData, status: provincesStatus } = useGetRequest<{
-    data: getProvincesType[];
+    data: ProvincesType[];
   }>({
-    url: Api.GetProvinces,
+    url: Api.GetProvinces_Cities,
     key: ["getProvinces"],
     enabled: true,
     staleTime: 10 * 60 * 1000,
   });
 
   // Get provinceCities
-  const {
-    data: citiesData,
-    status: citiesStatus,
-    refetch,
-  } = useGetRequest<{ data: getProvinceCitiesType[] }>({
-    url: `${Api.GetProvinceCities}${filterData?.province?.id}`,
+  const { data: citiesData, refetch } = useGetRequest<{ data: CitiesType[] }>({
+    url: `${Api.GetProvinces_Cities}/${filterData?.province?.id}/cities`,
     key: ["getCities", JSON.stringify(filterData?.province?.id)],
     enabled: false,
     staleTime: 10 * 60 * 1000,
   });
 
+  // Get propertyTypeData
+
   const { data: propertyTypeData } = useGetRequest<{
     data: SelectionDataType[];
   }>({
-    url: `${Api.GetSelectionData}property_type`,
+    url: `${Api.GetSelectionData}?key=property_type`,
     key: ["getPropertyType"],
     enabled: true,
     staleTime: 10 * 60 * 1000,
@@ -91,12 +89,19 @@ export default function Filter({ filterData, setFilterData }: FilterType) {
   const {
     register,
     handleSubmit,
-    control,
-    trigger,
     formState: { errors },
   } = useForm<InputsType>();
 
-  const onSubmit: SubmitHandler<InputsType> = (data) => {};
+  const onSubmit: SubmitHandler<InputsType> = (data) => {
+    setFilterData((prevState) => ({
+      ...prevState,
+      city: data.city,
+      rentalPrice: { min: data.rentalPriceMin, max: data.rentalPriceMax },
+      depositPrice: { min: data.depositPriceMin, max: data.depositPriceMax },
+      metre: { min: data.metreMin, max: data.metreMax },
+    }));
+    setOpenCustomMenu(null);
+  };
 
   useEffect(() => {
     refetch();
@@ -118,154 +123,180 @@ export default function Filter({ filterData, setFilterData }: FilterType) {
     }
   }, [citiesData?.data, filterData?.province]);
 
-  console.log(propertyTypeData);
-
   const optionPropertyTypeData = propertyTypeData?.data.map((item) => ({
     value: item.id,
     label: item.value,
   }));
 
-  // PriceSelectionCustomMenu
-
-  const PriceSelectionCustomMenu = (props: MenuProps) => {
+  const RentalPriceSelectionCustomMenu = (props: MenuProps) => {
     return (
-      <components.Menu {...props}>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col w-full text-center"
-          onMouseDown={(e) => e.stopPropagation()}
-          onTouchStart={(e) => e.stopPropagation()}
-          onKeyDown={(e) => e.stopPropagation()}
-          onClick={() => setOpenMenuPrice(true)}
-        >
-          <Input
-            title=""
-            displayMode="column"
-            register={register}
-            nameMin="priceMin"
-            nameMax="priceMax"
-            placeholder={{ min: "۲۰۰,۰۰۰", max: "۴۰۰,۰۰۰" }}
-            unit="تومان"
-            rules={{ required: "لطفا مقادیر را وارد کنید" }}
-            error={errors.priceMin?.message || errors.priceMax?.message}
-          />
-
-          <div className="w-full flex justify-between pb-3 gap-3 px-4">
-            <Button
-              type="submit"
-              className="w-1/2 mt-3 bg-[#CB1B1B] !rounded"
-              size="sm"
-              radius="sm"
-              color="danger"
-            >
-              ثبت
-            </Button>
-
-            <Button
-              className="w-1/2 mt-3 !rounded"
-              size="sm"
-              radius="sm"
-              color="default"
-              onPress={() => setOpenMenuPrice(false)}
-            >
-              بستن
-            </Button>
-          </div>
-        </form>
-      </components.Menu>
+      <SelectionCustomMenu
+        register={register}
+        nameMin="rentalPriceMin"
+        nameMax="rentalPriceMax"
+        handleSubmit={handleSubmit}
+        onSubmit={onSubmit}
+        props={props}
+        setOpenCustomMenu={setOpenCustomMenu}
+        errors={
+          errors.rentalPriceMin?.message || errors.rentalPriceMax?.message
+        }
+      />
     );
   };
 
-  // END PriceSelectionCustomMenu
+  const DepositPriceSelectionCustomMenu = (props: MenuProps) => {
+    return (
+      <SelectionCustomMenu
+        register={register}
+        nameMin="depositPriceMin"
+        nameMax="depositPriceMax"
+        handleSubmit={handleSubmit}
+        onSubmit={onSubmit}
+        props={props}
+        setOpenCustomMenu={setOpenCustomMenu}
+        errors={
+          errors.depositPriceMin?.message || errors.depositPriceMax?.message
+        }
+      />
+    );
+  };
+
+  const MetreSelectionCustomMenu = (props: MenuProps) => {
+    return (
+      <SelectionCustomMenu
+        register={register}
+        nameMin="metreMin"
+        nameMax="metreMax"
+        handleSubmit={handleSubmit}
+        onSubmit={onSubmit}
+        props={props}
+        setOpenCustomMenu={setOpenCustomMenu}
+        errors={
+          errors.depositPriceMin?.message || errors.depositPriceMax?.message
+        }
+      />
+    );
+  };
 
   return (
     <>
-      {provincesStatus === "pending" ? (
-        <div className="mt-5 md:mt-10">
-          <Skeleton width={100} height={20} className="md:!w-[250px]" />
-        </div>
-      ) : (
-        <>
-          {/* Mobile */}
-          <Button
-            variant="bordered"
-            size={sizeBtn}
-            className="w-1/4 border mt-5 rounded md:mt-10 md:hidden"
-            onPress={() => setOpenFilterModal(true)}
-          >
-            <div className="flex items-center">
-              <Image
-                width={16}
-                height={16}
-                src="/icons/filter-search.svg"
-                alt=""
-              />
-              <span className="mr-1">فیلترها</span>
-            </div>
-          </Button>
-          {/* Desktop */}
-          <div className="hidden md:flex items-center mt-6 w-full gap-4">
-            <div className="w-44">
-              <Select
-                placeholder="انتخاب استان"
-                onChange={(newValue) =>
-                  setFilterData((prevState) => ({
-                    province: {
-                      ...prevState,
-                      value: newValue?.label,
-                      id: newValue?.value,
-                    },
-                  }))
-                }
-                options={optionsProvincesData}
-                classNames={SelectStyle}
-              />
-            </div>
-
-            <div className="w-44">
-              <Select
-                placeholder="انتخاب شهرستان"
-                onChange={(newValue) =>
-                  setFilterData((prevState) => ({
-                    ...prevState,
-                    city: newValue?.value,
-                  }))
-                }
-                options={optionsCitiesData}
-                isDisabled={!citiesData?.data}
-                classNames={SelectStyle}
-              />
-            </div>
-
-            <div className="w-44">
-              <Select
-                components={{ Menu: PriceSelectionCustomMenu }}
-                options={[]}
-                placeholder="انتخاب قیمت"
-                isSearchable={false}
-                menuIsOpen={openMenuPrice}
-                onMenuOpen={() => setOpenMenuPrice(true)}
-                classNames={SelectStyle}
-                styles={{
-                  menu: (provided) => ({
-                    ...provided,
-                    width: "230px !important",
-                  }),
-                }}
-              />
-            </div>
+      <div className="mt-1 md:mt-5">
+        {/* Mobile */}
+        <Button
+          variant="bordered"
+          size={isMobile ? "sm" : "md"}
+          className="w-1/4 border mt-5 rounded md:mt-10 md:hidden"
+          onPress={() => setOpenFilterModal(true)}
+        >
+          <div className="flex items-center">
+            <Image
+              width={16}
+              height={16}
+              src="/icons/filter-search.svg"
+              alt=""
+            />
+            <span className="mr-1">فیلترها</span>
           </div>
-          <ModalFilter
-            openFilterModal={openFilterModal}
-            setOpenFilterModal={setOpenFilterModal}
-            optionPropertyTypeData={optionPropertyTypeData}
-            optionsCitiesData={optionsCitiesData}
-            optionsProvincesData={optionsProvincesData}
-            filterData={filterData}
-            setFilterData={setFilterData}
-          />
-        </>
-      )}
+        </Button>
+        {/* Desktop */}
+        <div className="hidden md:flex items-center mt-6 w-full gap-4">
+          <div className="w-44">
+            <Select
+              placeholder="انتخاب استان"
+              onChange={(newValue) =>
+                setFilterData((prevState) => ({
+                  province: {
+                    ...prevState,
+                    value: newValue?.label,
+                    id: newValue?.value,
+                  },
+                }))
+              }
+              options={optionsProvincesData}
+              classNames={SelectStyle}
+            />
+          </div>
+
+          <div className="w-44">
+            <Select
+              placeholder="انتخاب شهرستان"
+              onChange={(newValue) =>
+                setFilterData((prevState) => ({
+                  ...prevState,
+                  city: newValue?.value,
+                }))
+              }
+              options={optionsCitiesData}
+              isDisabled={!citiesData?.data}
+              classNames={SelectStyle}
+            />
+          </div>
+
+          <div className="w-44">
+            <Select
+              components={{ Menu: RentalPriceSelectionCustomMenu }}
+              options={[]}
+              placeholder="قیمت اجاره"
+              isSearchable={false}
+              menuIsOpen={openCustomMenu === "rent"}
+              onMenuOpen={() => setOpenCustomMenu("rent")}
+              classNames={SelectStyle}
+              styles={{
+                menu: (provided) => ({
+                  ...provided,
+                  width: "230px !important",
+                }),
+              }}
+            />
+          </div>
+
+          <div className="w-44">
+            <Select
+              components={{ Menu: DepositPriceSelectionCustomMenu }}
+              options={[]}
+              placeholder="قیمت رهن"
+              isSearchable={false}
+              menuIsOpen={openCustomMenu === "deposit"}
+              onMenuOpen={() => setOpenCustomMenu("deposit")}
+              classNames={SelectStyle}
+              styles={{
+                menu: (provided) => ({
+                  ...provided,
+                  width: "230px !important",
+                }),
+              }}
+            />
+          </div>
+
+          <div className="w-44">
+            <Select
+              components={{ Menu: MetreSelectionCustomMenu }}
+              options={[]}
+              placeholder="انتخاب متر"
+              isSearchable={false}
+              menuIsOpen={openCustomMenu === "metre"}
+              onMenuOpen={() => setOpenCustomMenu("metre")}
+              classNames={SelectStyle}
+              styles={{
+                menu: (provided) => ({
+                  ...provided,
+                  width: "230px !important",
+                }),
+              }}
+            />
+          </div>
+        </div>
+        <ModalFilter
+          openFilterModal={openFilterModal}
+          setOpenFilterModal={setOpenFilterModal}
+          optionPropertyTypeData={optionPropertyTypeData}
+          optionsCitiesData={optionsCitiesData}
+          optionsProvincesData={optionsProvincesData}
+          filterData={filterData}
+          setFilterData={setFilterData}
+        />
+      </div>
     </>
   );
 }

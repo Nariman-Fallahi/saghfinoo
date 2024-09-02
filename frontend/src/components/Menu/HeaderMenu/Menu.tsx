@@ -3,11 +3,9 @@ import MobileMenu from "./MobileMenu";
 import DesktopMenu from "./DesktopMenu";
 import { navigationMenuType } from "@/types/Type";
 import { getCookie } from "cookies-next";
-import { useEffect } from "react";
 import Register from "@/components/Register/Register";
 import { Api } from "@/ApiService";
 import { useGetRequest } from "@/ApiService";
-import { useState } from "react";
 import { userInfoDataType } from "@/types/Type";
 import Link from "next/link";
 import Image from "next/image";
@@ -15,15 +13,14 @@ import { usePathname } from "next/navigation";
 import { Button } from "@nextui-org/button";
 import { useRouter } from "next-nprogress-bar";
 import { isMobile } from "@/constant/Constants";
-import { useSizeBtn } from "@/store/Size";
 import { ErrorNotification } from "@/notification/Error";
 
 export default function Menu() {
   const access = getCookie("access");
   const router = useRouter();
   const currentPath = usePathname();
-  const { sizeBtn } = useSizeBtn();
-  const { data, status, fetchStatus } = useGetRequest<userInfoDataType>({
+
+  const { data, status } = useGetRequest<userInfoDataType>({
     url: Api.GetUserInfo,
     key: ["getUserInfo"],
     headers: {
@@ -108,7 +105,7 @@ export default function Menu() {
             ? router.push("/adPosting")
             : ErrorNotification("ابتدا وارد حساب کاربری خود شوید.")
         }
-        size={sizeBtn}
+        size={isMobile ? "sm" : "md"}
         variant="light"
         className="p-1 px-2 border border-red-600 text-[12px] font-medium
        rounded-[8px] text-red-600 md:text-[12.7px] md:p-0 lg:text-sm md:rounded-[0.35rem]"

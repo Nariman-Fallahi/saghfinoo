@@ -23,7 +23,7 @@ export default function MobileMenu({
   AdPostingBtn,
   isLogin,
 }: mobileMenuType) {
-  const [openMenu, setOpenMenu] = useState<boolean | null>(null);
+  const [openMenu, setOpenMenu] = useState<"open" | "close" | null>(null);
   const { setOpen } = useModalStore();
   const router = useRouter();
 
@@ -36,7 +36,7 @@ export default function MobileMenu({
   };
 
   useEffect(() => {
-    if (openMenu && typeof window !== "undefined") {
+    if (openMenu === "open" && typeof window !== "undefined") {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
@@ -54,7 +54,7 @@ export default function MobileMenu({
           size="sm"
           radius="full"
           variant="light"
-          onPress={() => setOpenMenu(true)}
+          onPress={() => setOpenMenu("open")}
         >
           <Image width={24} height={24} src="/icons/menu.svg" alt="" />
         </Button>
@@ -64,7 +64,11 @@ export default function MobileMenu({
 
       <div
         className={`absolute w-full h-screen bg-white hidden z-50 top-0 overflow-y-auto ${
-          openMenu ? "openMenu" : "closeMenu"
+          openMenu === "open"
+            ? "openMenu"
+            : openMenu === "close"
+            ? "closeMenu"
+            : ""
         }`}
       >
         <div className="w-full flex flex-col py-5">
@@ -73,7 +77,7 @@ export default function MobileMenu({
               isIconOnly
               size="sm"
               variant="light"
-              onPress={() => setOpenMenu(false)}
+              onPress={() => setOpenMenu("close")}
             >
               <Image
                 width={24}
@@ -92,7 +96,7 @@ export default function MobileMenu({
               width={isLogin ? 36 : 20}
               height={isLogin ? 36 : 20}
               src={
-               isLogin && userInfoData?.data.image_full_path ||
+                (isLogin && userInfoData?.data.image_full_path) ||
                 "/icons/profile-circle.svg"
               }
               alt=""

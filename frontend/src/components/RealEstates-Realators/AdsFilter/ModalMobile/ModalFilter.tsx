@@ -44,6 +44,7 @@ export default function ModalFilter({
     register,
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = useForm<InputsType>();
 
@@ -51,9 +52,11 @@ export default function ModalFilter({
     setFilterData((prevState) => ({
       ...prevState,
       city: data.city,
-      price: { min: data.priceMin, max: data.priceMax },
+      rentalPrice: { min: data.rentalPriceMin, max: data.rentalPriceMax },
+      depositPrice: { min: data.depositPriceMin, max: data.depositPriceMax },
       metre: { min: data.metreMin, max: data.metreMax },
     }));
+     setOpenFilterModal(false);
   };
 
   return (
@@ -140,14 +143,31 @@ export default function ModalFilter({
                   </div>
 
                   <Input
-                    title="قیمت"
+                    title="قیمت اجاره"
                     displayMode="row"
-                    error={errors.priceMin?.message || errors.priceMax?.message}
-                    nameMin="priceMin"
-                    nameMax="priceMax"
+                    nameMin="rentalPriceMin"
+                    nameMax="rentalPriceMax"
                     register={register}
                     placeholder={{ min: "۲۰۰,۰۰۰", max: "۴۰۰,۰۰۰" }}
                     unit="تومان"
+                    error={
+                      errors.rentalPriceMin?.message ||
+                      errors.rentalPriceMax?.message
+                    }
+                  />
+
+                  <Input
+                    title="قیمت رهن"
+                    displayMode="row"
+                    nameMin="depositPriceMin"
+                    nameMax="depositPriceMax"
+                    register={register}
+                    placeholder={{ min: "۲۰۰,۰۰۰", max: "۴۰۰,۰۰۰" }}
+                    unit="تومان"
+                    error={
+                      errors.depositPriceMin?.message ||
+                      errors.depositPriceMax?.message
+                    }
                   />
 
                   <Input
@@ -159,14 +179,16 @@ export default function ModalFilter({
                     register={register}
                     placeholder={{ min: "۱۲۰", max: "۲۰۰" }}
                     unit="متر"
-                    
                   />
 
                   <div className="w-[-webkit-fill-available] bg-white bottom-0 absolute p-3 flex justify-between">
                     <Button
                       size="sm"
                       variant="bordered"
-                      onPress={onClose}
+                      onPress={() => {
+                        onClose();
+                        reset();
+                      }}
                       className="w-[48%] border"
                     >
                       حذف فیلترها
@@ -175,11 +197,6 @@ export default function ModalFilter({
                       className="text-white bg-[#CB1B1B] w-[48%]"
                       size="sm"
                       type="submit"
-                      // onPress={() => {
-                      //   onClose;
-                      //   handleSubmit(onSubmit);
-                      // alert('کلسک شد')
-                      // }}
                     >
                       جست‌جو
                     </Button>

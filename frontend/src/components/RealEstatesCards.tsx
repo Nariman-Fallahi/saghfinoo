@@ -1,4 +1,3 @@
-"use client";
 import Image from "next/image";
 import { Button } from "@nextui-org/button";
 import { useEffect } from "react";
@@ -17,14 +16,14 @@ type RealEstatesCardsType = {
     | undefined;
   pageNumber: number;
   setPageNumber: (value: SetStateAction<number>) => void;
-  status: "error" | "success" | "pending";
+  isPending: boolean;
 };
 
 export default function RealEstatesCards({
   data,
   pageNumber,
   setPageNumber,
-  status,
+  isPending,
 }: RealEstatesCardsType) {
   const router = useRouter();
 
@@ -35,7 +34,7 @@ export default function RealEstatesCards({
   return (
     <>
       <div className="w-full flex flex-wrap p-3 justify-between md:p-5">
-        {status === "pending" &&
+        {isPending &&
           Array.from({ length: 9 }).map((_, index) => (
             <div
               key={index}
@@ -75,14 +74,14 @@ export default function RealEstatesCards({
                   width={50}
                   height={50}
                   className="rounded-full mt-2 md:w-[80px] md:h-[80px]"
-                  src={item.image_full_path || "/icons/archive-minus.svg"}
+                  src={item.imageFullPath || "/icons/archive-minus.svg"}
                   alt=""
                 />
                 <div className="flex items-center mt-4 ">
-                  <p className="font-bold md:text-xl">
+                  <p className="font-bold md:text-xl truncate">
                     مشاور املاک {item.name}
                   </p>
-                  {item.blue_tick && (
+                  {item.blueTick && (
                     <Image
                       width={15}
                       height={15}
@@ -92,22 +91,22 @@ export default function RealEstatesCards({
                     />
                   )}
                 </div>
-                <p className="mt-2 text-[#717171] md:text-lg">
-                  {item.city}، {item.main_street}، {item.sub_street}
+                <p className="mt-2 text-[#717171] md:text-lg text-center">
+                  {item.city}، {item.mainStreet}، {item.subStreet}
                 </p>
                 <p className="mt-2 text-[#717171] md:text-lg">
                   میزان رضایت مندی: {item.score} از 5
                 </p>
                 <p className="mt-2 text-[#717171] md:text-lg">
-                  آگهی های فعال: {item.number_of_active_ads}
+                  آگهی های فعال: {item.numberOfActiveAds}
                 </p>
-                {item.number_of_comments >= 1 ? (
+                {item.numberOfComments >= 1 ? (
                   <Button
                     className="mt-2 md:text-sm rounded-lg"
                     size="sm"
                     variant="light"
                   >
-                    مشاهده نظرات کاربران ({item.number_of_comments} نظر)
+                    مشاهده نظرات کاربران ({item.numberOfComments} نظر)
                   </Button>
                 ) : (
                   <span className="mt-2 text-[#717171] text-sm md:text-base">

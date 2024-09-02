@@ -29,17 +29,6 @@ export default function ModalREA({
   const access = getCookie("access");
 
   useEffect(() => {
-    // if (isMobile && activeModalName !== "Score") {
-    //   setSizeModal("sm");
-    // } else if (!isMobile && activeModalName !== "Score") {
-    //   setSizeModal("md");
-    // } else if (
-    //   (isMobile && activeModalName === "Score")
-    // ) {
-    //   setSizeModal("full");
-    // } else if (!isMobile && activeModalName === "Score") {
-    //   setSizeModal("xl");
-    // }
     if (activeModalName === "Score" || activeModalName === "Report") {
       setSizeModal(isMobile ? "full" : "xl");
     } else {
@@ -52,7 +41,8 @@ export default function ModalREA({
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       size={sizeModal}
-      className=" max-h-screen overflow-y-auto"
+      className="max-h-screen overflow-y-auto"
+      placement="center"
     >
       <ModalContent>
         {(onClose) => (
@@ -62,7 +52,17 @@ export default function ModalREA({
                 <ContactInfoModal data={data} />
               )}
 
-              {/* {activeModalName === "Share" && <ShareModal data={data} />} */}
+              {activeModalName === "Share" && (
+                <ShareModal
+                  data={{
+                    email: data.socialNetwork.email,
+                    facebook: data.socialNetwork.facebook,
+                    telegram: data.socialNetwork.telegram,
+                    twitter: data.socialNetwork.twitter,
+                    whatsapp: data.socialNetwork.whatsapp,
+                  }}
+                />
+              )}
 
               {activeModalName === "Score" && (
                 <ScoreModal

@@ -16,7 +16,9 @@ export default function SearchDataNotFound({ text }: SearchDataNotFound) {
           className="md:w-[300px] md:h-[300px] mt-2 lg:w-[400px] lg:h-[400px]"
         />
 
-        <p className="font-bold md:text-lg lg:text-xl mt-1 text-center">{text}</p>
+        <p className="font-bold md:text-lg lg:text-xl mt-1 text-center">
+          {text}
+        </p>
       </div>
     </div>
   );

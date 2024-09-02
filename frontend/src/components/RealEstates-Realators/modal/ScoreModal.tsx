@@ -34,10 +34,10 @@ export default function ScoreModal({
 }: ScoreModalType) {
   const {
     mutate,
-    isPending,
+    isPending : createRealtorsCommentPending,
     data: createRealtorsCommentData,
   } = usePostRequest<Inputs>({
-    url: `${Api.CreateRealtorsComment}${id}`,
+    url: `${Api.realtors}${id}/comments`,
     key: "createRealtorsComment",
     headers: {
       Authorization: `Bearer ${access}`,
@@ -64,11 +64,11 @@ export default function ScoreModal({
     mutate(data);
   };
 
-  const { data: scoreReasonsData } = useGetRequest<{
+  const { data: scoreReasonsData, isPending: scoreReasonPending } = useGetRequest<{
     data: ScoreReasonsType[];
   }>({
-    url: `${Api.GetAllScoreReasons}score=${watch("score")}`,
-    key: ["getAllScoreReasons", JSON.stringify(watch("score"))],
+    url: `${Api.GetAllScoreReasons}?score=${watch("score")}`,
+    key: ["getAllScoreReasons", watch("score").toString()],
     enabled: true,
     staleTime: 10 * 60 * 1000,
   });
@@ -119,6 +119,12 @@ export default function ScoreModal({
 
       <p className="text-sm mt-4">لطفا دلیل این امتیاز را انتخاب کنید</p>
 
+      {scoreReasonPending && (
+        <div className="mt-3">
+          <Spinner size="sm" color="danger" />
+        </div>
+      )}
+
       <div className="flex w-full justify-between flex-wrap">
         {scoreReasonsData?.data?.map((item) => (
           <Controller
@@ -168,10 +174,10 @@ export default function ScoreModal({
         className="mt-3 bg-[#CB1B1B] text-white px-3 w-1/2"
         size={isMobile ? "sm" : "md"}
         type="submit"
-        isLoading={isPending}
+        isLoading={createRealtorsCommentPending}
         spinner={<Spinner color="white" size="sm" />}
       >
-        {isPending ? "" : "ثبت امتیاز"}
+        {createRealtorsCommentPending ? "" : "ثبت امتیاز"}
       </Button>
     </form>
   );

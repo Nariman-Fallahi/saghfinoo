@@ -135,7 +135,7 @@ export default function AdFormContainer() {
     isPending,
     data: adPosting,
   } = usePostRequest<AdPostingApi>({
-    url: Api.AdPosting,
+    url: Api.Ad,
     key: "adPosting",
     headers: {
       Authorization: `Bearer ${access}`,
@@ -146,7 +146,7 @@ export default function AdFormContainer() {
     usePostRequest<{
       image: File | null;
     }>({
-      url: `${Api.UploadImageFile}${idForm}`,
+      url: `${Api.Ad}/${idForm}/image`,
       key: "uploadImageFile",
       headers: {
         Authorization: `Bearer ${access}`,

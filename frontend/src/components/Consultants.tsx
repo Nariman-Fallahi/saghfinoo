@@ -1,4 +1,3 @@
-"use client";
 import { Title } from "@/constant/Constants";
 import Image from "next/image";
 import { useState } from "react";
@@ -30,8 +29,6 @@ export default function Consultants({ userName }: ConsultantsType) {
     staleTime: 5 * 60 * 1000,
     enabled: true,
   });
-
-  console.log(data?.data);
 
   return (
     <div className="mt-10 flex flex-col w-fill p-4 md:mt-14 md:p-8">

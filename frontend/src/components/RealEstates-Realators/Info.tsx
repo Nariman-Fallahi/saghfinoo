@@ -3,8 +3,8 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { useSizeBtn } from "@/store/Size";
 import { useActiveModalName } from "@/store/ReaModalActive";
+import { isMobile } from "@/constant/Constants";
 
 type InfoType = {
   onOpen: () => void;
@@ -52,7 +52,6 @@ const ActiveMoreBtn: React.FC<ActiveMoreBtnProps> = ({
 export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
   const [activeMore, setActiveMore] = useState<boolean>(false);
   const { setActiveModalName } = useActiveModalName();
-  const { sizeBtn } = useSizeBtn();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -306,7 +305,7 @@ export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
               variant="bordered"
               color="danger"
               radius="sm"
-              size={sizeBtn}
+              size={isMobile ? 'sm' : 'md'}
               onClick={handleContactInfoBtn}
             >
               {data.titleContactInfoBtn}

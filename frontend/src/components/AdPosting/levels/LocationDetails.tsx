@@ -1,7 +1,7 @@
 import { Api } from "@/ApiService";
 import { useGetRequest } from "@/ApiService";
-import { getProvincesType } from "@/types/Type";
-import { getProvinceCitiesType } from "@/types/Type";
+import { ProvincesType } from "@/types/Type";
+import { CitiesType } from "@/types/Type";
 import { useEffect, useState } from "react";
 import { AdPostingFormDataType } from "@/types/Type";
 import { Dispatch, SetStateAction } from "react";
@@ -41,9 +41,9 @@ export default function LocationDetails({
   // Get provinces
   const { data: provincesData, isPending: provincesDataPending } =
     useGetRequest<{
-      data: getProvincesType[];
+      data: ProvincesType[];
     }>({
-      url: Api.GetProvinces,
+      url: Api.GetProvinces_Cities,
       key: ["getProvinces"],
       enabled: true,
       staleTime: 10 * 60 * 1000,
@@ -55,9 +55,9 @@ export default function LocationDetails({
     refetch,
     isPending: CitiesDataPending,
   } = useGetRequest<{
-    data: getProvinceCitiesType[];
+    data: CitiesType[];
   }>({
-    url: `${Api.GetProvinceCities}${selectedProvince}`,
+    url: `${Api.GetProvinces_Cities}/${selectedProvince}/cities`,
     key: ["getCities", JSON.stringify(selectedProvince)],
     enabled: false,
     staleTime: 10 * 60 * 1000,

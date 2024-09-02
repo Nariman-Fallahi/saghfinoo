@@ -14,7 +14,7 @@ export default function PaginationComponent({
 }: PaginationComponent) {
   return (
     totalPages &&
-    totalPages > 1 && (
+    totalPages > 1 ? (
       <div className="w-full flex mt-8 ltr justify-center">
         <Pagination
           total={totalPages}
@@ -26,5 +26,6 @@ export default function PaginationComponent({
         />
       </div>
     )
+    : null
   );
 }

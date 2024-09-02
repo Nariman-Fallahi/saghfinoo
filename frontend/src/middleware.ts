@@ -10,13 +10,7 @@ export async function middleware(req: NextRequest) {
   const pathname = url.pathname;
 
   const isProtectedPath = (path: string) => {
-    const protectedPatterns = [
-      /^\/$/,
-      /^\/proUser/,
-      /^\/adPosting/,
-      /^\/userProfile/,
-      /^\/realatorProfile\/[^\/]+$/,
-    ];
+    const protectedPatterns = [/^\/proUser/, /^\/adPosting/, /^\/userProfile/];
 
     return protectedPatterns.some((pattern) => pattern.test(path));
   };
@@ -42,8 +36,6 @@ export async function middleware(req: NextRequest) {
             maxAge: data.expire,
             secure: process.env.NODE_ENV === "production",
           });
-        } else {
-          return NextResponse.redirect(new URL("/newUser", req.url));
         }
       } else {
         return NextResponse.redirect(new URL("/newUser", req.url));
@@ -53,12 +45,12 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  if ((access && refresh && pathname === "/") || pathname === "/newUser") {
+  if (pathname === "newUser" && access && refresh) {
     return NextResponse.redirect(new URL("/proUser", req.url));
   }
 
   if (isProtectedPath(pathname) && (!access || !refresh)) {
-    return NextResponse.redirect(new URL("/newUser", req.url));
+    return NextResponse.redirect(new URL("/403", req.url));
   }
 
   return res;

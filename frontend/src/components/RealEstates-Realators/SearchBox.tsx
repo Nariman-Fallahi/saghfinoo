@@ -1,73 +1,77 @@
-import Image from "next/image";
 import { Title } from "@/constant/Constants";
-import { useState } from "react";
+import { Api } from "@/ApiService";
+import { useGetRequest } from "@/ApiService";
+import Select, { components, MultiValue } from "react-select";
+import { CitiesType } from "@/types/Type";
+import Image from "next/image";
 
 type SearchBoxType = {
   title: string;
-  setSearchCity: (value: string) => void;
+  setSearchCity: (
+    value: MultiValue<{
+      value: string;
+      label: string;
+    }>
+  ) => void;
 };
 
 export default function SearchBox({ title, setSearchCity }: SearchBoxType) {
-  const [localValue, setLocalValue] = useState("");
-  const [textErr, setTextErr] = useState<string>("");
+  const { data } = useGetRequest<{ data: CitiesType[] }>({
+    url: Api.SearchCity,
+    key: ["searchCityData"],
+    enabled: true,
+    staleTime: 10 * 60 * 1000,
+  });
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLocalValue(event.target.value);
-  };
+  const cityOptions = data?.data.map((item) => ({
+    value: item.name,
+    label: item.name,
+  }));
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      if (/^\d/.test(localValue)) {
-        setTextErr("نام شهر نمیتواند با عدد شروع شود.");
-      } else {
-        setSearchCity(localValue);
-      }
-    }
+  const handleCityChange = (
+    selectedOptions: MultiValue<{
+      value: string;
+      label: string;
+    }>
+  ) => {
+    setSearchCity(selectedOptions);
   };
 
   return (
     <div className="mt-[82px] flex flex-col p-3 relative md:mt-[180px] md:px-8">
       <Title title={title} />
 
-      <div
-        className="flex items-center mt-4 border border-[#353535] p-2 rounded
-       md:w-5/12 md:mt-8 md:border-[#ADADAD] justify-between"
-      >
-        <Image
-          width={16}
-          height={16}
-          src="/icons/search-normal.svg"
-          alt=""
-          className="lg:w-6 lg:h-6"
+      <div className="mt-5 md:mt-8 w-[80%] md:w-[35%]">
+        <Select
+          placeholder="لطفا شهر مورد نظر خود را جستجو کنید."
+          isMulti
+          options={cityOptions}
+          className="basic-multi-select"
+          classNamePrefix="select"
+          classNames={{
+            multiValue: () => "border border-[#353535] !bg-transparent ltr",
+            control: () => "!cursor-text text-xs md:text-base",
+            menu: () => "!w-[70%] text-sm md:text-base",
+          }}
+          onChange={handleCityChange}
+          components={{
+            Control: ({ children, ...rest }) => (
+              <components.Control {...rest}>
+                <i className="mr-4">
+                  <Image
+                    width={16}
+                    height={16}
+                    src="/icons/search-normal.svg"
+                    className="md:w-5 md:h-5"
+                    alt="Search Normal"
+                  />
+                </i>{" "}
+                {children}
+              </components.Control>
+            ),
+          }}
         />
-        <input
-          className="mr-2 text-xs font-normal md:text-base outline-none w-full"
-          type="text"
-          placeholder="شهر مورد نظر را جستجو کنید."
-          onKeyDown={handleKeyDown}
-          onChange={handleChange}
-          value={localValue}
-        />
-        {localValue && (
-          <i
-            className="cursor-pointer"
-            onClick={() => {
-              setSearchCity("");
-              setLocalValue("");
-            }}
-          >
-            <Image
-              width={18}
-              height={18}
-              className="md:w-5 md:h-5 lg:w-6 lg:h-6"
-              src="/icons/close-circle.svg"
-              alt=""
-            />
-          </i>
-        )}
       </div>
-
-      <p className="mt-2 text-xs text-red-500">{textErr}</p>
     </div>
   );
 }

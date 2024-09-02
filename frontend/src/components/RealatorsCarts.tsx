@@ -14,13 +14,13 @@ type RealatorsCartsType = {
   data: { data: allRealtorDataType[]; total_pages: number } | undefined;
   pageNumber: number;
   setPageNumber: (value: SetStateAction<number>) => void;
-  status: "error" | "success" | "pending";
+  isPending: boolean;
 };
 
 export default function RealatorsCarts({
   data,
   setPageNumber,
-  status,
+  isPending,
   pageNumber,
 }: RealatorsCartsType) {
   const router = useRouter();
@@ -32,7 +32,7 @@ export default function RealatorsCarts({
   return (
     <>
       <div className="w-full flex flex-wrap p-3 justify-between md:p-5">
-        {status === "pending" &&
+        {isPending &&
           Array.from({ length: 9 }).map((_, index) => (
             <div
               key={index}
@@ -69,14 +69,14 @@ export default function RealatorsCarts({
                   width={80}
                   height={80}
                   className="rounded-full !h-[80px]"
-                  src={item.user__image_full_path}
+                  src={item.user.imageFullPath}
                   alt=""
                 />
                 <p className="font-bold mt-3 md:text-xl">
-                  {item.user__first_name} {item.user__last_name}
+                  {item.user.firstName} {item.user.lastName}
                 </p>
                 <p className="mt-2 text-[#717171] md:text-lg">
-                  املاک {item.real_estate_office__name}
+                  املاک {item.realEstateOffice.name}
                 </p>
                 <p className="mt-2 text-[#717171] md:text-lg">
                   امتیاز {item.score} از 5
