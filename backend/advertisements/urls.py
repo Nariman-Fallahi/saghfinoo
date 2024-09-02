@@ -3,7 +3,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.CreateAdvertisementAPIView.as_view(), name='create_advertisement'),
+    path('', views.CreateSearchAdvertisementAPIView.as_view(), name='create_search_advertisement'),
     path('choices', views.GetAllAdvertisementChoicesAPIView.as_view(), name='get_all_advertisement_choices'),
     path('<int:advertisement_id>', views.GetEditDeleteAdvertisementAPIView.as_view(), name='get_edit_delete_advertisement'),
     

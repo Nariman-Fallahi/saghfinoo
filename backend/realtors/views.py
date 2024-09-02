@@ -34,8 +34,8 @@ class CreateSearchRealtor(APIView):
     def post(self, req):
         serializer = RealtorSerializer(data=req.data)
         if serializer.is_valid():
-            serializer.save(user=req.user)
-            return Response({"msg":"done", 'status':200})
+            realtor = serializer.save(user=req.user)
+            return Response({"msg":"done", 'id':realtor.id, 'status':200})
         return Response({"errors":serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})
     
 

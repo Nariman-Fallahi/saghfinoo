@@ -42,6 +42,16 @@ class AdvertisementSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, attrs): # todo
+        
+        # integer validation with its limitaions
+        validations.validate_se('room', attrs['room'], lambda value: validations.validate_integer(value, (1, 20)))
+        validations.validate_se('floor', attrs['floor'], lambda value: validations.validate_integer(value, (0, 100)))
+        validations.validate_se('number_of_floors', attrs['number_of_floors'], lambda value: validations.validate_integer(value, (attrs['floor']+1, 101)))
+        validations.validate_se('parking', attrs['parking'], lambda value: validations.validate_integer(value, (1, 20)))
+        validations.validate_se('storage', attrs['storage'], lambda value: validations.validate_integer(value, (1, 20)))
+        validations.validate_se('elevator', attrs['elevator'], lambda value: validations.validate_integer(value, (1, 20)))
+        validations.validate_se('restroom', attrs['restroom'], lambda value: validations.validate_integer(value, (1, 20)))
+
 
         validations.validate_se('city', attrs['city'], validations.validate_name)
         validations.validate_se('mainStreet', attrs['main_street'], validations.validate_name)

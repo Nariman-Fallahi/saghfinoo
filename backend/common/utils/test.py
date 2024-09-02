@@ -9,22 +9,47 @@ from realtors.models import Realtor
 from real_estate_offices.models import RealEstateOffice
 
 def test_invalid_field(self, url: str, data: dict, invalid_chars: dict, headers: dict):
-    """data example: {"name":"test"} , invalid_chars example: {"name":"*"}
+    """data example: {"name":"test"} , invalid_chars example: {"name":"*"},
+        invalid_chars for valid range example: {"name": (1, 10)}
     """
     
     default_data = data
     fields = invalid_chars.keys()
     
     for field in fields:
-        for char in invalid_chars[field]:
-            data[field] = default_data[field] + char
+        if type(invalid_chars[field]) == tuple:
+            # set values of out of range
+            min_value = invalid_chars[field][0]-1
+            max_value = invalid_chars[field][1]+1
+            data = default_data
+            data[field] = min_value
             if headers:
                 resp = self.client.post(url, data, headers=headers)
             else:
                 resp = self.client.post(url, data)
             self.assertEqual(resp.data['status'], 400, f"Request data: {data} \nResponse data: {resp.data}")
             self.assertEqual(resp.data['code'], codes.INVALID_FIELD, resp.data)
-                
+
+            data = default_data
+            data[field] = max_value
+            if headers:
+                resp = self.client.post(url, data, headers=headers)
+            else:
+                resp = self.client.post(url, data)
+            self.assertEqual(resp.data['status'], 400, f"Request data: {data} \nResponse data: {resp.data}")
+            self.assertEqual(resp.data['code'], codes.INVALID_FIELD, resp.data)
+            
+        else:
+            for char in invalid_chars[field]:
+                data = default_data
+                data[field] = default_data[field] + char
+                if headers:
+                    resp = self.client.post(url, data, headers=headers)
+                else:
+                    resp = self.client.post(url, data)
+                self.assertEqual(resp.data['status'], 400, f"Request data: {data} \nResponse data: {resp.data}")
+                self.assertEqual(resp.data['code'], codes.INVALID_FIELD, resp.data)
+                    
 
 def login(self, number):
     
@@ -71,25 +96,29 @@ class NumberGenerator:
         return f'0{cls._number}'
     
 
-def create_realtor(self, number, headers):
-        # create Realtor
-        data = {
-            'description':'test is test', 
-            'number':'09120120102', 
-            'landline_number':'0211287821', 
-            'telegram':'test',
-            'whatsapp': 'test',
-            'twitter': 'test',
-            'facebook': 'tset',
-            'email': 'test@test.com'
-            }
-        resp = self.client.post(reverse('create_realtor'), data, headers=headers)
-        self.assertEqual(resp.data['status'], 200, resp.data)
+def create_realtor(self, number, headers) -> Realtor:
+    """creates realtor confrims it and returns its object"""
 
-        # confirm the realtor
-        realtor = Realtor.objects.get(user__number=number)
-        realtor.is_confirmed = True
-        realtor.save()
+    # create Realtor
+    data = {
+        'description':'test is test', 
+        'number':'09120120102', 
+        'landlineNumber':'0211287821', 
+        'telegram':'test',
+        'whatsapp': 'test',
+        'twitter': 'test',
+        'facebook': 'tset',
+        'email': 'test@test.com'
+        }
+    resp = self.client.post(reverse('create_realtor'), data, headers=headers)
+    self.assertEqual(resp.data['status'], 200, resp.data)
+
+    # confirm the realtor
+    realtor = Realtor.objects.get(user__number=number)
+    realtor.is_confirmed = True
+    realtor.save()
+
+    return realtor
 
 def create_real_estate_office(self, headers):
         default_data = {
@@ -97,10 +126,10 @@ def create_real_estate_office(self, headers):
                 'description': 'tset test',
                 'username': 'test',
                 'city':'test',
-                'main_street': 'test',
-                'sub_street': 'test',
+                'mainStreet': 'test',
+                'subStreet': 'test',
                 'number': '09121211212',
-                'landline_number': '021938493849849',
+                'landlineNumber': '021938493849849',
                 'whatsapp': 'test.ir',
                 'twitter': 'test',
                 'facebook':'test',

@@ -46,8 +46,9 @@ def validate_choice_se(field_name, field_value):
     if field_value.key != field_name:
         raise serializers.ValidationError({field_name:f'{field_name} with id={field_value.id} not found'})
 
-def validate_integer(value):
-    """validate a string that have integer"""
+def validate_integer(value, range: tuple = None):
+    """validate a string that have integer
+        range is a tuple (from, to). range[0] <= value <= range[1]"""
     if type(value) == int:
         return
     
@@ -57,6 +58,11 @@ def validate_integer(value):
         int(value)
     except:
         raise ValueError('invalid integer')
+
+    if range:
+        if not(range[0] <= value <= range[1]):
+            raise ValueError(f'invalid integer range. valid: {range[0]} to {range[1]}')
+
 
 def validate(string: str, valid_chars):
     if type(string) != str:
