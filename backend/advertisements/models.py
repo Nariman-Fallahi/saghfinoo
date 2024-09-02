@@ -40,7 +40,7 @@ class AdvertisementChoice(models.Model):
         )
 
         if AdvertisementChoice.objects.count() < len(default):
-            for key, value in default:
+            for key, value, en_value in default:
                 
                 # continue if already exist
                 try:
@@ -52,6 +52,7 @@ class AdvertisementChoice(models.Model):
                 r = AdvertisementChoice()
                 r.key = key
                 r.value = value
+                r.en_value= en_value
                 r.save()
 
 

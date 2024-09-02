@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils import timezone
-
+from common.utils.database import formated_datetime_now
 
 from .managers import CustomUserManager
 
@@ -13,13 +13,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     password = models.CharField(max_length=512)
     email = models.EmailField(max_length=300, null=True, unique=True)
 
-    image = models.CharField(max_length=1000, null=True)
-    image_full_path = models.CharField(max_length=1000, null=True)
+    image = models.CharField(max_length=1000,  default='')
+    image_full_path = models.CharField(max_length=1000, default='')
 
     is_active = models.BooleanField(default=True)
     permisions = models.CharField(max_length=53, default='')
-    created_at = models.DateTimeField(default=timezone.now)
-    modified_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(default=formated_datetime_now)
+    modified_at = models.DateTimeField(default=formated_datetime_now)
     is_staff = models.BooleanField(default=False)
     activity_type = models.CharField(max_length=50,default='user')
 

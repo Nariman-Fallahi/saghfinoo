@@ -42,8 +42,8 @@ class SignupSerializer(serializers.ModelSerializer):
     
 
     def to_internal_value(self, data):
-        data['first_name'] = data.get('first_name', None)
-        data['last_name'] = data.get('last_name', None)
+        data['first_name'] = data.get('firstName', None)
+        data['last_name'] = data.get('lastName', None)
         return super().to_internal_value(data)
 
 

@@ -15,10 +15,10 @@ class CreateRealEstateOfficeTest(APITestCase):
                 'description': 'tset test',
                 'username': 'test',
                 'city':'test',
-                'main_street': 'test',
-                'sub_street': 'test',
+                'mainStreet': 'test',
+                'subStreet': 'test',
                 'number': '09121211212',
-                'landline_number': '021938493849849',
+                'landlineNumber': '021938493849849',
                 'whatsapp': 'test.ir',
                 'twitter': 'test',
                 'facebook':'test',
@@ -60,10 +60,10 @@ class CreateRealEstateOfficeTest(APITestCase):
                 'description': characters.DESCRIPTION_INVALID_CHARS,
                 'username': characters.USERNAME_INVALID_CHARS,
                 'city':characters.NAME_INVALID_CHARS,
-                'main_street': characters.NAME_INVALID_CHARS,
-                'sub_street': characters.NAME_INVALID_CHARS,
+                'mainStreet': characters.NAME_INVALID_CHARS,
+                'subStreet': characters.NAME_INVALID_CHARS,
                 'number': characters.NUMBER_INVALID_CHARS,
-                'landline_number': characters.NUMBER_INVALID_CHARS,
+                'landlineNumber': characters.NUMBER_INVALID_CHARS,
                 'whatsapp': characters.USERNAME_INVALID_CHARS,
                 'twitter': characters.USERNAME_INVALID_CHARS,
                 'facebook':characters.USERNAME_INVALID_CHARS,
@@ -106,4 +106,4 @@ class GetAllRealEstateOfficesTest(APITestCase):
         self.assertEqual(resp.data['status'], 200, resp.data)
         self.assertNotEqual(resp.data.get('data', ''), '', resp.data)
         self.assertGreater(len(resp.data['data']), 0, 'not data exist in resp.data["data"]')
-        test_have_fields(self, list(resp.data['data'])[0], ['name', 'username', 'city', 'main_street', 'sub_street', 'score', 'number_of_actice_ads', 'number_of_comments', 'image_full_path', 'blue_tick'])        
+        test_have_fields(self, list(resp.data['data'])[0], ['name', 'username', 'city', 'mainStreet', 'subStreet', 'score', 'numberOfActice_ads', 'numberOfComments', 'imageFullPath', 'blueTick'])        

@@ -20,7 +20,7 @@ from .models import Advertisement, AdvertisementImage, AdvertisementChoice, Save
 from realtors.models import Realtor
 
 
-class CreateAdvertisementAPIView(APIView):
+class CreateSearchAdvertisementAPIView(APIView):
     """ Create and Search
     after create, real estate office must be confirmed by admin"""
 
@@ -42,9 +42,9 @@ class CreateAdvertisementAPIView(APIView):
             ad = serializer.save(owner=req.realtor)
 
             ad.owner.number_of_active_ads += 1
-            ad.owner.save()
+            ad.owner.asave()
             ad.owner.real_estate_office.number_of_active_ads += 1
-            ad.owner.real_estate_office.save()
+            ad.owner.real_estate_office.asave()
 
             return Response({"msg": "done", 'id':ad.id, 'status':200})
         return Response({"errors": serializer.errors, 'code':codes.INVALID_FIELD, 'status':400})
@@ -84,16 +84,19 @@ class CreateAdvertisementAPIView(APIView):
             'property_type': validations.validate_integer,
             'rent': validations.validate_integer,
             'city':validations.validate_name,
+            'province': validations.validate_name,
             'main_street': validations.validate_name,
             'side_street': validations.validate_name,
             'type_of_transaction': validations.validate_integer,
             'deposit': validations.validate_integer,
-            'area': validations.validate_integer,
             'number_of_floors': validations.validate_integer,
             'deposit_from': validations.validate_integer,
             'deposit_to': validations.validate_integer,
             'rent_from': validations.validate_integer,
             'rent_to': validations.validate_integer,
+            'area_from': validations.validate_integer,
+            'area_to': validations.validate_integer,
+            
         }
         greater_than_exceptions = {
             'room': 5,
@@ -111,12 +114,14 @@ class CreateAdvertisementAPIView(APIView):
 
         ranged_fields_from = {
             'deposit_from':'deposit',
-            'rent_from':'rent'
+            'rent_from':'rent',
+            'area_from': 'area',
         }
 
         ranged_fields_to = {
             'deposit_to':'deposit',
-            'rent_to':'rent'
+            'rent_to':'rent',
+            'area_to': 'area',
         }
 
         # check query param keys is allowed
