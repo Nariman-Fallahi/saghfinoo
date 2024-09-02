@@ -108,9 +108,7 @@ class SignupAPIView(APIView):
                 return Response({"errors":{'number':"user already created"}, "code":codes.USER_EXIST, "status":400})
 
             user = CustomUser()
-            user.first_name = serializer.data['first_name']
-            user.last_name = serializer.data['last_name']
-            user.number = serializer.data['number']
+            user.fill_from_dict(serializer.data)
             user.set_password(serializer.data['password'])
             user.save()
 
@@ -190,10 +188,10 @@ class UploadProfileImageAPIView(APIView):
     def post(self, req):
         image = req.FILES.get('image', '')
         if image == '':
-            return Response({'errors':{'image':'image not sent'}})
+            return Response({'errors':{'image':'image not sent'}, 'status':400, 'code':codes.INVALID_FIELD})
 
         if Image.open(image).format not in ('PNG', 'JPEG'):
-            return Response({"errors":{"image":"invalid image format (accepted formats: PNG, JPEG)"}})
+            return Response({"errors":{"image":"invalid image format (accepted formats: PNG, JPEG)"}, 'status':400, 'code':codes.INVALID_FILE_FORMAT})
     
         file_ext = image.name.split('.')[-1]
         file_name = f'{uuid.uuid4()}.{file_ext}'
@@ -213,9 +211,7 @@ class EditUserAPIView(APIView):
     def put(self, req):
         serializer = CustomUserSerializer(data=req.data)
         if serializer.is_valid():
-            req.user.first_name = serializer.data['first_name']
-            req.user.last_name = serializer.data['last_name']
-            req.user.email = serializer.data['email']
+            req.user.fill_from_dict(serializer.data)
             req.user.save()
             return Response({'msg':"done", 'status':200})
         
@@ -229,7 +225,7 @@ class ChangePasswordAPIView(APIView):
         serializer = ChangePasswordSerializer(data=req.data)
         if serializer.is_valid():
             if not req.user.check_password(serializer.data['current_password']):
-                return Response({'errors':{'current_password':'current password is incurrent'}, 'status':400})
+                return Response({'errors':{'currentPassword':'current password is incurrent'}, 'status':400, 'code':codes.INCURRECT_PASSWORD})
             req.user.set_password(serializer.data['new_password'])
             req.user.save()
             return Response({'msg':'done', 'status':200})

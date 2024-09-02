@@ -20,7 +20,7 @@ VERIFY_NUMBER_FIRST = 'verify_number_first'
 USER_EXIST = 'user_exist'
 INCURRECT_NUMBER_OR_PASSWORD = 'incurrect_number_or_password'
 COMPLETE_SIGNUP = 'complete_signup'
-
+INCURRECT_PASSWORD = 'incurrect_password'
 
 # real_estate_offices
 
