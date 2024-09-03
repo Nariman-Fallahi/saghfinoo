@@ -11,6 +11,7 @@ import {
   realEstateOfficesType,
 } from "@/types/Type";
 import ErrNoData from "@/components/ErrNoData";
+import { getCookie } from "cookies-next";
 
 // Components
 import Info from "@/components/RealEstates-Realators/Info";
@@ -26,12 +27,40 @@ export default function Page() {
   const [adsUrl, setAdsUrl] = useState<string>("");
   const [adsfilterData, setAdsFilterData] = useState<AdsFilterDataType>();
   const [adsPageNumber, setAdsPageNumber] = useState<number>(1);
+  const access = getCookie("access");
+
+  const {
+    data: realEstateData,
+    isPending,
+    isError,
+  } = useGetRequest<{ data: realEstateOfficesType }>({
+    url: `${Api.Reos}/${params.userName}`,
+    key: ["getRealEstateOffices", params.userName.toString()],
+    enabled: true,
+    staleTime: 10 * 60 * 1000,
+  });
 
   useEffect(() => {
     const adsUrl = new URL(Api.Ad, process.env.NEXT_PUBLIC_API_BASE_URL);
 
     adsUrl.searchParams.append("page", adsPageNumber.toString());
     adsUrl.searchParams.append("reo_username", params.userName.toString());
+
+    if (adsfilterData?.province?.value) {
+      adsUrl.searchParams.append("province", adsfilterData.province.value);
+    }
+
+    if (adsfilterData?.city) {
+      adsUrl.searchParams.append("city", adsfilterData.city);
+    }
+
+    if (adsfilterData?.metre?.min && adsfilterData.metre.max) {
+      adsUrl.searchParams.append(
+        "area_from",
+        adsfilterData.metre.min.toString()
+      );
+      adsUrl.searchParams.append("area_to", adsfilterData.metre.max.toString());
+    }
 
     if (adsfilterData?.depositPrice?.min && adsfilterData?.depositPrice?.max) {
       adsUrl.searchParams.append(
@@ -59,17 +88,11 @@ export default function Page() {
   }, [adsPageNumber, params.userName, adsfilterData]);
 
   const {
-    data: realEstateData,
-    isPending,
-    isError,
-  } = useGetRequest<{ data: realEstateOfficesType }>({
-    url: `${Api.Reos}/${params.userName}`,
-    key: ["getRealEstateOffices", params.userName.toString()],
-    enabled: true,
-    staleTime: 10 * 60 * 1000,
-  });
-
-  const { data: adsData, status: adsStatus } = useGetRequest<{
+    data: adsData,
+    status: adsStatus,
+    refetch: adsRefetch,
+    isFetching: adsFetching,
+  } = useGetRequest<{
     data: AdsDataType[];
     totalPages: number;
   }>({
@@ -81,6 +104,9 @@ export default function Page() {
     ],
     enabled: true,
     staleTime: 10 * 60 * 1000,
+    headers: {
+      Authorization: `Bearer ${access}`,
+    },
   });
 
   const { data: commentData, status: commentStatus } = useGetRequest<{
@@ -142,6 +168,8 @@ export default function Page() {
         totalPages={adsData?.totalPages}
         adsfilterData={adsfilterData}
         setAdsFilterData={setAdsFilterData}
+        refetch={adsRefetch}
+        isFetching={adsFetching}
       />
       <Comments
         pageNumber={commentPageNumber}

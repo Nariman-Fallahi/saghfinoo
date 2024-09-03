@@ -12,7 +12,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Button } from "@nextui-org/button";
 import { useRouter } from "next-nprogress-bar";
-import { isMobile } from "@/constant/Constants";
+import { isMobile, LoginErrorText } from "@/constant/Constants";
 import { ErrorNotification } from "@/notification/Error";
 
 export default function Menu() {
@@ -103,7 +103,7 @@ export default function Menu() {
         onPress={() =>
           isLogin
             ? router.push("/adPosting")
-            : ErrorNotification("ابتدا وارد حساب کاربری خود شوید.")
+            : ErrorNotification(LoginErrorText)
         }
         size={isMobile ? "sm" : "md"}
         variant="light"

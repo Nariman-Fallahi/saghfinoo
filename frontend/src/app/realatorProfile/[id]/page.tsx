@@ -7,6 +7,7 @@ import { useDisclosure } from "@nextui-org/modal";
 import ModalREA from "@/components/RealEstates-Realators/modal/ModalREA";
 import { CommentType } from "@/types/Type";
 import { useEffect, useState } from "react";
+import { getCookie } from "cookies-next";
 
 // Components
 import Info from "@/components/RealEstates-Realators/Info";
@@ -20,6 +21,7 @@ export default function RealatorProfile() {
   const [commentPageNumber, setCommentpageNumber] = useState(1);
   const [adsfilterData, setAdsFilterData] = useState<AdsFilterDataType>();
   const [adsPageNumber, setAdsPageNumber] = useState<number>(1);
+  const access = getCookie('access');
 
   const { data: realtorData, isPending: realtorPending } = useGetRequest<{
     data: RealtorDataType;
@@ -44,6 +46,22 @@ export default function RealatorProfile() {
 
     adsUrl.searchParams.append("page", adsPageNumber.toString());
     adsUrl.searchParams.append("owner", params.id.toString());
+
+    if (adsfilterData?.province?.value) {
+      adsUrl.searchParams.append("province", adsfilterData.province.value);
+    }
+
+    if (adsfilterData?.city) {
+      adsUrl.searchParams.append("city", adsfilterData.city);
+    }
+
+    if (adsfilterData?.metre?.min && adsfilterData.metre.max) {
+      adsUrl.searchParams.append(
+        "area_from",
+        adsfilterData.metre.min.toString()
+      );
+      adsUrl.searchParams.append("area_to", adsfilterData.metre.max.toString());
+    }
 
     if (adsfilterData?.depositPrice?.min && adsfilterData?.depositPrice?.max) {
       adsUrl.searchParams.append(
@@ -70,7 +88,7 @@ export default function RealatorProfile() {
     setAdsUrl(adsUrl.toString());
   }, [adsPageNumber, adsfilterData, params.id]);
 
-  const { data: adsData, status: adsStatus } = useGetRequest<{
+  const { data: adsData, status: adsStatus, refetch : adsRefetch, isFetching: adsFetching } = useGetRequest<{
     data: AdsDataType[];
     totalPages: number;
   }>({
@@ -82,6 +100,9 @@ export default function RealatorProfile() {
     ],
     enabled: true,
     staleTime: 10 * 60 * 1000,
+    headers: {
+      Authorization: `Bearer ${access}`,
+    },
   });
 
   return (
@@ -130,6 +151,8 @@ export default function RealatorProfile() {
         status={adsStatus}
         title={`آگهی های مشاور ${realtorData?.data.user.firstName} ${realtorData?.data.user.lastName}`}
         totalPages={adsData?.totalPages}
+        refetch={adsRefetch}
+        isFetching={adsFetching}
       />
       <Comments
         data={realtorCommentsData?.data}

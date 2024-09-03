@@ -48,3 +48,6 @@ export const SelectTitle = ({ text }: { text: string | undefined }) => {
     </label>
   );
 };
+
+
+export const LoginErrorText = 'ابتدا وارد حساب کاربری خود شوید.'

@@ -4,7 +4,9 @@ import { useState, useEffect } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useActiveModalName } from "@/store/ReaModalActive";
-import { isMobile } from "@/constant/Constants";
+import { isMobile, LoginErrorText } from "@/constant/Constants";
+import { getCookie } from "cookies-next";
+import { ErrorNotification } from "@/notification/Error";
 
 type InfoType = {
   onOpen: () => void;
@@ -52,6 +54,7 @@ const ActiveMoreBtn: React.FC<ActiveMoreBtnProps> = ({
 export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
   const [activeMore, setActiveMore] = useState<boolean>(false);
   const { setActiveModalName } = useActiveModalName();
+  const access = getCookie("access");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -84,13 +87,21 @@ export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
   };
 
   const handleRegisterScoreBtn = () => {
-    onOpen();
-    setActiveModalName("Score");
+    if (access) {
+      onOpen();
+      setActiveModalName("Score");
+    } else {
+      ErrorNotification(LoginErrorText);
+    }
   };
 
   const handleViolationReport = () => {
-    onOpen();
-    setActiveModalName("Report");
+    if (access) {
+      onOpen();
+      setActiveModalName("Report");
+    } else {
+      ErrorNotification(LoginErrorText);
+    }
   };
 
   return (
@@ -227,7 +238,7 @@ export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
                     <Image
                       width={24}
                       height={24}
-                      src="/icons/save.svg"
+                      src="/icons/archive-add.svg"
                       alt=""
                     />
                   </Button>
@@ -305,7 +316,7 @@ export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
               variant="bordered"
               color="danger"
               radius="sm"
-              size={isMobile ? 'sm' : 'md'}
+              size={isMobile ? "sm" : "md"}
               onClick={handleContactInfoBtn}
             >
               {data.titleContactInfoBtn}

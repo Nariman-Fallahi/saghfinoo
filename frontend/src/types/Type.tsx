@@ -277,7 +277,7 @@ export type AdsDataType = {
   mainStreet: string;
   deposit: number;
   rent: number;
-  // is_confirmed: boolean;
+  isSaved: boolean;
 };
 
 export type CommentType = {

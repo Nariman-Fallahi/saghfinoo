@@ -7,6 +7,7 @@ import PaginationComponent from "../Pagination";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import Image from "next/image";
+import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 
 export type ProvinceType =
   | { name: string | undefined; id: number | undefined }
@@ -21,6 +22,16 @@ type AdsType = {
   totalPages: number | undefined;
   adsfilterData: AdsFilterDataType | undefined;
   setAdsFilterData: Dispatch<SetStateAction<AdsFilterDataType | undefined>>;
+  refetch: (options?: RefetchOptions) => Promise<
+    QueryObserverResult<
+      {
+        data: AdsDataType[];
+        totalPages: number;
+      },
+      Error
+    >
+  >;
+  isFetching: boolean;
 };
 
 export default function Ads({
@@ -32,6 +43,8 @@ export default function Ads({
   totalPages,
   adsfilterData,
   setAdsFilterData,
+  refetch,
+  isFetching
 }: AdsType) {
   return (
     <div className="mt-10 flex flex-col p-4 md:mt-14 md:p-8">
@@ -47,7 +60,7 @@ export default function Ads({
 
       <Filter filterData={adsfilterData} setFilterData={setAdsFilterData} />
 
-      <AdsCart data={data} isloading={status === "pending"} />
+      <AdsCart data={data} isloading={status === "pending"} refetch={refetch} isFetching={isFetching} />
 
       {status === "success" && data && data?.length <= 0 && (
         <div className="flex flex-col items-center mt-5 w-full">
