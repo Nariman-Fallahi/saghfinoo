@@ -8,6 +8,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from PIL import Image
 from django.core.files.storage import default_storage
 from django.conf import settings
+from django.db.models import Q
 # import magic
 
 from common.utils.permissions import IsAdvertisementOwner, IsAdmin, IsRealtor, IsOwner
@@ -163,12 +164,18 @@ class CreateSearchAdvertisementAPIView(APIView):
                     kwargs[f'{to_field_name}__lte'] = value
             else:
                 kwargs[field_name] = value
-        
-        ads = Advertisement.objects.filter(**kwargs).order_by('-created_at')[page*limit: page*limit+limit]
-        ads = AdvertisementPreviewResponseSerializer(ads, many=True)
+        if req.user.id:
+            kwargs['savedadvertisement__isnull'] = True
+            ads = Advertisement.objects.filter(Q(**kwargs) | Q(savedadvertisement__user=req.user.id)).order_by('-created_at').values(*AdvertisementPreviewResponseSerializer.Meta.fields)[page*limit: page*limit+limit]
+
+        else:
+            ads = Advertisement.objects.filter(**kwargs).order_by('-created_at')[page*limit: page*limit+limit]
+
+        ads = AdvertisementPreviewResponseSerializer(ads, many=True).data
+
         total_pages = math.ceil(Advertisement.objects.filter(**kwargs).count()/limit)
 
-        return Response({'data':ads.data, 'totalPages':total_pages, 'status':200})
+        return Response({'data':ads, 'totalPages':total_pages, 'status':200})
     
 
 class GetAllAdvertisementChoicesAPIView(APIView):
@@ -255,9 +262,17 @@ class GetEditDeleteAdvertisementAPIView(APIView):
         """Get one advertisement by id"""
         try:
             ad = Advertisement.objects.get(is_confirmed=True, id=advertisement_id)
+            if req.user.id:
+                is_saved = SavedAdvertisement.objects.filter(advertisement=ad.id, user=req.user.id)
+                if len(is_saved) == 1:
+                    ad.is_saved = True
+                else:
+                    ad.is_saved = False
 
             ad.number_of_views += 1
             ad.asave()
+
+
             
             
 

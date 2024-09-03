@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from common.utils.permissions import IsAdmin, IsRealtor
-from .models import Advertisement, AdvertisementImage, AdvertisementChoice
+from .models import Advertisement, AdvertisementImage, AdvertisementChoice, SavedAdvertisement
 from common.utils import validations
 from realtors.models import Realtor
 from users.models import CustomUser
@@ -156,7 +156,7 @@ class AdvertisementResponseSerializer(serializers.ModelSerializer):
         ]
 
     def to_representation(self, instance):
-        return {
+        data = {
             'owner':{
                 'score':instance.owner.score, 
                 'numberOfActiveAds': instance.owner.number_of_active_ads,
@@ -200,27 +200,75 @@ class AdvertisementResponseSerializer(serializers.ModelSerializer):
             'numberOfViews':instance.number_of_views,
             'numberOfSaves':instance.number_of_saves,
             'convertible':instance.convertible,
+            'isSaved': False
         }
+
+        if hasattr(instance, 'is_saved'):
+            data['isSaved'] = instance.is_saved
+        
+        return data
+
 
 class AdvertisementPreviewResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Advertisement
+        fields = [
+            'id',
+            'image_full_path',
+            'type_of_transaction__value',
+            'property_type__value',
+            'area',
+            'city',
+            'main_street',
+            'side_street',
+            'deposit',
+            'rent',
+            'created_at',
+            'savedadvertisement__advertisement',
+        ]
 
     def to_representation(self, instance):
-        return {
-            'id':instance.id,
-            'imageFullPath':instance.image_full_path,
-            'typeOfTransaction':instance.type_of_transaction.value,
-            'propertyType':instance.property_type.value,
-            'area': instance.area,
-            'city': instance.city,
-            'mainStreet': instance.main_street,
-            'sideStreet': instance.side_street,
-            'deposit': instance.deposit,
-            'rent': instance.rent,
-            'createdAt': instance.created_at,
-        }
+        if type(instance) == dict:
+            data = {
+                'id':instance['id'],
+                'imageFullPath':instance['image_full_path'],
+                'typeOfTransaction':instance['type_of_transaction__value'],
+                'propertyType':instance['property_type__value'],
+                'area': instance['area'],
+                'city': instance['city'],
+                'mainStreet': instance['main_street'],
+                'sideStreet': instance['side_street'],
+                'deposit': instance['deposit'],
+                'rent': instance['rent'],
+                'createdAt': instance['created_at'],
+                'isSaved': instance.get('savedadvertisement__advertisement', False)
+            }
+        else:
+            data = {
+                'id':instance.id,
+                'imageFullPath':instance.image_full_path,
+                'typeOfTransaction':instance.type_of_transaction.value,
+                'propertyType':instance.property_type.value,
+                'area': instance.area,
+                'city': instance.city,
+                'mainStreet': instance.main_street,
+                'sideStreet': instance.side_street,
+                'deposit': instance.deposit,
+                'rent': instance.rent,
+                'createdAt': instance.created_at,
+                'isSaved': False
+            }
+        
+            if hasattr(instance, 'savedadvertisement__advertisement') and instance.savedadvertisement__advertisement != None:
+                data['isSaved'] = 1
+
+        if type(data['isSaved']) == int:
+            data['isSaved'] = True
+        else:
+            data['isSaved'] = False
+
+        return data
 
 class RealtorAdvertisementPreviewResponseSerializer(serializers.ModelSerializer):
 
