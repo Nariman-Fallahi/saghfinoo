@@ -49,6 +49,7 @@ urlpatterns = [
     path('api/v1/news/', include('news.urls')),
     path('api/v1/ads/', include('advertisements.urls')),
     path('api/v1/tools/', include('tools.urls')),
+    path('api/v1/mainpages', include('mainpages.urls')),
 ]
 
 if not settings.TESTING:
