@@ -1,5 +1,5 @@
 
-PERSIAN_CHARS = sorted(list("ابتپجچحخدذآرزژسشصضطظعغفقکگلمنوهی"))
+PERSIAN_CHARS = sorted(list("ابتپجچحخدذآرزژسشصضطظعغفقکگلمنوهی") + list("نه‌د")) 
 
 ENGLISH_CHARS = sorted(list("abcdefghijklmnopqrstuvwxyz"))
 
@@ -9,7 +9,7 @@ ENGLISH_SIGNS = sorted(list("!.,?':;\""))
 
 ENGLISH_NUMBERS = sorted(list("1234567890"))
 
-PERSIAN_NUMBERS = sorted(list(""))
+PERSIAN_NUMBERS = sorted(list("۱۲۸"))
 
 NAME_CHARS = sorted(PERSIAN_CHARS + ENGLISH_CHARS + list(" "))
 USERNAME_CHARS = sorted(ENGLISH_CHARS + ENGLISH_NUMBERS + list("_.-"))

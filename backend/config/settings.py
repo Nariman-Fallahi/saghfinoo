@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'advertisements',
     'users',
     'tools',
+    'mainpages',
 ]
 
 MIDDLEWARE = [
