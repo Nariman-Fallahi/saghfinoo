@@ -46,6 +46,7 @@ class News(models.Model):
     read_time = models.IntegerField()
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
     publish_date = models.DateTimeField(default=formated_datetime_now)
+    special = models.IntegerField(default=0)
 
     image = models.CharField(max_length=1000, default='')
     image_full_path = models.CharField(max_length=1000, default='')

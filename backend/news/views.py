@@ -1,10 +1,14 @@
 import math
+import uuid
 
+from PIL import Image
 from rest_framework .views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.response import Response
 from django.db.models import Q
+from django.conf import settings
+from django.core.files.storage import default_storage
 
 from common import codes
 from common.utils.permissions import IsAdmin
@@ -37,7 +41,7 @@ class SearchNewsAPIView(APIView):
                     if c == '' or c == '"':
                         continue
                     try:
-                        validations.validate_username(c)
+                        validations.validate_name(c)
                     except ValueError as e:
                         return Response({'errors':{'tag':str(e)}, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
                     
@@ -60,7 +64,7 @@ class SearchNewsAPIView(APIView):
                 return Response({'erorrs':{'category':str(v)}, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
             query &= Q(category=category)
 
-        news = News.objects.filter(query)[page*limit: page*limit+limit]
+        news = News.objects.filter(query).order_by('-publish_date')[page*limit: page*limit+limit]
         news = NewsPreviewResponseSerializer(news, many=True).data
         total_pages = math.ceil(News.objects.filter(query).count()/limit)
     
@@ -84,3 +88,42 @@ class CreateGetNewsAPIView(APIView):
             return Response({'msg':'done', 'status':200})
         
         return Response({'errors':serializer.errors, 'status':400, 'code': codes.INVALID_FIELD})
+
+
+
+class UploadNewsImageAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsAdmin]
+    authentication_classes = [JWTAuthentication]
+    
+    def post(self, req, slug):
+        try:
+            validations.validate_slug(slug)
+        except ValueError as v:
+            return Response({'errors':{"slug":str(v)}, 'status':400})
+
+
+        image = req.FILES.get('image', '')
+        if image == '':
+            return Response({'errors':{'image':'image not sent'}})
+
+        if Image.open(image).format not in ('PNG', 'JPEG'):
+            return Response({"errors":{"image":"invalid image format (accepted formats: PNG, JPEG)"}})
+        
+        try:
+            news = News.objects.get(slug=slug)
+        except News.DoesNotExist:
+            return Response({'errors':{'non-field-error':'news not found'}, 'status':404, 'code':codes.OBJ_NOT_FOUND})
+        
+        self.check_object_permissions(req, news)
+
+        file_ext = image.name.split('.')[-1]
+        file_name = f'{uuid.uuid4()}.{file_ext}'
+
+        if news.image:
+            default_storage.delete(news.image)
+        news.image = default_storage.save(f'news/{file_name}', image, max_length=1*1024*1024)
+        news.image_full_path = f'{settings.S3_ENDPOINT_URL_WITH_BUCKET}/{news.image}'
+        news.save()
+
+        return Response({"msg":"done", 'status':200})
+

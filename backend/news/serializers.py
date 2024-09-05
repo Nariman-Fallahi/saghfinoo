@@ -26,10 +26,10 @@ class NewsSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
 
         validations.validate_se('title', attrs['title'], validations.validate_description)
-        validations.validate_se('slug', attrs['slug'], validations.validate_username)
+        validations.validate_se('slug', attrs['slug'], validations.validate_slug)
         validations.validate_se('short_description', attrs['short_description'], validations.validate_description)
         validations.validate_se('content', attrs['content'], validations.validate_description)
-        validations.validate_se('tags', attrs['tags'], lambda string: validations.validate(string, sorted(list(characters.USERNAME_CHARS + ["|"]))))
+        validations.validate_se('tags', attrs['tags'], lambda string: validations.validate_tag)
         validations.validate_se('read_time', attrs['read_time'], lambda x: validations.validate_integer(x, (1, 120)))
 
         return super().validate(attrs)
