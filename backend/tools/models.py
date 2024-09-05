@@ -17,8 +17,9 @@ class Province(models.Model):
         provinces = json.load(urlopen(provices_url, timeout=20))
       
         if Province.objects.all().count() < len(provinces):
-
-            print('setting up provinces')
+            provinces_list = []
+            
+            print('saving provinces')
             for province in provinces:   
                 # continue if already exist
                 try:
@@ -36,13 +37,15 @@ class Province(models.Model):
                 p.id = province['id']
                 p.name = province['name']
                 p.slug = province['slug']
-                p.save()
+                provinces_list.append(p)
+            
+            Province.objects.bulk_create(provinces_list)
 
 
 
 
 class City(models.Model):
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50)
     slug = models.CharField(max_length=50)
     province = models.ForeignKey(Province, on_delete=models.CASCADE)
 
@@ -51,27 +54,27 @@ class City(models.Model):
         cities_url = "https://raw.githubusercontent.com/sajaddp/list-of-cities-in-iran/main/json/cities.json"
         cities = json.load(urlopen(cities_url, timeout=20))
 
-        if Province.objects.all().count() < len(cities):
-            
+        if City.objects.all().count() < len(cities):
+            cities_list = []
 
-            print('saving up cities')
+            print('saving cities')
             for city in cities:
-            
+
                 # continue if already exist
                 try:
-                    City.objects.get(name=city)
+                    City.objects.get(name=city['name'], province=city['province_id'])
+                    print(f'{city["name"]} already exsit. skip')    
                     continue                 
                 except City.DoesNotExist:
                     pass
-            
-                print(f'setting up {city["name"]}')
-                c = City.objects.filter(name=city['name'])
-                if len(c) == 0:
-                    c = City()
-                else:
-                    c = c[0]
+
+                c = City()
                 c.name = city['name']
                 c.province = Province.objects.get(id=city['province_id'])
                 c.slug = city['slug']
-                c.save()
+
+                cities_list.append(c)
+                # c.save()
+
+            City.objects.bulk_create(cities_list)
 

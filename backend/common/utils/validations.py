@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from common.utils import characters
-
+from common.utils.algorithms import binary_search
 
 def validate_number(number: str):
     if len(number) != 11:
@@ -28,14 +28,29 @@ def validate_landline_number(landline_number: str):
 
 def validate_name(name: str):
     valid_chars = characters.NAME_CHARS
-
+    print(name)
     validate(name, valid_chars)
         
 def validate_description(description: str):
     valid_chars = characters.DESCRIPTION_CHARS
 
+    for tag in characters.HTML_INVALID_TAGS:
+        if tag in description:
+            raise ValueError('invalid description')
+
     validate(description, valid_chars)
-        
+
+def validate_slug(slug: str):
+    valid_chars = characters.SLUG_CHARS
+
+    validate(slug, valid_chars)
+
+
+def validate_tag(tag: str):
+    valid_chars = characters.TAG_CHARS
+
+    validate(tag, valid_chars)
+
 
 def validate_username(username: str):
     valid_chars = characters.USERNAME_CHARS
@@ -67,9 +82,9 @@ def validate_integer(value, range: tuple = None):
 def validate(string: str, valid_chars):
     if type(string) != str:
         raise ValueError('invalid string')
- 
+
     for c in string.lower():
-        if c not in valid_chars:
+        if binary_search(valid_chars, c) == -1:
             raise ValueError(f'invalid character: {c}')
             
 

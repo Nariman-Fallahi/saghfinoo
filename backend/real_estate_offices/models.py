@@ -76,18 +76,20 @@ class CommentScoreReason(models.Model):
             
         )
 
-        for name, score in defaults:
-            try:
-                # not save if already exist
-                CommentScoreReason.objects.get(name=name, score=score)
-                continue
-            except CommentScoreReason.DoesNotExist:
-                pass
+        if CommentScoreReason.objects.count() == 0:
 
-            csr = CommentScoreReason()
-            csr.name = name
-            csr.score = score
-            csr.save()
+            for name, score in defaults:
+                try:
+                    # not save if already exist
+                    CommentScoreReason.objects.get(name=name, score=score)
+                    continue
+                except CommentScoreReason.DoesNotExist:
+                    pass
+
+                csr = CommentScoreReason()
+                csr.name = name
+                csr.score = score
+                csr.save()
 
 
 
