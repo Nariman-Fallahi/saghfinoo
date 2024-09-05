@@ -48,10 +48,7 @@ class NewsResponseSerailizer(serializers.ModelSerializer):
             'content': instance.content,
             'tags': instance.tags,
             'readTime': instance.read_time,
-            'category': {
-                'name': instance.category.name,
-                'id': instance.category.id,   
-            },
+            'category': instance.category.name,
             'publishDate': instance.publish_data,
             'imageFullPath': instance.image_full_path,
         }
@@ -67,10 +64,7 @@ class NewsPreviewResponseSerializer(serializers.ModelSerializer):
             'readTime': instance.read_time,
             'title': instance.title,
             'shortDescription': instance.short_description,
-            'category': {
-                'name': instance.category.name,
-                'id': instance.category.id,   
-            },
+            'category': instance.category.name,
             'special': instance.special,
         }
     
@@ -78,4 +72,4 @@ class CategoryResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'name']
+        fields = ['name']
