@@ -16,6 +16,7 @@ class NewsSerializer(serializers.ModelSerializer):
             'tags',
             'read_time',
             'category',
+            'special',
         ]
 
     def to_internal_value(self, data):
@@ -70,6 +71,7 @@ class NewsPreviewResponseSerializer(serializers.ModelSerializer):
                 'name': instance.category.name,
                 'id': instance.category.id,   
             },
+            'special': instance.special,
         }
     
 class CategoryResponseSerializer(serializers.ModelSerializer):

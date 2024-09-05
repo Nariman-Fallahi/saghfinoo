@@ -64,7 +64,7 @@ class SearchNewsAPIView(APIView):
                 return Response({'erorrs':{'category':str(v)}, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
             query &= Q(category=category)
 
-        news = News.objects.filter(query).order_by('-publish_date')[page*limit: page*limit+limit]
+        news = News.objects.filter(query).order_by('-publish_date').order_by('-special')[page*limit: page*limit+limit]
         news = NewsPreviewResponseSerializer(news, many=True).data
         total_pages = math.ceil(News.objects.filter(query).count()/limit)
     
