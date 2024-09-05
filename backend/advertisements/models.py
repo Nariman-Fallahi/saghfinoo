@@ -39,7 +39,7 @@ class AdvertisementChoice(models.Model):
             ('flooring', 'موزائیک', 'mosaic'),
         )
 
-        if AdvertisementChoice.objects.count() < len(default):
+        if AdvertisementChoice.objects.count() == 0:
             for key, value, en_value in default:
                 
                 # continue if already exist
