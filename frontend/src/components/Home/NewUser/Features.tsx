@@ -36,8 +36,9 @@ export default function Features() {
             استفاده از بیش از ۲۸ فیلتر کاربردی تلاش کرده ایم خانه ای که در
             جستجوی آن هستید را هر چه سریعتر پیدا و اجاره کنید.
           </p>
+          {/* TODO Edit */}
           <Button
-            className="bg-[#CB1B1B] text-xs font-medium w-[156px] h-[32px] mt-12
+            className="bg-primary text-xs font-medium w-[156px] h-[32px] mt-12
              text-white lg:text-sm lg:mt-24 lg:w-[328px] rounded-lg lg:h-[40px]"
           >
             اجاره خانه

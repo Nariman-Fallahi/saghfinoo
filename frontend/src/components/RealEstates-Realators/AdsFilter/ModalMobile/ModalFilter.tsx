@@ -56,7 +56,7 @@ export default function ModalFilter({
       depositPrice: { min: data.depositPriceMin, max: data.depositPriceMax },
       metre: { min: data.metreMin, max: data.metreMax },
     }));
-     setOpenFilterModal(false);
+    setOpenFilterModal(false);
   };
 
   return (
@@ -194,7 +194,7 @@ export default function ModalFilter({
                       حذف فیلترها
                     </Button>
                     <Button
-                      className="text-white bg-[#CB1B1B] w-[48%]"
+                      className="text-white bg-primary w-[48%]"
                       size="sm"
                       type="submit"
                     >

@@ -1,4 +1,5 @@
-import { Title } from "@/app/userProfile/[id]/page";
+"use client";
+import { Title } from "@/app/userProfile/[userName]/page";
 import Image from "next/image";
 import { Button } from "@nextui-org/button";
 import NoData from "./NoData";
@@ -147,7 +148,7 @@ export default function MyAds() {
                   />
                   <div className="flex flex-col p-3 w-full">
                     <p className="text-xs md:text-sm lg:text-base text-[#909090] mt-1 truncate">
-                      {`${item.type_of_transaction__value} ${item.property_type__value}`}
+                      {`${item.typeOfTransaction} ${item.propertyType}`}
                     </p>
                     <p className="text-xs md:text-sm lg:text-base text-[#909090] mt-1 truncate">
                       {`${item.area}‌متر، شهرستان ${item.city}`}

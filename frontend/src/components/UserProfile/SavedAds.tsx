@@ -1,4 +1,4 @@
-import { Title } from "@/app/userProfile/[id]/page";
+import { Title } from "@/app/userProfile/[userName]/page";
 import NoData from "./NoData";
 import DeleteAllAdsBtn from "./DeleteAllAdsBtn";
 import AdsCart from "../AdsCart";

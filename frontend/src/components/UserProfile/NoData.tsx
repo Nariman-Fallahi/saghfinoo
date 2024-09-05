@@ -1,7 +1,7 @@
 import { Button } from "@nextui-org/button";
 import Image from "next/image";
 import { useRouter } from "next-nprogress-bar";
-import { useSizeBtn } from "@/store/Size";
+// import { useSizeBtn } from "@/store/Size";
 
 type NoData = {
   icon: string;
@@ -19,7 +19,7 @@ export default function NoData({
   linkBtn,
 }: NoData) {
   const router = useRouter();
-  const { sizeBtn } = useSizeBtn();
+  // const { sizeBtn } = useSizeBtn();
 
   return (
     <div className="flex flex-col mt-6 w-full justify-center items-center md:mt-7">
@@ -41,9 +41,8 @@ export default function NoData({
       </p>
 
       <Button
-        size={sizeBtn}
         radius="sm"
-        className="bg-[#CB1B1B] text-white mt-4 md:mt-5 w-[20%]"
+        className="bg-primary text-white mt-4 md:mt-5 w-[20%]"
         onPress={() => router.push(linkBtn)}
       >
         {titleBtn}

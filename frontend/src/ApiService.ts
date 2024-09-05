@@ -20,8 +20,6 @@ export enum Api {
 
   // realtors Api
   realtors = "/api/v1/realtors",
-
-  // GetRealEstateConsultants = "/api/v1/realtors/search?reo_username=",
   GetAllScoreReasons = "/api/v1/realtors/comments/score-reasons",
   GetAllReportReasonsRealtors = "/api/v1/realtors/report/reasons",
 

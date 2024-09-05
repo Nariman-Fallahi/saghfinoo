@@ -13,6 +13,10 @@ h6 {
   direction: rtl;
 }
 
+.primaryColor {
+  
+}
+
 .openMenu {
   display: block;
   animation: OPEN_MENU 0.3s ease-in forwards;

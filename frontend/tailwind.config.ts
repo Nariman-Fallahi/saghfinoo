@@ -1,7 +1,6 @@
-import type { Config } from "tailwindcss";
 const { nextui } = require("@nextui-org/theme");
 
-const config: Config = {
+module.exports = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -19,5 +18,11 @@ const config: Config = {
       },
     }),
   ],
+  theme: {
+    extend: {
+      colors: {
+        primary: "#CB1B1B",
+      },
+    },
+  },
 };
-export default config;

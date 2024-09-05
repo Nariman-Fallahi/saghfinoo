@@ -192,7 +192,7 @@ export default function Register() {
                     handleSendPhoneNumber={handleSendPhoneNumber}
                   />
                   <Button
-                    className="mt-[64px] w-full rounded-lg p-2 bg-[#CB1B1B]
+                    className="mt-[64px] w-full rounded-lg p-2 bg-primary
                    text-white md:mt-[50px] md:text-lg"
                     onPress={BtnSendCode}
                     isLoading={isPending}

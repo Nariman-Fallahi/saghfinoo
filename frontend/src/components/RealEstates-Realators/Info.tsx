@@ -233,32 +233,21 @@ export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
                   className="ml-2"
                 />
               ) : (
-                <>
-                  <Button isIconOnly size="sm" variant="light" radius="full">
-                    <Image
-                      width={24}
-                      height={24}
-                      src="/icons/archive-add.svg"
-                      alt=""
-                    />
-                  </Button>
-
-                  <Button
-                    isIconOnly
-                    size="sm"
-                    variant="light"
-                    radius="full"
-                    className="mr-2"
-                    onPress={handleShareBtn}
-                  >
-                    <Image
-                      width={24}
-                      height={24}
-                      src="/icons/export.svg"
-                      alt=""
-                    />
-                  </Button>
-                </>
+                <Button
+                  isIconOnly
+                  size="sm"
+                  variant="light"
+                  radius="full"
+                  className="mr-2"
+                  onPress={handleShareBtn}
+                >
+                  <Image
+                    width={24}
+                    height={24}
+                    src="/icons/export.svg"
+                    alt=""
+                  />
+                </Button>
               )}
             </div>
           </div>
@@ -338,7 +327,7 @@ export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
                 <Button
                   onPress={handleRegisterScoreBtn}
                   radius="sm"
-                  className="bg-[#CB1B1B] text-white w-1/2 mt-2"
+                  className="bg-primary text-white w-1/2 mt-2"
                 >
                   ثبت امتیاز
                 </Button>

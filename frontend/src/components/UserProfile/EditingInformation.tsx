@@ -1,10 +1,10 @@
-import { Button } from "@nextui-org/button";
+"use client";
+import CustomButton from "../CustomButton";
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
-import { useSizeBtn } from "@/store/Size";
 import InputRegister from "../InputRegister";
 import { changePasswordType, userInfoDataType } from "@/types/Type";
-import { Title } from "@/app/userProfile/[id]/page";
+import { Title } from "@/app/userProfile/[userName]/page";
 import { useGetRequest, usePostRequest } from "@/ApiService";
 import { Api } from "@/ApiService";
 import { getCookie } from "cookies-next";
@@ -26,7 +26,6 @@ type Inputs = {
 };
 
 export default function EditingInformation() {
-  const { sizeBtn } = useSizeBtn();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [defaultValues, setDefaultValues] = useState<{
@@ -376,17 +375,15 @@ export default function EditingInformation() {
             />
           </div>
         </div>
-        <Button
-          size={sizeBtn}
+        <CustomButton
           radius="sm"
-          className="bg-[#CB1B1B] text-white w-full mt-8 md:w-1/3"
-          // onPress={clickSaveInfo}
+          className="bg-primary text-white w-full mt-8 md:w-1/3"
           type="submit"
           isLoading={isLoadingBtn}
           spinner={<Spinner color="white" size="sm" />}
         >
           {isLoadingBtn ? "" : "ذخیره اطلاعات"}
-        </Button>
+        </CustomButton>
       </form>
     </>
   );

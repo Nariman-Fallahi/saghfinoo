@@ -160,7 +160,7 @@ export default function SignUp({ token, phoneNumber }: SignUpType) {
       <div className="w-full flex justify-center">
         <Button
           type="submit"
-          className="text-sm mt-5 w-4/5 rounded-lg p-2 bg-[#CB1B1B] text-white
+          className="text-sm mt-5 w-4/5 rounded-lg p-2 bg-primary text-white
            md:mt-[50px] md:text-base"
           isLoading={isPending}
           spinner={<Spinner color="white" size="sm" />}

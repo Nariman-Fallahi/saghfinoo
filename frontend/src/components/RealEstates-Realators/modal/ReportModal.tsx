@@ -2,8 +2,7 @@ import { DataModalREA, ReportModaltDataType } from "@/types/Type";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import UserIcon from "./UserIcon";
 import { Api, useGetRequest, usePostRequest } from "@/ApiService";
-import { Button } from "@nextui-org/button";
-import { isMobile } from "@/constant/Constants";
+import CustomButton from "@/components/CustomButton";
 import { CookieValueTypes } from "cookies-next";
 import { Spinner } from "@nextui-org/spinner";
 import { TextError } from "@/constant/Constants";
@@ -111,11 +110,10 @@ export default function ReportModal({
               required: "لطفا دلیل گزارش خود را انتخاب کنید",
             }}
             render={({ field: { onChange } }) => (
-              <Button
+              <CustomButton
                 variant={
                   watch("report_reason") === item.id ? "flat" : "bordered"
                 }
-                size={isMobile ? "sm" : "md"}
                 className="w-[48%] mt-3 border"
                 radius="sm"
                 onPress={() => {
@@ -123,7 +121,7 @@ export default function ReportModal({
                 }}
               >
                 {item.name}
-              </Button>
+              </CustomButton>
             )}
           />
         ))}
@@ -148,15 +146,14 @@ export default function ReportModal({
 
       <TextError text={errors.description?.message} />
 
-      <Button
-        className="mt-5 bg-[#CB1B1B] text-white px-3 w-1/2"
-        size={isMobile ? "sm" : "md"}
+      <CustomButton
+        className="mt-5 bg-primary text-white px-3 w-1/2"
         type="submit"
         isLoading={isPending}
         spinner={<Spinner color="white" size="sm" />}
       >
         {isPending ? "" : "ثبت امتیاز"}
-      </Button>
+      </CustomButton>
     </form>
   );
 }

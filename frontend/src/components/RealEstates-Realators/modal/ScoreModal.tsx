@@ -1,6 +1,4 @@
-import Image from "next/image";
-import { Button } from "@nextui-org/button";
-import { isMobile } from "@/constant/Constants";
+import CustomButton from "@/components/CustomButton";
 import { useEffect } from "react";
 import { usePostRequest, useGetRequest } from "@/ApiService";
 import { Api } from "@/ApiService";
@@ -34,7 +32,7 @@ export default function ScoreModal({
 }: ScoreModalType) {
   const {
     mutate,
-    isPending : createRealtorsCommentPending,
+    isPending: createRealtorsCommentPending,
     data: createRealtorsCommentData,
   } = usePostRequest<Inputs>({
     url: `${Api.realtors}${id}/comments`,
@@ -64,14 +62,15 @@ export default function ScoreModal({
     mutate(data);
   };
 
-  const { data: scoreReasonsData, isPending: scoreReasonPending } = useGetRequest<{
-    data: ScoreReasonsType[];
-  }>({
-    url: `${Api.GetAllScoreReasons}?score=${watch("score")}`,
-    key: ["getAllScoreReasons", watch("score").toString()],
-    enabled: true,
-    staleTime: 10 * 60 * 1000,
-  });
+  const { data: scoreReasonsData, isPending: scoreReasonPending } =
+    useGetRequest<{
+      data: ScoreReasonsType[];
+    }>({
+      url: `${Api.GetAllScoreReasons}?score=${watch("score")}`,
+      key: ["getAllScoreReasons", watch("score").toString()],
+      enabled: true,
+      staleTime: 10 * 60 * 1000,
+    });
 
   useEffect(() => {
     if (createRealtorsCommentData && createRealtorsCommentData.msg === "done") {
@@ -102,9 +101,8 @@ export default function ScoreModal({
 
       <div className="flex w-full justify-center mt-3 ltr mr-2">
         {[1, 2, 3, 4, 5].map((number) => (
-          <Button
+          <CustomButton
             key={number}
-            size={isMobile ? "sm" : "md"}
             variant={number <= watch("score") ? "faded" : "bordered"}
             onPress={() => {
               setValue("score", number);
@@ -113,7 +111,7 @@ export default function ScoreModal({
             className="ml-2 border"
           >
             {number}
-          </Button>
+          </CustomButton>
         ))}
       </div>
 
@@ -135,11 +133,10 @@ export default function ScoreModal({
               required: "لطفا دلیل امتیاز خود را انتخاب کنید",
             }}
             render={({ field: { onChange } }) => (
-              <Button
+              <CustomButton
                 variant={
                   watch("score_reason") === item.id ? "flat" : "bordered"
                 }
-                size={isMobile ? "sm" : "md"}
                 className="w-[48%] mt-3 border"
                 radius="sm"
                 onPress={() => {
@@ -147,7 +144,7 @@ export default function ScoreModal({
                 }}
               >
                 {item.name}
-              </Button>
+              </CustomButton>
             )}
           />
         ))}
@@ -170,15 +167,14 @@ export default function ScoreModal({
 
       <TextError text={errors.description?.message} />
 
-      <Button
-        className="mt-3 bg-[#CB1B1B] text-white px-3 w-1/2"
-        size={isMobile ? "sm" : "md"}
+      <CustomButton
+        className="mt-3 bg-primary text-white px-3 w-1/2"
         type="submit"
         isLoading={createRealtorsCommentPending}
         spinner={<Spinner color="white" size="sm" />}
       >
         {createRealtorsCommentPending ? "" : "ثبت امتیاز"}
-      </Button>
+      </CustomButton>
     </form>
   );
 }

@@ -6,6 +6,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { Api } from "@/ApiService";
 import { useGetRequest } from "@/ApiService";
 import PaginationComponent from "./Pagination";
+import { allRealtorDataType } from "@/types/Type";
 
 type ConsultantsType = {
   userName: string | string[];
@@ -15,18 +16,12 @@ export default function Consultants({ userName }: ConsultantsType) {
   const [pageNumber, setPageNumber] = useState(1);
 
   const { data, isPending } = useGetRequest<{
-    data: {
-      id: number;
-      user__first_name: string;
-      user__last_name: string;
-      user__image_full_path: string;
-      real_estate_office__name: string;
-    }[];
+    data: allRealtorDataType[];
     total_pages: number;
   }>({
-    url: `${Api.GetRealEstateConsultants}${userName}&page=${pageNumber}`,
+    url: `${Api.realtors}/?reo_username=${userName}&page=${pageNumber}`,
     key: ["getRealEstateConsultants"],
-    staleTime: 5 * 60 * 1000,
+    staleTime: 10 * 60 * 1000,
     enabled: true,
   });
 
@@ -37,7 +32,7 @@ export default function Consultants({ userName }: ConsultantsType) {
       ) : (
         <Title
           title={`مشاورین ${data?.data.map(
-            (item) => item.real_estate_office__name
+            (item) => item.realEstateOffice.name
           )}`}
         />
       )}
@@ -75,16 +70,14 @@ export default function Consultants({ userName }: ConsultantsType) {
                     height={70}
                     className="rounded-full md:w-[120px] md:h-[120px]"
                     sizes="(min-width: 768px) 120px, 120px"
-                    src={
-                      item.user__image_full_path || "/icons/profile-circle.svg"
-                    }
+                    src={item.user.imageFullPath || "/icons/profile-circle.svg"}
                     alt="profileIcon"
                   />
                   <span className="mt-3 font-medium text-xs md:text-base md:mt-4">
                     {isPending ? (
                       <Skeleton width={50} className="md:!w-[100px]" />
                     ) : (
-                      `${item.user__first_name} ${item.user__last_name}`
+                      `${item.user.firstName} ${item.user.lastName}`
                     )}
                   </span>
                 </div>

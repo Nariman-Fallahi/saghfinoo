@@ -2,8 +2,6 @@
 import Stepper from "./Stepper";
 import { useState, useEffect } from "react";
 import { AdPostingFormDataType } from "@/types/Type";
-import { Button } from "@nextui-org/button";
-import { useSizeBtn } from "@/store/Size";
 import { useGetRequest } from "@/ApiService";
 import { Api } from "@/ApiService";
 import { getCookie } from "cookies-next";
@@ -12,6 +10,8 @@ import { SelectionDataType } from "@/types/Type";
 import { AdPostingApi } from "@/types/Type";
 import Image from "next/image";
 import { useRouter } from "next-nprogress-bar";
+import { isMobile } from "@/constant/Constants";
+import CustomButton from "../CustomButton";
 
 // Components
 import LocationDetails from "./levels/LocationDetails";
@@ -43,7 +43,6 @@ export default function AdFormContainer() {
   const [formStage, setFormStage] = useState<number>(1);
   const [formData, setFormData] = useState<AdPostingFormDataType>();
   // To prevent multiple modal from opening at the same time
-  const { sizeBtn } = useSizeBtn();
   const [files, setFiles] = useState<(File | null)[]>([]);
   const [idForm, setIdForm] = useState<number | undefined>(undefined);
 
@@ -216,8 +215,11 @@ export default function AdFormContainer() {
     <div
       className="w-full flex mt-[60px] justify-center md:mt-0"
       style={{
-        backgroundImage:
-          sizeBtn === "sm" ? (!adPosting ? "url(/icons/BgForm.svg)" : "") : "",
+        backgroundImage: isMobile
+          ? !adPosting
+            ? "url(/icons/BgForm.svg)"
+            : ""
+          : "",
       }}
     >
       <div
@@ -259,15 +261,14 @@ export default function AdFormContainer() {
                     برای شما مشخص شده است.
                   </p>
 
-                  <Button
-                    size={sizeBtn}
+                  <CustomButton
                     radius="sm"
                     variant="bordered"
-                    className="text-[#CB1B1B] border-[#CB1B1B] border mt-6"
+                    className="text-primary border-primary border mt-6"
                     onPress={() => router.push("/adPosting")}
                   >
                     برگشت به ثبت آگهی
-                  </Button>
+                  </CustomButton>
 
                   <i className="mt-8 md:mt-5">
                     <Image

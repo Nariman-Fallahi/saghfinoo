@@ -1,5 +1,4 @@
 import {
-  FieldErrors,
   Path,
   SubmitErrorHandler,
   SubmitHandler,
@@ -60,7 +59,7 @@ export default function SelectionCustomMenu({
         <div className="w-full flex justify-between pb-3 gap-3 px-4">
           <Button
             type="submit"
-            className="w-1/2 mt-3 bg-[#CB1B1B] !rounded"
+            className="w-1/2 mt-3 bg-primary !rounded"
             size="sm"
             radius="sm"
             color="danger"

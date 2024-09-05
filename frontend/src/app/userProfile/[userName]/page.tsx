@@ -1,53 +1,43 @@
-"use client";
 import Image from "next/image";
-import { useParams } from "next/navigation";
-import { deleteCookie } from "cookies-next";
-import { useRouter } from "next-nprogress-bar";
 import EditingInformation from "@/components/UserProfile/EditingInformation";
 import MyAds from "@/components/UserProfile/MyAds";
 import SavedAds from "@/components/UserProfile/SavedAds";
+import ItemMenu from "@/components/UserProfile/ItemMenu";
+import { notFound } from "next/navigation";
 
 enum UserProfileItem {
   EditingInformation = "EditingInformation",
   MyAds = "MyAds",
   SavedAds = "SavedAds",
+  Logout = "Logout",
 }
-
-type ItemMenu = {
-  title: string;
-  icon: string;
-  alt: string;
-  active: string;
-  onClick: () => void;
-};
 
 export const Title = ({ title }: { title: string }) => {
   return <p className="text-xs md:text-xl lg:text-2xl font-bold">{title}</p>;
 };
 
-const ItemMenu = ({ title, icon, alt, active, onClick }: ItemMenu) => {
-  const params = useParams();
+export async function generateStaticParams() {
+  return [
+    { id: "EditingInformation" },
+    { id: UserProfileItem.MyAds },
+    { id: UserProfileItem.SavedAds },
+    { id: UserProfileItem.Logout },
+  ];
+}
 
-  return (
-    <div
-      onClick={onClick}
-      className={`flex mt-2 p-2 cursor-pointer text-[#717171] ${
-        params.id === active
-          ? "before:w-1 before:h-5 before:rounded-xl before:ml-2 before:bg-[#CB1B1B] text-black"
-          : null
-      }`}
-    >
-      <i>
-        <Image width={20} height={20} src={icon} alt={alt} />
-      </i>
-      <span className="text-xs lg:text-sm mr-3 w-full">{title}</span>
-    </div>
-  );
-};
+export default function Page({ params }: { params: { userName: string } }) {
+  const { userName } = params;
 
-export default function UserProfile() {
-  const router = useRouter();
-  const params = useParams();
+  if (
+    ![
+      UserProfileItem.EditingInformation,
+      UserProfileItem.MyAds,
+      UserProfileItem.SavedAds,
+      UserProfileItem.Logout,
+    ].includes(userName as UserProfileItem)
+  ) {
+    notFound();
+  }
 
   return (
     <div className="mt-28 md:mt-36 flex px-4 md:px-8 w-full">
@@ -73,7 +63,8 @@ export default function UserProfile() {
             icon="/icons/edit.svg"
             alt="Edit Icon"
             active={UserProfileItem.EditingInformation}
-            onClick={() => router.push(UserProfileItem.EditingInformation)}
+            userName={userName}
+            routerPush={UserProfileItem.EditingInformation}
           />
 
           <ItemMenu
@@ -81,7 +72,8 @@ export default function UserProfile() {
             icon="/icons/receipt-text.svg"
             alt="My Ads"
             active={UserProfileItem.MyAds}
-            onClick={() => router.push(UserProfileItem.MyAds)}
+            userName={userName}
+            routerPush={UserProfileItem.MyAds}
           />
 
           <ItemMenu
@@ -89,28 +81,26 @@ export default function UserProfile() {
             icon="/icons/save.svg"
             alt="Saved Ads"
             active={UserProfileItem.SavedAds}
-            onClick={() => router.push(UserProfileItem.SavedAds)}
+            userName={userName}
+            routerPush={UserProfileItem.SavedAds}
           />
 
           <ItemMenu
             title="خروج"
             icon="/icons/logout.svg"
             alt="Logout"
-            active=""
-            onClick={() => {
-              deleteCookie("access");
-              deleteCookie("refresh");
-              router.push("/");
-            }}
+            active={UserProfileItem.Logout}
+            userName={userName}
+            routerPush={UserProfileItem.Logout}
           />
         </div>
       </div>
       <div className="w-full flex flex-col border md:mr-4 rounded-lg p-5">
-        {params.id === UserProfileItem.EditingInformation && (
+        {userName === UserProfileItem.EditingInformation && (
           <EditingInformation />
         )}
-        {params.id === UserProfileItem.MyAds && <MyAds />}
-        {params.id === UserProfileItem.SavedAds && <SavedAds />}
+        {userName === UserProfileItem.MyAds && <MyAds />}
+        {userName === UserProfileItem.SavedAds && <SavedAds />}
       </div>
     </div>
   );

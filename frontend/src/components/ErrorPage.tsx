@@ -1,7 +1,5 @@
-"use client";
 import Image from "next/image";
-import { Button } from "@nextui-org/button";
-import { useRouter } from "next-nprogress-bar";
+import BackToHomeButton from "./BackToHomeButton";
 
 type ErrorPage = {
   icon: string;
@@ -10,7 +8,6 @@ type ErrorPage = {
 };
 
 export default function ErrorPage({ icon, description, title }: ErrorPage) {
-  const router = useRouter();
   return (
     <div className="w-full p-5">
       <div className="mt-20 md:mt-28 border rounded-lg items-center justify-center py-8 flex flex-col">
@@ -25,13 +22,7 @@ export default function ErrorPage({ icon, description, title }: ErrorPage) {
         <h2 className="font-bold text-xl mt-8 md:text-2xl">{title}</h2>
         <p className="mt-3 text-sm text-center md:text-xl">{description}</p>
 
-        <Button
-          className="bg-[#CB1B1B] text-white mt-5 md:px-8"
-          radius="sm"
-          onPress={() => router.push("/")}
-        >
-          بازگشت به صفحه اصلی
-        </Button>
+        <BackToHomeButton />
       </div>
     </div>
   );

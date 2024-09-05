@@ -10,10 +10,10 @@ import { userInfoDataType } from "@/types/Type";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Button } from "@nextui-org/button";
 import { useRouter } from "next-nprogress-bar";
 import { isMobile, LoginErrorText } from "@/constant/Constants";
 import { ErrorNotification } from "@/notification/Error";
+import CustomButton from "@/components/CustomButton";
 
 export default function Menu() {
   const access = getCookie("access");
@@ -56,7 +56,7 @@ export default function Menu() {
     {
       title: "اخبار روز",
       icon: "/icons/receipt-2.svg",
-      link: "",
+      link: "/news",
     },
   ];
 
@@ -99,21 +99,23 @@ export default function Menu() {
 
   const AdPostingBtn = () => {
     return (
-      <Button
+      <CustomButton
         onPress={() =>
           isLogin
             ? router.push("/adPosting")
             : ErrorNotification(LoginErrorText)
         }
-        size={isMobile ? "sm" : "md"}
         variant="light"
-        className="p-1 px-2 border border-red-600 text-[12px] font-medium
-       rounded-[8px] text-red-600 md:text-[12.7px] md:p-0 lg:text-sm md:rounded-[0.35rem]"
+        radius="sm"
+        className="border border-primary text-primary"
       >
         ثبت آگهی
-      </Button>
+      </CustomButton>
     );
   };
+
+  // z-0 group relative inline-flex items-center justify-center box-border appearance-none select-none whitespace-nowrap font-normal subpixel-antialiased overflow-hidden tap-highlight-transparent data-[pressed=true]:scale-[0.97] outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 px-4 min-w-20 h-10 text-small gap-2 rounded-medium [&>svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none bg-transparent text-default-foreground data-[hover=true]:bg-default/40
+  // z-0 group relative inline-flex items-center justify-center box-border appearance-none select-none whitespace-nowrap font-normal subpixel-antialiased overflow-hidden tap-highlight-transparent data-[pressed=true]:scale-[0.97] outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 px-3 min-w-16 h-8 text-tiny gap-2 rounded-small [&>svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none bg-transparent text-default-foreground data-[hover=true]:bg-default/40
 
   return (
     <>

@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import { Button } from "@nextui-org/button";
 import "react-loading-skeleton/dist/skeleton.css";

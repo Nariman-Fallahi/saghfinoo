@@ -71,7 +71,7 @@ export default function PhoneNumber({
         ></Checkbox>
         <p className="text-xs text-[#909090] md:text-sm">
           با
-          <span className="text-[#CB1B1B]"> قوانین سقفینو </span>
+          <span className="text-primary"> قوانین سقفینو </span>
           موافق هستم.
         </p>
       </div>
@@ -81,7 +81,7 @@ export default function PhoneNumber({
         isDisabled={!isSelected}
         isLoading={isPendingVerifyNumber}
         spinner={<Spinner color="white" size="sm" />}
-        className="mt-[64px] w-full rounded-lg p-2 bg-[#CB1B1B] text-white md:mt-[50px] md:text-lg"
+        className="mt-[64px] w-full rounded-lg p-2 bg-primary text-white md:mt-[50px] md:text-lg"
       >
         {isPendingVerifyNumber ? "" : "ورود"}
       </Button>

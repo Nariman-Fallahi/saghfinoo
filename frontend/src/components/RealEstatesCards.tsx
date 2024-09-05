@@ -115,7 +115,7 @@ export default function RealEstatesCards({
                 )}
                 <Button
                   radius="sm"
-                  className="hidden md:flex mt-3 bg-[#CB1B1B] text-white"
+                  className="hidden md:flex mt-3 bg-primary text-white"
                   onPress={() =>
                     router.push(`/realEstateProfile/${item.username}`)
                   }

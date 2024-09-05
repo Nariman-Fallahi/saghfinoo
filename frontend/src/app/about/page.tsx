@@ -7,21 +7,19 @@ export default function About() {
         <p className="font-bold text-xs md:text-base lg:text-2xl">
           داستان سقفینو
         </p>
-
         <p
           className="mt-6 font-bold text-[#871212] md:mt-7 md:text-2xl lg:text-3xl
          w-full text-center"
         >
           ما باور داریم هر شخصی، سقفی دارد
         </p>
-
+        A
         <p
           className="mt-2 font-medium text-[#717171] md:mt-3 md:text-xl lg:text-2xl
         w-full text-center"
         >
           تا پیدا کردن سقف دلخواه کنار شماییم
         </p>
-
         <div
           className="mt-7 flex flex-col items-center md:flex-row md:justify-between
          md:mt-8 md:items-start"

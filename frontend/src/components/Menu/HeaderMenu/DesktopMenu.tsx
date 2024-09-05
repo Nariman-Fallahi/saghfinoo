@@ -6,7 +6,6 @@ import { useModalStore } from "@/store/Register";
 import Link from "next/link";
 import { userInfoDataType } from "@/types/Type";
 import { Spinner } from "@nextui-org/spinner";
-import { FetchStatus } from "@tanstack/react-query";
 import { useRouter } from "next-nprogress-bar";
 
 type desktopMenuType = {

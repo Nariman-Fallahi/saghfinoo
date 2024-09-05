@@ -1,10 +1,10 @@
-import { Button } from "@nextui-org/button";
+// import { Button } from "@nextui-org/button";
+import CustomButton from "@/components/CustomButton";
 import Image from "next/image";
 import { useState, useEffect, SetStateAction, Dispatch } from "react";
 import ModalFilter from "./ModalMobile/ModalFilter";
 import { useGetRequest } from "@/ApiService";
 import { Api } from "@/ApiService";
-import Skeleton from "react-loading-skeleton";
 import {
   AdsFilterDataType,
   ProvincesType,
@@ -183,9 +183,8 @@ export default function Filter({ filterData, setFilterData }: FilterType) {
     <>
       <div className="mt-1 md:mt-5">
         {/* Mobile */}
-        <Button
+        <CustomButton
           variant="bordered"
-          size={isMobile ? "sm" : "md"}
           className="w-1/4 border mt-5 rounded md:mt-10 md:hidden"
           onPress={() => setOpenFilterModal(true)}
         >
@@ -198,7 +197,7 @@ export default function Filter({ filterData, setFilterData }: FilterType) {
             />
             <span className="mr-1">فیلترها</span>
           </div>
-        </Button>
+        </CustomButton>
         {/* Desktop */}
         <div className="hidden md:flex items-center mt-6 w-full gap-4">
           <div className="w-44">
