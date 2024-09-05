@@ -1,11 +1,11 @@
 
-PERSIAN_CHARS = sorted(list("ابتپجچحخدذآرزژسشصضطظعغفقکگلمنوهی") + list("نه‌د")) 
+PERSIAN_CHARS = sorted(list("ثابتپجچحخدذآرزژسشصضطظعغفقکگلمنوهیأ") + list("نه‌د")) 
 
 ENGLISH_CHARS = sorted(list("abcdefghijklmnopqrstuvwxyz"))
 
-PERSIAN_SIGNS = sorted(list("،؟.!:؛\""))
+PERSIAN_SIGNS = sorted(list("،؟.!:؛\"»«()"))
 
-ENGLISH_SIGNS = sorted(list("!.,?':;\""))
+ENGLISH_SIGNS = sorted(list("!.,?':;\"()"))
 
 ENGLISH_NUMBERS = sorted(list("1234567890"))
 
@@ -13,9 +13,9 @@ PERSIAN_NUMBERS = sorted(list("۰۱۲۳۴۵۶۷۸۹"))
 
 NAME_CHARS = sorted(PERSIAN_CHARS + ENGLISH_CHARS + list(" "))
 USERNAME_CHARS = sorted(ENGLISH_CHARS + ENGLISH_NUMBERS + list("_.-"))
-DESCRIPTION_CHARS = sorted(list(" ") + ENGLISH_CHARS + PERSIAN_CHARS + ENGLISH_NUMBERS + PERSIAN_NUMBERS + ENGLISH_SIGNS + PERSIAN_SIGNS+ ['\n'])
-
-
+DESCRIPTION_CHARS = sorted(list(" ") + ENGLISH_CHARS + PERSIAN_CHARS + ENGLISH_NUMBERS + PERSIAN_NUMBERS + ENGLISH_SIGNS + PERSIAN_SIGNS+ ['\n', '<', '>', '/', '='])
+SLUG_CHARS = sorted(list(USERNAME_CHARS) + ['%'])
+TAG_CHARS = sorted(NAME_CHARS + PERSIAN_NUMBERS + ENGLISH_NUMBERS + ['|'])
 
 if len(PERSIAN_CHARS) != 32:
     print(f"ERROR: invalid length of PERSIAN_CHARS: {len(PERSIAN_CHARS)}")
@@ -29,3 +29,4 @@ NAME_INVALID_CHARS = list('!@#$%^&*()-=+_[]{}\\|\'";:.,></?')+ENGLISH_NUMBERS+PE
 USERNAME_INVALID_CHARS = list('@!#$%^&*(){}[]\\|\'":;?/><.,')
 DESCRIPTION_INVALID_CHARS = list('<>{}[]\\|')
 NUMBER_INVALID_CHARS = PERSIAN_CHARS + ENGLISH_CHARS + PERSIAN_SIGNS + ENGLISH_SIGNS + list('{}[]\\|-_()=+/?')
+HTML_INVALID_TAGS = ['<script>']
