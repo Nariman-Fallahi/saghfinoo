@@ -14,7 +14,7 @@ from common import codes
 from common.utils.permissions import IsAdmin
 from common.utils import validations
 from common.utils.request import get_page_and_limit
-from .serializers import NewsSerializer, NewsResponseSerailizer, NewsPreviewResponseSerializer
+from .serializers import NewsSerializer, NewsResponseSerailizer, NewsPreviewResponseSerializer, CategoryResponseSerializer
 from .models import News, Category
 # Create your views here.
 
@@ -28,7 +28,7 @@ class SearchNewsAPIView(APIView):
 
         qp = dict(req.query_params)
         try:
-            page, limit = get_page_and_limit(req)
+            page, limit = get_page_and_limit(req, 12)
         except ValueError as e:
             return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
 
@@ -64,6 +64,15 @@ class SearchNewsAPIView(APIView):
                 return Response({'erorrs':{'category':str(v)}, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
             query &= Q(category=category)
 
+        special = req.query_params.get('special', None)
+        if special:
+            try:
+                validations.validate_integer(special)
+            except ValueError as v:
+                return Response({'errors': {'special': str(v)}, 'stauts':400, 'code':codes.INVALID_QUERY_PARAM})
+
+            query &= Q(special=special)
+        
         news = News.objects.filter(query).order_by('-publish_date').order_by('-special')[page*limit: page*limit+limit]
         news = NewsPreviewResponseSerializer(news, many=True).data
         total_pages = math.ceil(News.objects.filter(query).count()/limit)
@@ -127,3 +136,13 @@ class UploadNewsImageAPIView(APIView):
 
         return Response({"msg":"done", 'status':200})
 
+
+class GetAllCategoriesAPIView(APIView):
+
+    def get(self, req):
+
+        categories = Category.objects.all()
+
+        categories =CategoryResponseSerializer(categories, many=True).data
+
+        return Response({'data': categories, 'status':200})
