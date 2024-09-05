@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from common.utils import characters
-
+from common.utils.algorithms import binary_search
 
 def validate_number(number: str):
     if len(number) != 11:
@@ -69,7 +69,7 @@ def validate(string: str, valid_chars):
         raise ValueError('invalid string')
  
     for c in string.lower():
-        if c not in valid_chars:
+        if binary_search(valid_chars, c) == -1:
             raise ValueError(f'invalid character: {c}')
             
 
