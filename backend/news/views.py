@@ -59,10 +59,10 @@ class SearchNewsAPIView(APIView):
         category = req.query_params.get('category', None)
         if category:
             try:
-                validations.validate_integer(category)
+                validations.validate_name(category)
             except ValueError as v:
                 return Response({'erorrs':{'category':str(v)}, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
-            query &= Q(category=category)
+            query &= Q(category__name=category)
 
         special = req.query_params.get('special', None)
         if special:
