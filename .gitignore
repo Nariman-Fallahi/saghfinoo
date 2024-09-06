@@ -1,4 +1,4 @@
 __pycache__
 .env
 db.sqlite3
-/.idx
+/backend/venv

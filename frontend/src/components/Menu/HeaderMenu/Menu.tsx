@@ -2,66 +2,137 @@
 import MobileMenu from "./MobileMenu";
 import DesktopMenu from "./DesktopMenu";
 import { navigationMenuType } from "@/types/Type";
-import { useUserInfo } from "@/store/Register";
 import { getCookie } from "cookies-next";
-import { useEffect } from "react";
+import Register from "@/components/Register/Register";
+import { Api } from "@/ApiService";
+import { useGetRequest } from "@/ApiService";
+import { userInfoDataType } from "@/types/Type";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
+import { isMobile, LoginErrorText } from "@/constant/Constants";
+import { ErrorNotification } from "@/notification/Error";
+import CustomButton from "@/components/CustomButton";
 
 export default function Menu() {
   const access = getCookie("access");
-  const { setUserInfo, userInfo } = useUserInfo();
+  const router = useRouter();
+  const currentPath = usePathname();
 
-  const navigationMenu: navigationMenuType = [
+  const { data, status } = useGetRequest<userInfoDataType>({
+    url: Api.GetUserInfo,
+    key: ["getUserInfo"],
+    headers: {
+      Authorization: `Bearer ${access}`,
+    },
+    staleTime: 5 * 1000 * 60,
+    enabled: true,
+  });
+
+  const isLogin: boolean = !!access && !!data?.data && status === "success";
+
+  const baseMenu: navigationMenuType = [
     {
       title: "اجاره",
-      icon: "/icons/arrow-left.svg",
+      icon: "/icons/house.svg",
+      link: "",
     },
     {
       title: "خرید",
-      icon: "/icons/arrow-left.svg",
+      icon: "/icons/key.svg",
+      link: "",
     },
     {
       title: "املاک و مستغلات",
-      icon: "/icons/arrow-left.svg",
+      icon: "/icons/house-2.svg",
+      link: "/realEstates",
     },
     {
       title: "مشاورین املاک",
-      icon: "/icons/arrow-left.svg",
+      icon: "/icons/people.svg",
+      link: "/realators",
     },
     {
       title: "اخبار روز",
-      icon: "/icons/arrow-left.svg",
+      icon: "/icons/receipt-2.svg",
+      link: "/news",
     },
   ];
 
-  useEffect(() => {
-    const getUserInfo = async () => {
-      try {
-        const response = await fetch(
-          "http://127.0.0.1:8000/api/v1/users/get-user-info",
+  const loggedIn =
+    isMobile && isLogin
+      ? [
           {
-            headers: {
-              Authorization: `Bearer ${access}`,
-            },
-          }
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setUserInfo(data);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
+            title: "ایجاد آگهی",
+            icon: "/icons/add-circle.svg",
+            link: "/adPosting",
+          },
+          {
+            title: "آگهی های من",
+            icon: "/icons/receipt-text.svg",
+            link: "",
+          },
+          {
+            title: "آگهی های ذخیره شده",
+            icon: "/icons/save.svg",
+            link: "",
+          },
+        ]
+      : [];
 
-    if (access !== undefined) {
-      getUserInfo();
-    }
-  }, []);
+  const navigationMenu = [...loggedIn, ...baseMenu];
+
+  const iconMenu = () => {
+    return (
+      <Link href={access ? "/proUser" : "newUser"}>
+        <Image
+          width={72}
+          height={32}
+          className="md:w-[77px] md:h-[37px] lg:w-[131px] lg:h-[63px]"
+          src="/icons/Logo.svg"
+          alt=""
+        />
+      </Link>
+    );
+  };
+
+  const AdPostingBtn = () => {
+    return (
+      <CustomButton
+        onPress={() =>
+          isLogin
+            ? router.push("/adPosting")
+            : ErrorNotification(LoginErrorText)
+        }
+        variant="light"
+        radius="sm"
+        className="border border-primary text-primary"
+      >
+        ثبت آگهی
+      </CustomButton>
+    );
+  };
 
   return (
     <>
-      <MobileMenu NavigationMenu={navigationMenu} />
-      <DesktopMenu NavigationMenu={navigationMenu} />
+      <MobileMenu
+        NavigationMenu={navigationMenu}
+        userInfoData={data}
+        iconMenu={iconMenu()}
+        AdPostingBtn={AdPostingBtn()}
+        isLogin={isLogin}
+      />
+      <DesktopMenu
+        NavigationMenu={navigationMenu}
+        userInfoData={data}
+        dataStatus={status}
+        iconMenu={iconMenu()}
+        currentPath={currentPath}
+        AdPostingBtn={AdPostingBtn()}
+        isLogin={isLogin}
+      />
+      <Register />
     </>
   );
 }

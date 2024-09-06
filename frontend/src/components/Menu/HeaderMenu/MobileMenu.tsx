@@ -1,36 +1,47 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@nextui-org/button";
 import { navigationMenuType } from "@/types/Type";
-import { useModalStore, useUserInfo } from "@/store/Register";
-import { useEffect } from "react";
+import { useModalStore } from "@/store/Register";
+import Link from "next/link";
+import { userInfoDataType } from "@/types/Type";
+import { useRouter } from "next-nprogress-bar";
 
 type mobileMenuType = {
   NavigationMenu: navigationMenuType;
+  userInfoData: userInfoDataType | undefined;
+  iconMenu: JSX.Element;
+  AdPostingBtn: JSX.Element;
+  isLogin: boolean;
 };
 
-export default function MobileMenu({ NavigationMenu }: mobileMenuType) {
-  const [openMenu, setOpenMenu] = useState<boolean>();
+export default function MobileMenu({
+  NavigationMenu,
+  userInfoData,
+  iconMenu,
+  AdPostingBtn,
+  isLogin,
+}: mobileMenuType) {
+  const [openMenu, setOpenMenu] = useState<"open" | "close" | null>(null);
   const { setOpen } = useModalStore();
-  const { userInfo } = useUserInfo();
-  const [isLogin, setIsLogin] = useState<boolean>();
-
-  useEffect(() => {
-    console.log(userInfo);
-    
-    if (userInfo !== undefined) {
-      setIsLogin(true);
-    } else {
-      setIsLogin(false);
-    }
-  }, [userInfo]);
+  const router = useRouter();
 
   const ClickRegister = () => {
     if (!isLogin) {
       setOpen(true);
+    } else {
+      router.push("/userProfile/EditingInformation");
     }
   };
+
+  useEffect(() => {
+    if (openMenu === "open" && typeof window !== "undefined") {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [openMenu]);
 
   return (
     <>
@@ -43,24 +54,21 @@ export default function MobileMenu({ NavigationMenu }: mobileMenuType) {
           size="sm"
           radius="full"
           variant="light"
-          onPress={() => setOpenMenu(true)}
+          onPress={() => setOpenMenu("open")}
         >
-          <Image width={24} height={24} src="icons/menu.svg" alt="" />
+          <Image width={24} height={24} src="/icons/menu.svg" alt="" />
         </Button>
-        <Image width={72} height={32} src="/icons/Logo.svg" alt="" />
-        <Button
-          size="sm"
-          variant="light"
-          className="p-1 px-2 border border-red-600 text-[12px] font-medium
-           rounded-[8px] text-red-600"
-        >
-          ثبت آگهی
-        </Button>
+        {iconMenu}
+        {AdPostingBtn}
       </nav>
 
       <div
-        className={`absolute w-full h-screen bg-white hidden z-50 top-0 ${
-          openMenu ? "openMenu" : "closeMenu"
+        className={`absolute w-full h-screen bg-white hidden z-50 top-0 overflow-y-auto ${
+          openMenu === "open"
+            ? "openMenu"
+            : openMenu === "close"
+            ? "closeMenu"
+            : ""
         }`}
       >
         <div className="w-full flex flex-col py-5">
@@ -69,13 +77,13 @@ export default function MobileMenu({ NavigationMenu }: mobileMenuType) {
               isIconOnly
               size="sm"
               variant="light"
-              onPress={() => setOpenMenu(false)}
+              onPress={() => setOpenMenu("close")}
             >
               <Image
                 width={24}
                 height={24}
                 src="/icons/close-circle.svg"
-                alt=""
+                alt="User Profile"
               />
             </Button>
           </div>
@@ -85,23 +93,27 @@ export default function MobileMenu({ NavigationMenu }: mobileMenuType) {
             className="w-full bg-gray-100 px-2 py-5 mt-4 flex items-center"
           >
             <Image
-              width={isLogin ? 30 : 20}
-              height={isLogin ? 30 : 20}
-              src="/icons/profile-circle.svg"
+              width={isLogin ? 36 : 20}
+              height={isLogin ? 36 : 20}
+              src={
+                (isLogin && userInfoData?.data.image_full_path) ||
+                "/icons/profile-circle.svg"
+              }
               alt=""
+              className="rounded-full h-9"
             />{" "}
             {isLogin && (
               <Image
                 width={20}
                 height={20}
-                className="mr-2"
                 src="/icons/edit.svg"
+                className="mr-2"
                 alt=""
               />
             )}
             <p className="mr-2 text-xs">
               {isLogin
-                ? `${userInfo?.first_name} ${userInfo?.last_name}`
+                ? `${userInfoData?.data.first_name} ${userInfoData?.data.last_name}`
                 : "ورود یا ثبت نام"}
             </p>
             {isLogin && (
@@ -114,31 +126,24 @@ export default function MobileMenu({ NavigationMenu }: mobileMenuType) {
               />
             )}
           </div>
-          <div className="mt-5 flex items-center justify-between px-2">
-            <div className="flex items-center">
-              <Image
-                width={20}
-                height={20}
-                src="/icons/add-circle.svg"
-                alt=""
-              />
-              <p className="text-xs mr-2">ثبت آگهی</p>
-            </div>
-            <Image width={20} height={20} src="/icons/arrow-left.svg" alt="" />
-          </div>
-
           {NavigationMenu.map((item, index) => {
             return (
-              <div
+              <Link
+                href={item.link}
                 key={index}
                 className="mt-7 flex items-center justify-between px-2"
               >
                 <div className="flex items-center">
-                  <Image width={20} height={20} src="/icons/house.svg" alt="" />
+                  <Image width={20} height={20} src={item.icon} alt="" />
                   <p className="text-xs mr-2">{item.title}</p>
                 </div>
-                <Image width={20} height={20} src={item.icon} alt="" />
-              </div>
+                <Image
+                  width={20}
+                  height={20}
+                  src="/icons/arrow-left.svg"
+                  alt=""
+                />
+              </Link>
             );
           })}
         </div>

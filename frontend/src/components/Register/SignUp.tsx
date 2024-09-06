@@ -1,65 +1,60 @@
-import { SignUpItem } from "@/constant/Constants";
 import { Button } from "@nextui-org/button";
-import { useState } from "react";
-import { SignUpType } from "@/types/Type";
-import { Error } from "@/notification/Error";
-import Image from "next/image";
+import { useEffect, useState } from "react";
+import { ErrorNotification } from "@/notification/Error";
 import { Success } from "@/notification/Success";
 import { useModalStore } from "@/store/Register";
-import { InputPasswordType } from "@/types/Type";
 import { Spinner } from "@nextui-org/spinner";
 import { useRegisterStatus } from "@/store/Register";
 import { RegisterStatusValue } from "@/constant/Constants";
 import { setCookie } from "cookies-next";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
+import { usePostRequest } from "@/ApiService";
+import { Api } from "@/ApiService";
+import { SignUpDataType } from "@/types/Type";
+import InputRegister from "../InputRegister";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+type SignUpType = {
+  token: string;
+  phoneNumber: number | undefined;
+};
+
+type Inputs = {
+  fristName: string;
+  lastName: string;
+  password: string;
+};
 
 export default function SignUp({ token, phoneNumber }: SignUpType) {
-  const [focus, setFocus] = useState<number>();
-  const [firstName, setFirstName] = useState<string>("");
-  const [lastName, setLastName] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
   const { setOpen } = useModalStore();
-  const [typeInputPassword, setTypeInputPassword] = useState<InputPasswordType>(
-    {
-      type: "password",
-      icon: "/icons/eye.svg",
-    }
-  );
-  const [loading, setLoading] = useState<boolean>(false);
   const { setRegisterStatus } = useRegisterStatus();
   const router = useRouter();
-
-  const apiUrlSignUp = "http://127.0.0.1:8000/api/v1/users/complete-signup";
-
-  const ClickBtnSignUp = () => {
-    if (firstName == "" || lastName == "" || password == "") {
-      Error("لطفا اطلاعات خود را کامل وارد نمایید.");
-    } else {
-      UserSignUp();
+  const { mutate, isSuccess, data, isPending } = usePostRequest<SignUpDataType>(
+    {
+      url: Api.CompleteSignup,
+      key: "signUp",
     }
+  );
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>();
+
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    mutate({
+      first_name: data.fristName,
+      last_name: data.lastName,
+      password: data.password,
+      token: token,
+      number: phoneNumber,
+    });
   };
 
-  const UserSignUp = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(apiUrlSignUp, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          first_name: firstName,
-          last_name: lastName,
-          password: password,
-          token: token,
-          number: phoneNumber,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.status === 200 && data.code === "login_done") {
-        console.log(data);
+  useEffect(() => {
+    if (isSuccess) {
+      if (data.code === "login_done") {
         setCookie("access", data.access, {
           maxAge: data.expire,
           sameSite: "strict",
@@ -73,102 +68,106 @@ export default function SignUp({ token, phoneNumber }: SignUpType) {
         setOpen(false);
         router.push("/proUser");
       } else {
-        Error("در ارسال اطلاعات مشکلی پیش آمد.");
+        ErrorNotification("در ارسال اطلاعات مشکلی پیش آمد.");
       }
-    } catch (error) {
-      Error("در ارتباط با سرور مشکلی پیش آمد.");
-      console.log(error);
     }
-    setLoading(false);
-  };
-
-  const OnChangeInput = (value: string, id: number) => {
-    switch (id) {
-      case 0:
-        setFirstName(value);
-        break;
-      case 1:
-        setLastName(value);
-        break;
-      case 2:
-        setPassword(value);
-    }
-  };
-
-  const ShowPassword = () => {
-    switch (typeInputPassword.type) {
-      case "password":
-        setTypeInputPassword({ type: "text", icon: "/icons/eye-slash.svg" });
-        break;
-      case "text":
-        setTypeInputPassword({ type: "password", icon: "/icons/eye.svg" });
-        break;
-    }
-  };
+  }, [isSuccess, data, setRegisterStatus, setOpen, router]);
 
   return (
-    <div className="w-full flex flex-col mt-2 items-center">
-      <p className="text-sm text-[#353535] md:mt-2 md:text-base">
-        با این موبایل حساب کاربری وجود ندارد.
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full flex flex-col items-center"
+    >
+      <p className="text-sm text-[#353535] md:mt-2 md:text-base mt-[-30px] text-center">
+        با این شماره موبایل حساب کاربری وجود ندارد.
         <br />
         برای ثبت نام اطلاعات زیر را کامل کنید.
       </p>
-      {SignUpItem.map((item, index) => {
-        return (
-          <div
-            key={index}
-            className={
-              focus === item.id
-                ? "mt-[28px] flex items-center directionRTL p-3 rounded w-full border-[#2F80ED] border  text-sm md:p-3 md:mt-[24px]"
-                : "mt-[28px] flex items-center directionRTL p-3 rounded w-full border-[#ADADAD] border text-sm md:p-3 md:mt-[24px]"
+
+      <div className="flex flex-col w-full">
+        <InputRegister
+          name="fristName"
+          placeholder="نام خود را  وارد نمایید"
+          alt="Frist Name"
+          type="text"
+          icon="/icons/user.svg"
+          register={register}
+          rules={{
+            required: "لطفا نام خود را وارد کنید",
+            pattern: {
+              value: /^[\u0600-\u06FF\s]+$/,
+              message: "لطفا اسم خود را به فارسی وارد کنید",
+            },
+            maxLength: {
+              value: 18,
+              message: "وارد کردن بیشتر از ۱۸ کاراکتر ممکن نمیباشد",
+            },
+            minLength: {
+              value: 3,
+              message: "وارد کردن کم تر از ۳ کاراکتر ممکن نمیباشد"
             }
-            style={{
-              boxShadow:
-                focus === item.id
-                  ? "0px 0px 0px 3px rgba(47, 128, 237, 0.19)"
-                  : "",
-            }}
-          >
-            <Image
-              width={16}
-              height={16}
-              className="md:w-[17px] md:h-[17px]"
-              src={item.icon}
-              alt=""
-            />
-            <input
-              onFocus={() => setFocus(index)}
-              placeholder={item.placeholder}
-              type={item.id !== 2 ? "text" : typeInputPassword.type}
-              className="w-full outline-none mr-2 text-xs md:text-sm"
-              onChange={(e) => OnChangeInput(e.target.value, item.id)}
-            />
-            {item.id === 2 && (
-              <div>
-                <Image
-                  width={18}
-                  height={18}
-                  onClick={ShowPassword}
-                  className="cursor-pointer mr-2"
-                  src={typeInputPassword.icon}
-                  alt=""
-                />
-              </div>
-            )}
-          </div>
-        );
-      })}
+          }}
+          error={errors.fristName?.message}
+        />
+
+        <InputRegister
+          name="lastName"
+          placeholder="نام خانوادگی خود را  وارد نمایید"
+          alt="Last Name"
+          type="text"
+          icon="/icons/user.svg"
+          register={register}
+          rules={{
+            required: "لطفا نام خانوادگی خود را وارد کنید",
+            pattern: {
+              value: /^[\u0600-\u06FF\s]+$/,
+              message: "لطفا نام خانوادگی خود را به فارسی وارد کنید",
+            },
+            maxLength: {
+              value: 18,
+              message: "وارد کردن بیشتر از ۱۸ کاراکتر ممکن نمیباشد",
+            },
+            minLength: {
+              value: 3,
+              message: "وارد کردن کم تر از ۳ کاراکتر ممکن نمیباشد"
+            }
+          }}
+          error={errors.lastName?.message}
+        />
+
+        <InputRegister
+          name="password"
+          placeholder="رمز دلخواه خود را وارد نمایید"
+          alt="Password"
+          type="password"
+          icon="/icons/key.svg"
+          register={register}
+          rules={{
+            required: "لطفا رمز عبور خود را وارد کنید",
+            pattern: {
+              value: /^[A-Za-z0-9._$#@]+$/,
+              message: "رمز عبور معتبر نمیباشد",
+            },
+            minLength: {
+              value: 8,
+              message: "رمز عبور نمیتواند کم تر از ۸ رقم باشد",
+            },
+          }}
+          error={errors.password?.message}
+        />
+      </div>
+
       <div className="w-full flex justify-center">
         <Button
-          className="mt-5 w-4/5 rounded-lg p-2 bg-[#CB1B1B]
-        text-white md:mt-[50px] md:text-lg"
-          onPress={ClickBtnSignUp}
-          isLoading={loading}
+          type="submit"
+          className="text-sm mt-5 w-4/5 rounded-lg p-2 bg-primary text-white
+           md:mt-[50px] md:text-base"
+          isLoading={isPending}
           spinner={<Spinner color="white" size="sm" />}
         >
-          {loading ? "" : "ثبت اطلاعات"}
+          {isPending ? "" : "ثبت اطلاعات"}
         </Button>
       </div>
-    </div>
+    </form>
   );
 }

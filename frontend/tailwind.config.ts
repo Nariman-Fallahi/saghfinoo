@@ -1,7 +1,6 @@
-import type { Config } from "tailwindcss";
 const { nextui } = require("@nextui-org/theme");
 
-const config: Config = {
+module.exports = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -10,16 +9,20 @@ const config: Config = {
     "./node_modules/@nextui-org/theme/dist/components/modal.js",
     "./node_modules/@nextui-org/theme/dist/components/checkbox.js",
     "./node_modules/@nextui-org/theme/dist/components/spinner.js",
+    "./node_modules/@nextui-org/theme/dist/components/pagination.js",
+  ],
+  plugins: [
+    nextui({
+      layout: {
+        disabledOpacity: "0.3",
+      },
+    }),
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      colors: {
+        primary: "#CB1B1B",
       },
     },
   },
-  plugins: [nextui()],
 };
-export default config;

@@ -2,6 +2,7 @@
 export type navigationMenuType = {
   title: string;
   icon: string;
+  link: string;
 }[];
 
 // Menu
@@ -26,29 +27,6 @@ export type staticFooterItemsType = {
   description: string;
 };
 
-//   Otp
-export type OtpType = {
-  otp: string;
-  setOtp: (value: string) => void;
-  handleFocus: (index: number) => void;
-  handleBlur: () => void;
-  focusedInput: number | null;
-  time: number;
-  setTime: (value : number) => void;
-  sendPhoneNumber: () => void;
-};
-
-// InputPhoneNumber
-export type InputPhoneNumberType = {
-  setPhoneNumber: (value: string) => void;
-  inputErr: boolean;
-  isSelected: boolean;
-  setIsSelected: (value: boolean) => void;
-  btnSendPhoneNumber: () => void;
-  loading: boolean;
-};
-
-// DeveloperMenuFooter
 type contact = {
   image: string;
   url: string;
@@ -60,20 +38,273 @@ export type DevelopersType = {
   contact: contact[];
 }[];
 
-// SignUp
-export type SignUpInputType = {
-  id: number;
-  title: string;
-  placeholder: string;
-  icon: string;
-}[];
-
-export type SignUpType = {
-  token: string;
-  phoneNumber: string;
+export type usePostRequestType = {
+  url: string;
+  key: string;
+  headers?: Record<string, string>;
+  method?: "POST" | "DELETE" | "PUT";
 };
 
-export type InputPasswordType = {
-  type: string;
-  icon: string;
-}
+export type LoginDataType = {
+  number: number | undefined;
+  code: number | string;
+  token: string;
+};
+
+export type SignUpDataType = {
+  first_name: string;
+  last_name: string;
+  password: string;
+  token: number | string;
+  number: number | undefined;
+};
+
+export type editUserProfileType = {
+  first_name: string;
+  last_name: string;
+};
+
+export type changePasswordType = {
+  new_password: string;
+  current_password: string;
+};
+
+export type useGetRequestType = {
+  url: string;
+  key: string[];
+  headers?: Record<string, string>;
+  enabled: boolean;
+  staleTime: number;
+};
+
+export type userInfoDataType = {
+  data: {
+    first_name: string | undefined;
+    last_name: string | undefined;
+    number: number | undefined;
+    image_full_path?: string | undefined;
+    email: string | undefined;
+    password: string;
+    newPassword: string;
+  };
+};
+
+export type ProvincesType = {
+  id: number;
+  name: string;
+};
+
+export type CitiesType = {
+  name: string;
+};
+
+export type filterValuesType = {
+  selectedProvince?: { id?: number; name?: string } | undefined;
+  selectedCity?: string | undefined;
+};
+
+export type allrealEstateOfficesDataType = {
+  name: string;
+  username: string;
+  city: string;
+  mainStreet: string;
+  subStreet: string;
+  score: number;
+  numberOfActiveAds: number;
+  numberOfComments: number;
+  imageFullPath?: string;
+  blueTick: boolean;
+};
+
+export type realEstateOfficesType = {
+  name: string;
+  description: string;
+  username: string;
+  city: string;
+  mainStreet: string;
+  subStreet: string;
+  number: string;
+  landlineNumber: string;
+  score: number;
+  numberOfActiveAds: number;
+  numberOfComments: number;
+  imageFullPath?: string;
+  twitter: string;
+  whatsapp: string;
+  facebook: string;
+  telegram: string;
+  email: string;
+  site: string;
+  blueTick: boolean;
+  bgImageFullPath?: string;
+};
+
+export type allRealtorDataType = {
+  id: string;
+  user: {
+    firstName: string;
+    lastName: string;
+    imageFullPath: string;
+  };
+  score: number;
+  blueTick: boolean;
+  realEstateOffice: {
+    name: string;
+    username: string;
+  };
+};
+
+export type RealtorDataType = {
+  id: number;
+  user: {
+    firstName: string;
+    lastName: string;
+    imageFullPath: string;
+  };
+  bgImageFullPath: string;
+  score: number;
+  numberOfActiveAds: number;
+  description: string;
+  number: string;
+  landlineNumber: string;
+  telegram: string;
+  whatsapp: string;
+  twitter: string;
+  facebook: string;
+  email: string;
+  blueTick: boolean;
+  realEstateOffice: {
+    name: string;
+    username: string;
+  };
+};
+
+export type DataModalREA = {
+  profileIcon: string | undefined;
+  name: string | undefined;
+  number: {
+    phoneNumber: string | undefined;
+    landlineNumber: string | undefined;
+  };
+  socialNetwork: {
+    twitter: string | undefined;
+    whatsapp: string | undefined;
+    facebook: string | undefined;
+    telegram: string | undefined;
+    email: string | undefined;
+  };
+};
+
+// Ad Posting Form Data Type
+export type AdPostingFormDataType = {
+  // LocationDetails
+  province?: string;
+  city?: string;
+  mainSt?: string;
+  sideStreet?: string;
+
+  // DealType
+  typeOfTransaction?: number;
+  propertyType?: number;
+  deposit?: number;
+  rent?: number;
+
+  // Specifications
+  area?: number;
+  room?: number;
+  floor?: number;
+  numberFloors?: number;
+
+  // Amenities
+  parking?: number;
+  storage?: number;
+  elevator?: number;
+  flooring?: number;
+  restroom?: number;
+  typeOfRestroom?: number;
+  coolingSystem?: number;
+  heatingSystem?: number;
+
+  // AdditionalInformation
+  description?: string;
+};
+
+export type SelectionDataType = {
+  value: string;
+  id: number;
+  key: string;
+};
+
+export type optionType =
+  | {
+      value: number;
+      label: string;
+    }[]
+  | undefined;
+
+export type AdPostingApi = {
+  city: string | undefined;
+  province: string | undefined;
+  main_street: string | undefined;
+  side_street: string | undefined;
+  type_of_transaction: number | undefined;
+  property_type: number | undefined;
+  deposit: number | undefined;
+  rent: number | undefined;
+  convertible: boolean | undefined;
+  area: number | undefined;
+  room: number | undefined;
+  floor: number | undefined;
+  number_of_floors: number | undefined;
+  parking: number | undefined;
+  restroom: number | undefined;
+  type_of_restroom: number | undefined;
+  storage: number | undefined;
+  elevator: number | undefined;
+  flooring: number | undefined;
+  cooling_system: number | undefined;
+  heating_system: number | undefined;
+  description: string | undefined;
+};
+
+export type AdsDataType = {
+  id: number;
+  imageFullPath: string;
+  typeOfTransaction: string;
+  propertyType: string;
+  area: number;
+  city: string;
+  mainStreet: string;
+  deposit: number;
+  rent: number;
+  isSaved: boolean;
+};
+
+export type CommentType = {
+  id: number;
+  owner__first_name: string;
+  owner__last_name: string;
+  owner__image_full_path: string;
+  score: number;
+  description: string;
+  score_reason: string;
+};
+
+export type AdsFilterDataType = {
+  province?: { value?: string; id?: number };
+  city?: string;
+  rentalPrice?: { min: number; max: number };
+  depositPrice?: { min: number; max: number };
+  metre?: { min: number; max: number };
+};
+
+export type ScoreReasonsType = {
+  id: number;
+  name: string;
+  score: number;
+};
+
+export type ReportModaltDataType = {
+  id: number;
+  name: string;
+};

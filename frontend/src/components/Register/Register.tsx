@@ -2,32 +2,37 @@
 import { Modal, ModalContent, ModalBody } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Otp from "./Otp";
 import PhoneNumber from "./PhoneNumber";
 import { RegisterStatusValue } from "@/constant/Constants";
 import SignUp from "./SignUp";
-import { Error } from "@/notification/Error";
+import { ErrorNotification } from "@/notification/Error";
 import { Spinner } from "@nextui-org/spinner";
 import { Success } from "@/notification/Success";
 import { useModalStore } from "@/store/Register";
 import { useRegisterStatus } from "@/store/Register";
 import { setCookie } from "cookies-next";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
+import { Api } from "@/ApiService";
+import { usePostRequest } from "@/ApiService";
+import { LoginDataType } from "@/types/Type";
+import { isMobile } from "@/constant/Constants";
 
 export default function Register() {
-  let sizeModal: any = "";
+  const router = useRouter();
   const { isOpen, setOpen } = useModalStore();
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<number>();
   const [isSelected, setIsSelected] = useState<boolean>(false);
-  const [inputErr, setInputErr] = useState<boolean>(false);
   const [otp, setOtp] = useState<string>("");
   const [focusedInput, setFocusedInput] = useState<number | null>(null);
   const [token, setToken] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
   const { registerStatus, setRegisterStatus } = useRegisterStatus();
   const [time, setTime] = useState<number>(90);
-  const router = useRouter();
+  const { mutate, isSuccess, data, isPending } = usePostRequest<LoginDataType>({
+    url: Api.verifynumber,
+    key: "verifyNumber",
+  });
 
   // constants
   let ModalRegisterTitle: string = "";
@@ -49,14 +54,6 @@ export default function Register() {
       ModalRegisterTitle = "ثبت نام";
   }
 
-  if (typeof window !== "undefined") {
-    if (window.innerWidth < 768) {
-      sizeModal = "full";
-    } else {
-      sizeModal = "lg";
-    }
-  }
-
   const handleFocus = (index: number) => {
     setFocusedInput(index);
   };
@@ -65,121 +62,80 @@ export default function Register() {
     setFocusedInput(null);
   };
 
-  const btnSendPhoneNumber = () => {
-    if (
-      phoneNumber !== "" &&
-      phoneNumber.length === 11 &&
-      phoneNumber[0] === "0" &&
-      phoneNumber[1] === "9"
-    ) {
-      setInputErr(false);
-      sendPhoneNumber();
-    } else {
-      setInputErr(true);
+  const handleSendPhoneNumber = (phoneNumber?: number) => {
+    if (isSelected) {
+      mutate({ number: phoneNumber, code: 0, token: "" });
+      setPhoneNumber(phoneNumber);
     }
   };
 
-  const apiUrlSPN: string = "http://127.0.0.1:8000/api/v1/users/verify-number";
+  useEffect(() => {
+    if (isSuccess && data.code === "code_sent_to_number") {
+      setToken(data.token);
+      setRegisterStatus(RegisterStatusValue.status2);
+      const intervalId = setInterval(() => {
+        setTime((prevTime) => prevTime - 1);
+      }, 1000);
 
-  const sendPhoneNumber = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(apiUrlSPN, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ number: phoneNumber, code: 0, token: "" }),
-      });
-
-      const data = await response.json();
-
-      if (response.status === 200 && data.code === "code_sent_to_number") {
-        setToken(data.token);
-        setRegisterStatus(RegisterStatusValue.status2);
-        setInterval(() => {
-          setTime((prevTime) => prevTime - 1);
-        }, 1000);
-        console.log("کد دریافت شده از سرور:", data);
-      } else {
-        Error("در ارسال شماره تلفن مشکلی پیش آمد.");
-        console.log(data);
-      }
-    } catch (error) {
-      Error("در ارتباط با سرور مشکلی پیش آمد.");
-      console.error("خطا:", error);
+      return () => clearInterval(intervalId);
+    } else if (data && data.code === "number_delay") {
+      ErrorNotification("لطفا بعد تلاش کنید.");
     }
-    setLoading(false);
-  };
+  }, [isSuccess, data, setRegisterStatus]);
 
   const BtnSendCode = () => {
     if (otp === "" || otp.length < 5) {
-      Error("لطفا کد را کامل وارد نمایید.");
+      ErrorNotification("لطفا کد را کامل وارد نمایید.");
     } else {
-      clickSendCode();
+      mutate({ number: phoneNumber, code: otp, token: token });
     }
   };
 
-  const clickSendCode = async () => {
-    setLoading(true);
-    try {
-      console.log("agin");
-
-      const response = await fetch(apiUrlSPN, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ number: phoneNumber, code: otp, token: token }),
-      });
-
-      const data = await response.json();
-
+  useEffect(() => {
+    if (isSuccess && data) {
       if (data.status === 303) {
         setRegisterStatus(RegisterStatusValue.status3);
       } else if (data.code === "wrong_code") {
-        Error("کد وارد شده اشتباه میباشد.");
+        ErrorNotification("کد وارد شده اشتباه می‌باشد.");
       } else if (data.code === "to_manny_tries") {
-        Error("لطفا بعد تلاش کنید.");
+        ErrorNotification("لطفا بعد تلاش کنید.");
       } else if (data.code === "login_done") {
         console.log(data);
         setCookie("access", data.access, {
           maxAge: data.expire,
           sameSite: "strict",
+          secure: process.env.NODE_ENV === "production",
         });
         setCookie("refresh", data.refresh, {
           sameSite: "strict",
+          secure: process.env.NODE_ENV === "production",
         });
         console.log(data);
-        
         setRegisterStatus(RegisterStatusValue.status1);
         setOpen(false);
         Success("ثبت نام با موفقیت انجام شد.");
-        router.push('/proUser');
+        router.push("/proUser");
       } else {
         console.log(data);
       }
-    } catch (error) {
-      Error("در ارتباط با سرور مشکلی پیش آمد.");
-      console.log(error);
     }
-    setLoading(false);
-  };
+  }, [isSuccess, data, setRegisterStatus, setOpen, router]);
 
   const EditMN = () => {
     setRegisterStatus(RegisterStatusValue.status1);
-    setPhoneNumber("");
+    setPhoneNumber(undefined);
   };
 
   return (
-    <Modal size={sizeModal} isOpen={isOpen} onClose={() => setOpen(false)}>
+    <Modal
+      size={isMobile ? "full" : "lg"}
+      isOpen={isOpen}
+      onClose={() => setOpen(false)}
+    >
       <ModalContent>
         <>
-          <ModalBody>
-            <div
-              className="mt-5 w-full flex flex-col items-center pb-3"
-              style={{ direction: "ltr" }}
-            >
+          <ModalBody className="overflow-y-auto">
+            <div className="mt-5 w-full flex flex-col items-center pb-3 ltr">
               {registerStatus == RegisterStatusValue.status1 ||
                 (registerStatus == RegisterStatusValue.status2 && (
                   <Image
@@ -216,11 +172,10 @@ export default function Register() {
               {registerStatus === RegisterStatusValue.status1 && (
                 <PhoneNumber
                   setPhoneNumber={setPhoneNumber}
-                  inputErr={inputErr}
                   isSelected={isSelected}
                   setIsSelected={setIsSelected}
-                  btnSendPhoneNumber={btnSendPhoneNumber}
-                  loading={loading}
+                  handleSendPhoneNumber={handleSendPhoneNumber}
+                  isPendingVerifyNumber={isPending}
                 />
               )}
 
@@ -234,16 +189,16 @@ export default function Register() {
                     focusedInput={focusedInput}
                     time={time}
                     setTime={setTime}
-                    sendPhoneNumber={sendPhoneNumber}
+                    handleSendPhoneNumber={handleSendPhoneNumber}
                   />
                   <Button
-                    className="mt-[64px] w-full rounded-lg p-2 bg-[#CB1B1B]
+                    className="mt-[64px] w-full rounded-lg p-2 bg-primary
                    text-white md:mt-[50px] md:text-lg"
                     onPress={BtnSendCode}
-                    isLoading={loading}
+                    isLoading={isPending}
                     spinner={<Spinner color="white" size="sm" />}
                   >
-                    {loading ? "" : "ثبت کد"}
+                    {isPending ? "" : "ثبت کد"}
                   </Button>
                 </div>
               )}

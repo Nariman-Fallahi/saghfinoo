@@ -2,9 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-p,h1,h2,h3,h4,h5,h6 {
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   cursor: default;
   direction: rtl;
+}
+
+.primaryColor {
+  
 }
 
 .openMenu {
@@ -45,16 +55,76 @@ p,h1,h2,h3,h4,h5,h6 {
   }
 }
 
-#nprogress .bar {
-  border-radius: 15px !important;
+.swiper-button-prev:after,
+.swiper-button-next:after {
+  font-size: 25px !important;
 }
 
-.directionRTL {
+.swiper-button-prev,
+.swiper-button-next {
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 999px !important;
+  background-color: #ffffff !important;
+  padding: 3px !important;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
+}
+
+.swiper-button-prev:active,
+.swiper-button-next:active {
+  background-color: #f8f8f8 !important;
+}
+
+.swiper-button-prev.swiper-button-disabled,
+.swiper-button-next.swiper-button-disabled {
+  display: none !important;
+}
+
+#nprogress .bar {
+  border-radius: 20px !important;
+}
+
+.rtl {
   direction: rtl;
+}
+
+.ltr {
+  direction: ltr;
 }
 
 @media screen and (max-width: 768px) {
   .Toastify__toast-body > div:last-child {
     font-size: 14px !important;
   }
+  .selectBtn::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.selectBtn::-webkit-scrollbar {
+  width: 10px;
+  background-color: #f0f0f0;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.selectBtn::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+  border: 3px solid #f1f1f1;
+}
+
+.selectBtn::-webkit-scrollbar-thumb:active {
+  background: #555;
+}
+
+.react-select__menu,
+.react-select__menu-list,
+.react-select__option,
+.react-select__indicators {
+  background-color: red !important;
+}
+
+.blueShadow {
+  box-shadow: 0px 0px 0px 3px rgba(47, 128, 237, 0.19) !important;
 }
