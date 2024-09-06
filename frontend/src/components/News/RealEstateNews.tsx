@@ -1,6 +1,7 @@
 import { Title } from "@/constant/Constants";
 import Image from "next/image";
 import CustomButton from "../CustomButton";
+import Card from "./ReadingTimeCard";
 
 export default function RealEstateNews() {
   return (
@@ -22,12 +23,7 @@ export default function RealEstateNews() {
         />
 
         <div className="w-full flex flex-col p-3 mt-1 md:1/2">
-          <div
-            className="p-1 px-2 text-xs bg-[#EDEDED] rounded-lg w-fit md:text-[13px]
-             md:p-2 cursor-default"
-          >
-            زمان مطالعه : 4 دقیقه
-          </div>
+          <Card time={20} />
 
           <h2 className="font-bold mt-4 md:text-3xl lg:text-[40px] md:mt-6">
             رکورد بازار مسکن
@@ -39,7 +35,7 @@ export default function RealEstateNews() {
 
           <p
             className="text-xs text-[#353535] mt-4 line-clamp-2 md:text-base lg:text-lg
-          md:mt-6"
+           md:mt-6"
           >
             از منظر فعالان بازار مسکن، وضعیت فعلی بازار پاسخی است به جهشهای
             متوالی قیمت در سال‌های گذشته و به واسطه رشد نجومی قیمت‌ها در این
@@ -47,10 +43,10 @@ export default function RealEstateNews() {
             ندارد.
           </p>
 
-          <div className="w-full flex justify-between mt-6 items-center">
+          <div className="w-full flex justify-between mt-6">
             <div
-              className="p-1 px-2 flex items-center text-xs bg-[#EDEDED] rounded-lg w-fit
-               md:text-[13px] md:p-2 cursor-default"
+              className="px-2 flex items-center text-xs bg-[#EDEDED] rounded-lg w-fit
+               md:text-[13px] cursor-default"
             >
               <i>
                 <Image

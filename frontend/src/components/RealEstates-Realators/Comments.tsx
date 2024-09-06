@@ -70,8 +70,6 @@ export default function Comments({
     }
   }, [data, status]);
 
-  console.log(completeData);
-
   return (
     <div className="w-full flex flex-col mt-8 p-4 md:mt-14 md:p-8">
       <Title title="نظرات کاربران " />
