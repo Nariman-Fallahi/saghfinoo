@@ -22,13 +22,6 @@ export const isPersian = (text: string) => {
   return persian.test(text);
 };
 
-export const scrollToTop = () => {
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
-};
-
 export const numberToPersian = (number: number) => {
   return new Intl.NumberFormat("fa-IR").format(number);
 };
@@ -49,5 +42,4 @@ export const SelectTitle = ({ text }: { text: string | undefined }) => {
   );
 };
 
-
-export const LoginErrorText = 'ابتدا وارد حساب کاربری خود شوید.'
+export const LoginErrorText = "ابتدا وارد حساب کاربری خود شوید.";
