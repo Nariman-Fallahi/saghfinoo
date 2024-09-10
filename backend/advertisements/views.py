@@ -536,3 +536,10 @@ class GetUserSavedAdvertisementAPIView(APIView):
         total_pages = math.ceil(SavedAdvertisement.objects.filter(user=req.user.id).count()/limit)
             
         return Response({'data':ads, 'totalPages':total_pages, 'status':200})
+
+    def delete(self, req):
+        """delete all user saved advertisements"""
+        SavedAdvertisement.objects.filter(user=req.user.id).delete()
+
+        return Response({"msg":"done", 'status':200})
+        

@@ -19,6 +19,7 @@ urlpatterns = [
     path('<int:advertisement_id>/video', views.UploadAdvertisementVideoAPIView.as_view(), name='upload_advertisement_video'),
     path('video/<int:video_id>', views.DeleteAdvertisementVideoAPIView.as_view(), name='delete_advertisement_video'),
 
+    # saved ads
     path('<int:advertisement_id>/save', views.SaveUnsaveAdvertisementAPIView.as_view(), name='save_advertisement'),
     path('saved', views.GetUserSavedAdvertisementAPIView.as_view(), name='get_all_user_saved_advertisement'),
 ]
