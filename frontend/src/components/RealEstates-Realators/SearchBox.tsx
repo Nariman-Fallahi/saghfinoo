@@ -1,32 +1,31 @@
-'use client'
+"use client";
 import { Title } from "@/constant/Constants";
 import { Api } from "@/ApiService";
 import { useGetRequest } from "@/ApiService";
 import Select, { components, MultiValue } from "react-select";
 import { CitiesType } from "@/types/Type";
 import Image from "next/image";
-//  import { useRouter } from "next-nprogress-bar";
- import { usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useRouter } from "next-nprogress-bar";
 
 type SearchBoxType = {
   title: string;
-  // setSearchCity: (
-  //   value: MultiValue<{
-  //     value: string;
-  //     label: string;
-  //   }>
-  // ) => void;
 };
 
 export default function SearchBox({ title }: SearchBoxType) {
   const router = useRouter();
-  const pathname = usePathname()
-  const [selectedOptions, setSelectedOptions] = useState<any>([]);
+  const pathname = usePathname();
+
+  const [searchCity, setSearchCity] = useState<
+    MultiValue<{
+      value: string;
+      label: string;
+    }>
+  >();
 
   const { data } = useGetRequest<{ data: CitiesType[] }>({
-    url: 'http://127.0.0.1:8000/api/v1/tools/cities',
+    url: Api.SearchCity,
     key: ["searchCityData"],
     enabled: true,
     staleTime: 10 * 60 * 1000,
@@ -37,29 +36,25 @@ export default function SearchBox({ title }: SearchBoxType) {
     label: item.name,
   }));
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const selectedValues = params.getAll("value");
-
-    const selectedFromUrl = cityOptions?.filter((option) =>
-      selectedValues.includes(option.value)
-    );
-    setSelectedOptions(selectedFromUrl);
-  }, [cityOptions]);
-
-  const handleSelectChange = (options: any) => {
-    // setSelectedOptions(options);
-
-    // const params = new URLSearchParams();
-
-    // options.forEach((option: any) => {
-    //   params.append("value", option.value);
-    // });
-
-    // const url = `${pathname}?${'fff'}`;
-
-    router.push(`${pathname}?${'test'}`);
+  const handleSelectChange = (
+    selectedOptions: MultiValue<{
+      value: string;
+      label: string;
+    }>
+  ) => {
+    setSearchCity(selectedOptions);
   };
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+
+    searchCity?.forEach((city) => {
+      params.append("city", city.value);
+    });
+
+    router.push(`${pathname}?${params}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchCity]);
 
   return (
     <div className="mt-[82px] flex flex-col p-3 relative md:mt-[180px] md:px-8">
@@ -74,7 +69,7 @@ export default function SearchBox({ title }: SearchBoxType) {
           classNamePrefix="select"
           classNames={{
             multiValue: () => "border border-[#353535] !bg-transparent ltr",
-            control: () => "!cursor-text text-xs md:text-base",
+            control: () => "!cursor-pointer text-xs md:text-base",
             menu: () => "!w-[70%] text-sm md:text-base",
           }}
           onChange={handleSelectChange}

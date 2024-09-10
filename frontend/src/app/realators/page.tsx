@@ -1,56 +1,55 @@
-"use client";
-import { Api } from "@/ApiService";
-import { useGetRequest } from "@/ApiService";
+import { Api, axiosInstance } from "@/ApiService";
 import { allRealtorDataType } from "@/types/Type";
-import { useState } from "react";
 import ErrNoData from "@/components/ErrNoData";
+
 // Components
 import SearchBox from "@/components/RealEstates-Realators/SearchBox";
 import RealatorsCarts from "@/components/RealatorsCarts";
 import SearchDataNotFound from "@/components/RealEstates-Realators/SearchDataNotFound";
-import { MultiValue } from "react-select";
 
-export default function Realators() {
-  const [pageNumber, setPageNumber] = useState<number>(1);
-  const [searchCity, setSearchCity] = useState<
-    MultiValue<{
-      value: string;
-      label: string;
-    }>
-  >();
+type RealatorsDataType = {
+  data: allRealtorDataType[];
+  status: number;
+  total_pages: number;
+};
 
+export default async function Realators({
+  searchParams,
+}: {
+  searchParams: { city?: string | string[]; pageNumber: string };
+}) {
+  const cities = searchParams.city || "";
+  const pageNumber = searchParams.pageNumber || "1";
   const params = new URLSearchParams();
 
-  params.append("page", pageNumber.toString());
-  searchCity?.forEach((city) => {
-    params.append("city", city.value);
-  });
+  params.append("page", pageNumber);
 
-  const { data, isError, isPending } = useGetRequest<{
-    data: allRealtorDataType[];
-    total_pages: number;
-    status: number;
-  }>({
-    url: `${Api.realtors}/?${params.toString()}`,
-    key: ["getAllRealtor", pageNumber.toString(), params.toString()],
-    enabled: true,
-    staleTime: 10 * 60 * 1000,
-  });
+  if (Array.isArray(cities)) {
+    cities?.forEach((city) => {
+      params.append("city", city);
+    });
+  } else {
+    params.append("city", cities);
+  }
 
-  if (isError) {
+  const { data } = await axiosInstance.get<RealatorsDataType>(
+    `${Api.realtors}/?${params}`
+  );
+
+  console.log(data.data);
+  
+
+  if (data.status !== 200) {
     return <ErrNoData />;
   }
   return (
     <>
-      <SearchBox title="مشاورین املاک" setSearchCity={setSearchCity} />
-      <RealatorsCarts
-        data={data}
-        isPending={isPending}
-        pageNumber={pageNumber}
-        setPageNumber={setPageNumber}
-      />
+      <SearchBox title="مشاورین املاک" />
+      {data?.data && data.status === 200 && data?.data.length >= 1 && (
+        <RealatorsCarts data={data} />
+      )}
 
-      {data?.data && data?.data.length < 1 && (
+      {data?.data && data.status === 200 && data?.data.length < 1 && (
         <SearchDataNotFound text="مشاوری که عضو بنگاه شهر مورد نظر شما باشد وجود ندارد." />
       )}
     </>
