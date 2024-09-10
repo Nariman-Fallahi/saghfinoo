@@ -98,6 +98,16 @@ class CreateGetNewsAPIView(APIView):
         
         return Response({'errors':serializer.errors, 'status':400, 'code': codes.INVALID_FIELD})
 
+    def get(self, req, slug):
+
+        try:
+            n = News.objects.get(slug=slug)
+        except News.DoesNotExist:
+            return Response({'status':404, 'code':codes.OBJ_NOT_FOUND})
+        
+        n = NewsResponseSerailizer(n).data
+        return Response({"data":n, 'status':200})
+
 
 
 class UploadNewsImageAPIView(APIView):

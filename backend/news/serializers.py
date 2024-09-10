@@ -49,7 +49,7 @@ class NewsResponseSerailizer(serializers.ModelSerializer):
             'tags': instance.tags,
             'readTime': instance.read_time,
             'category': instance.category.name,
-            'publishDate': instance.publish_data,
+            'publishDate': instance.publish_date,
             'imageFullPath': instance.image_full_path,
         }
     
@@ -66,6 +66,7 @@ class NewsPreviewResponseSerializer(serializers.ModelSerializer):
             'shortDescription': instance.short_description,
             'category': instance.category.name,
             'special': instance.special,
+            'slug': instance.slug,
         }
     
 class CategoryResponseSerializer(serializers.ModelSerializer):
