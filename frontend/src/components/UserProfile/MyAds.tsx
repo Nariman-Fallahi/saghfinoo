@@ -1,5 +1,5 @@
 "use client";
-import { Title } from "@/app/userProfile/[userName]/page";
+import { Title } from "@/app/userProfile/[id]/page";
 import Image from "next/image";
 import { Button } from "@nextui-org/button";
 import NoData from "./NoData";

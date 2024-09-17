@@ -1,5 +1,5 @@
 "use client";
-import { Title } from "@/app/userProfile/[userName]/page";
+import { Title } from "@/app/userProfile/[id]/page";
 import NoData from "./NoData";
 import DeleteAllAdsBtn from "./DeleteAllAdsBtn";
 import AdsCart from "../AdsCart";
@@ -65,7 +65,7 @@ export default function SavedAds() {
           </div>
         ))
       )}
-      
+
       <AdsCart
         data={adsSavedData?.data}
         isloading={adsSavedPending}

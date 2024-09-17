@@ -25,8 +25,8 @@ export async function generateStaticParams() {
   ];
 }
 
-export default function Page({ params }: { params: { userName: string } }) {
-  const { userName } = params;
+export default function Page({ params }: { params: { id: string } }) {
+  const { id } = params;
 
   if (
     ![
@@ -34,7 +34,7 @@ export default function Page({ params }: { params: { userName: string } }) {
       UserProfileItem.MyAds,
       UserProfileItem.SavedAds,
       UserProfileItem.Logout,
-    ].includes(userName as UserProfileItem)
+    ].includes(id as UserProfileItem)
   ) {
     notFound();
   }
@@ -63,7 +63,7 @@ export default function Page({ params }: { params: { userName: string } }) {
             icon="/icons/edit.svg"
             alt="Edit Icon"
             active={UserProfileItem.EditingInformation}
-            userName={userName}
+            userName={id}
             routerPush={UserProfileItem.EditingInformation}
           />
 
@@ -72,7 +72,7 @@ export default function Page({ params }: { params: { userName: string } }) {
             icon="/icons/receipt-text.svg"
             alt="My Ads"
             active={UserProfileItem.MyAds}
-            userName={userName}
+            userName={id}
             routerPush={UserProfileItem.MyAds}
           />
 
@@ -81,7 +81,7 @@ export default function Page({ params }: { params: { userName: string } }) {
             icon="/icons/save.svg"
             alt="Saved Ads"
             active={UserProfileItem.SavedAds}
-            userName={userName}
+            userName={id}
             routerPush={UserProfileItem.SavedAds}
           />
 
@@ -90,17 +90,15 @@ export default function Page({ params }: { params: { userName: string } }) {
             icon="/icons/logout.svg"
             alt="Logout"
             active={UserProfileItem.Logout}
-            userName={userName}
+            userName={id}
             routerPush={UserProfileItem.Logout}
           />
         </div>
       </div>
       <div className="w-full flex flex-col border md:mr-4 rounded-lg p-5">
-        {userName === UserProfileItem.EditingInformation && (
-          <EditingInformation />
-        )}
-        {userName === UserProfileItem.MyAds && <MyAds />}
-        {userName === UserProfileItem.SavedAds && <SavedAds />}
+        {id === UserProfileItem.EditingInformation && <EditingInformation />}
+        {id === UserProfileItem.MyAds && <MyAds />}
+        {id === UserProfileItem.SavedAds && <SavedAds />}
       </div>
     </div>
   );
