@@ -7,7 +7,16 @@ from .models import Mainpage
 class MainpageResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Mainpage
-        fields = ['order', 'title', 'description']
+        fields = ['order', 'title', 'description', 'icon', 'btn_text']
+
+    def to_representation(self, instance):
+        return {
+            'order':instance.order,
+            'title':instance.title,
+            'description':instance.description,
+            'icon':instance.icon,
+            'btnText':instance.btn_text,
+        }
 
 class MainpageSerializer(serializers.ModelSerializer):
 
