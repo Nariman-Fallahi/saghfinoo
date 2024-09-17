@@ -7,17 +7,17 @@ from .models import Mainpage
 class MainpageResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Mainpage
-        fields = ['order' ,'page', 'section', 'content']
+        fields = ['order', 'title', 'description']
 
 class MainpageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model= Mainpage
-        fields = ['order', 'section', 'content']
+        fields = ['order', 'title', 'description']
 
     def validate(self, attrs):
-        validations.validate_se('section', attrs['section'], validations.validate_description)
-        validations.validate_se('content', attrs['content'], validations.validate_description)
+        validations.validate_se('title', attrs['title'], validations.validate_description)
+        validations.validate_se('description', attrs['description'], validations.validate_description)
         return super().validate(attrs)
     
 
