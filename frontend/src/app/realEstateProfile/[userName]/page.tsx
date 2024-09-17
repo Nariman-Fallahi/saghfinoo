@@ -25,8 +25,8 @@ export default function Page() {
   const params = useParams();
   const [commentPageNumber, setCommentPageNumber] = useState<number>(1);
   const [adsUrl, setAdsUrl] = useState<string>("");
-  const [adsfilterData, setAdsFilterData] = useState<AdsFilterDataType>();
-  const [adsPageNumber, setAdsPageNumber] = useState<number>(1);
+  const [adsfilterData, setAdsFilterData] = useState<AdsFilterDataType>(); //TODO Delete
+  const [adsPageNumber, setAdsPageNumber] = useState<number>(1); //TODO Delete
   const access = getCookie("access");
 
   const {
@@ -163,8 +163,6 @@ export default function Page() {
         data={adsData?.data}
         status={adsStatus}
         title={`آگهی های املاک ${realEstateData?.data.name}`}
-        pageNumber={adsPageNumber}
-        setPageNumber={setAdsPageNumber}
         totalPages={adsData?.totalPages}
         adsfilterData={adsfilterData}
         setAdsFilterData={setAdsFilterData}

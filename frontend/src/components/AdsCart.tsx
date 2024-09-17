@@ -65,7 +65,7 @@ export default function AdsCart({
     method: "DELETE",
   });
 
-  const handleAdsSave = (id: number, isSaved: boolean) => {
+  const handleAdsSave_Delete = (id: number, isSaved: boolean) => {
     if (access) {
       setAdsSave_Delete_Id(id);
       isSaved ? adsDeleteMutate({}) : adsSaveMutate({});
@@ -75,14 +75,24 @@ export default function AdsCart({
   };
 
   useEffect(() => {
-    if (adsSaveSuccess && adsSaveData && adsSaveData.msg === "done") {
+    if (
+      adsSaveSuccess &&
+      adsSaveData &&
+      refetch &&
+      adsSaveData.msg === "done"
+    ) {
       refetch();
       Success("آگهی با موفقیت ذخیره شد.");
     }
   }, [adsSaveSuccess, adsSaveData, refetch]);
 
   useEffect(() => {
-    if (adsDeleteSuccess && adsDeleteData && adsDeleteData.msg === "done") {
+    if (
+      adsDeleteSuccess &&
+      adsDeleteData &&
+      refetch &&
+      adsDeleteData.msg === "done"
+    ) {
       refetch();
       Success("آگهی با موفقیت حذف شد.");
     }
@@ -101,12 +111,12 @@ export default function AdsCart({
             <div
               key={item.id}
               className="w-[48%] h-fit flex flex-col border border-[#E1E1E1]
-             rounded-lg mt-6 lg:mt-8 md:w-[30%] md:rounded-2xl"
+             rounded-lg mt-6 lg:mt-8 lg:w-[30%] md:rounded-2xl"
             >
               <Image
                 width={100}
                 height={100}
-                className="w-full h-[100px] rounded-tl-lg rounded-tr-lg md:h-1/2"
+                className="w-full h-[100px] rounded-t-lg md:h-1/2"
                 sizes="(min-width: 768px) 100%, 50%"
                 src={item.imageFullPath || "/icons/noneImage.svg"}
                 alt="Ads Image"
@@ -129,7 +139,10 @@ export default function AdsCart({
                       isIconOnly
                       variant="light"
                       onPress={() => {
-                        handleAdsSave(item.id, item.isSaved);
+                        handleAdsSave_Delete(
+                          item.id,
+                          item.isSaved === undefined ? true : item.isSaved
+                        );
                       }}
                     >
                       <i>
@@ -137,7 +150,9 @@ export default function AdsCart({
                           width={16}
                           height={16}
                           src={
-                            item.isSaved
+                            item.isSaved === undefined
+                              ? "/icons/trash-black.svg"
+                              : item.isSaved
                               ? "/icons/trash-black.svg"
                               : "/icons/archive-add.svg"
                           }

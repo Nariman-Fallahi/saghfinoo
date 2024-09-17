@@ -17,6 +17,8 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { isMobile } from "@/constant/Constants";
 import { Spinner } from "@nextui-org/spinner";
 
+//TODO EDIT
+
 export default function MyAds() {
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [adDeleteId, setAdDeleteId] = useState<number | undefined>(undefined);

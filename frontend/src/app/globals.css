@@ -44,10 +44,6 @@ h6 {
   }
 }
 
-.bg-search {
-  background-image: url("/image/Bg-SearchBox.webp");
-}
-
 @media (hover: none) {
   .swiper-button-prev,
   .swiper-button-next {

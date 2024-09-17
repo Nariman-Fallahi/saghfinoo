@@ -11,7 +11,7 @@ export enum Api {
   ChangePassword = "/api/v1/users/change-password",
   EditUserProfile = "/api/v1/users/edit-user",
   Refresh = "/api/v1/users/token/refresh",
-  GetUserInfo = "/api/v1/users/get-user-info",
+  GetUserInfo = "/api/v1/users/user-info",
   UploadProfileImage = "/api/v1/users/upload-profile-image",
 
   // reos Api
@@ -28,10 +28,14 @@ export enum Api {
   GetSelectionData = "/api/v1/ads/choices",
   DeleteAllMyAds = "/api/v1/ads/self-all",
   GetAllMyAds = "/api/v1/ads/self",
+  AdsSaved = "/api/v1/ads/saved",
 
   // tools Api
   GetProvinces_Cities = "/api/v1/tools/provinces",
   SearchCity = "/api/v1/tools/cities",
+
+  // news Api
+  News = "/api/v1/news",
 }
 
 export const axiosInstance = axios.create({

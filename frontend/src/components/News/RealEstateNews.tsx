@@ -2,23 +2,22 @@ import { Title } from "@/constant/Constants";
 import Image from "next/image";
 import CustomButton from "../CustomButton";
 import Card from "./ReadingTimeCard";
+import { NewsDataType } from "@/types/Type";
 
-export default function RealEstateNews() {
+export default function RealEstateNews({ data }: { data: NewsDataType }) {
   return (
-    <div className="flex w-full flex-col md:px-4 md:p-1">
-      <div className="px-3">
-        <Title title="اخبار املاک" />
-      </div>
+    <div className="flex w-full flex-col">
+      <Title title="اخبار املاک" />
 
       <div
-        className="flex flex-col w-full bg-[#F9F9F9] mt-4 md:flex-row-reverse
+        className="flex flex-col w-full bg-[#F9F9F9] mt-4 md:flex-row-reverse h-[400px]
        md:rounded-lg lg:rounded-xl md:items-center md:mt-6 lg:mt-7 md:justify-between md:gap-4"
       >
         <Image
           width={1000}
           height={500}
-          className="w-full md:w-1/2 md:rounded-l-lg lg:rounded-l-xl"
-          src="/image/Bg-SearchBox.webp"
+          className="w-full h-1/2 md:h-full md:w-1/2 md:rounded-l-lg lg:rounded-l-xl"
+          src={data.imageFullPath}
           alt="Image News"
         />
 
@@ -26,21 +25,14 @@ export default function RealEstateNews() {
           <Card time={20} />
 
           <h2 className="font-bold mt-4 md:text-3xl lg:text-[40px] md:mt-6">
-            رکورد بازار مسکن
+            {data.title}
           </h2>
-
-          <h4 className="font-bold text-sm mt-2 md:text-xl lg:text-2xl md:mt-4 lg:mt-6">
-            رکورد بازار مسکن
-          </h4>
 
           <p
             className="text-xs text-[#353535] mt-4 line-clamp-2 md:text-base lg:text-lg
            md:mt-6"
           >
-            از منظر فعالان بازار مسکن، وضعیت فعلی بازار پاسخی است به جهشهای
-            متوالی قیمت در سال‌های گذشته و به واسطه رشد نجومی قیمت‌ها در این
-            بازار، فعلا رغبتی برای خرید این کالای ضروری اما سرمایه‌ای وجود
-            ندارد.
+            {data.shortDescription}
           </p>
 
           <div className="w-full flex justify-between mt-6">

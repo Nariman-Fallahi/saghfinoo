@@ -36,9 +36,6 @@ export default async function Realators({
     `${Api.realtors}/?${params}`
   );
 
-  console.log(data.data);
-  
-
   if (data.status !== 200) {
     return <ErrNoData />;
   }
