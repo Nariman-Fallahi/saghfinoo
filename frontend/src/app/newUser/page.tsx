@@ -7,7 +7,7 @@ import LatestNews from "@/components/Home/newUser/LatestNews";
 import Services from "@/components/Home/newUser/Services";
 import SearchBox from "@/components/Home/SearchBox";
 import { NewsDataType } from "@/types/Type";
-import { Api, axiosInstance } from "@/ApiService";
+import { Api } from "@/ApiService";
 
 export default async function Home({
   searchParams,
@@ -16,10 +16,15 @@ export default async function Home({
 }) {
   const pageNumber = searchParams.pageNumber || "1";
 
-  const data = await axiosInstance.get<{
+  let data = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}${Api.News}/?page=${pageNumber}&special=0`
+  );
+
+  let newsData: {
     data: NewsDataType[];
     total_pages: number;
-  }>(`${Api.News}/?page=${pageNumber}&special=0`);
+    status: number;
+  } = await data.json();
 
   return (
     <>
@@ -32,9 +37,9 @@ export default async function Home({
         data={ServicesDataNewUserHome}
       />
       <LatestNews
-        data={data.data.data}
-        totalPages={data.data.total_pages}
-        status={data.status}
+        data={newsData.data}
+        totalPages={newsData.total_pages}
+        status={newsData.status}
       />
     </>
   );

@@ -45,11 +45,11 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  if (pathname === "newUser" && access && refresh) {
+  if (pathname === "newUser" && access) {
     return NextResponse.redirect(new URL("/proUser", req.url));
   }
 
-  if (isProtectedPath(pathname) && (!access || !refresh)) {
+  if (isProtectedPath(pathname) && !access) {
     return NextResponse.redirect(new URL("/403", req.url));
   }
 

@@ -6,9 +6,8 @@ import { redirect } from "next/navigation";
 
 export default async function Page() {
   const access = getCookie("access", { cookies });
-  const refresh = getCookie("refresh", { cookies });
 
-  if (access && refresh) {
+  if (access) {
     redirect("/proUser");
   } else {
     redirect("/newUser");

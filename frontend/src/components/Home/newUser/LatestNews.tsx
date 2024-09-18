@@ -77,12 +77,12 @@ export default function LatestNews({
             {completeData.map((item) => {
               return (
                 <SwiperSlide
-                  className="!w-[242px] !h-[213px] flex flex-col border border-gray-200
-                  rounded-xl md:!w-[30%] lg:!w-[288px] lg:!h-[358px]"
+                  className="!w-[242px] flex flex-col border border-gray-200
+                  rounded-xl md:!w-[30%] lg:!w-[288px]"
                   key={item.slug}
                 >
                   <Image
-                    className="w-[242px] h-[145px] rounded-t-lg lg:w-[288px] lg:h-[238px]"
+                    className="w-full h-32 lg:h-48 rounded-t-lg"
                     width={100}
                     height={100}
                     src={item.imageFullPath}
@@ -90,7 +90,7 @@ export default function LatestNews({
                     alt=""
                   />
                   <div
-                    className="h-[66px] pt-3 pb-6 px-6 text-sm bg-slate-50
+                    className="pt-3 pb-6 px-6 text-sm bg-slate-50
                      lg:h-[118px] rounded-l-xl"
                   >
                     <h3 className="truncate text-sm lg:text-lg font-bold">
