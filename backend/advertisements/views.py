@@ -559,7 +559,7 @@ class GetAllSuggestedSearchsAPIView(APIView):
 
     def get(self, req):
         try:
-            page, limit = get_page_and_limit(req)
+            page, limit = get_page_and_limit(req, settings.SUGGESTED_SEARCH_LIMIT)
         except ValueError as e:
             return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
         
