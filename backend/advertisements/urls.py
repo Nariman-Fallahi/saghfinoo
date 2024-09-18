@@ -22,4 +22,7 @@ urlpatterns = [
     # saved ads
     path('<int:advertisement_id>/save', views.SaveUnsaveAdvertisementAPIView.as_view(), name='save_advertisement'),
     path('saved', views.GetUserSavedAdvertisementAPIView.as_view(), name='get_all_user_saved_advertisement'),
+
+    # client searchs (suggested searchs)
+    path('suggested-searchs', views.GetAllSuggestedSearchsAPIView.as_view(), name='get_all_client_searchs'),
 ]

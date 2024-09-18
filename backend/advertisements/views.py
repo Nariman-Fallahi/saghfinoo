@@ -17,8 +17,8 @@ from common.utils.request import get_page_and_limit, get_client_ip
 from common import codes
 from common.utils import validations
 
-from .serializers import AdvertisementSerializer, AdvertisementPreviewResponseSerializer, AdvertisementResponseSerializer, RealtorAdvertisementPreviewResponseSerializer, RealtorAdvertisementResponseSerializer, UserSavedAdvertisementPreviewResponseSerializer, AdvertisementImageResponseSerializer, AdvertisementVideoResponseSerializer, AdvertisementChoiceResponseSerializer
-from .models import Advertisement, AdvertisementImage, AdvertisementChoice, SavedAdvertisement, AdvertisementVideo
+from .serializers import AdvertisementSerializer, AdvertisementPreviewResponseSerializer, AdvertisementResponseSerializer, SuggestedSearchResponseSerializer, RealtorAdvertisementPreviewResponseSerializer, RealtorAdvertisementResponseSerializer, UserSavedAdvertisementPreviewResponseSerializer, AdvertisementImageResponseSerializer, AdvertisementVideoResponseSerializer, AdvertisementChoiceResponseSerializer
+from .models import Advertisement, AdvertisementImage, AdvertisementChoice, SuggestedSearch, SavedAdvertisement, AdvertisementVideo
 from realtors.models import Realtor
 
 
@@ -552,3 +552,20 @@ class GetUserSavedAdvertisementAPIView(APIView):
 
         return Response({"msg":"done", 'status':200})
         
+
+##################### suggested searchs  #######################
+
+class GetAllSuggestedSearchsAPIView(APIView):
+
+    def get(self, req):
+        try:
+            page, limit = get_page_and_limit(req)
+        except ValueError as e:
+            return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
+        
+
+
+        cs = SuggestedSearch.objects.all().order_by('-priority')[page*limit:page*limit+limit]
+        cs = SuggestedSearchResponseSerializer(cs, many=True).data
+
+        return Response({'data':cs, 'status':200})
