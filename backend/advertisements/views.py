@@ -97,6 +97,7 @@ class CreateSearchAdvertisementAPIView(APIView):
             'rent_to': validations.validate_integer,
             'area_from': validations.validate_integer,
             'area_to': validations.validate_integer,
+            'type_of_transaction_name': validations.validate_name,
             
         }
         greater_than_exceptions = {
@@ -111,6 +112,7 @@ class CreateSearchAdvertisementAPIView(APIView):
 
         different_fields_name = {
             'reo_username': 'owner__real_estate_office__username',
+            'type_of_transaction_name': 'type_of_transaction__value',
         }
 
         ranged_fields_from = {
