@@ -9,10 +9,11 @@ from PIL import Image
 from django.core.files.storage import default_storage
 from django.conf import settings
 from django.db.models import Q
+from django.core.cache import caches
 # import magic
 
 from common.utils.permissions import IsAdvertisementOwner, IsAdmin, IsRealtor, IsOwner
-from common.utils.request import get_page_and_limit
+from common.utils.request import get_page_and_limit, get_client_ip
 from common import codes
 from common.utils import validations
 
@@ -20,6 +21,8 @@ from .serializers import AdvertisementSerializer, AdvertisementPreviewResponseSe
 from .models import Advertisement, AdvertisementImage, AdvertisementChoice, SavedAdvertisement, AdvertisementVideo
 from realtors.models import Realtor
 
+
+ip_cache = caches['ip']
 
 class CreateSearchAdvertisementAPIView(APIView):
     """ Create and Search
@@ -46,6 +49,7 @@ class CreateSearchAdvertisementAPIView(APIView):
             ad.owner.asave()
             ad.owner.real_estate_office.number_of_active_ads += 1
             ad.owner.real_estate_office.asave()
+
 
             return Response({"msg": "done", 'id':ad.id, 'status':200})
         return Response({"errors": serializer.errors, 'code':codes.INVALID_FIELD, 'status':400})
@@ -271,12 +275,15 @@ class GetEditDeleteAdvertisementAPIView(APIView):
                 else:
                     ad.is_saved = False
 
-            ad.number_of_views += 1
-            ad.asave()
 
+            # if ip not exists in cache
+            if not ip_cache.get(get_client_ip(req), None):
 
-            
-            
+                # add ip to cache
+                ip_cache.add(get_client_ip(req), 'saved')
+                ad.number_of_views += 1
+                ad.save()
+
 
             ad = AdvertisementResponseSerializer(ad).data
             
