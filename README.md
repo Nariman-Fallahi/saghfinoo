@@ -106,7 +106,7 @@ npm run dev
 
 <!-- How to Run BackEnd -->
 
-  <h2 id="how_to_run_frontend">نحوه اجرای پروژه در سمت فرانت اند</h2>
+  <h2 id="how_to_run_backend">نحوه اجرای پروژه در سمت بک اند</h2>
 
 ```bash
 #  backEnd Code
