@@ -26,7 +26,6 @@
   </h2>
 </div>
 
-[تصاویری از سقفینو](#projectـimages)|
 [قابلیت های پروژه](#project_Features)|
 [تکنولوژی های استفاده شده در فرانت اند](#technologiesـusedـinـfrontend)|
 [تکنولوژی های استفاده شده در بک اند](#technologiesـusedـinـbackend)|
@@ -52,19 +51,6 @@
     <li>امکان ثبت کامنت، گزارش و امتیاز به مشاور یا املاک</li>
     <li>قابلیت جستجو در لیست مشاورین یا املاک ها</li>
   </ul>
-</div>
-
-<!-- Project Images -->
-
-<div align="center">
-  <h2 id="projectـimages">تصاویری از سقفینو</h2>
-
-  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
-  <img src="./README_assets/image/Home_New_User.png" style="width: 200px; height: auto;" alt="Home_New_User" />
-  <img src="./README_assets/image/Home_Pro_User.png" style="width: 200px; height: auto;" alt="Home_Pro_User" />
-  <img src="./README_assets/image/Registered.png" style="width: 200px; height: auto;" alt="Registered" />
-  <img src="./README_assets/image/Realestate.png" style="width: 200px; height: auto;" alt="Realestate" />
-</div>
 </div>
 
 <!-- Technologies Used In Frontend -->
@@ -98,8 +84,9 @@
 
 <div align="center">
   <h2 id="how_to_run_frontend">نحوه اجرای پروژه در سمت فرانت اند</h2>
-
-```bash
+  
+  <pre>
+  <code>
 # 1
 git clone git@github.com:Nariman-Fallahi/saghfinoo.git
 # 2
@@ -108,9 +95,10 @@ cd saghfinoo && cd frontend
 npm i
 # 4
 npm run dev
-```
-
+  </code>
+  </pre>
 </div>
+
 
 <!-- How to Run BackEnd -->
 
