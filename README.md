@@ -84,9 +84,8 @@
 
 <div align="center">
   <h2 id="how_to_run_frontend">نحوه اجرای پروژه در سمت فرانت اند</h2>
-  
-  <pre>
-  <code>
+
+```bash
 # 1
 git clone git@github.com:Nariman-Fallahi/saghfinoo.git
 # 2
@@ -95,10 +94,9 @@ cd saghfinoo && cd frontend
 npm i
 # 4
 npm run dev
-  </code>
-  </pre>
-</div>
+```
 
+</div>
 
 <!-- How to Run BackEnd -->
 
