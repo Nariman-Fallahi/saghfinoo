@@ -9,17 +9,20 @@ from PIL import Image
 from django.core.files.storage import default_storage
 from django.conf import settings
 from django.db.models import Q
+from django.core.cache import caches
 # import magic
 
 from common.utils.permissions import IsAdvertisementOwner, IsAdmin, IsRealtor, IsOwner
-from common.utils.request import get_page_and_limit
+from common.utils.request import get_page_and_limit, get_client_ip
 from common import codes
 from common.utils import validations
 
-from .serializers import AdvertisementSerializer, AdvertisementPreviewResponseSerializer, AdvertisementResponseSerializer, RealtorAdvertisementPreviewResponseSerializer, RealtorAdvertisementResponseSerializer, UserSavedAdvertisementPreviewResponseSerializer, AdvertisementImageResponseSerializer, AdvertisementVideoResponseSerializer, AdvertisementChoiceResponseSerializer
-from .models import Advertisement, AdvertisementImage, AdvertisementChoice, SavedAdvertisement, AdvertisementVideo
+from .serializers import AdvertisementSerializer, AdvertisementPreviewResponseSerializer, AdvertisementResponseSerializer, SuggestedSearchResponseSerializer, RealtorAdvertisementPreviewResponseSerializer, RealtorAdvertisementResponseSerializer, UserSavedAdvertisementPreviewResponseSerializer, AdvertisementImageResponseSerializer, AdvertisementVideoResponseSerializer, AdvertisementChoiceResponseSerializer
+from .models import Advertisement, AdvertisementImage, AdvertisementChoice, SuggestedSearch, SavedAdvertisement, AdvertisementVideo
 from realtors.models import Realtor
 
+
+ip_cache = caches['ip']
 
 class CreateSearchAdvertisementAPIView(APIView):
     """ Create and Search
@@ -46,6 +49,7 @@ class CreateSearchAdvertisementAPIView(APIView):
             ad.owner.asave()
             ad.owner.real_estate_office.number_of_active_ads += 1
             ad.owner.real_estate_office.asave()
+
 
             return Response({"msg": "done", 'id':ad.id, 'status':200})
         return Response({"errors": serializer.errors, 'code':codes.INVALID_FIELD, 'status':400})
@@ -97,6 +101,7 @@ class CreateSearchAdvertisementAPIView(APIView):
             'rent_to': validations.validate_integer,
             'area_from': validations.validate_integer,
             'area_to': validations.validate_integer,
+            'type_of_transaction_name': validations.validate_name,
             
         }
         greater_than_exceptions = {
@@ -111,6 +116,7 @@ class CreateSearchAdvertisementAPIView(APIView):
 
         different_fields_name = {
             'reo_username': 'owner__real_estate_office__username',
+            'type_of_transaction_name': 'type_of_transaction__value',
         }
 
         ranged_fields_from = {
@@ -269,12 +275,15 @@ class GetEditDeleteAdvertisementAPIView(APIView):
                 else:
                     ad.is_saved = False
 
-            ad.number_of_views += 1
-            ad.asave()
 
+            # if ip not exists in cache
+            if not ip_cache.get(get_client_ip(req), None):
 
-            
-            
+                # add ip to cache
+                ip_cache.add(get_client_ip(req), 'saved')
+                ad.number_of_views += 1
+                ad.save()
+
 
             ad = AdvertisementResponseSerializer(ad).data
             
@@ -543,3 +552,20 @@ class GetUserSavedAdvertisementAPIView(APIView):
 
         return Response({"msg":"done", 'status':200})
         
+
+##################### suggested searchs  #######################
+
+class GetAllSuggestedSearchsAPIView(APIView):
+
+    def get(self, req):
+        try:
+            page, limit = get_page_and_limit(req, settings.SUGGESTED_SEARCH_LIMIT)
+        except ValueError as e:
+            return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
+        
+
+
+        cs = SuggestedSearch.objects.all().order_by('-priority')[page*limit:page*limit+limit]
+        cs = SuggestedSearchResponseSerializer(cs, many=True).data
+
+        return Response({'data':cs, 'status':200})

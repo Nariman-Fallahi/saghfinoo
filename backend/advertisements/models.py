@@ -148,3 +148,10 @@ class AdvertisementVideo(models.Model):
 
     video = models.CharField(max_length=1000)
     video_full_path = models.CharField(max_length=1000) 
+
+
+class SuggestedSearch(models.Model):
+
+    query = models.CharField(max_length=300)
+    display_name = models.CharField(max_length=200)
+    priority = models.IntegerField()

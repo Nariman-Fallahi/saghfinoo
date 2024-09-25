@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from common.utils.permissions import IsAdmin, IsRealtor
-from .models import Advertisement, AdvertisementImage, AdvertisementChoice, SavedAdvertisement
+from .models import Advertisement, AdvertisementImage, AdvertisementChoice, SavedAdvertisement, SuggestedSearch
 from common.utils import validations
 from realtors.models import Realtor
 from users.models import CustomUser
@@ -289,3 +289,10 @@ class RealtorAdvertisementResponseSerializer(serializers.ModelSerializer):
         data = AdvertisementPreviewResponseSerializer().to_representation(instance)
         data['isConfirmed'] = instance.is_confirmed
         return data
+    
+
+class SuggestedSearchResponseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SuggestedSearch
+        fields = ['query']

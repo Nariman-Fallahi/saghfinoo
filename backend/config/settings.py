@@ -140,6 +140,12 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
         'LOCATION': 'redis://127.0.0.1:6379',
         'TIMEOUT': 10*60
+    },
+
+    'ip' :{
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379',
+        'TIMEOUT': 1*60*60,
     }
 }
 
@@ -289,3 +295,4 @@ NUMBER_DELAY = timedelta(minutes=1, seconds=30)
 
 REALTOR_DEFAULT_SCORE = 4
 ADVERTISEMENT_MEDIA_LIMIT = 6
+SUGGESTED_SEARCH_LIMIT = 12
