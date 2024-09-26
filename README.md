@@ -76,6 +76,8 @@
 <div align="center">
   <h2 id="technologiesـusedـinـbackend">تکنولوژی های استفاده شده در بک اند</h2>
 
+  <img src="https://skillicons.dev/icons?i=python">`Python` <img src="https://skillicons.dev/icons?i=django">`Django` <img src="https://skillicons.dev/icons?i=django-rest-framework">`Django RestFramework` <img src="https://skillicons.dev/icons?i=python">`Redis` <img src="https://skillicons.dev/icons?i=aws">`AWS S3 storage` <img src="https://skillicons.dev/icons?i=postgres">`PostgreSQL`  
+
   <!-- BackEnd -->
 
 </div>
@@ -108,8 +110,26 @@ npm run dev
 
   <h2 id="how_to_run_backend">نحوه اجرای پروژه در سمت بک اند</h2>
 
+  `1`
 ```bash
-#  backEnd Code
+git clone git@github.com:yaghoubi-mn/saghfinoo.git
+```
+
+`2`
+```bash
+cd saghfinoo/backend
+```
+`3`
+```bash
+pip install -r requirements.txt
+```
+`4`
+```bash
+python3 manage.py runserver
+```
+or
+```bash
+python manage.py runserver
 ```
 
 </div>
@@ -135,4 +155,5 @@ npm run dev
     <span>مریم شکاتی </span>،
     <span>امین خسروتاج </span>،
     <span>سردار وظیفه </span>
+    <span>link <a href="https://www.figma.com/design/rYySk0zqhnrBcDnP8l9Afk/🏡Saghfinoo---Real-Estate-Website-(Community)">Saghfinoo (Figma)</a></span>
 </div>
