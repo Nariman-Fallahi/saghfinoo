@@ -76,7 +76,12 @@
 <div align="center">
   <h2 id="technologiesـusedـinـbackend">تکنولوژی های استفاده شده در بک اند</h2>
 
-  <img src="https://skillicons.dev/icons?i=python">`Python` <img src="https://skillicons.dev/icons?i=django">`Django` <img src="https://skillicons.dev/icons?i=django-rest-framework">`Django RestFramework` <img src="https://skillicons.dev/icons?i=python">`Redis` <img src="https://skillicons.dev/icons?i=aws">`AWS S3 storage` <img src="https://skillicons.dev/icons?i=postgres">`PostgreSQL`  
+  <img width="30" align="center" src="https://skillicons.dev/icons?i=python">`Python`
+  <img width="30" align="center" src="https://skillicons.dev/icons?i=postgres">`PostgreSQL`  
+  <img width="30" align="center" src="https://skillicons.dev/icons?i=python">`Redis`
+  <img width="30" align="center" src="https://skillicons.dev/icons?i=aws">`AWS S3 storage`
+  <img width="30" align="center" src="https://skillicons.dev/icons?i=django">`Django` 
+  <img width="30" align="center" src="https://skillicons.dev/icons?i=django-rest-framework">`Django RestFramework`
 
   <!-- BackEnd -->
 
