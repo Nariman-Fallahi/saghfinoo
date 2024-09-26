@@ -1,9 +1,37 @@
+"use client";
 import Image from "next/image";
+import { useState } from "react";
 
-export default function SearchBox() {
+type TabSearchBoxType = {
+  title: string;
+  isSelected: boolean;
+  onClick: () => void;
+};
+
+const TabSearchBox = ({ title, isSelected, onClick }: TabSearchBoxType) => {
   return (
     <div
-      className="mt-[57px] md:mt-0 bg-search flex flex-col items-center p-5
+      className={`w-1/2 border-b-2 ${
+        isSelected ? "border-b-red-500" : "border-b-gray-300"
+      } border-b text-center pb-1
+    text-sm font-normal md:text-base cursor-pointer hover:text-red-500
+     lg:text-2xl lg:font-medium`}
+      onClick={onClick}
+    >
+      {title}
+    </div>
+  );
+};
+
+export default function SearchBox() {
+  const [nameTheSelectedTab, setNameTheSelectedTab] = useState<
+    "rent" | "shopping"
+  >("rent");
+
+  return (
+    <div
+      style={{ backgroundImage: "url(/image/bgSearch.png)" }}
+      className="mt-[57px] md:mt-0 flex flex-col items-center p-5
      bg-center bg-cover pb-10 lg:h-screen"
     >
       <h2
@@ -24,20 +52,16 @@ export default function SearchBox() {
        md:w-[70%] lg:mt-16"
       >
         <div className="flex items-center">
-          <div
-            className="w-1/2 border-b border-b-gray-300 text-center pb-1
-            text-sm font-normal md:text-base cursor-pointer hover:text-red-500
-             lg:text-2xl lg:font-medium"
-          >
-            اجاره
-          </div>
-          <div
-            className="w-1/2 border-b border-b-gray-300 text-center pb-1
-            text-sm font-normal md:text-base cursor-pointer hover:text-red-500
-             lg:text-2xl lg:font-medium"
-          >
-            خرید
-          </div>
+          <TabSearchBox
+            title="اجاره"
+            isSelected={nameTheSelectedTab === "rent"}
+            onClick={() => setNameTheSelectedTab("rent")}
+          />
+          <TabSearchBox
+            title="خرید"
+            isSelected={nameTheSelectedTab === "shopping"}
+            onClick={() => setNameTheSelectedTab("shopping")}
+          />
         </div>
 
         <div className="flex items-center mt-2 md:mt-3">

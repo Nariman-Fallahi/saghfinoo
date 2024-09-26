@@ -1,5 +1,5 @@
 "use client";
-import { Title } from "@/app/userProfile/[userName]/page";
+import { Title } from "@/app/userProfile/[id]/page";
 import Image from "next/image";
 import { Button } from "@nextui-org/button";
 import NoData from "./NoData";
@@ -16,6 +16,8 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { isMobile } from "@/constant/Constants";
 import { Spinner } from "@nextui-org/spinner";
+
+//TODO EDIT
 
 export default function MyAds() {
   const [pageNumber, setPageNumber] = useState<number>(1);

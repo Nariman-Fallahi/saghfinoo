@@ -96,7 +96,7 @@ export default function MobileMenu({
               width={isLogin ? 36 : 20}
               height={isLogin ? 36 : 20}
               src={
-                (isLogin && userInfoData?.data.image_full_path) ||
+                (isLogin && userInfoData?.data.imageFullPath) ||
                 "/icons/profile-circle.svg"
               }
               alt=""
@@ -113,7 +113,7 @@ export default function MobileMenu({
             )}
             <p className="mr-2 text-xs">
               {isLogin
-                ? `${userInfoData?.data.first_name} ${userInfoData?.data.last_name}`
+                ? `${userInfoData?.data.firstName} ${userInfoData?.data.lastName}`
                 : "ورود یا ثبت نام"}
             </p>
             {isLogin && (

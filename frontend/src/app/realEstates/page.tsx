@@ -1,18 +1,11 @@
 import { Api } from "@/ApiService";
 import { allrealEstateOfficesDataType } from "@/types/Type";
-import { axiosInstance } from "@/ApiService";
 import ErrNoData from "@/components/ErrNoData";
 import SearchDataNotFound from "@/components/RealEstates-Realators/SearchDataNotFound";
 
 // Components
 import SearchBox from "@/components/RealEstates-Realators/SearchBox";
 import RealEstatesCards from "@/components/RealEstatesCards";
-
-type RealEstatesDataType = {
-  data: allrealEstateOfficesDataType[];
-  status: number;
-  total_pages: number;
-};
 
 export default async function RealEstates({
   searchParams,
@@ -33,24 +26,34 @@ export default async function RealEstates({
     params.append("city", cities);
   }
 
-  const { data } = await axiosInstance.get<RealEstatesDataType>(
-    `${Api.Reos}/?${params}`
+  let data = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}${Api.Reos}/?${params}`
   );
 
-  if (data.status !== 200) {
+  let realEstateData: {
+    data: allrealEstateOfficesDataType[];
+    status: number;
+    total_pages: number;
+  } = await data.json();
+
+  if (!data.ok) {
     return <ErrNoData />;
   }
 
   return (
     <>
       <SearchBox title="املاک و مستغلات" />
-      {data?.data && data.status === 200 && data.data.length >= 1 && (
-        <RealEstatesCards data={data} />
-      )}
+      {realEstateData.data &&
+        data.status === 200 &&
+        realEstateData.data.length >= 1 && (
+          <RealEstatesCards data={realEstateData} />
+        )}
 
-      {data?.data && data.status === 200 && data.data.length < 1 && (
-        <SearchDataNotFound text="بنگاهی با شهر مورد نظر شما پیدا نشد." />
-      )}
+      {realEstateData.data &&
+        data.status === 200 &&
+        realEstateData.data.length < 1 && (
+          <SearchDataNotFound text="بنگاهی با شهر مورد نظر شما پیدا نشد." />
+        )}
     </>
   );
 }

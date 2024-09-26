@@ -1,7 +1,7 @@
 import AdsCart from "../AdsCart";
 import { Title } from "@/constant/Constants";
 import Filter from "./AdsFilter/Filter";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { AdsDataType, AdsFilterDataType } from "@/types/Type";
 import PaginationComponent from "../Pagination";
 import Skeleton from "react-loading-skeleton";
@@ -17,8 +17,6 @@ type AdsType = {
   title: string;
   status: "error" | "success" | "pending";
   data: AdsDataType[] | undefined;
-  pageNumber: number;
-  setPageNumber: (value: number) => void;
   totalPages: number | undefined;
   adsfilterData: AdsFilterDataType | undefined;
   setAdsFilterData: Dispatch<SetStateAction<AdsFilterDataType | undefined>>;
@@ -33,18 +31,15 @@ type AdsType = {
   >;
   isFetching: boolean;
 };
-
 export default function Ads({
   title,
   status,
   data,
-  pageNumber,
-  setPageNumber,
   totalPages,
   adsfilterData,
   setAdsFilterData,
   refetch,
-  isFetching
+  isFetching,
 }: AdsType) {
   return (
     <div className="mt-10 flex flex-col p-4 md:mt-14 md:p-8">
@@ -60,7 +55,12 @@ export default function Ads({
 
       <Filter filterData={adsfilterData} setFilterData={setAdsFilterData} />
 
-      <AdsCart data={data} isloading={status === "pending"} refetch={refetch} isFetching={isFetching} />
+      <AdsCart
+        data={data}
+        isloading={status === "pending"}
+        refetch={refetch}
+        isFetching={isFetching}
+      />
 
       {status === "success" && data && data?.length <= 0 && (
         <div className="flex flex-col items-center mt-5 w-full">
@@ -77,11 +77,7 @@ export default function Ads({
         </div>
       )}
 
-      <PaginationComponent
-        pageNumber={pageNumber}
-        setPageNumber={setPageNumber}
-        totalPages={totalPages}
-      />
+      <PaginationComponent totalPages={totalPages} />
     </div>
   );
 }

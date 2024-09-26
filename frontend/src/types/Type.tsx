@@ -79,11 +79,11 @@ export type useGetRequestType = {
 
 export type userInfoDataType = {
   data: {
-    first_name: string | undefined;
-    last_name: string | undefined;
+    firstName: string | undefined;
+    lastName: string | undefined;
     number: number | undefined;
-    image_full_path?: string | undefined;
-    email: string | undefined;
+    imageFullPath?: string | undefined;
+    email: string | null;
     password: string;
     newPassword: string;
   };
@@ -307,4 +307,12 @@ export type ScoreReasonsType = {
 export type ReportModaltDataType = {
   id: number;
   name: string;
+};
+
+export type NewsDataType = {
+  imageFullPath: string;
+  readTime: number;
+  title: string;
+  shortDescription: string;
+  slug: string;
 };

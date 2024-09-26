@@ -82,12 +82,12 @@ export default function DesktopMenu({
                 height={28}
                 className="rounded-full h-7 lg:w-9 lg:h-9"
                 src={
-                  userInfoData?.data.image_full_path ||
+                  userInfoData?.data.imageFullPath ||
                   "/icons/profile-circle.svg"
                 }
                 alt="User Profile"
               />
-              <p className="ml-2 cursor-pointer lg:text-sm">{`${userInfoData?.data.first_name} ${userInfoData?.data.last_name}`}</p>
+              <p className="ml-2 cursor-pointer lg:text-sm">{`${userInfoData?.data.firstName} ${userInfoData?.data.lastName}`}</p>
             </Button>
           )}
 

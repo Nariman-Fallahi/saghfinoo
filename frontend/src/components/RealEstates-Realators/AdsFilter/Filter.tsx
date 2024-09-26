@@ -15,7 +15,6 @@ import Select, { MenuProps } from "react-select";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { getCookie } from "cookies-next";
 import SelectionCustomMenu from "./SelectionCustomMenu";
-import { isMobile } from "@/constant/Constants";
 
 export type InputsType = {
   city: string;
@@ -72,8 +71,7 @@ export default function Filter({ filterData, setFilterData }: FilterType) {
     staleTime: 10 * 60 * 1000,
   });
 
-  // Get propertyTypeData
-
+  // Get propertyTypeDataS
   const { data: propertyTypeData } = useGetRequest<{
     data: SelectionDataType[];
   }>({

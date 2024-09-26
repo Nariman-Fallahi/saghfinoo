@@ -1,4 +1,4 @@
-import { Api, axiosInstance } from "@/ApiService";
+import { Api } from "@/ApiService";
 import { allRealtorDataType } from "@/types/Type";
 import ErrNoData from "@/components/ErrNoData";
 
@@ -6,12 +6,6 @@ import ErrNoData from "@/components/ErrNoData";
 import SearchBox from "@/components/RealEstates-Realators/SearchBox";
 import RealatorsCarts from "@/components/RealatorsCarts";
 import SearchDataNotFound from "@/components/RealEstates-Realators/SearchDataNotFound";
-
-type RealatorsDataType = {
-  data: allRealtorDataType[];
-  status: number;
-  total_pages: number;
-};
 
 export default async function Realators({
   searchParams,
@@ -32,26 +26,33 @@ export default async function Realators({
     params.append("city", cities);
   }
 
-  const { data } = await axiosInstance.get<RealatorsDataType>(
-    `${Api.realtors}/?${params}`
+  let data = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}${Api.realtors}/?${params}`
   );
 
-  console.log(data.data);
-  
+  let realatorsData: {
+    data: allRealtorDataType[];
+    total_pages: number;
+    status: number;
+  } = await data.json();
 
-  if (data.status !== 200) {
+  if (!data.ok) {
     return <ErrNoData />;
   }
   return (
     <>
       <SearchBox title="مشاورین املاک" />
-      {data?.data && data.status === 200 && data?.data.length >= 1 && (
-        <RealatorsCarts data={data} />
-      )}
+      {realatorsData.data &&
+        data.status === 200 &&
+        realatorsData.data.length >= 1 && (
+          <RealatorsCarts data={realatorsData} />
+        )}
 
-      {data?.data && data.status === 200 && data?.data.length < 1 && (
-        <SearchDataNotFound text="مشاوری که عضو بنگاه شهر مورد نظر شما باشد وجود ندارد." />
-      )}
+      {realatorsData.data &&
+        realatorsData.status === 200 &&
+        realatorsData.data.length < 1 && (
+          <SearchDataNotFound text="مشاوری که عضو بنگاه شهر مورد نظر شما باشد وجود ندارد." />
+        )}
     </>
   );
 }
