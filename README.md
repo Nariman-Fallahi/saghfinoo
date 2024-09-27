@@ -78,10 +78,10 @@
 
   <img width="30" align="center" src="https://skillicons.dev/icons?i=python">`Python`
   <img width="30" align="center" src="https://skillicons.dev/icons?i=postgres">`PostgreSQL`  
-  <img width="30" align="center" src="https://skillicons.dev/icons?i=python">`Redis`
-  <img width="30" align="center" src="https://skillicons.dev/icons?i=aws">`AWS S3 storage`
+  <img width="30" align="center" src="https://skillicons.dev/icons?i=redis">`Redis`
   <img width="30" align="center" src="https://skillicons.dev/icons?i=django">`Django` 
-  <img width="30" align="center" src="https://skillicons.dev/icons?i=django-rest-framework">`Django RestFramework`
+  <img width="30" align="center" src="https://skillicons.dev/icons?i=aws">`AWS S3 storage`
+  <img width="30" align="center" src="https://skillicons.dev/icons?i=django">`Django RestFramework`
 
   <!-- BackEnd -->
 
@@ -89,8 +89,8 @@
 
 <!-- How to Run FrontEnd -->
 
-<div align="center">
-  <h2 id="how_to_run_frontend">نحوه اجرای پروژه در سمت فرانت اند</h2>
+<div>
+  <h2 align="center" id="how_to_run_frontend">نحوه اجرای پروژه در سمت فرانت اند</h2>
 
   `1`
 ```bash
@@ -113,7 +113,7 @@ npm run dev
 
 <!-- How to Run BackEnd -->
 
-  <h2 id="how_to_run_backend">نحوه اجرای پروژه در سمت بک اند</h2>
+  <h2 align="center" id="how_to_run_backend">نحوه اجرای پروژه در سمت بک اند</h2>
 
   `1`
 ```bash
@@ -160,5 +160,5 @@ python manage.py runserver
     <span>مریم شکاتی </span>،
     <span>امین خسروتاج </span>،
     <span>سردار وظیفه </span>
-    <span>link <a href="https://www.figma.com/design/rYySk0zqhnrBcDnP8l9Afk/🏡Saghfinoo---Real-Estate-Website-(Community)">Saghfinoo (Figma)</a></span>
+    <br><span>Link: <a href="https://www.figma.com/design/rYySk0zqhnrBcDnP8l9Afk/🏡Saghfinoo---Real-Estate-Website-(Community)">Saghfinoo (Figma)</a></span>
 </div>
