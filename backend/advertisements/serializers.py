@@ -295,4 +295,4 @@ class SuggestedSearchResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SuggestedSearch
-        fields = ['name']
+        fields = ['name', 'id']
