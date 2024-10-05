@@ -152,6 +152,5 @@ class AdvertisementVideo(models.Model):
 
 class SuggestedSearch(models.Model):
 
-    query = models.CharField(max_length=300)
-    display_name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200)
     priority = models.IntegerField()
