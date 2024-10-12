@@ -33,8 +33,8 @@ class RealEstateOffice(models.Model):
     number_of_active_ads = models.PositiveIntegerField(default=0)
     number_of_comments = models.PositiveIntegerField(default=0)
 
-    score_num = models.PositiveIntegerField()
-    score_sum = models.PositiveBigIntegerField()
+    score_num = models.PositiveIntegerField(default=0)
+    score_sum = models.PositiveBigIntegerField(default=0)
 
     is_confirmed = models.BooleanField(default=False)
 

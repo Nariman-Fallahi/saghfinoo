@@ -78,7 +78,7 @@ class CustomUserResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'number', 'image_full_path', 'created_at', 'email', 'activity_type']
+        fields = ['first_name', 'last_name', 'number', 'image_full_path', 'created_at', 'email', 'activity_type', 'number']
 
     def to_representation(self, instance):
         return {
@@ -87,7 +87,8 @@ class CustomUserResponseSerializer(serializers.ModelSerializer):
             'imageFullPath': instance.image_full_path,
             'RigisteredAt': instance.created_at,
             'email': instance.email,
-            'activityType': instance.activity_type
+            'activityType': instance.activity_type,
+            'number': instance.number
         }
 
 class CustomUserSerializer(serializers.ModelSerializer):

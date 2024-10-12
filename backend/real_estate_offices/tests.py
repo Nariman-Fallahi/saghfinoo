@@ -8,7 +8,7 @@ from realtors.models import Realtor
 
 class CreateRealEstateOfficeTest(APITestCase):
     def setUp(self) -> None:
-        self.url = reverse('create_real_estate_office')
+        self.url = reverse('create_search_real_estate_office')
         self.number = NumberGenerator.get_number()
         self.default_data = {
                 'name': 'test',
@@ -39,7 +39,7 @@ class CreateRealEstateOfficeTest(APITestCase):
         # create Realtor
         data = {
             'number': '09128282837',
-            'landline_number': '021938493849849',
+            'landlineNumber': '021938493849849',
             'whatsapp': 'test.ir',
             'twitter': 'test',
             'facebook':'test',
@@ -91,7 +91,7 @@ class CreateRealEstateOfficeTest(APITestCase):
 
 class GetAllRealEstateOfficesTest(APITestCase):
     def setUp(self):
-        self.url = reverse('get_all_real_estate_offices')
+        self.url = reverse('create_search_real_estate_office')
         self.number = NumberGenerator.get_number()
         self.access, self.refresh = login(self, self.number)
         self.headers = {'Authorization': 'Bearer '+ self.access}
@@ -106,4 +106,4 @@ class GetAllRealEstateOfficesTest(APITestCase):
         self.assertEqual(resp.data['status'], 200, resp.data)
         self.assertNotEqual(resp.data.get('data', ''), '', resp.data)
         self.assertGreater(len(resp.data['data']), 0, 'not data exist in resp.data["data"]')
-        test_have_fields(self, list(resp.data['data'])[0], ['name', 'username', 'city', 'mainStreet', 'subStreet', 'score', 'numberOfActice_ads', 'numberOfComments', 'imageFullPath', 'blueTick'])        
+        test_have_fields(self, list(resp.data['data'])[0], ['name', 'username', 'city', 'mainStreet', 'subStreet', 'score', 'numberOfActiveAds', 'numberOfComments', 'imageFullPath', 'blueTick'])        

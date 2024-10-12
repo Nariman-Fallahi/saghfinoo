@@ -14,7 +14,8 @@ class CreateAdvertisementTests(APITestCase):
         self.url = reverse('create_search_advertisement')
 
         # find choices IDs
-        resp = self.client.get(reverse('get_all_advertisements_choices'))
+        resp = self.client.get(reverse('get_all_advertisement_choices'))
+        
         for id, key, value in resp.data:
             if key == 'type_of_transaction' and value == 'رهن و اجاره':
                 type_of_transaction_id = id
@@ -162,6 +163,6 @@ class SearchAdvertisementsTests(APITestCase):
         return super().setUp()
 
     def test_success(self):
-        resp = self.client.get(self.url)
-        self.assertEqual(resp.data["status"], 200)
-        self.assertNotEqual(resp.data.get('data', None), None)
+        resp = self.client.get(self.url+'?page=1')
+        self.assertEqual(resp.data["status"], 200, resp.data)
+        self.assertNotEqual(resp.data.get('data', None), None, resp.data)

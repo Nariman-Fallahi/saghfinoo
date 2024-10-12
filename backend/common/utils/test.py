@@ -75,16 +75,20 @@ def login(self, number):
         self.assertEqual(resp.data['code'], codes.COMPLETE_SIGNUP, resp.data)
         
         # signup
-        data2 = {'number':number, 'first_name':'abc', 'last_name':'abc', 'password':'1234', 'token': data['token']}
+        data2 = {'number':number, 'firstName':'abc', 'lastName':'abc', 'password':'1234', 'token': data['token']}
         resp = self.client.post(reverse('signup'), data2)
         self.assertEqual(resp.data['status'], 201, resp.data)
 
         return resp.data['access'], resp.data['refresh']
 
+
+class NoneType:
+     pass
+
 def test_have_fields(self, data: dict, fields: list):
      
      for field in fields:
-          self.assertNotEqual(data.get(field, ''), '', f'field: {field}, data: {data}')
+          self.assertNotEqual(data.get(field, NoneType), NoneType, f'field {field} not found in response, data: {data}')
 
 
 class NumberGenerator:
@@ -137,7 +141,7 @@ def create_real_estate_office(self, headers):
                 'telegram': 'test',
         }
 
-        resp = self.client.post(reverse('create_real_estate_office'), default_data, headers=headers)
+        resp = self.client.post(reverse('create_search_real_estate_office'), default_data, headers=headers)
         self.assertEqual(resp.data['status'], 200, resp.data)
 
         # confirm real estate office

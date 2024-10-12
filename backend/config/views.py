@@ -2,7 +2,6 @@ from django.http import JsonResponse
 from common import codes
 
 def json404(request, exception=None):
-    print('------------------------------------')
     return JsonResponse({'status':404, 'code': codes.PAGE_NOT_FOUND})
 
 def json500(request, exception=None):

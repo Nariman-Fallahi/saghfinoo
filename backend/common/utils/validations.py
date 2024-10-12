@@ -28,7 +28,6 @@ def validate_landline_number(landline_number: str):
 
 def validate_name(name: str):
     valid_chars = characters.NAME_CHARS
-    print(name)
     validate(name, valid_chars)
         
 def validate_description(description: str):

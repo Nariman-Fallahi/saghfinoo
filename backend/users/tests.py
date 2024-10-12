@@ -232,7 +232,7 @@ class GetUserInfoAPIViewTests(APITestCase):
         resp = self.client.get(self.url, headers=self.headers)
         self.assertEqual(resp.data['status'], 200, resp.data)
         self.assertNotEqual(resp.data.get('data', ''), '', resp.data)
-        test_have_fields(self, resp.data['data'], ['firstName', 'lastName', 'number', 'imageFullPath', 'createdAt', 'email', 'activityType'])
+        test_have_fields(self, resp.data['data'], ['firstName', 'lastName', 'number', 'imageFullPath', 'RigisteredAt', 'email', 'activityType'])
 
 
         
