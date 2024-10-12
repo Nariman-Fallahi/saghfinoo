@@ -154,3 +154,14 @@ class CreateAdvertisementTests(APITestCase):
             'elevator': (1,20),
             'description':characters.DESCRIPTION_INVALID_CHARS,
         })
+
+
+class SearchAdvertisementsTests(APITestCase):
+    def setUp(self) -> None:
+        self.url = reverse('create_search_advertisement')
+        return super().setUp()
+
+    def test_success(self):
+        resp = self.client.get(self.url)
+        self.assertEqual(resp.data["status"], 200)
+        self.assertNotEqual(resp.data.get('data', None), None)
