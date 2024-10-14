@@ -11,3 +11,4 @@ django-debug-toolbar
 boto3
 django-storages
 gunicorn
+pillow
