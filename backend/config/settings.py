@@ -129,25 +129,48 @@ if TESTING:
         'PORT': os.getenv('TEST_DB_PORT'),
     }
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379',
-        'TIMEOUT': 7*24*60*60
-    },
-    
-    'auth': {
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379',
-        'TIMEOUT': 10*60
-    },
+if os.getenv("CACHE_DB") == 'redis':
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': 'redis://127.0.0.1:6379',
+            'TIMEOUT': 7*24*60*60
+        },
+        
+        'auth': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': 'redis://127.0.0.1:6379',
+            'TIMEOUT': 10*60
+        },
 
-    'ip' :{
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379',
-        'TIMEOUT': 1*60*60,
+        'ip' :{
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': 'redis://127.0.0.1:6379',
+            'TIMEOUT': 1*60*60,
+        }
     }
-}
+else:
+    print('using database as cache ...')
+    # use database as cache
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+            'LOCATION': 'defualt_cache',
+            'TIMEOUT': 7*24*60*60
+        },
+        'auth': {
+            'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+            'LOCATION': 'auth_cache',
+            'TIMEOUT': 10*60
+        },
+        'ip': {
+            'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+            'LOCATION': 'ip_cache',
+            'TIMEOUT': 1*60*60
+        },
+        
+    }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
