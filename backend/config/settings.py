@@ -36,7 +36,7 @@ if secret != None:
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-if os.getenv("DEBUG") != 'true':
+if os.getenv("DEBUG") == 'false':
     DEBUG = False
 print('debug mode is', DEBUG)
 
