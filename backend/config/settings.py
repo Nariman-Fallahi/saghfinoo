@@ -36,7 +36,7 @@ if secret != None:
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-if os.getenv("DEBUG") == 'false':
+if os.getenv("DJANGO_DEBUG") == 'false':
     DEBUG = False
 print('debug mode is', DEBUG)
 
