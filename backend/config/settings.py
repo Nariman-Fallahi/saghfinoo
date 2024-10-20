@@ -293,7 +293,7 @@ REST_FRAMEWORK ={
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME':timedelta(minutes=60),
+    'ACCESS_TOKEN_LIFETIME':timedelta(minutes=20),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=15),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
     'SLIDING_TOKEN_LIFETIME': timedelta(days=30),
@@ -302,7 +302,7 @@ SIMPLE_JWT = {
 }
 
 if DEBUG:
-    SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'] = timedelta(days=7)
+    SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'] = timedelta(days=1)
 
 # django debug toolbar
 INTERNAL_IPS = ['127.0.0.1']
