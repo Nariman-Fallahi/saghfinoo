@@ -58,7 +58,7 @@ class AdvertisementSerializer(serializers.ModelSerializer):
         validations.validate_se('sideStreet', attrs['side_street'], validations.validate_name)
         validations.validate_choice_se('typeOfTransaction', attrs['type_of_transaction'])
         validations.validate_choice_se('propertyType', attrs['property_type'])
-        type_of_transaction = attrs['typeOfTransaction']
+        type_of_transaction = attrs['type_of_transaction']
         
         if type_of_transaction.en_value == 'rent':
             # desposit must be 0

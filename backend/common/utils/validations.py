@@ -58,7 +58,7 @@ def validate_username(username: str):
 
 def validate_choice_se(field_name, field_value):
     if field_value.key != field_name:
-        raise serializers.ValidationError({field_name:f'{field_name} with id={field_value.id} not found'})
+        raise serializers.ValidationError({field_name:f'{field_name} with id={field_value.id} not found. this id is for {field_value.key} not {field_name}'})
 
 def validate_integer(value, range: tuple = None):
     """validate a string that have integer
