@@ -87,6 +87,22 @@ class CreateSearchRealtor(APIView):
         return Response({'data':realtors, 'total_pages':total_pages, 'status':200})
 
 
+
+class GetTopRealtorsAPIView(APIView):
+    def get(self, req):
+
+        try:
+            limit = int(req.query_params.get('limit', '8'))
+        except:
+            return Response({'errors':{'limit':'invalid limit'}, 'status':400})
+        
+        reo = Realtor.objects.all().order_by('-score')[:limit]
+        reo = RealtorPreviewResponseSerializer(reo, many=True).data
+
+        return Response({'data': reo, 'status':200})
+
+
+
 class GetEditDeleteRealtorAPIView(APIView):
     permission_classes = [IsAuthenticated, IsRealtor]
     authentication_classes = [JWTAuthentication]

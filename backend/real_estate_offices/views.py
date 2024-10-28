@@ -85,6 +85,19 @@ class CreateSearchRealEstateOfficeAPIView(APIView):
     
         return Response({'data':reo, 'total_pages':total_pages, 'status':200})
 
+class GetTopRealEstateOfficesAPIView(APIView):
+    def get(self, req):
+
+        try:
+            limit = int(req.query_params.get('limit', '8'))
+        except:
+            return Response({'errors':{'limit':'invalid limit'}, 'status':400})
+        
+        reo = RealEstateOffice.objects.all().order_by('-score')[:limit]
+        reo = RealEstateOfficePreviewResponseSerializer(reo, many=True).data
+
+        return Response({'data': reo, 'status':200})
+
 
 class GetEditDeleteRealEstateOfficeAPIView(APIView):
 

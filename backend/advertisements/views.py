@@ -182,7 +182,7 @@ class CreateSearchAdvertisementAPIView(APIView):
         total_pages = math.ceil(Advertisement.objects.filter(**kwargs).count()/limit)
 
         return Response({'data':ads, 'totalPages':total_pages, 'status':200})
-    
+  
 
 class GetAllAdvertisementChoicesAPIView(APIView):
 

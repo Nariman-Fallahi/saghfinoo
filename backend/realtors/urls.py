@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     path('', views.CreateSearchRealtor.as_view(), name='create_realtor'),
+    path('top', views.GetTopRealtorsAPIView.as_view(), name='get_top_realtors'),
     path('<realtor_id>', views.GetEditDeleteRealtorAPIView.as_view(), name='get_realtor'),
     
     path('<int:realtor_id>/comments', views.CreateGetAllCommentAPIView.as_view(), name='create_comment_for_realtor'),
