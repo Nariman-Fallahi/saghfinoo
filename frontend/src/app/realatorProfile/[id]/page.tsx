@@ -1,5 +1,5 @@
 "use client";
-import { Api } from "@/ApiService";
+import { Api, baseURL } from "@/ApiService";
 import { useGetRequest } from "@/ApiService";
 import { useParams } from "next/navigation";
 import { AdsDataType, AdsFilterDataType, RealtorDataType } from "@/types/Type";
@@ -42,7 +42,7 @@ export default function RealatorProfile() {
     });
 
   useEffect(() => {
-    const adsUrl = new URL(Api.Ad, process.env.NEXT_PUBLIC_API_BASE_URL);
+    const adsUrl = new URL(Api.Ad, baseURL);
 
     adsUrl.searchParams.append("page", adsPageNumber.toString());
     adsUrl.searchParams.append("owner", params.id.toString());

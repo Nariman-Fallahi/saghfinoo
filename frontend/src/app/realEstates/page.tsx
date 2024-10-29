@@ -1,4 +1,4 @@
-import { Api } from "@/ApiService";
+import { Api, baseURL } from "@/ApiService";
 import { allrealEstateOfficesDataType } from "@/types/Type";
 import ErrNoData from "@/components/ErrNoData";
 import SearchDataNotFound from "@/components/RealEstates-Realators/SearchDataNotFound";
@@ -6,6 +6,12 @@ import SearchDataNotFound from "@/components/RealEstates-Realators/SearchDataNot
 // Components
 import SearchBox from "@/components/RealEstates-Realators/SearchBox";
 import RealEstatesCards from "@/components/RealEstatesCards";
+import PaginationComponent from "@/components/Pagination";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "املاک و مستغلات",
+};
 
 export default async function RealEstates({
   searchParams,
@@ -27,7 +33,7 @@ export default async function RealEstates({
   }
 
   let data = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}${Api.Reos}/?${params}`
+    `${baseURL}${Api.Reos}/?${params}`
   );
 
   let realEstateData: {
@@ -46,7 +52,10 @@ export default async function RealEstates({
       {realEstateData.data &&
         data.status === 200 &&
         realEstateData.data.length >= 1 && (
-          <RealEstatesCards data={realEstateData} />
+          <>
+            <RealEstatesCards data={realEstateData.data} />
+            <PaginationComponent totalPages={realEstateData.total_pages} />
+          </>
         )}
 
       {realEstateData.data &&

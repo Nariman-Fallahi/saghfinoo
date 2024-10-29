@@ -14,13 +14,14 @@ import { useRouter } from "next-nprogress-bar";
 import { isMobile, LoginErrorText } from "@/constant/Constants";
 import { ErrorNotification } from "@/notification/Error";
 import CustomButton from "@/components/CustomButton";
+import { useEffect } from "react";
 
 export default function Menu() {
   const access = getCookie("access");
   const router = useRouter();
   const currentPath = usePathname();
 
-  const { data, status } = useGetRequest<userInfoDataType>({
+  const { data, status, refetch } = useGetRequest<userInfoDataType>({
     url: Api.GetUserInfo,
     key: ["getUserInfo"],
     headers: {
@@ -29,6 +30,12 @@ export default function Menu() {
     staleTime: 5 * 1000 * 60,
     enabled: true,
   });
+
+  useEffect(() => {
+    if (access) {
+      refetch();
+    }
+  }, [access]);
 
   const isLogin: boolean = !!access && !!data?.data && status === "success";
 

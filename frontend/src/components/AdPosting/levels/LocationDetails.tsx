@@ -53,7 +53,7 @@ export default function LocationDetails({
   const {
     data: CitiesData,
     refetch,
-    isPending: CitiesDataPending,
+    isFetching: CitiesDataFetching,
   } = useGetRequest<{
     data: CitiesType[];
   }>({
@@ -146,7 +146,7 @@ export default function LocationDetails({
               inputId={name}
               placeholder="شهرستان خود را انتخاب کنید"
               options={optionsCitiesData}
-              isLoading={CitiesDataPending}
+              isLoading={CitiesDataFetching}
               isDisabled={!CitiesData?.data}
               onChange={(option) => onChange(option?.value)}
               classNames={SelectStyle}

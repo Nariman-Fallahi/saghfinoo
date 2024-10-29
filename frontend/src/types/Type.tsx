@@ -316,3 +316,8 @@ export type NewsDataType = {
   shortDescription: string;
   slug: string;
 };
+
+export type SuggestedSearchesDataType = {
+  id: number;
+  name: string;
+};

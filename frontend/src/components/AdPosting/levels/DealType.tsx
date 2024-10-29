@@ -13,6 +13,7 @@ type DealType = {
   formData: AdPostingFormDataType | undefined;
   setFormData: Dispatch<SetStateAction<AdPostingFormDataType | undefined>>;
   optionsTypeOfTransaction: optionType;
+  propertyType: optionType;
   setFormStage: Dispatch<SetStateAction<number>>;
 };
 
@@ -27,6 +28,7 @@ export default function DealType({
   formData,
   setFormData,
   optionsTypeOfTransaction,
+  propertyType,
   setFormStage,
 }: DealType) {
   const {
@@ -89,7 +91,7 @@ export default function DealType({
             <Select
               inputId={name}
               placeholder="نوع ملک خود را انتخاب کنید"
-              options={optionsTypeOfTransaction}
+              options={propertyType}
               onChange={(option) => {
                 onChange(option?.value);
               }}

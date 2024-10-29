@@ -2,7 +2,7 @@
 import { useDisclosure } from "@nextui-org/modal";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { useGetRequest } from "@/ApiService";
+import { baseURL, useGetRequest } from "@/ApiService";
 import { Api } from "@/ApiService";
 import {
   AdsDataType,
@@ -41,7 +41,7 @@ export default function Page() {
   });
 
   useEffect(() => {
-    const adsUrl = new URL(Api.Ad, process.env.NEXT_PUBLIC_API_BASE_URL);
+    const adsUrl = new URL(Api.Ad, baseURL);
 
     adsUrl.searchParams.append("page", adsPageNumber.toString());
     adsUrl.searchParams.append("reo_username", params.userName.toString());

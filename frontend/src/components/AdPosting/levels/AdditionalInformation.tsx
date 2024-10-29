@@ -1,10 +1,12 @@
 import React, { useState, Dispatch, SetStateAction, useEffect } from "react";
 import { AdPostingFormDataType } from "@/types/Type";
 import BtnSubmit from "../BtnSubmit";
+import { useForm, SubmitHandler } from "react-hook-form";
 
 type AdditionalInformationType = {
-  formData: AdPostingFormDataType | undefined;
   setFormData: Dispatch<SetStateAction<AdPostingFormDataType | undefined>>;
+  sendForm: () => void;
+  setFormStage: Dispatch<SetStateAction<number>>;
 };
 
 type InputType = {
@@ -26,9 +28,12 @@ const Input: React.FC<InputType> = ({ number, onchange }) => {
 };
 
 export default function AdditionalInformation({
-  formData,
   setFormData,
+  sendForm,
+  setFormStage
 }: AdditionalInformationType) {
+  const { handleSubmit } = useForm();
+
   const [inputValue, setInputValue] = useState({
     line1: "",
     line2: "",
@@ -36,6 +41,11 @@ export default function AdditionalInformation({
     line4: "",
     line5: "",
   });
+
+  const onSubmit = () => {
+    sendForm();
+    setFormStage((prevState: number) => prevState + 1);
+  };
 
   const handleInputChange = (lineNumber: string) => (value: string) => {
     setInputValue((prev) => ({
@@ -55,7 +65,7 @@ export default function AdditionalInformation({
   }, [inputValue, setFormData]);
 
   return (
-    <div className="flex flex-col w-full">
+    <form className="flex flex-col w-full" onSubmit={handleSubmit(onSubmit)}>
       <Input number={1} onchange={handleInputChange("line1")} />
       <Input number={2} onchange={handleInputChange("line2")} />
       <Input number={3} onchange={handleInputChange("line3")} />
@@ -63,6 +73,6 @@ export default function AdditionalInformation({
       <Input number={5} onchange={handleInputChange("line5")} />
 
       <BtnSubmit />
-    </div>
+    </form>
   );
 }

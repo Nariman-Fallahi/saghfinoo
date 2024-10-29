@@ -1,13 +1,21 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import Image from "next/image";
+import { useForm } from "react-hook-form";
+import BtnSubmit from "../BtnSubmit";
 
 type UploadMediaType = {
   files: (File | null)[];
   setFiles: (files: (File | null)[]) => void;
+  submitAllFiles: () => void;
 };
 
-export default function UploadMedia({ files, setFiles }: UploadMediaType) {
+export default function UploadMedia({ files, setFiles, submitAllFiles }: UploadMediaType) {
+  const { handleSubmit } = useForm();
   const fileInputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  const onSubmit = () => {
+    submitAllFiles();
+  };
 
   const fileChange =
     (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +39,7 @@ export default function UploadMedia({ files, setFiles }: UploadMediaType) {
   };
 
   return (
-    <div className="flex flex-col w-full">
+    <form className="flex flex-col w-full" onSubmit={handleSubmit(onSubmit)}>
       <p className="text-xs md:text-sm text-[#909090]">
         اضافه کردن عکس و ویدیو باعث افزایش بازدید آگهی شما میشود.
         <br />
@@ -108,6 +116,7 @@ export default function UploadMedia({ files, setFiles }: UploadMediaType) {
           </div>
         ))}
       </div>
-    </div>
+      <BtnSubmit label="ارسال اطلاعات" />
+    </form>
   );
 }

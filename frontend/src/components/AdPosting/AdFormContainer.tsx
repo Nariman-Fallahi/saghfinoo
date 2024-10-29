@@ -8,10 +8,7 @@ import { getCookie } from "cookies-next";
 import { usePostRequest } from "@/ApiService";
 import { SelectionDataType } from "@/types/Type";
 import { AdPostingApi } from "@/types/Type";
-import Image from "next/image";
-import { useRouter } from "next-nprogress-bar";
 import { isMobile } from "@/constant/Constants";
-import CustomButton from "../CustomButton";
 
 // Components
 import LocationDetails from "./levels/LocationDetails";
@@ -20,6 +17,8 @@ import Specifications from "./levels/Specifications";
 import Amenities from "./levels/Amenities";
 import AdditionalInformation from "./levels/AdditionalInformation";
 import UploadMedia from "./levels/UploadMedia";
+import Successful from "./status/Successful";
+import Error from "./status/Error";
 
 export const inputStyle =
   "text-xs md:text-sm p-2 border border-[#ADADAD] rounded outline-none md:p-[8.7px]";
@@ -47,12 +46,10 @@ export default function AdFormContainer() {
   const [idForm, setIdForm] = useState<number | undefined>(undefined);
 
   const access = getCookie("access");
-  const router = useRouter();
 
   const {
     data: selectionData,
     status: SelectionDataStatus,
-    refetch,
   } = useGetRequest<{ data: SelectionDataType[] }>({
     url: `${Api.GetSelectionData}`,
     key: ["getSelectionData"],
@@ -63,20 +60,23 @@ export default function AdFormContainer() {
     },
   });
 
+  console.log(selectionData?.data);
+
   // cooling_system
   const cooling_system = selectionData?.data.filter(
-    (item) => item.key === "cooling_system"
+    (item) => item.key === "coolingSystem"
   );
 
   const optionsCoolingSystem = cooling_system?.map((item) => ({
     value: item.id,
     label: item.value,
   }));
+
   // END cooling_system
 
   // heating_system
   const heating_system = selectionData?.data.filter(
-    (item) => item.key === "heating_system"
+    (item) => item.key === "heatingSystem"
   );
 
   const optionsHeatingSystem = heating_system?.map((item) => ({
@@ -87,7 +87,7 @@ export default function AdFormContainer() {
 
   // type_of_transaction
   const type_of_transaction = selectionData?.data.filter(
-    (item) => item.key === "type_of_transaction"
+    (item) => item.key === "typeOfTransaction"
   );
 
   const optionsTypeOfTransaction = type_of_transaction?.map((item) => ({
@@ -98,7 +98,7 @@ export default function AdFormContainer() {
 
   // property_type
   const property_type = selectionData?.data.filter(
-    (item) => item.key === "property_type"
+    (item) => item.key === "propertyType"
   );
 
   const optionsPropertyType = property_type?.map((item) => ({
@@ -109,7 +109,7 @@ export default function AdFormContainer() {
 
   // type_of_restroom
   const type_of_restroom = selectionData?.data.filter(
-    (item) => item.key === "type_of_restroom"
+    (item) => item.key === "typeOfRestroom"
   );
 
   const optionsTypeOfRestroom = type_of_restroom?.map((item) => ({
@@ -131,7 +131,6 @@ export default function AdFormContainer() {
 
   const {
     mutate: adPostinMutate,
-    isPending,
     data: adPosting,
   } = usePostRequest<AdPostingApi>({
     url: Api.Ad,
@@ -142,11 +141,18 @@ export default function AdFormContainer() {
   });
 
   const { mutate: uploadImageFileMutate, data: uploadImageFile } =
-    usePostRequest<{
-      image: File | null;
-    }>({
+    usePostRequest({
       url: `${Api.Ad}/${idForm}/image`,
       key: "uploadImageFile",
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+  const { mutate: uploadVideoFileMutate, data: uploadVideoFile } =
+    usePostRequest({
+      url: `${Api.Ad}/${idForm}/video`,
+      key: "uploadVideoFile",
       headers: {
         Authorization: `Bearer ${access}`,
       },
@@ -168,42 +174,62 @@ export default function AdFormContainer() {
   }, [formStage]);
 
   const images = files.filter(
-    (file) => file && file.type.startsWith("image/") //TODO تغییر
+    (file) => file && file.type.startsWith("image/")
   ) as File[];
 
   const videos = files.filter(
-    (file) => file && file.type.startsWith("video/") //TODO تغییر
+    (file) => file && file.type.startsWith("video/")
   ) as File[];
 
-  useEffect(() => {
-    if (formStage === 6) {
-      adPostinMutate({
-        city: formData?.city,
-        province: formData?.province,
-        main_street: formData?.mainSt,
-        side_street: formData?.sideStreet,
-        type_of_transaction: formData?.typeOfTransaction,
-        property_type: formData?.propertyType,
-        deposit: formData?.typeOfTransaction !== 10 ? formData?.deposit : 0,
-        rent: formData?.rent,
-        convertible: false,
-        area: formData?.area,
-        room: formData?.room,
-        floor: formData?.floor,
-        number_of_floors: formData?.numberFloors,
-        parking: formData?.parking,
-        restroom: formData?.restroom,
-        type_of_restroom: formData?.typeOfRestroom,
-        storage: formData?.storage,
-        elevator: formData?.elevator,
-        flooring: formData?.flooring,
-        cooling_system: formData?.coolingSystem,
-        heating_system: formData?.heatingSystem,
-        description: formData?.description,
+  const handleSubmitFiles = (name: string, file: File) => {
+    const formData = new FormData();
+    formData.append(name, file);
+
+    name === "image"
+      ? uploadImageFileMutate(formData)
+      : uploadVideoFileMutate(formData);
+  };
+
+  const submitAllFiles = () => {
+    if (images.length > 0) {
+      images.forEach((image) => {
+        handleSubmitFiles("image", image);
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formStage]);
+
+    if (videos.length > 0) {
+      videos.forEach((video) => {
+        handleSubmitFiles("video", video);
+      });
+    }
+  };
+
+  const sendForm = () => {
+    adPostinMutate({
+      city: formData?.city,
+      province: formData?.province,
+      main_street: formData?.mainSt,
+      side_street: formData?.sideStreet,
+      type_of_transaction: formData?.typeOfTransaction,
+      property_type: formData?.propertyType,
+      deposit: formData?.typeOfTransaction !== 10 ? formData?.deposit : 0,
+      rent: formData?.rent,
+      convertible: false,
+      area: formData?.area,
+      room: formData?.room,
+      floor: formData?.floor,
+      number_of_floors: formData?.numberFloors,
+      parking: formData?.parking,
+      restroom: formData?.restroom,
+      type_of_restroom: formData?.typeOfRestroom,
+      storage: formData?.storage,
+      elevator: formData?.elevator,
+      flooring: formData?.flooring,
+      cooling_system: formData?.coolingSystem,
+      heating_system: formData?.heatingSystem,
+      description: formData?.description,
+    });
+  };
 
   useEffect(() => {
     if (adPosting && adPosting.msg === "done") {
@@ -231,56 +257,9 @@ export default function AdFormContainer() {
         {adPosting && (
           <>
             <div className="w-full flex items-center justify-center flex-col">
-              {adPosting.msg === "done" && (
-                <>
-                  <p className="md:text-xl lg:text-2xl font-bold">
-                    فرم با موفقیت ارسال شد
-                  </p>
+              {adPosting.msg === "done" && <Successful />}
 
-                  <i className="mt-5">
-                    <Image
-                      width={250}
-                      height={250}
-                      className="md:w-[400px] md:h-[400px]"
-                      src="/icons/formSubmit_S.svg"
-                      alt="Form submit successful"
-                    />
-                  </i>
-                </>
-              )}
-
-              {adPosting.msg !== "done" && (
-                <>
-                  <p className="md:text-xl lg:text-2xl font-bold">
-                    مشکلی در ثبت آگهی شما به وجود آمده !
-                  </p>
-
-                  <p className="text-[#717171] text-sm md:text-base lg:text-xl mt-4 text-center">
-                    در قسمت ثبت آگهی، خطای مربوط به اطلاعات
-                    <br />
-                    برای شما مشخص شده است.
-                  </p>
-
-                  <CustomButton
-                    radius="sm"
-                    variant="bordered"
-                    className="text-primary border-primary border mt-6"
-                    onPress={() => router.push("/adPosting")}
-                  >
-                    برگشت به ثبت آگهی
-                  </CustomButton>
-
-                  <i className="mt-8 md:mt-5">
-                    <Image
-                      width={180}
-                      height={180}
-                      src="/icons/Folder.svg"
-                      alt="Error"
-                      className="md:w-[300px] md:h-[300px]"
-                    />
-                  </i>
-                </>
-              )}
+              {adPosting.msg !== "done" && <Error />}
             </div>
           </>
         )}
@@ -312,6 +291,7 @@ export default function AdFormContainer() {
                   formData={formData}
                   setFormData={setFormData}
                   optionsTypeOfTransaction={optionsTypeOfTransaction}
+                  propertyType={optionsPropertyType}
                   setFormStage={setFormStage}
                 />
               )}
@@ -336,13 +316,18 @@ export default function AdFormContainer() {
 
               {formStage === 5 && (
                 <AdditionalInformation
-                  formData={formData}
                   setFormData={setFormData}
+                  sendForm={sendForm}
+                  setFormStage={setFormStage}
                 />
               )}
 
               {formStage === 6 && (
-                <UploadMedia files={files} setFiles={setFiles} />
+                <UploadMedia
+                  files={files}
+                  setFiles={setFiles}
+                  submitAllFiles={submitAllFiles}
+                />
               )}
 
               {adPosting && adPosting.msg !== "done" && (

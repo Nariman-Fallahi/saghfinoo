@@ -1,16 +1,14 @@
-"use client";
 import Image from "next/image";
 import { useRouter } from "next-nprogress-bar";
-import { deleteCookie } from "cookies-next";
-import { useEffect } from "react";
 
 type ItemMenuType = {
   title: string;
   icon: string;
   alt: string;
-  active: string;
   userName: string;
-  routerPush: string;
+  onClick?: () => void;
+  active?: string;
+  routerPush?: string;
 };
 
 export default function ItemMenu({
@@ -20,20 +18,19 @@ export default function ItemMenu({
   title,
   userName,
   routerPush,
+  onClick,
 }: ItemMenuType) {
   const router = useRouter();
 
-  useEffect(() => {
-    if (userName === "Logout") {
-      deleteCookie("access");
-      deleteCookie("refresh");
-      router.push("/");
-    }
-  }, [router, userName]);
-
   return (
     <div
-      onClick={() => router.push(routerPush)}
+      onClick={() => {
+        if (routerPush) {
+          router.push(routerPush);
+        } else if (onClick) {
+          onClick();
+        }
+      }}
       className={`flex mt-2 p-2 cursor-pointer text-[#717171] ${
         userName === active
           ? "before:w-1 before:h-5 before:rounded-xl before:ml-2 before:bg-primary text-black"

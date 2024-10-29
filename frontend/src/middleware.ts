@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { getCookie, setCookie } from "cookies-next";
-import { Api } from "./ApiService";
+import { Api, baseURL } from "./ApiService";
 
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl;
@@ -18,7 +18,7 @@ export async function middleware(req: NextRequest) {
   if (access === undefined && refresh !== undefined) {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/${Api.Refresh}`,
+        `${baseURL}/${Api.Refresh}`,
         {
           method: "POST",
           headers: {

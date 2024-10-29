@@ -1,15 +1,31 @@
 import { Title } from "@/constant/Constants";
+import { SuggestedSearchesDataType } from "@/types/Type";
+import Link from "next/link";
 
-export default function SuggestedSearches() {
+type SuggestedSearchesType = {
+  data: SuggestedSearchesDataType[];
+};
+
+export default function SuggestedSearches({ data }: SuggestedSearchesType) {
   return (
     <div className="mt-7 p-3 flex flex-col lg:mt-10">
       <Title title="جستجو های پیشنهادی" />
 
       <div
-        className="mt-5 flex-wrap flex w-full text-xs text-[#505050]
+        className="mt-6 flex-wrap flex w-full text-xs text-[#505050]
        md:text-xl lg:text-2xl md:gap-5 lg:gap-7"
       >
-        <p className="w-1/2 md:w-fit truncate cursor-pointer">gggggg</p>
+        {data.map((item) => {
+          return (
+            <Link
+              className="w-1/2 md:w-fit truncate cursor-pointer"
+              key={item.id}
+              href={"/"}
+            >
+              املاک در {item.name}
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
