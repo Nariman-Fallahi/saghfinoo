@@ -25,6 +25,7 @@ class AdvertisementSerializer(serializers.ModelSerializer):
             'property_type',
             'deposit',
             'rent',
+            'buy',
             'convertible',
             'area',
             'room',
@@ -58,6 +59,7 @@ class AdvertisementSerializer(serializers.ModelSerializer):
         validations.validate_se('sideStreet', attrs['side_street'], validations.validate_name)
         validations.validate_choice_se('typeOfTransaction', attrs['type_of_transaction'])
         validations.validate_choice_se('propertyType', attrs['property_type'])
+
         type_of_transaction = attrs['type_of_transaction']
         
         if type_of_transaction.en_value == 'rent':
@@ -65,7 +67,9 @@ class AdvertisementSerializer(serializers.ModelSerializer):
             if attrs['deposit'] != 0:
                 raise serializers.ValidationError({'deposit':'in rent transaction, this field must be zero'})
             if attrs['rent'] == 0:
-                raise serializers.ValidationError({'rent':'in rent and desposit transaction, this field cannot be zero'})
+                raise serializers.ValidationError({'rent':'in rent transaction, this field cannot be zero'})
+            if attrs['buy'] != 0:
+                raise serializers.ValidationError({'buy':'in rent transaction, this field must be zero'})
 
 
         elif type_of_transaction.en_value == 'rent and deposit':
@@ -74,6 +78,9 @@ class AdvertisementSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({'rent':'in rent and deposit transaction, this field cannot be zero'})
             if attrs['deposit'] == 0:
                 raise serializers.ValidationError({'deposit':'in rent and deposit transaction, this field cannot be zero'})
+            if attrs['buy'] != 0:
+                raise serializers.ValidationError({'buy':'in rent and deposit transaction, this field must be zero'})
+
 
         elif type_of_transaction.en_value == 'full deposit':
             # buying_price and rent_price must be zero
@@ -81,6 +88,16 @@ class AdvertisementSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({'rent':'in full deposit transaction, this field must be zero'})
             if attrs['deposit'] == 0:
                 raise serializers.ValidationError({'deposit':'in full deposit transaction, this field cannot be zero'})
+            if attrs['buy'] != 0:
+                raise serializers.ValidationError({'buy':'in full deposit transaction, this field must be zero'})
+
+        elif type_of_transaction.en_value == 'buy':
+            if attrs['rent'] != 0:
+                raise serializers.ValidationError({'rent':'in buy transaction, this field must be zero'})
+            if attrs['deposit'] != 0:
+                raise serializers.ValidationError({'deposit':'in buy transaction, this field must be zero'})
+            if attrs['buy'] == 0:
+                raise serializers.ValidationError({'buy':'in buy transaction, this field cannot be zero'})
 
         else:
             raise ValueError('typeOfTransaction is set incurrectlly')
@@ -122,6 +139,7 @@ class UserSavedAdvertisementPreviewResponseSerializer(serializers.ModelSerialize
             'side_street': instance.advertisement.side_street,
             'deposit': instance.advertisement.deposit,
             'rent': instance.advertisement.rent,
+            'buy': instance.buy,
             'createdAt': instance.advertisement.created_at,
         }
 
@@ -184,6 +202,7 @@ class AdvertisementResponseSerializer(serializers.ModelSerializer):
             'typeOfTransaction': instance.type_of_transaction.value,
             'deposit': instance.deposit,
             'rent': instance.rent,
+            'buy': instance.buy,
             'room':instance.room,
             'parking':instance.parking,
             'storage':instance.storage,
@@ -224,6 +243,7 @@ class AdvertisementPreviewResponseSerializer(serializers.ModelSerializer):
             'side_street',
             'deposit',
             'rent',
+            'buy',
             'created_at',
             'savedadvertisement__advertisement',
         ]
@@ -241,6 +261,7 @@ class AdvertisementPreviewResponseSerializer(serializers.ModelSerializer):
                 'sideStreet': instance['side_street'],
                 'deposit': instance['deposit'],
                 'rent': instance['rent'],
+                'buy': instance['buy'],
                 'createdAt': instance['created_at'],
                 'isSaved': instance.get('savedadvertisement__advertisement', False)
             }
@@ -256,6 +277,7 @@ class AdvertisementPreviewResponseSerializer(serializers.ModelSerializer):
                 'sideStreet': instance.side_street,
                 'deposit': instance.deposit,
                 'rent': instance.rent,
+                'buy': instance.buy,
                 'createdAt': instance.created_at,
                 'isSaved': False
             }
