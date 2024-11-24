@@ -181,6 +181,11 @@ else:
             'LOCATION': 'ip_cache',
             'TIMEOUT': 1*60*60
         },
+        'cache-for-ratelimiting': {
+            'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+            'LOCATION': 'ip_cache',
+            'TIMEOUT': 1*60*60
+        },
         
     }
 
