@@ -20,7 +20,8 @@ from common.utils import validations
 from .serializers import AdvertisementSerializer, AdvertisementPreviewResponseSerializer, AdvertisementResponseSerializer, SuggestedSearchResponseSerializer, RealtorAdvertisementPreviewResponseSerializer, RealtorAdvertisementResponseSerializer, UserSavedAdvertisementPreviewResponseSerializer, AdvertisementImageResponseSerializer, AdvertisementVideoResponseSerializer, AdvertisementChoiceResponseSerializer
 from .models import Advertisement, AdvertisementImage, AdvertisementChoice, SuggestedSearch, SavedAdvertisement, AdvertisementVideo
 from realtors.models import Realtor
-
+from django_ratelimit.decorators import ratelimit
+from django.utils.decorators import method_decorator
 
 ip_cache = caches['ip']
 
@@ -38,6 +39,7 @@ class CreateSearchAdvertisementAPIView(APIView):
             return [AllowAny()]
         return super().get_permissions()
 
+    @method_decorator(ratelimit(key='ip', method='POST', rate=settings.DEFAULT_RATE_WRITE))
     def post(self, req):
         """Create advertisement"""
 
@@ -54,6 +56,7 @@ class CreateSearchAdvertisementAPIView(APIView):
             return Response({"msg": "done", 'id':ad.id, 'status':200})
         return Response({"errors": serializer.errors, 'code':codes.INVALID_FIELD, 'status':400})
     
+    @method_decorator(ratelimit(key='ip', method='GET', rate=settings.DEFAULT_RATE_READ))
     def get(self, req):
         """Search advertisements
             valid query params: owner: int, reo_username(real estate office username): string, room: int, parking: int,
@@ -186,6 +189,7 @@ class CreateSearchAdvertisementAPIView(APIView):
 
 class GetAllAdvertisementChoicesAPIView(APIView):
 
+    @method_decorator(ratelimit(key='ip', method='GET', rate=settings.DEFAULT_RATE_READ))
     def get(self, req):
         """Get all advertisement choices
             search by key example: ?key=property_type"""
@@ -216,6 +220,8 @@ class GetEditDeleteAdvertisementAPIView(APIView):
             return [AllowAny()]
         return super().get_permissions()
 
+
+    @method_decorator(ratelimit(key='ip', method='PUT', rate=settings.DEFAULT_RATE_WRITE))
     def put(self, req, advertisement_id):
         """edit one advertisemebt by id"""
 
@@ -232,6 +238,7 @@ class GetEditDeleteAdvertisementAPIView(APIView):
             return Response({"msg":"done", 'status':200})
         return Response({"errors": serializer.errors, 'code':codes.INVALID_FIELD, 'status':400})
 
+    @method_decorator(ratelimit(key='ip', method='DELETE', rate=settings.DEFAULT_RATE_WRITE))
     def delete(self, req, advertisement_id):
         """delete one advertisement by id"""
 
@@ -264,6 +271,7 @@ class GetEditDeleteAdvertisementAPIView(APIView):
 
         return Response({'msg':'done', 'status':200})
     
+    @method_decorator(ratelimit(key='ip', method='GET', rate=settings.DEFAULT_RATE_READ))
     def get(self, req, advertisement_id):
         """Get one advertisement by id"""
         try:
@@ -300,6 +308,7 @@ class GetAllRealtorAdvertisementsAPIView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsRealtor]
 
+    @method_decorator(ratelimit(key='ip', method='GET', rate=settings.DEFAULT_RATE_READ))
     def get(self, req):
 
         try:
@@ -321,6 +330,7 @@ class GetRealtorAdvertisementAPIView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsRealtor, IsAdvertisementOwner]
 
+    @method_decorator(ratelimit(key='ip', method='GET', rate=settings.DEFAULT_RATE_READ))
     def get(self, req, advertisement_id):
         try:
             ad = Advertisement.objects.get(id=advertisement_id)
@@ -338,6 +348,7 @@ class UploadAdvertisementImageAPIView(APIView):
     permission_classes = [IsAuthenticated, IsAdvertisementOwner]
     authentication_classes = [JWTAuthentication]
     
+    @method_decorator(ratelimit(key='ip', method='POST', rate=settings.DEFAULT_RATE_WRITE))
     def post(self, req, advertisement_id):
         """upload advertisement image.
             input: "form-data" with "image" field"""
@@ -379,6 +390,7 @@ class DeleteAdvertisementUploadedImageAPIView(APIView):
     permission_classes = [IsAuthenticated, IsOwner]
     authentication_classes = [ JWTAuthentication]
 
+    @method_decorator(ratelimit(key='ip', method='DELETE', rate=settings.DEFAULT_RATE_WRITE))
     def delete(self, req, image_id):
         """delete advertisement image by image id"""
         try:
@@ -397,6 +409,7 @@ class SetAdvertisementPrimaryImageAPIView(APIView):
     permission_classes = [IsAuthenticated, IsAdvertisementOwner | IsAdmin]
     authentication_classes = [JWTAuthentication]
 
+    @method_decorator(ratelimit(key='ip', method='POST', rate=settings.DEFAULT_RATE_WRITE))
     def post(self, req, advertisement_id, image_id):
         try:
             ad = Advertisement.objects.get(id=advertisement_id)
@@ -424,6 +437,7 @@ class DeleteAllRealtorAdvertisementsAPIView(APIView):
     permission_classes = [IsAuthenticated, IsRealtor]
     authentication_classes = [JWTAuthentication]
 
+    @method_decorator(ratelimit(key='ip', method='DELETE', rate=settings.DEFAULT_RATE_WRITE))
     def delete(self, req):
         """delete all realtor advertisements"""
         images = AdvertisementImage.objects.filter(advertisement__owner=req.realtor.id)
@@ -450,6 +464,7 @@ class UploadAdvertisementVideoAPIView(APIView):
     permission_classes = [IsAuthenticated, IsAdvertisementOwner]
     authentication_classes = [JWTAuthentication]
 
+    @method_decorator(ratelimit(key='ip', method='POST', rate=settings.DEFAULT_RATE_WRITE))
     def post(self, req, advertisement_id):
         """upload video for advertisement
             input: "form-data" with "video" field"""
@@ -493,6 +508,7 @@ class SaveUnsaveAdvertisementAPIView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
+    @method_decorator(ratelimit(key='ip', method='POST', rate=settings.DEFAULT_RATE_WRITE))
     def post(self, req, advertisement_id):
         """save advertisement"""
         # check is ad exist
@@ -515,6 +531,7 @@ class SaveUnsaveAdvertisementAPIView(APIView):
 
         return Response({'msg':'done', 'status':200})
         
+    @method_decorator(ratelimit(key='ip', method='DELETE', rate=settings.DEFAULT_RATE_WRITE))
     def delete(self, req, advertisement_id):
         """unsave advertisement"""
         try:
@@ -532,6 +549,7 @@ class GetUserSavedAdvertisementAPIView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
+    @method_decorator(ratelimit(key='ip', method='GET', rate=settings.DEFAULT_RATE_READ))
     def get(self, req):
         """get saved advertisements"""
         try:
@@ -546,6 +564,7 @@ class GetUserSavedAdvertisementAPIView(APIView):
             
         return Response({'data':ads, 'totalPages':total_pages, 'status':200})
 
+    @method_decorator(ratelimit(key='ip', method='DELETE', rate=settings.DEFAULT_RATE_WRITE))
     def delete(self, req):
         """delete all user saved advertisements"""
         SavedAdvertisement.objects.filter(user=req.user.id).delete()
@@ -557,6 +576,7 @@ class GetUserSavedAdvertisementAPIView(APIView):
 
 class GetAllSuggestedSearchsAPIView(APIView):
 
+    @method_decorator(ratelimit(key='ip', method='GET', rate=settings.DEFAULT_RATE_READ))
     def get(self, req):
         
         cs = SuggestedSearch.objects.all().order_by('-priority')[:settings.SUGGESTED_SEARCH_LIMIT]
