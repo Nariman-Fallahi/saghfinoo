@@ -17,7 +17,7 @@ class AdvertisementChoice(models.Model):
         default = (
             ('propertyType', 'آپارتمان', 'apartment'),
             ('propertyType', 'ویلا', 'villa'),
-            # ('type_of_transaction', 'خرید', 'buy'),
+            ('type_of_transaction', 'خرید', 'buy'),
             ('typeOfTransaction', 'رهن و اجاره', 'rent and deposit'),
             ('typeOfTransaction', 'رهن کامل', 'full deposit'),
             ('typeOfTransaction', 'اجاره', 'rent'),
@@ -74,8 +74,9 @@ class Advertisement(models.Model):
     property_type = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='property_type') # apartment or villa or ...
     type_of_transaction = models.ForeignKey(AdvertisementChoice, on_delete=models.PROTECT, related_name='type_of_transaction') # rent+mortgage or full mortgage or rent
 
-    deposit = models.BigIntegerField()
-    rent = models.BigIntegerField()
+    deposit = models.PositiveBigIntegerField()
+    rent = models.PositiveBigIntegerField()
+    buy = models.PositiveBigIntegerField()
     convertible = models.BooleanField()
 
     area = models.IntegerField()

@@ -172,7 +172,7 @@ class CreateSearchAdvertisementAPIView(APIView):
                 kwargs[field_name] = value
         if req.user.id:
             kwargs['savedadvertisement__isnull'] = True
-            ads = Advertisement.objects.filter(Q(**kwargs) | Q(savedadvertisement__user=req.user.id)).order_by('-created_at').values(*AdvertisementPreviewResponseSerializer.Meta.fields)[page*limit: page*limit+limit]
+            ads = Advertisement.objects.filter(Q(**kwargs) | (Q(**kwargs) & Q(savedadvertisement__user=req.user.id))).order_by('-created_at').values(*AdvertisementPreviewResponseSerializer.Meta.fields)[page*limit: page*limit+limit]
 
         else:
             ads = Advertisement.objects.filter(**kwargs).order_by('-created_at')[page*limit: page*limit+limit]

@@ -45,6 +45,7 @@ SAVE_DEFAULT_VALUES = False # must be true in production
 # todo: add server host ip and next server ip
 ALLOWED_HOSTS = ['*']
 
+APPEND_SLASH = False
 
 # Application definition
 
