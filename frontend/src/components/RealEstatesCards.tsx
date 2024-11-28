@@ -4,7 +4,6 @@ import { Button } from "@nextui-org/button";
 import { allrealEstateOfficesDataType } from "@/types/Type";
 import { useRouter } from "next-nprogress-bar";
 import { isMobile } from "@/constant/Constants";
-import PaginationComponent from "./Pagination";
 
 type RealEstatesCardsType = {
   data: allrealEstateOfficesDataType[];

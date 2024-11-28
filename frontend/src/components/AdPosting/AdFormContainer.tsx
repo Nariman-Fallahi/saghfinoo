@@ -47,10 +47,7 @@ export default function AdFormContainer() {
 
   const access = getCookie("access");
 
-  const {
-    data: selectionData,
-    status: SelectionDataStatus,
-  } = useGetRequest<{ data: SelectionDataType[] }>({
+  const { data: selectionData } = useGetRequest<{ data: SelectionDataType[] }>({
     url: `${Api.GetSelectionData}`,
     key: ["getSelectionData"],
     enabled: true,
@@ -129,16 +126,14 @@ export default function AdFormContainer() {
   }));
   // END flooring
 
-  const {
-    mutate: adPostinMutate,
-    data: adPosting,
-  } = usePostRequest<AdPostingApi>({
-    url: Api.Ad,
-    key: "adPosting",
-    headers: {
-      Authorization: `Bearer ${access}`,
-    },
-  });
+  const { mutate: adPostinMutate, data: adPosting } =
+    usePostRequest<AdPostingApi>({
+      url: Api.Ad,
+      key: "adPosting",
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
 
   const { mutate: uploadImageFileMutate, data: uploadImageFile } =
     usePostRequest({

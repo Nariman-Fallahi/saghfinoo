@@ -13,8 +13,8 @@ h6 {
   direction: rtl;
 }
 
-.primaryColor {
-  
+input:focus {
+  outline: none; 
 }
 
 .openMenu {

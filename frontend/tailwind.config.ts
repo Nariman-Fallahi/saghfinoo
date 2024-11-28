@@ -10,6 +10,8 @@ module.exports = {
     "./node_modules/@nextui-org/theme/dist/components/checkbox.js",
     "./node_modules/@nextui-org/theme/dist/components/spinner.js",
     "./node_modules/@nextui-org/theme/dist/components/pagination.js",
+    "./node_modules/@nextui-org/theme/dist/components/autocomplete.js",
+    "./node_modules/@nextui-org/theme/dist/components/select.js",
   ],
   plugins: [
     nextui({
@@ -17,6 +19,7 @@ module.exports = {
         disabledOpacity: "0.3",
       },
     }),
+    require("tailwind-scrollbar"),
   ],
   theme: {
     extend: {

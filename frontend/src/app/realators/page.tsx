@@ -47,7 +47,9 @@ export default async function Realators({
   }
   return (
     <>
+    <div className="mt-[82px] md:mt-[180px]">
       <SearchBox title="مشاورین املاک" />
+    </div>
       {realatorsData.data &&
         data.status === 200 &&
         realatorsData.data.length >= 1 && (

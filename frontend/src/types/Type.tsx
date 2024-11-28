@@ -321,3 +321,22 @@ export type SuggestedSearchesDataType = {
   id: number;
   name: string;
 };
+
+export type FilterDataType = {
+  province?: string;
+  city?: string;
+  propertyType?: string;
+  rentalPrice: { min?: string; max?: string };
+  depositPrice: { min?: string; max?: string };
+  metre: { min?: string; max?: string };
+  //MoreItems
+  numberOfBedroom?: string;
+  numberOfParking?: string;
+  numberOfStorageRoom?: string;
+  numberOfElevators?: string;
+  numberOfRestrooms?: string;
+  typeOfRestroom?: string;
+  numberOfFloors?: string;
+  coolingSystem?: string;
+  heatingSystem?: string;
+};

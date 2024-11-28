@@ -48,7 +48,10 @@ export default async function RealEstates({
 
   return (
     <>
-      <SearchBox title="املاک و مستغلات" />
+     <div className="mt-[82px] md:mt-[180px]">
+     <SearchBox title="املاک و مستغلات" />
+    </div>
+    
       {realEstateData.data &&
         data.status === 200 &&
         realEstateData.data.length >= 1 && (

@@ -3,8 +3,11 @@ import { Title } from "@/constant/Constants";
 import AdsCart from "@/components/AdsCart";
 import { useGetRequest, Api } from "@/ApiService";
 import { AdsDataType } from "@/types/Type";
+import { getCookie } from "cookies-next";
 
 export default function NewestHouseRent() {
+  const access = getCookie("access");
+
   const { isLoading, isFetching, refetch, data } = useGetRequest<{
     data: AdsDataType[];
     totalPages: number;
@@ -13,6 +16,9 @@ export default function NewestHouseRent() {
     key: ["getNewestHouseRentData"],
     enabled: true,
     staleTime: 10 * 60 * 1000,
+    headers: {
+      Authorization: `Bearer ${access}`,
+    },
   });
 
   return (

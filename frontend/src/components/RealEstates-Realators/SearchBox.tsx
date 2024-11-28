@@ -5,24 +5,18 @@ import { useGetRequest } from "@/ApiService";
 import Select, { components, MultiValue } from "react-select";
 import { CitiesType } from "@/types/Type";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useRouter } from "next-nprogress-bar";
 
 type SearchBoxType = {
-  title: string;
+  title?: string;
+  className?: string;
 };
 
-export default function SearchBox({ title }: SearchBoxType) {
+export default function SearchBox({ title, className }: SearchBoxType) {
   const router = useRouter();
   const pathname = usePathname();
-
-  const [searchCity, setSearchCity] = useState<
-    MultiValue<{
-      value: string;
-      label: string;
-    }>
-  >();
 
   const { data } = useGetRequest<{ data: CitiesType[] }>({
     url: Api.SearchCity,
@@ -42,25 +36,21 @@ export default function SearchBox({ title }: SearchBoxType) {
       label: string;
     }>
   ) => {
-    setSearchCity(selectedOptions);
-  };
-
-  useEffect(() => {
     const params = new URLSearchParams();
 
-    searchCity?.forEach((city) => {
+    selectedOptions?.forEach((city) => {
       params.append("city", city.value);
     });
-
     router.push(`${pathname}?${params}`);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchCity]);
+  };
 
   return (
-    <div className="mt-[82px] flex flex-col p-3 relative md:mt-[180px] md:px-8">
-      <Title title={title} />
+    <div className={`flex flex-col p-3 relative md:px-8 ${className}`}>
+      {title && <Title title={title} />}
 
-      <div className="mt-5 md:mt-8 w-[80%] md:w-[35%]">
+      <div
+        className={`${title ?? "mt-5 md:mt-8"} w-[80%] md:w-[35%] ${className}`}
+      >
         <Select
           placeholder="لطفا شهر مورد نظر خود را جستجو کنید."
           isMulti
