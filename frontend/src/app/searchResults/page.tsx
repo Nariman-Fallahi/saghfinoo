@@ -91,7 +91,7 @@ export default function page() {
       },
       typeOfRestroom: queryObject.typeOfRestroom,
     });
-  }, [searchParams]);
+  }, [queryObject]);
 
   // const {} = useGetRequest({
   //   url: `${Api.}`

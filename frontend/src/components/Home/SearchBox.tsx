@@ -29,8 +29,8 @@ const TabSearchBox = ({ title, isSelected, onClick }: TabSearchBoxType) => {
 
 export default function SearchBox() {
   const [typeOfTransaction, setTypeOfTransaction] = useState<
-    "rent" | "shopping"
-  >("rent");
+    "اجاره" | "فروش"
+  >('اجاره');
 
   const router = useRouter();
 
@@ -67,13 +67,13 @@ export default function SearchBox() {
         <div className="flex items-center">
           <TabSearchBox
             title="اجاره"
-            isSelected={typeOfTransaction === "rent"}
-            onClick={() => setTypeOfTransaction("rent")}
+            isSelected={typeOfTransaction === 'اجاره'}
+            onClick={() => setTypeOfTransaction("اجاره")}
           />
           <TabSearchBox
             title="خرید"
-            isSelected={typeOfTransaction === "shopping"}
-            onClick={() => setTypeOfTransaction("shopping")}
+            isSelected={typeOfTransaction === "فروش"}
+            onClick={() => setTypeOfTransaction("فروش")}
           />
         </div>
 
@@ -84,7 +84,9 @@ export default function SearchBox() {
           defaultItems={data?.data || []}
           onSelectionChange={(value) =>
             router.push(
-              `/searchResults?TypeOfTransaction=${typeOfTransaction}&city=${value?.toString}`
+              `/searchResults?propertyType=${typeOfTransaction}&city=${
+                value ? value.toString() : ""
+              }`
             )
           }
           inputProps={{

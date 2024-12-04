@@ -117,18 +117,20 @@ export default function DesktopFilter({
     router.push(`${pathname}?${updatedSearchParams}`);
   };
 
+
   return (
     <div className="flex w-[70%] gap-3">
       <Autocomplete
         isLoading={allCitiesPending}
         placeholder="شهرستان‌"
+        aria-label="cities"
         variant="bordered"
         radius="sm"
         defaultItems={allCitiesData?.data || []}
         size={isTablet ? "sm" : "md"}
-        onSelectionChange={(id) =>
+        onSelectionChange={(city) =>
           router.push(
-            pathname + "?" + createQueryString("city", id ? id.toString() : "")
+            pathname + "?" + createQueryString("city", city ? city.toString() : "")
           )
         }
       >
@@ -140,8 +142,10 @@ export default function DesktopFilter({
       <Autocomplete
         placeholder="نوع ملک"
         isLoading={propertyTypePending}
+        aria-label="propertyType"
         variant="bordered"
         radius="sm"
+        defaultSelectedKey={urlQuery?.propertyType}
         defaultItems={propertyTypeData?.data || []}
         size={isTablet ? "sm" : "md"}
         onSelectionChange={(value) =>
