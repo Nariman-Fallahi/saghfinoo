@@ -88,13 +88,15 @@ export default function DesktopFilter({
 
   useEffect(() => {
     reset(urlQuery);
-  }, [urlQuery]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onSubmit: SubmitHandler<FilterDataType> = (data) => {
     const filters = {
-      rentalPrice: `${data.rentalPrice.min}-${data.rentalPrice.max}`,
-      depositPrice: `${data.depositPrice.min}-${data.depositPrice.max}`,
-      metre: `${data.metre.min}-${data.metre.max}`,
+      rent_from: data.rent_from,
+      rent_to: data.rent_to,
+      deposit_from: data.deposit_from,
+      deposit_to: data.deposit_to,
       numberOfBedroom: data.numberOfBedroom,
       numberOfParking: data.numberOfParking,
       numberOfStorageRoom: data.numberOfStorageRoom,
@@ -117,7 +119,6 @@ export default function DesktopFilter({
     router.push(`${pathname}?${updatedSearchParams}`);
   };
 
-
   return (
     <div className="flex w-[70%] gap-3">
       <Autocomplete
@@ -130,7 +131,9 @@ export default function DesktopFilter({
         size={isTablet ? "sm" : "md"}
         onSelectionChange={(city) =>
           router.push(
-            pathname + "?" + createQueryString("city", city ? city.toString() : "")
+            pathname +
+              "?" +
+              createQueryString("city", city ? city.toString() : "")
           )
         }
       >
@@ -164,12 +167,10 @@ export default function DesktopFilter({
       <SelectionCustomMenu
         placeholder="رهن"
         register={register}
-        name={{ min: "depositPrice.min", max: "depositPrice.max" }}
+        name={{ min: "deposit_from", max: "deposit_to" }}
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
-        errors={
-          errors.depositPrice?.min?.message || errors.depositPrice?.max?.message
-        }
+        errors={errors.deposit_from?.message || errors.deposit_to?.message}
         isTablet={isTablet}
         setOpenCustomMenu={setOpenCustomMenu}
         menuName={"deposit"}
@@ -179,28 +180,13 @@ export default function DesktopFilter({
       <SelectionCustomMenu
         placeholder="اجاره"
         register={register}
-        name={{ min: "rentalPrice.min", max: "rentalPrice.max" }}
+        name={{ min: "rent_from", max: "rent_to" }}
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
-        errors={
-          errors.rentalPrice?.min?.message || errors.rentalPrice?.max?.message
-        }
+        errors={errors.rent_from?.message || errors.rent_to?.message}
         isTablet={isTablet}
         setOpenCustomMenu={setOpenCustomMenu}
         menuName={"rent"}
-        openCustomMenu={openCustomMenu}
-      />
-
-      <SelectionCustomMenu
-        placeholder="متراژ"
-        register={register}
-        name={{ min: "metre.min", max: "metre.max" }}
-        handleSubmit={handleSubmit}
-        onSubmit={onSubmit}
-        errors={errors.metre?.min?.message || errors.metre?.max?.message}
-        isTablet={isTablet}
-        setOpenCustomMenu={setOpenCustomMenu}
-        menuName={"metre"}
         openCustomMenu={openCustomMenu}
       />
 

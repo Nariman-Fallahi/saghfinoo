@@ -114,13 +114,6 @@ input:focus {
   background: #555;
 }
 
-.react-select__menu,
-.react-select__menu-list,
-.react-select__option,
-.react-select__indicators {
-  background-color: red !important;
-}
-
 .blueShadow {
   box-shadow: 0px 0px 0px 3px rgba(47, 128, 237, 0.19) !important;
 }

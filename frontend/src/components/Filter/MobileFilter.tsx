@@ -22,6 +22,7 @@ import Input from "./Input";
 import MoreItems from "./MoreItems";
 import { useRouter } from "next-nprogress-bar";
 import { usePathname } from "next/navigation";
+import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 
 type MobileFilterType = {
   isViewMore: boolean;
@@ -40,9 +41,6 @@ export default function MobileFilter({
   queryObject,
   urlQuery,
 }: MobileFilterType) {
-  const [optionsCitiesData, setOptionsCitiesData] = useState<
-    { value: string; label: string }[] | undefined
-  >(undefined);
   const [viewMore, setViewMore] = useState<boolean>(false);
 
   const router = useRouter();
@@ -84,44 +82,18 @@ export default function MobileFilter({
 
   useEffect(() => {
     reset(urlQuery);
-  }, [urlQuery]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // Get provinces
-  const { data: provincesData } = useGetRequest<{
-    data: ProvincesType[];
+  // GetAllCity
+  const { data: allCitiesData, isPending: allCitiesPending } = useGetRequest<{
+    data: CitiesType[];
   }>({
-    url: Api.GetProvinces_Cities,
-    key: ["getProvinces"],
+    url: Api.SearchCity,
+    key: ["getAllCities"],
     enabled: true,
-    staleTime: 10 * 60 * 1000,
+    staleTime: 10 * 60 * 10,
   });
-
-  const optionsProvincesData = provincesData?.data.map((item) => ({
-    value: item.id,
-    label: item.name,
-  }));
-
-  // Get provinceCities
-  const { data: citiesData, refetch } = useGetRequest<{ data: CitiesType[] }>({
-    url: `${Api.GetProvinces_Cities}/${watch("province")}/cities`,
-    key: ["getCities", JSON.stringify(watch("province"))],
-    enabled: false,
-    staleTime: 10 * 60 * 1000,
-  });
-
-  useEffect(() => {
-    refetch();
-  }, [watch("province")]);
-
-  useEffect(() => {
-    if (citiesData && watch("province")) {
-      const mappedOptions = citiesData.data.map((item) => ({
-        value: item.name,
-        label: item.name,
-      }));
-      setOptionsCitiesData(mappedOptions);
-    }
-  }, [citiesData]);
 
   // Get propertyTypeDataS
   const { data: selectionData } = useGetRequest<{
@@ -165,12 +137,12 @@ export default function MobileFilter({
 
   const onSubmit: SubmitHandler<FilterDataType> = (data) => {
     const filters = {
-      province: data.province,
       city: data.city,
       propertyType: data.propertyType,
-      rentalPrice: `${data.rentalPrice.min}-${data.rentalPrice.max}`,
-      depositPrice: `${data.depositPrice.min}-${data.depositPrice.max}`,
-      metre: `${data.metre.min}-${data.metre.max}`,
+      rent_from: data.rent_from,
+      rent_to: data.rent_to,
+      deposit_from: data.deposit_from,
+      deposit_to: data.deposit_to,
       numberOfBedroom: data.numberOfBedroom,
       numberOfParking: data.numberOfParking,
       numberOfStorageRoom: data.numberOfStorageRoom,
@@ -193,12 +165,6 @@ export default function MobileFilter({
     router.push(`${pathname}?${updatedSearchParams}`);
   };
 
-  const provinceDefaultValue = findDefaultValue(
-    optionsProvincesData,
-    "province",
-    true
-  );
-  const cityDefaultValue = findDefaultValue(optionsCitiesData, "city");
   const propertyTypeDefaultValue = findDefaultValue(
     optionsPropertyType,
     "propertyType",
@@ -214,6 +180,10 @@ export default function MobileFilter({
     "heatingSystem",
     true
   );
+
+  function createQueryString(arg0: string, arg1: string) {
+    throw new Error("Function not implemented.");
+  }
 
   return (
     <>
@@ -238,52 +208,40 @@ export default function MobileFilter({
                     onSubmit={handleSubmit(onSubmit)}
                     className="mt-5 w-full flex gap-3 justify-between flex-wrap"
                   >
-                    <div className="w-full flex flex-col">
-                      <SelectTitle text="انتخاب استان" />
-                      <Controller
-                        name="province"
-                        control={control}
-                        render={({ field: { onChange, name } }) => (
-                          <Select
-                            inputId={name}
-                            placeholder="استان خود را انتخاب کنید"
-                            options={optionsProvincesData}
-                            onChange={(option) => {
-                              onChange(option?.value);
-                            }}
-                            classNames={SelectStyle}
-                            defaultValue={provinceDefaultValue}
-                          />
-                        )}
-                      />
-                    </div>
-
-                    <div className="w-full flex flex-col">
-                      <SelectTitle text="انتخاب شهرستان" />
-                      <Controller
-                        name="city"
-                        control={control}
-                        rules={{
-                          required: watch("province") ? true : false,
-                        }}
-                        render={({ field: { onChange, name } }) => (
-                          <Select
-                            inputId={name}
-                            placeholder="شهرستان خود را انتخاب کنید"
-                            isDisabled={watch("province") ? false : true}
-                            options={optionsCitiesData}
-                            onChange={(option) => {
-                              onChange(option?.label);
-                            }}
-                            classNames={SelectStyle}
-                            defaultValue={cityDefaultValue}
-                          />
-                        )}
-                      />
-                      {errors.city && (
-                        <TextError text="لطفا شهرستان خود را انتخاب کنید" />
+                    <SelectTitle text="انتخاب شهرستان" />
+                    <Controller
+                      name="city"
+                      control={control}
+                      rules={{
+                        required: watch("city") ? true : false,
+                      }}
+                      render={({ field: { onChange } }) => (
+                        <Autocomplete
+                          isLoading={allCitiesPending}
+                          placeholder="شهرستان‌"
+                          aria-label="cities"
+                          variant="bordered"
+                          radius="sm"
+                          defaultItems={allCitiesData?.data || []}
+                          size="sm"
+                          inputProps={{
+                            classNames: {
+                              input: "text-[13px]",
+                            },
+                          }}
+                          onSelectionChange={(city) => onChange(city)}
+                        >
+                          {(city) => (
+                            <AutocompleteItem key={city.name}>
+                              {city.name}
+                            </AutocompleteItem>
+                          )}
+                        </Autocomplete>
                       )}
-                    </div>
+                    />
+                    {errors.city && (
+                      <TextError text="لطفا شهرستان خود را انتخاب کنید" />
+                    )}
 
                     <div className="w-full flex flex-col">
                       <SelectTitle text="نوع ملک" />
@@ -308,13 +266,12 @@ export default function MobileFilter({
                     <Input
                       title="قیمت اجاره"
                       displayMode="row"
-                      name={{ min: "rentalPrice.min", max: "rentalPrice.max" }}
+                      name={{ min: "rent_from", max: "rent_to" }}
                       register={register}
                       placeholder={{ min: "۲۰۰,۰۰۰", max: "۴۰۰,۰۰۰" }}
                       unit="تومان"
                       error={
-                        errors.rentalPrice?.min?.message ||
-                        errors.rentalPrice?.max?.message
+                        errors.rent_from?.message || errors.rent_to?.message
                       }
                     />
 
@@ -322,28 +279,16 @@ export default function MobileFilter({
                       title="قیمت رهن"
                       displayMode="row"
                       name={{
-                        min: "depositPrice.min",
-                        max: "depositPrice.max",
+                        min: "deposit_from",
+                        max: "deposit_to",
                       }}
                       register={register}
                       placeholder={{ min: "۲۰۰,۰۰۰", max: "۴۰۰,۰۰۰" }}
                       unit="تومان"
                       error={
-                        errors.depositPrice?.min?.message ||
-                        errors.depositPrice?.max?.message
+                        errors.deposit_from?.message ||
+                        errors.deposit_to?.message
                       }
-                    />
-
-                    <Input
-                      title="متر"
-                      name={{ min: "metre.min", max: "metre.max" }}
-                      displayMode="row"
-                      error={
-                        errors.metre?.min?.message || errors.metre?.max?.message
-                      }
-                      register={register}
-                      placeholder={{ min: "۱۲۰", max: "۲۰۰" }}
-                      unit="متر"
                     />
 
                     {isViewMore && (
@@ -419,12 +364,12 @@ export default function MobileFilter({
                         variant="bordered"
                         onPress={() => {
                           reset({
-                            province: "",
                             city: "",
                             propertyType: "",
-                            rentalPrice: { min: "", max: "" },
-                            depositPrice: { min: "", max: "" },
-                            metre: { min: "", max: "" },
+                            deposit_from: "",
+                            deposit_to: "",
+                            rent_from: "",
+                            rent_to: "",
                             numberOfBedroom: "",
                             numberOfParking: "",
                             numberOfStorageRoom: "",

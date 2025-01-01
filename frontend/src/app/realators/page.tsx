@@ -32,9 +32,7 @@ export default async function Realators({
     params.append("city", cities);
   }
 
-  let data = await fetch(
-    `${baseURL}${Api.realtors}/?${params}`
-  );
+  let data = await fetch(`${baseURL}${Api.realtors}/?${params}`);
 
   let realatorsData: {
     data: allRealtorDataType[];
@@ -47,9 +45,9 @@ export default async function Realators({
   }
   return (
     <>
-    <div className="mt-[82px] md:mt-[180px]">
-      <SearchBox title="مشاورین املاک" />
-    </div>
+      <div className="mt-[82px] md:mt-[180px]">
+        <SearchBox title="مشاورین املاک" />
+      </div>
       {realatorsData.data &&
         data.status === 200 &&
         realatorsData.data.length >= 1 && (

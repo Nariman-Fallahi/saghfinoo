@@ -1,5 +1,5 @@
 import { Button } from "@nextui-org/button";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { ErrorNotification } from "@/notification/Error";
 import { Success } from "@/notification/Success";
 import { useModalStore } from "@/store/Register";
@@ -61,6 +61,7 @@ export default function SignUp({ token, phoneNumber }: SignUpType) {
         });
         setCookie("refresh", data.refresh, {
           sameSite: "strict",
+          httpOnly: true,
         });
         console.log(data);
         Success("ثبت نام با موفقیت انجام شد.");
@@ -104,8 +105,8 @@ export default function SignUp({ token, phoneNumber }: SignUpType) {
             },
             minLength: {
               value: 3,
-              message: "وارد کردن کم تر از ۳ کاراکتر ممکن نمیباشد"
-            }
+              message: "وارد کردن کم تر از ۳ کاراکتر ممکن نمیباشد",
+            },
           }}
           error={errors.fristName?.message}
         />
@@ -129,8 +130,8 @@ export default function SignUp({ token, phoneNumber }: SignUpType) {
             },
             minLength: {
               value: 3,
-              message: "وارد کردن کم تر از ۳ کاراکتر ممکن نمیباشد"
-            }
+              message: "وارد کردن کم تر از ۳ کاراکتر ممکن نمیباشد",
+            },
           }}
           error={errors.lastName?.message}
         />

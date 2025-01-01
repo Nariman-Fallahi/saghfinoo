@@ -3,7 +3,6 @@ import {
   Path,
   RegisterOptions,
   UseFormRegister,
-  UseFormWatch,
 } from "react-hook-form";
 import { TextError } from "@/constant/Constants";
 import { SelectTitle } from "@/constant/Constants";
@@ -42,7 +41,7 @@ export default function Input<T extends FieldValues>({
       >
         <div
           className="flex w-fit border rounded border-[#D9D9D9] text-[13px] lg:text-base
-               md:border-none"
+              md:border-none"
         >
           <span className="p-[9px] bg-red-500 text-white rounded-tr cursor-default">
             از

@@ -1,11 +1,9 @@
 import { AdPostingFormDataType, optionType } from "@/types/Type";
 import { Dispatch, SetStateAction } from "react";
-import Select from "react-select";
-import { inputStyle } from "../AdFormContainer";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { TextError, SelectTitle } from "@/constant/Constants";
-import { SelectStyle } from "../AdFormContainer";
 import BtnSubmit from "../BtnSubmit";
+import Input from "../Input";
+import AutocompleteComponent from "../AutocompleteComponent";
 
 type AmenitiesType = {
   setFormData: Dispatch<SetStateAction<AdPostingFormDataType | undefined>>;
@@ -61,157 +59,111 @@ export default function Amenities({
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full flex flex-wrap justify-between mt-3"
+        className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 mt-3"
       >
-        <div className="md:w-[48%] flex flex-col">
-          <SelectTitle text="پارکینگ" />
-          <input
-            type="number"
-            className={inputStyle}
-            placeholder="۲"
-            {...register("parking", {
-              required: "لطفا تعداد پارکینگ ها را را وارد کنید",
-            })}
-          />
-          {errors.parking && <TextError text={errors.parking?.message} />}
-        </div>
+        <Input
+          register={register}
+          name="parking"
+          title="پارکینگ"
+          placeholder="۲"
+          errors={errors}
+        />
 
-        <div className="md:w-[48%] flex flex-col">
-          <SelectTitle text="انباری" />
-          <input
-            type="number"
-            className={inputStyle}
-            placeholder="۲"
-            {...register("storage", {
-              required: "لطفا تعداد انباری ها را وارد کنید",
-            })}
-          />
-          {errors.storage && <TextError text={errors.storage?.message} />}
-        </div>
+        <Input
+          register={register}
+          name="storage"
+          title="انباری"
+          placeholder="۲"
+          errors={errors}
+        />
 
-        <div className="md:w-[48%] flex flex-col">
-          <SelectTitle text="آسانسور" />
-          <input
-            type="number"
-            className={inputStyle}
-            placeholder="۲"
-            {...register("elevator", {
-              required: "لطفا تعداد آسانسور را وارد کنید",
-            })}
-          />
-          {errors.elevator && <TextError text={errors.elevator?.message} />}
-        </div>
+        <Input
+          register={register}
+          name="elevator"
+          title="آسانسور"
+          placeholder="۲"
+          errors={errors}
+        />
 
-        <div className="w-[48%] flex flex-col">
-          <SelectTitle text="جنس کف" />
-          <Controller
-            name="flooring"
-            control={control}
-            rules={{
-              required: true,
-            }}
-            render={({ field: { onChange, name } }) => (
-              <Select
-                inputId={name}
-                placeholder="جنس کف را انتخاب کنید"
-                options={optionsFlooring}
-                onChange={(option) => {
-                  onChange(option?.value);
-                }}
-                classNames={SelectStyle}
-              />
-            )}
-          />
-          {errors.flooring && <TextError text="لطفا جنس کف را انتخاب کنید" />}
-        </div>
-
-        <div className="md:w-[48%] flex flex-col">
-          <SelectTitle text="سرویس بهداستی" />
-          <input
-            type="number"
-            className={inputStyle}
-            placeholder="۲"
-            {...register("restroom", {
-              required: "لطفا تعداد سرویس بهداشتی را وارد کنید",
-            })}
-          />
-          {errors.restroom && <TextError text={errors.restroom?.message} />}
-        </div>
-
-        <div className="w-[48%] flex flex-col">
-          <SelectTitle text="نوع سرویس بهداشتی" />
-          <Controller
-            name="typeOfRestroom"
-            control={control}
-            rules={{
-              required: true,
-            }}
-            render={({ field: { onChange, name } }) => (
-              <Select
-                inputId={name}
-                placeholder="نوع سرویس بهداشتی را انتخاب کنید"
-                options={optionsTypeOfRestroom}
-                onChange={(option) => {
-                  onChange(option?.value);
-                }}
-                classNames={SelectStyle}
-              />
-            )}
-          />
-          {errors.typeOfRestroom && (
-            <TextError text="لطفا نوع سرویس بهداشتی را انتخاب کنید" />
+        <Controller
+          name="flooring"
+          control={control}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange } }) => (
+            <AutocompleteComponent
+              data={optionsFlooring}
+              isLoading={false}
+              title="جنس کف"
+              onSelectionChange={(data) => onChange(data)}
+              placeholder="جنس کف را انتخاب کنید"
+              errorMessage={!!errors.flooring}
+            />
           )}
-        </div>
+        />
 
-        <div className="w-[48%] flex flex-col">
-          <SelectTitle text="سیستم سرمایش" />
-          <Controller
-            name="coolingSystem"
-            control={control}
-            rules={{
-              required: true,
-            }}
-            render={({ field: { onChange, name } }) => (
-              <Select
-                inputId={name}
-                placeholder="نوع سیستم سرمایش را انتخاب کنید"
-                options={optionsCoolingSystem}
-                onChange={(option) => {
-                  onChange(option?.value);
-                }}
-                classNames={SelectStyle}
-              />
-            )}
-          />
-          {errors.coolingSystem && (
-            <TextError text="لطفا نوع سیستم سرمایش را انتخاب کنید" />
-          )}
-        </div>
+        <Input
+          register={register}
+          name="restroom"
+          title="سرویس بهداستی"
+          placeholder="۲"
+          errors={errors}
+        />
 
-        <div className="w-[48%] flex flex-col">
-          <SelectTitle text="سیستم گرمایش" />
-          <Controller
-            name="heatingSystem"
-            control={control}
-            rules={{
-              required: true,
-            }}
-            render={({ field: { onChange, name } }) => (
-              <Select
-                inputId={name}
-                placeholder="نوع سیستم گرمایش را انتخاب کنید"
-                options={optionsHeatingSystem}
-                onChange={(option) => {
-                  onChange(option?.value);
-                }}
-                classNames={SelectStyle}
-              />
-            )}
-          />
-          {errors.heatingSystem && (
-            <TextError text="لطفا نوع سیستم گرمایش را انتخاب کنید" />
+        <Controller
+          name="typeOfRestroom"
+          control={control}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange } }) => (
+            <AutocompleteComponent
+              data={optionsTypeOfRestroom}
+              isLoading={false}
+              title="نوع سرویس بهداشتی"
+              onSelectionChange={(data) => onChange(data)}
+              placeholder="نوع سرویس بهداشتی را انتخاب کنید"
+              errorMessage={!!errors.typeOfRestroom}
+            />
           )}
-        </div>
+        />
+
+        <Controller
+          name="coolingSystem"
+          control={control}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange } }) => (
+            <AutocompleteComponent
+              data={optionsCoolingSystem}
+              isLoading={false}
+              title="نوع سیستم سرمایش"
+              onSelectionChange={(data) => onChange(data)}
+              placeholder="نوع سیستم سرمایش را انتخاب کنید"
+              errorMessage={!!errors.coolingSystem}
+            />
+          )}
+        />
+
+        <Controller
+          name="heatingSystem"
+          control={control}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange, name } }) => (
+            <AutocompleteComponent
+              data={optionsHeatingSystem}
+              isLoading={false}
+              title="نوع سیستم گرمایش"
+              onSelectionChange={(data) => onChange(data)}
+              placeholder="نوع سیستم گرمایش را انتخاب کنید"
+              errorMessage={!!errors.heatingSystem}
+            />
+          )}
+        />
 
         <BtnSubmit />
       </form>

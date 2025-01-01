@@ -29,7 +29,6 @@
     "react-hook-form": "^7.52.2",
     "react-loading-skeleton": "^3.4.0",
     "react-otp-input": "^3.1.1",
-    "react-select": "^5.8.0",
     "react-toastify": "^10.0.5",
     "swiper": "^11.1.9",
     "tailwind-scrollbar": "^3.1.0",

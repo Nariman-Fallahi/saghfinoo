@@ -10,23 +10,20 @@ export async function middleware(req: NextRequest) {
   const pathname = url.pathname;
 
   const isProtectedPath = (path: string) => {
-    const protectedPatterns = [/^\/proUser/, /^\/adPosting/, /^\/userProfile/];
+    const protectedPatterns = [/^\/proUser/, /^\/userProfile/];
 
     return protectedPatterns.some((pattern) => pattern.test(path));
   };
 
   if (access === undefined && refresh !== undefined) {
     try {
-      const response = await fetch(
-        `${baseURL}/${Api.Refresh}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ refresh }),
-        }
-      );
+      const response = await fetch(`${baseURL}/${Api.Refresh}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ refresh }),
+      });
       if (response.ok) {
         const data = await response.json();
         if (data.access && refresh) {

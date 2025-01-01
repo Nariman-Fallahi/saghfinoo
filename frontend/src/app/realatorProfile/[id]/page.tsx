@@ -21,7 +21,7 @@ export default function RealatorProfile() {
   const [commentPageNumber, setCommentpageNumber] = useState(1);
   const [adsfilterData, setAdsFilterData] = useState<AdsFilterDataType>();
   const [adsPageNumber, setAdsPageNumber] = useState<number>(1);
-  const access = getCookie('access');
+  const access = getCookie("access");
 
   const { data: realtorData, isPending: realtorPending } = useGetRequest<{
     data: RealtorDataType;
@@ -47,48 +47,32 @@ export default function RealatorProfile() {
     adsUrl.searchParams.append("page", adsPageNumber.toString());
     adsUrl.searchParams.append("owner", params.id.toString());
 
-    if (adsfilterData?.province?.value) {
-      adsUrl.searchParams.append("province", adsfilterData.province.value);
-    }
+    const filters = {
+      province: adsfilterData?.province?.value,
+      city: adsfilterData?.city,
+      area_from: adsfilterData?.metre?.min,
+      area_to: adsfilterData?.metre?.max,
+      deposit_from: adsfilterData?.depositPrice?.min,
+      deposit_to: adsfilterData?.depositPrice?.max,
+      rent_from: adsfilterData?.rentalPrice?.min,
+      rent_to: adsfilterData?.rentalPrice?.max,
+    };
 
-    if (adsfilterData?.city) {
-      adsUrl.searchParams.append("city", adsfilterData.city);
-    }
-
-    if (adsfilterData?.metre?.min && adsfilterData.metre.max) {
-      adsUrl.searchParams.append(
-        "area_from",
-        adsfilterData.metre.min.toString()
-      );
-      adsUrl.searchParams.append("area_to", adsfilterData.metre.max.toString());
-    }
-
-    if (adsfilterData?.depositPrice?.min && adsfilterData?.depositPrice?.max) {
-      adsUrl.searchParams.append(
-        "deposit_from",
-        adsfilterData.depositPrice.min.toString()
-      );
-      adsUrl.searchParams.append(
-        "deposit_to",
-        adsfilterData.depositPrice.max.toString()
-      );
-    }
-
-    if (adsfilterData?.rentalPrice?.min && adsfilterData?.rentalPrice?.max) {
-      adsUrl.searchParams.append(
-        "rent_from",
-        adsfilterData.rentalPrice.min.toString()
-      );
-      adsUrl.searchParams.append(
-        "rent_to",
-        adsfilterData.rentalPrice.max.toString()
-      );
-    }
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) {
+        adsUrl.searchParams.append(key, value.toString());
+      }
+    });
 
     setAdsUrl(adsUrl.toString());
   }, [adsPageNumber, adsfilterData, params.id]);
 
-  const { data: adsData, status: adsStatus, refetch : adsRefetch, isFetching: adsFetching } = useGetRequest<{
+  const {
+    data: adsData,
+    status: adsStatus,
+    refetch: adsRefetch,
+    isFetching: adsFetching,
+  } = useGetRequest<{
     data: AdsDataType[];
     totalPages: number;
   }>({
@@ -146,8 +130,6 @@ export default function RealatorProfile() {
         adsfilterData={adsfilterData}
         setAdsFilterData={setAdsFilterData}
         data={adsData?.data}
-        pageNumber={adsPageNumber}
-        setPageNumber={setAdsPageNumber}
         status={adsStatus}
         title={`آگهی های مشاور ${realtorData?.data.user.firstName} ${realtorData?.data.user.lastName}`}
         totalPages={adsData?.totalPages}

@@ -38,6 +38,13 @@ export enum Api {
   News = "/api/v1/news",
 }
 
+export enum dataKey {
+  GET_PROVINCES = "getProvinces",
+  GET_CITIES = "getCities",
+  GET_ALL_CITY = "getAllCity",
+  GET_SELECTION_DATA = "getSelectionData",
+}
+
 export const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const axiosInstance = axios.create({
@@ -58,7 +65,7 @@ export const usePostRequest = <dataType>({
     mutationFn: async (data: dataType) => {
       const response = await axiosInstance({
         url: url,
-        method: method ? method : "POST",
+        method: method || "POST",
         headers: headers,
         data: data,
       });

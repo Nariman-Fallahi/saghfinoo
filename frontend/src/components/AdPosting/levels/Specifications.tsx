@@ -1,9 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
 import { AdPostingFormDataType } from "@/types/Type";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { inputStyle } from "../AdFormContainer";
-import { TextError, SelectTitle } from "@/constant/Constants";
 import BtnSubmit from "../BtnSubmit";
+import Input from "../Input";
 
 type SpecificationsType = {
   setFormData: Dispatch<SetStateAction<AdPostingFormDataType | undefined>>;
@@ -41,61 +40,39 @@ export default function Specifications({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-full flex flex-wrap justify-between mt-3"
+      className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 mt-3"
     >
-      <div className="md:w-[48%] flex flex-col">
-        <SelectTitle text="متراژ (متر مربع)" />
-        <input
-          className={inputStyle}
-          type="number"
-          placeholder="۱۲۵"
-          {...register("area", {
-            required: "لطفا متراژ را وارد کنید",
-          })}
-        />
-        {errors.area && <TextError text={errors.area?.message} />}
-      </div>
+      <Input
+        register={register}
+        name="area"
+        title="متراژ (متر مربع)"
+        placeholder="۱۲۵"
+        errors={errors}
+      />
 
-      <div className="md:w-[48%] flex flex-col">
-        <SelectTitle text="اتاق" />
-        <input
-          className={inputStyle}
-          type="number"
-          placeholder="۳"
-          {...register("room", {
-            required: "لطفا تعداد اتاق را وارد کنید",
-          })}
-        />
-        {errors.room && <TextError text={errors.room?.message} />}
-      </div>
+      <Input
+        register={register}
+        name="room"
+        title="اتاق"
+        placeholder="۳"
+        errors={errors}
+      />
 
-      <div className="md:w-[48%] flex flex-col">
-        <SelectTitle text="طبقه" />
-        <input
-          className={inputStyle}
-          type="number"
-          placeholder="۵"
-          {...register("floor", {
-            required: "لطفا طبقه را وارد کنید",
-          })}
-        />
-        {errors.floor && <TextError text={errors.floor?.message} />}
-      </div>
+      <Input
+        register={register}
+        name="floor"
+        title="طبقه"
+        placeholder="۵"
+        errors={errors}
+      />
 
-      <div className="md:w-[48%] flex flex-col">
-        <SelectTitle text="تعداد طبقات" />
-        <input
-          className={inputStyle}
-          type="number"
-          placeholder="۲"
-          {...register("numberFloors", {
-            required: "لطفا تعداد طبقه را وارد کنید",
-          })}
-        />
-        {errors.numberFloors && (
-          <TextError text={errors.numberFloors?.message} />
-        )}
-      </div>
+      <Input
+        register={register}
+        name="numberFloors"
+        title="تعداد طبقات"
+        placeholder="۲"
+        errors={errors}
+      />
 
       <BtnSubmit />
     </form>

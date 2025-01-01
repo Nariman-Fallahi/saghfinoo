@@ -2,7 +2,7 @@
 import Stepper from "./Stepper";
 import { useState, useEffect } from "react";
 import { AdPostingFormDataType } from "@/types/Type";
-import { useGetRequest } from "@/ApiService";
+import { dataKey, useGetRequest } from "@/ApiService";
 import { Api } from "@/ApiService";
 import { getCookie } from "cookies-next";
 import { usePostRequest } from "@/ApiService";
@@ -20,25 +20,14 @@ import UploadMedia from "./levels/UploadMedia";
 import Successful from "./status/Successful";
 import Error from "./status/Error";
 
-export const inputStyle =
-  "text-xs md:text-sm p-2 border border-[#ADADAD] rounded outline-none md:p-[8.7px]";
-
-export const SelectStyle = {
-  control: (state: { menuIsOpen: any }) =>
-    `text-xs md:text-sm !cursor-pointer !border-[#adadad] ${
-      state.menuIsOpen ? "blueShadow" : ""
-    }`,
-  menu: () => "!w-[70%] text-[13.5px] md:text-[15.5px]",
-};
-
 export default function AdFormContainer() {
+  const [textTitle, setTextTitle] = useState<string>("");
   // 1 = LocationDetails
   // 2 = DealType
   // 3 = Specifications
   // 4 = Amenities
   // 5 = AdditionalInformation
   // 6 = UploadMedia
-  const [textTitle, setTextTitle] = useState<string>("");
   const [formStage, setFormStage] = useState<number>(1);
   const [formData, setFormData] = useState<AdPostingFormDataType>();
   // To prevent multiple modal from opening at the same time
@@ -49,15 +38,10 @@ export default function AdFormContainer() {
 
   const { data: selectionData } = useGetRequest<{ data: SelectionDataType[] }>({
     url: `${Api.GetSelectionData}`,
-    key: ["getSelectionData"],
+    key: [dataKey.GET_SELECTION_DATA],
     enabled: true,
     staleTime: 10 * 60 * 1000,
-    headers: {
-      Authorization: `Bearer ${access}`,
-    },
   });
-
-  console.log(selectionData?.data);
 
   // cooling_system
   const cooling_system = selectionData?.data.filter(
@@ -274,6 +258,7 @@ export default function AdFormContainer() {
               className="mt-1 flex w-full flex-col md:flex-row flex-wrap
               md:justify-between md:items-center"
             >
+              <form></form>
               {formStage === 1 && (
                 <LocationDetails
                   setFormData={setFormData}

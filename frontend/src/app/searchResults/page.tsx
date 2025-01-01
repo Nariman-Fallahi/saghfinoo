@@ -6,10 +6,11 @@ import SearchAndFilter from "@/components/SearchResults/SearchAndFilter";
 import MobileFilter from "@/components/Filter/MobileFilter";
 import DesktopFilter from "@/components/Filter/desktop/DesktopFilter";
 import { useSearchParams } from "next/navigation";
-import { FilterDataType } from "@/types/Type";
+import { AdsDataType, FilterDataType } from "@/types/Type";
 import { Select, SelectItem } from "@nextui-org/select";
 import Image from "next/image";
 import { Api, useGetRequest } from "@/ApiService";
+import AdsCart from "@/components/AdsCart";
 
 export const NumberOfItemsFound = ({ number }: { number: number }) => {
   return (
@@ -31,6 +32,7 @@ export const DateRangeSelector = () => {
       radius="sm"
       size="sm"
       className="w-full md:w-36"
+      aria-label="filter-search"
       startContent={
         <Image
           width={16}
@@ -47,7 +49,7 @@ export const DateRangeSelector = () => {
   );
 };
 
-export default function page() {
+export default function SearchResults() {
   const [isOpenFilterMobileModal, setIsOpenFilterMobileModal] =
     useState<boolean>(false);
   const [urlQuery, setUrlQuery] = useState<FilterDataType>();
@@ -60,24 +62,13 @@ export default function page() {
     queryObject[key] = value;
   });
 
-  const rentalPriceDefaultValue = queryObject.rentalPrice?.split("-");
-  const depositPriceDefaultValue = queryObject.depositPrice?.split("-");
-  const metreDefaultValue = queryObject.metre?.split("-");
-
   useEffect(() => {
     setUrlQuery({
-      province: queryObject.province,
       city: queryObject.city,
       coolingSystem: queryObject.coolingSystem,
-      depositPrice: {
-        min: depositPriceDefaultValue ? depositPriceDefaultValue[0] : undefined,
-        max: depositPriceDefaultValue ? depositPriceDefaultValue[1] : undefined,
-      },
+      deposit_from: queryObject.deposit_from,
+      deposit_to: queryObject.deposit_to,
       heatingSystem: queryObject.heatingSystem,
-      metre: {
-        min: metreDefaultValue ? metreDefaultValue[0] : "",
-        max: metreDefaultValue ? metreDefaultValue[1] : "",
-      },
       numberOfBedroom: queryObject.numberOfBedroom,
       numberOfElevators: queryObject.numberOfElevators,
       numberOfFloors: queryObject.numberOfFloors,
@@ -85,17 +76,24 @@ export default function page() {
       numberOfRestrooms: queryObject.numberOfRestrooms,
       numberOfStorageRoom: queryObject.numberOfStorageRoom,
       propertyType: queryObject.propertyType ? queryObject.propertyType : "",
-      rentalPrice: {
-        min: rentalPriceDefaultValue ? rentalPriceDefaultValue[0] : "",
-        max: rentalPriceDefaultValue ? rentalPriceDefaultValue[1] : "",
-      },
+      rent_from: queryObject.rent_from,
+      rent_to: queryObject.rent_to,
       typeOfRestroom: queryObject.typeOfRestroom,
     });
-  }, [queryObject]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // const {} = useGetRequest({
-  //   url: `${Api.}`
-  // })
+  const queryString = new URLSearchParams(searchParams).toString();
+
+  const { data, isFetching, isPending, refetch } = useGetRequest<{
+    data: AdsDataType[];
+    totalPages: number;
+  }>({
+    url: `${Api.Ad}/?${queryString}&page=1`,
+    key: [`searchResults${queryString}`],
+    enabled: true,
+    staleTime: 10 * 60 * 1000,
+  });
 
   return (
     <div className="p-4">
@@ -119,6 +117,13 @@ export default function page() {
           <DateRangeSelector />
         </div>
       </div>
+
+      <AdsCart
+        data={data?.data}
+        isFetching={isFetching}
+        isloading={isPending}
+        refetch={refetch}
+      />
     </div>
   );
 }
