@@ -9,6 +9,7 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import BtnSubmit from "../BtnSubmit";
 import AutocompleteComponent from "../AutocompleteComponent";
 import Input from "../Input";
+import FormWrapper from "../FormWrapper";
 
 type LocationDetails = {
   setFormData: Dispatch<SetStateAction<AdPostingFormDataType | undefined>>;
@@ -103,10 +104,7 @@ export default function LocationDetails({
   }, [CitiesData?.data, watch("province")]);
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 mt-3"
-    >
+    <FormWrapper handleSubmit={handleSubmit} onSubmit={onSubmit}>
       <Controller
         name="province"
         control={control}
@@ -160,6 +158,6 @@ export default function LocationDetails({
       />
 
       <BtnSubmit />
-    </form>
+    </FormWrapper>
   );
 }

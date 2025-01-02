@@ -2,10 +2,11 @@ import { AdPostingFormDataType } from "@/types/Type";
 import { Dispatch } from "react";
 import { SetStateAction } from "react";
 import { optionType } from "@/types/Type";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { useForm, SubmitHandler, Controller, Form } from "react-hook-form";
 import BtnSubmit from "../BtnSubmit";
 import AutocompleteComponent from "../AutocompleteComponent";
 import Input from "../Input";
+import FormWrapper from "../FormWrapper";
 
 type DealType = {
   formData: AdPostingFormDataType | undefined;
@@ -48,10 +49,7 @@ export default function DealType({
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 mt-3"
-    >
+    <FormWrapper handleSubmit={handleSubmit} onSubmit={onSubmit}>
       <Controller
         name="typeOfTransaction"
         control={control}
@@ -100,8 +98,6 @@ export default function DealType({
         required={formData?.typeOfTransaction !== 10}
       />
 
-      {/* TODO Type Number */}
-
       <Input
         register={register}
         name="rent"
@@ -111,6 +107,6 @@ export default function DealType({
       />
 
       <BtnSubmit />
-    </form>
+    </FormWrapper>
   );
 }

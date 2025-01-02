@@ -210,6 +210,8 @@ export default function AdFormContainer() {
     });
   };
 
+  console.log(adPosting);
+
   useEffect(() => {
     if (adPosting && adPosting.msg === "done") {
       setIdForm(adPosting.id);
@@ -258,7 +260,6 @@ export default function AdFormContainer() {
               className="mt-1 flex w-full flex-col md:flex-row flex-wrap
               md:justify-between md:items-center"
             >
-              <form></form>
               {formStage === 1 && (
                 <LocationDetails
                   setFormData={setFormData}

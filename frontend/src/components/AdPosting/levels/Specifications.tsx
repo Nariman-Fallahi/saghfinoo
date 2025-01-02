@@ -3,6 +3,7 @@ import { AdPostingFormDataType } from "@/types/Type";
 import { useForm, SubmitHandler } from "react-hook-form";
 import BtnSubmit from "../BtnSubmit";
 import Input from "../Input";
+import FormWrapper from "../FormWrapper";
 
 type SpecificationsType = {
   setFormData: Dispatch<SetStateAction<AdPostingFormDataType | undefined>>;
@@ -38,10 +39,7 @@ export default function Specifications({
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 mt-3"
-    >
+    <FormWrapper handleSubmit={handleSubmit} onSubmit={onSubmit}>
       <Input
         register={register}
         name="area"
@@ -75,6 +73,6 @@ export default function Specifications({
       />
 
       <BtnSubmit />
-    </form>
+    </FormWrapper>
   );
 }

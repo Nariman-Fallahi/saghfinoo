@@ -11,10 +11,10 @@ export default function Error() {
         مشکلی در ثبت آگهی شما به وجود آمده !
       </p>
 
-      <p className="text-[#717171] text-sm md:text-base lg:text-xl mt-4 text-center">
-        در قسمت ثبت آگهی، خطای مربوط به اطلاعات
+      <p className="text-[#717171] text-sm md:text-[15px] lg:text-lg mt-4 text-center">
+        در ارسال فرم مشکلی پیش آمد و امکان ادامه وجود نداره
         <br />
-        برای شما مشخص شده است.
+        لطفا دوباره تلاش کنید
       </p>
 
       <CustomButton

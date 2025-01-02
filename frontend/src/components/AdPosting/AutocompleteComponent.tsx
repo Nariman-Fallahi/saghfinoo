@@ -44,7 +44,7 @@ export default function AutocompleteComponent({
         isDisabled={!data}
       >
         {(item) => (
-          <AutocompleteItem key={item.label}>{item.value}</AutocompleteItem>
+          <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>
         )}
       </Autocomplete>
 
