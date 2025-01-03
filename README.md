@@ -76,12 +76,12 @@
 <div align="center">
   <h2 id="technologiesـusedـinـbackend">تکنولوژی های استفاده شده در بک اند</h2>
 
-  <img width="30" align="center" src="https://skillicons.dev/icons?i=python">`Python`
-  <img width="30" align="center" src="https://skillicons.dev/icons?i=postgres">`PostgreSQL`  
-  <img width="30" align="center" src="https://skillicons.dev/icons?i=redis">`Redis`
-  <img width="30" align="center" src="https://skillicons.dev/icons?i=django">`Django` 
-  <img width="30" align="center" src="https://skillicons.dev/icons?i=aws">`AWS S3 storage`
-  <img width="30" align="center" src="https://skillicons.dev/icons?i=django">`Django RestFramework`
+<img width="30" align="center" src="https://skillicons.dev/icons?i=python">`Python`
+<img width="30" align="center" src="https://skillicons.dev/icons?i=postgres">`PostgreSQL`  
+ <img width="30" align="center" src="https://skillicons.dev/icons?i=redis">`Redis`
+<img width="30" align="center" src="https://skillicons.dev/icons?i=django">`Django`
+<img width="30" align="center" src="https://skillicons.dev/icons?i=aws">`AWS S3 storage`
+<img width="30" align="center" src="https://skillicons.dev/icons?i=django">`Django RestFramework`
 
   <!-- BackEnd -->
 
@@ -92,19 +92,26 @@
 <div>
   <h2 align="center" id="how_to_run_frontend">نحوه اجرای پروژه در سمت فرانت اند</h2>
 
-  `1`
+`1`
+
 ```bash
 git clone git@github.com:Nariman-Fallahi/saghfinoo.git
 ```
+
 `2`
+
 ```bash
 cd saghfinoo && cd frontend
 ```
+
 `3`
+
 ```bash
 npm i
 ```
+
 `4`
+
 ```bash
 npm run dev
 ```
@@ -115,24 +122,32 @@ npm run dev
 
   <h2 align="center" id="how_to_run_backend">نحوه اجرای پروژه در سمت بک اند</h2>
 
-  `1`
+`1`
+
 ```bash
 git clone git@github.com:yaghoubi-mn/saghfinoo.git
 ```
 
 `2`
+
 ```bash
 cd saghfinoo/backend
 ```
+
 `3`
+
 ```bash
 pip install -r requirements.txt
 ```
+
 `4`
+
 ```bash
 python3 manage.py runserver
 ```
+
 or
+
 ```bash
 python manage.py runserver
 ```
@@ -160,5 +175,5 @@ python manage.py runserver
     <span>مریم شکاتی </span>،
     <span>امین خسروتاج </span>،
     <span>سردار وظیفه </span>
-    <br><span>Link: <a href="https://www.figma.com/design/rYySk0zqhnrBcDnP8l9Afk/🏡Saghfinoo---Real-Estate-Website-(Community)">Saghfinoo (Figma)</a></span>
+    <!-- <br><span>Link: <a href="https://www.figma.com/design/rYySk0zqhnrBcDnP8l9Afk/🏡Saghfinoo---Real-Estate-Website-(Community)">Saghfinoo (Figma)</a></span> -->
 </div>

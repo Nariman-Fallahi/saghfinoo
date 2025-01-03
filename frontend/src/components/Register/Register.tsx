@@ -109,6 +109,7 @@ export default function Register() {
         setCookie("refresh", data.refresh, {
           sameSite: "strict",
           secure: process.env.NODE_ENV === "production",
+          httpOnly: true,
         });
         console.log(data);
         setRegisterStatus(RegisterStatusValue.status1);

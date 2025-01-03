@@ -316,3 +316,27 @@ export type NewsDataType = {
   shortDescription: string;
   slug: string;
 };
+
+export type SuggestedSearchesDataType = {
+  id: number;
+  name: string;
+};
+
+export type FilterDataType = {
+  city?: string;
+  propertyType?: string;
+  rent_from?: string;
+  rent_to?: string;
+  deposit_from?: string;
+  deposit_to?: string;
+  //MoreItems
+  numberOfBedroom?: string;
+  numberOfParking?: string;
+  numberOfStorageRoom?: string;
+  numberOfElevators?: string;
+  numberOfRestrooms?: string;
+  typeOfRestroom?: string;
+  numberOfFloors?: string;
+  coolingSystem?: string;
+  heatingSystem?: string;
+};

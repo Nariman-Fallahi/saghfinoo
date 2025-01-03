@@ -1,18 +1,18 @@
 import { AdPostingFormDataType } from "@/types/Type";
 import { Dispatch } from "react";
 import { SetStateAction } from "react";
-import Select from "react-select";
 import { optionType } from "@/types/Type";
-import { inputStyle } from "../AdFormContainer";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { TextError, SelectTitle } from "@/constant/Constants";
+import { useForm, SubmitHandler, Controller, Form } from "react-hook-form";
 import BtnSubmit from "../BtnSubmit";
-import { SelectStyle } from "../AdFormContainer";
+import AutocompleteComponent from "../AutocompleteComponent";
+import Input from "../Input";
+import FormWrapper from "../FormWrapper";
 
 type DealType = {
   formData: AdPostingFormDataType | undefined;
   setFormData: Dispatch<SetStateAction<AdPostingFormDataType | undefined>>;
   optionsTypeOfTransaction: optionType;
+  propertyType: optionType;
   setFormStage: Dispatch<SetStateAction<number>>;
 };
 
@@ -27,6 +27,7 @@ export default function DealType({
   formData,
   setFormData,
   optionsTypeOfTransaction,
+  propertyType,
   setFormStage,
 }: DealType) {
   const {
@@ -48,95 +49,64 @@ export default function DealType({
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-full flex flex-wrap justify-between mt-3"
-    >
-      <div className="w-[48%] flex flex-col">
-        <SelectTitle text="نوع معامله" />
-        <Controller
-          name="typeOfTransaction"
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, name } }) => (
-            <Select
-              inputId={name}
-              placeholder="نوع معامله خود را انتخاب کنید"
-              options={optionsTypeOfTransaction}
-              onChange={(option) => {
-                onChange(option?.value);
-              }}
-              classNames={SelectStyle}
-            />
-          )}
-        />
-        {errors.typeOfTransaction && (
-          <TextError text="لطفا نوع معامله خود را انتخاب کنید" />
+    <FormWrapper handleSubmit={handleSubmit} onSubmit={onSubmit}>
+      <Controller
+        name="typeOfTransaction"
+        control={control}
+        rules={{
+          required: true,
+        }}
+        render={({ field: { onChange } }) => (
+          <AutocompleteComponent
+            data={optionsTypeOfTransaction}
+            isLoading={false}
+            title="نوع معامله"
+            onSelectionChange={(data) => onChange(data)}
+            placeholder="نوع معامله خود را انتخاب کنید"
+            errorMessage={!!errors.typeOfTransaction}
+          />
         )}
-      </div>
-
-      <div className="w-[48%] flex flex-col">
-        <SelectTitle text="نوع ملک" />
-        <Controller
-          name="propertyType"
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, name } }) => (
-            <Select
-              inputId={name}
-              placeholder="نوع ملک خود را انتخاب کنید"
-              options={optionsTypeOfTransaction}
-              onChange={(option) => {
-                onChange(option?.value);
-              }}
-              classNames={SelectStyle}
-            />
-          )}
-        />
-        {errors.typeOfTransaction && (
-          <TextError text="لطفا نوع ملک خود را انتخاب کنید" />
+      />
+      <Controller
+        name="propertyType"
+        control={control}
+        rules={{
+          required: true,
+        }}
+        render={({ field: { onChange } }) => (
+          <AutocompleteComponent
+            data={propertyType}
+            isLoading={false}
+            title="نوع ملک"
+            onSelectionChange={(data) => onChange(data)}
+            placeholder="نوع ملک خود را انتخاب کنید"
+            errorMessage={!!errors.propertyType}
+          />
         )}
-      </div>
+      />
+      <Input
+        register={register}
+        name="deposit"
+        title="رهن"
+        placeholder={
+          formData?.typeOfTransaction !== 10
+            ? "۵,۰۰۰,۰۰۰"
+            : "وارد کردن رهن ممکن نمیباشد"
+        }
+        errors={errors}
+        disabled={formData?.typeOfTransaction === 10 ? true : false}
+        required={formData?.typeOfTransaction !== 10}
+      />
 
-      <div className="md:w-[48%] flex flex-col">
-        <SelectTitle text="رهن" />
-        <input
-          className={inputStyle}
-          type="number"
-          placeholder={
-            formData?.typeOfTransaction !== 10
-              ? "۵۰ میلیون تومان"
-              : "وارد کردن رهن ممکن نمیباشد"
-          }
-          disabled={formData?.typeOfTransaction === 10 ? true : false}
-          {...register("deposit", {
-            required:
-              formData?.typeOfTransaction !== 10
-                ? "لطفا رهن را وارد کنید"
-                : false,
-          })}
-        />
-        {errors.deposit && <TextError text={errors.deposit?.message} />}
-      </div>
-
-      <div className="md:w-[48%] flex flex-col">
-        <SelectTitle text="اجاره" />
-        <input
-          type="number"
-          className={inputStyle}
-          placeholder="۲ میلیون تومان"
-          {...register("rent", {
-            required: "لطفا رهن را وارد کنید",
-          })}
-        />
-        {errors.rent && <TextError text={errors.rent?.message} />}
-      </div>
+      <Input
+        register={register}
+        name="rent"
+        title="اجاره"
+        placeholder="۲,۰۰۰,۰۰۰"
+        errors={errors}
+      />
 
       <BtnSubmit />
-    </form>
+    </FormWrapper>
   );
 }

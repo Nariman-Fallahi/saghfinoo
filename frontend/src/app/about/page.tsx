@@ -1,4 +1,11 @@
+import { Metadata } from "next";
 import Image from "next/image";
+
+export const metadata: Metadata = {
+  title: "درباره سقفینو",
+  description:
+    "سقفینو پلتفرمی تخصصی در زمینه اجاره، خرید و فروش املاک است که اطلاعات دقیق و به‌روز مناطق مختلف را ارائه می‌دهد تا با خیالی راحت معاملات ملکی خود را انجام دهید.",
+};
 
 export default function About() {
   return (

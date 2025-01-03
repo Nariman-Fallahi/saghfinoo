@@ -1,16 +1,15 @@
-import { Api } from "@/ApiService";
+import { Api, dataKey } from "@/ApiService";
 import { useGetRequest } from "@/ApiService";
 import { ProvincesType } from "@/types/Type";
 import { CitiesType } from "@/types/Type";
 import { useEffect, useState } from "react";
 import { AdPostingFormDataType } from "@/types/Type";
 import { Dispatch, SetStateAction } from "react";
-import Select from "react-select";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { TextError, SelectTitle } from "@/constant/Constants";
-import { inputStyle } from "../AdFormContainer";
 import BtnSubmit from "../BtnSubmit";
-import { SelectStyle } from "../AdFormContainer";
+import AutocompleteComponent from "../AutocompleteComponent";
+import Input from "../Input";
+import FormWrapper from "../FormWrapper";
 
 type LocationDetails = {
   setFormData: Dispatch<SetStateAction<AdPostingFormDataType | undefined>>;
@@ -28,9 +27,6 @@ export default function LocationDetails({
   setFormData,
   setFormStage,
 }: LocationDetails) {
-  const [selectedProvince, setSelectedProvince] = useState<
-    number | undefined
-  >();
   const [optionsCitiesData, setOptionsCitiesData] = useState<
     | {
         value: string;
@@ -38,37 +34,39 @@ export default function LocationDetails({
       }[]
     | undefined
   >();
+
   // Get provinces
   const { data: provincesData, isPending: provincesDataPending } =
     useGetRequest<{
       data: ProvincesType[];
     }>({
       url: Api.GetProvinces_Cities,
-      key: ["getProvinces"],
+      key: [dataKey.GET_PROVINCES],
       enabled: true,
       staleTime: 10 * 60 * 1000,
     });
-
-  // Get provinceCities
-  const {
-    data: CitiesData,
-    refetch,
-    isPending: CitiesDataPending,
-  } = useGetRequest<{
-    data: CitiesType[];
-  }>({
-    url: `${Api.GetProvinces_Cities}/${selectedProvince}/cities`,
-    key: ["getCities", JSON.stringify(selectedProvince)],
-    enabled: false,
-    staleTime: 10 * 60 * 1000,
-  });
 
   const {
     register,
     handleSubmit,
     control,
+    watch,
     formState: { errors },
   } = useForm<Inputs>();
+
+  // Get provinceCities
+  const {
+    data: CitiesData,
+    refetch,
+    isFetching: CitiesDataFetching,
+  } = useGetRequest<{
+    data: CitiesType[];
+  }>({
+    url: `${Api.GetProvinces_Cities}/${watch("province")}/cities`,
+    key: [dataKey.GET_CITIES, watch("province")],
+    enabled: false,
+    staleTime: 10 * 60 * 1000,
+  });
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     setFormData((prevState) => ({
@@ -82,10 +80,11 @@ export default function LocationDetails({
   };
 
   useEffect(() => {
-    if (selectedProvince) {
+    if (watch("province")) {
       refetch();
     }
-  }, [refetch, selectedProvince]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refetch, watch("province")]);
 
   const optionsProvincesData = provincesData?.data.map((item) => ({
     value: item.id,
@@ -93,7 +92,7 @@ export default function LocationDetails({
   }));
 
   useEffect(() => {
-    if (selectedProvince) {
+    if (watch("province")) {
       setOptionsCitiesData(
         CitiesData?.data.map((item) => ({
           value: item.name,
@@ -101,94 +100,64 @@ export default function LocationDetails({
         }))
       );
     }
-  }, [CitiesData?.data, selectedProvince]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [CitiesData?.data, watch("province")]);
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-full flex flex-wrap justify-between mt-3"
-    >
-      <div className="md:w-[48%] flex flex-col">
-        <SelectTitle text="انتخاب استان" />
-        <Controller
-          name="province"
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, name } }) => (
-            <Select
-              inputId={name}
-              placeholder="استان خود را انتخاب کنید"
-              options={optionsProvincesData}
-              isLoading={provincesDataPending}
-              onChange={(option) => {
-                onChange(option?.label);
-                setSelectedProvince(option?.value);
-              }}
-              classNames={SelectStyle}
-            />
-          )}
-        />
-        {errors.province && <TextError text="لطفا استان خود را انتخاب کنید" />}
-      </div>
+    <FormWrapper handleSubmit={handleSubmit} onSubmit={onSubmit}>
+      <Controller
+        name="province"
+        control={control}
+        rules={{
+          required: true,
+        }}
+        render={({ field: { onChange } }) => (
+          <AutocompleteComponent
+            data={optionsProvincesData}
+            isLoading={provincesDataPending}
+            title="استان"
+            onSelectionChange={(province) => onChange(province)}
+            placeholder="استان خود را انتخاب کنید"
+            errorMessage={!!errors.province}
+          />
+        )}
+      />
 
-      <div className="md:w-[48%] flex flex-col">
-        <SelectTitle text="انتخاب شهرستان" />
-        <Controller
-          name="city"
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, name } }) => (
-            <Select
-              inputId={name}
-              placeholder="شهرستان خود را انتخاب کنید"
-              options={optionsCitiesData}
-              isLoading={CitiesDataPending}
-              isDisabled={!CitiesData?.data}
-              onChange={(option) => onChange(option?.value)}
-              classNames={SelectStyle}
-            />
-          )}
-        />
-        {errors.city && <TextError text="لطفا شهرستان خود را انتخاب کنید" />}
-      </div>
+      <Controller
+        name="city"
+        control={control}
+        rules={{
+          required: true,
+        }}
+        render={({ field: { onChange } }) => (
+          <AutocompleteComponent
+            data={optionsCitiesData}
+            isLoading={CitiesDataFetching}
+            title="شهرستان"
+            onSelectionChange={(cityID) => onChange(cityID)}
+            placeholder="شهرستان خود را انتخاب کنید"
+            errorMessage={!!errors.city}
+          />
+        )}
+      />
 
-      <div className="md:w-[48%] flex flex-col">
-        <SelectTitle text="خیابان اصلی" />
-        <input
-          className={inputStyle}
-          placeholder="جزییات آدرس را وارد کنید"
-          {...register("mainSt", {
-            required: "لطفا آدرس خیابان اصلی خود را وارد کنید",
-            pattern: {
-              value: /^[\u0600-\u06FF\s]+$/,
-              message: "لطفا فقط حروف فارسی وارد کنید",
-            },
-          })}
-        />
-        {errors.mainSt && <TextError text={errors.mainSt?.message} />}
-      </div>
+      <Input
+        register={register}
+        name="mainSt"
+        title="خیابان اصلی"
+        placeholder="لطفا آدرس خیابان اصلی خود را وارد کنید"
+        errors={errors}
+      />
 
-      <div className="md:w-[48%] flex flex-col">
-        <SelectTitle text="خیابان فرعی / کوچه" />
-        <input
-          className={inputStyle}
-          placeholder="جزییات آدرس را وارد کنید"
-          {...register("sideStreet", {
-            required: "لطفا آدرس خیابان فرعی خود را وارد کنید",
-            pattern: {
-              value: /^[\u0600-\u06FF\s]+$/,
-              message: "لطفا فقط حروف فارسی وارد کنید",
-            },
-          })}
-        />
-        {errors.sideStreet && <TextError text={errors.sideStreet?.message} />}
-      </div>
+      <Input
+        register={register}
+        name="sideStreet"
+        placeholder="جزییات آدرس را وارد کنید"
+        title="خیابان فرعی / کوچه"
+        errors={errors}
+      />
 
       <BtnSubmit />
-    </form>
+    </FormWrapper>
   );
 }

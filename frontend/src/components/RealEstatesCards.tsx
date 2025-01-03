@@ -4,12 +4,9 @@ import { Button } from "@nextui-org/button";
 import { allrealEstateOfficesDataType } from "@/types/Type";
 import { useRouter } from "next-nprogress-bar";
 import { isMobile } from "@/constant/Constants";
-import PaginationComponent from "./Pagination";
 
 type RealEstatesCardsType = {
-  data:
-    | { data: allrealEstateOfficesDataType[]; total_pages: number }
-    | undefined;
+  data: allrealEstateOfficesDataType[];
 };
 
 export default function RealEstatesCards({ data }: RealEstatesCardsType) {
@@ -18,7 +15,7 @@ export default function RealEstatesCards({ data }: RealEstatesCardsType) {
   return (
     <>
       <div className="w-full flex flex-wrap p-3 justify-between md:p-5">
-        {data?.data.map((item, index) => (
+        {data.map((item, index) => (
           <div
             onClick={() =>
               isMobile
@@ -81,8 +78,6 @@ export default function RealEstatesCards({ data }: RealEstatesCardsType) {
             </Button>
           </div>
         ))}
-
-        <PaginationComponent totalPages={data?.total_pages} />
       </div>
     </>
   );

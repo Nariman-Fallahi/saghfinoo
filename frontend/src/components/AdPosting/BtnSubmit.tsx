@@ -6,7 +6,7 @@ type BtnSubmitType = {
 
 export default function BtnSubmit({ label }: BtnSubmitType) {
   return (
-    <div className="w-full flex justify-center mt-8">
+    <div className="w-full grid col-span-2 justify-center mt-8">
       <CustomButton type="submit" radius="sm" className="bg-primary text-white">
         {label || "ادامه"}
       </CustomButton>

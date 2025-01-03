@@ -88,8 +88,8 @@ export default function EditingInformation() {
 
   useEffect(() => {
     setDefaultValues({
-      fristName: userInfoData?.data.first_name,
-      lastName: userInfoData?.data.last_name,
+      fristName: userInfoData?.data.firstName,
+      lastName: userInfoData?.data.lastName,
     });
   }, [userInfoData?.data]);
 
@@ -243,8 +243,8 @@ export default function EditingInformation() {
                 src={
                   imagePreview
                     ? imagePreview
-                    : userInfoData?.data.image_full_path
-                    ? userInfoData?.data.image_full_path
+                    : userInfoData?.data.imageFullPath
+                    ? userInfoData?.data.imageFullPath
                     : "/icons/profile-circle.svg"
                 }
                 alt="Image User"

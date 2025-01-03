@@ -11,8 +11,11 @@ import { NextUIProvider } from "@nextui-org/system";
 const Shabnam = localFont({ src: "../../public/fonts/Shabnam.ttf" });
 
 export const metadata: Metadata = {
-  title: "Saghfinoo",
+  title: "سقفینو",
   description: "سقفینو، سقفی برای همه",
+  icons: {
+    icon: "/icons/Logo.svg",
+  },
 };
 
 export default function RootLayout({

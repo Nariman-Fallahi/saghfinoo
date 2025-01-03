@@ -1,10 +1,16 @@
-import { Api, axiosInstance } from "@/ApiService";
+import { Api, axiosInstance, baseURL } from "@/ApiService";
 
 // Components
 import RealEstateNews from "@/components/News/RealEstateNews";
 import NewsBox from "@/components/News/newsBox/NewsBox";
 import Construction from "@/components/News/construction/Construction";
 import Ad from "@/components/News/Ad";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "اخبار املاک",
+  description: "در این صفحه میتوانید اخبار روز املاک را دنبال کنید",
+};
 
 export default async function News({
   searchParams,
@@ -29,27 +35,27 @@ export default async function News({
     rentNewsResponse,
   ] = await Promise.all([
     fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}${Api.News}/?page=1&special=2`
+      `${baseURL}${Api.News}/?page=1&special=2`
     ).then((response) => response.json()),
 
     fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}${Api.News}/?page=1&category=مسکن&special=1`
+      `${baseURL}${Api.News}/?page=1&category=مسکن&special=1`
     ).then((response) => response.json()),
 
     fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}${Api.News}/?page=${housingNewsPageNumber}&special=0`
+      `${baseURL}${Api.News}/?page=${housingNewsPageNumber}&special=0`
     ).then((response) => response.json()),
 
     fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}${Api.News}/?page=${constructionNewsPageNumber}&category=ساخت و ساز`
+      `${baseURL}${Api.News}/?page=${constructionNewsPageNumber}&category=ساخت و ساز`
     ).then((response) => response.json()),
 
     fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}${Api.News}/?page=1&category=اجاره&special=1`
+      `${baseURL}${Api.News}/?page=1&category=اجاره&special=1`
     ).then((response) => response.json()),
 
     fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}${Api.News}/?page=${rentNewsPageNumber}&category=اجاره&special=0`
+      `${baseURL}${Api.News}/?page=${rentNewsPageNumber}&category=اجاره&special=0`
     ).then((response) => response.json()),
   ]);
 

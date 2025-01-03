@@ -5,10 +5,9 @@ import { allRealtorDataType } from "@/types/Type";
 import "react-loading-skeleton/dist/skeleton.css";
 import { isMobile } from "@/constant/Constants";
 import { useRouter } from "next-nprogress-bar";
-import PaginationComponent from "./Pagination";
 
 type RealatorsCartsType = {
-  data: { data: allRealtorDataType[]; total_pages: number } | undefined;
+  data: allRealtorDataType[] | undefined;
 };
 
 export default function RealatorsCarts({ data }: RealatorsCartsType) {
@@ -17,7 +16,7 @@ export default function RealatorsCarts({ data }: RealatorsCartsType) {
   return (
     <>
       <div className="w-full flex flex-wrap p-3 justify-between md:p-5">
-        {data?.data?.map((item) => (
+        {data?.map((item) => (
           <div
             key={item.id}
             onClick={() =>
@@ -53,7 +52,6 @@ export default function RealatorsCarts({ data }: RealatorsCartsType) {
             </Button>
           </div>
         ))}
-        <PaginationComponent totalPages={data?.total_pages} />
       </div>
     </>
   );

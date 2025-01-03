@@ -1,4 +1,4 @@
-import { Api } from "@/ApiService";
+import { Api, baseURL } from "@/ApiService";
 import { allRealtorDataType } from "@/types/Type";
 import ErrNoData from "@/components/ErrNoData";
 
@@ -6,6 +6,12 @@ import ErrNoData from "@/components/ErrNoData";
 import SearchBox from "@/components/RealEstates-Realators/SearchBox";
 import RealatorsCarts from "@/components/RealatorsCarts";
 import SearchDataNotFound from "@/components/RealEstates-Realators/SearchDataNotFound";
+import { Metadata } from "next";
+import PaginationComponent from "@/components/Pagination";
+
+export const metadata: Metadata = {
+  title: "مشاوران",
+};
 
 export default async function Realators({
   searchParams,
@@ -26,9 +32,7 @@ export default async function Realators({
     params.append("city", cities);
   }
 
-  let data = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}${Api.realtors}/?${params}`
-  );
+  let data = await fetch(`${baseURL}${Api.realtors}/?${params}`);
 
   let realatorsData: {
     data: allRealtorDataType[];
@@ -41,11 +45,16 @@ export default async function Realators({
   }
   return (
     <>
-      <SearchBox title="مشاورین املاک" />
+      <div className="mt-[82px] md:mt-[180px]">
+        <SearchBox title="مشاورین املاک" />
+      </div>
       {realatorsData.data &&
         data.status === 200 &&
         realatorsData.data.length >= 1 && (
-          <RealatorsCarts data={realatorsData} />
+          <>
+            <RealatorsCarts data={realatorsData.data} />
+            <PaginationComponent totalPages={realatorsData.total_pages} />
+          </>
         )}
 
       {realatorsData.data &&

@@ -1,39 +1,32 @@
+"use client";
 import Image from "next/image";
 import EditingInformation from "@/components/UserProfile/EditingInformation";
 import MyAds from "@/components/UserProfile/MyAds";
 import SavedAds from "@/components/UserProfile/SavedAds";
 import ItemMenu from "@/components/UserProfile/ItemMenu";
 import { notFound } from "next/navigation";
+import { deleteCookie } from "cookies-next";
+import { useRouter } from "next-nprogress-bar";
 
 enum UserProfileItem {
   EditingInformation = "EditingInformation",
   MyAds = "MyAds",
   SavedAds = "SavedAds",
-  Logout = "Logout",
 }
 
 export const Title = ({ title }: { title: string }) => {
   return <p className="text-xs md:text-xl lg:text-2xl font-bold">{title}</p>;
 };
 
-export async function generateStaticParams() {
-  return [
-    { id: "EditingInformation" },
-    { id: UserProfileItem.MyAds },
-    { id: UserProfileItem.SavedAds },
-    { id: UserProfileItem.Logout },
-  ];
-}
-
 export default function Page({ params }: { params: { id: string } }) {
   const { id } = params;
+  const router = useRouter();
 
   if (
     ![
       UserProfileItem.EditingInformation,
       UserProfileItem.MyAds,
       UserProfileItem.SavedAds,
-      UserProfileItem.Logout,
     ].includes(id as UserProfileItem)
   ) {
     notFound();
@@ -89,9 +82,12 @@ export default function Page({ params }: { params: { id: string } }) {
             title="خروج"
             icon="/icons/logout.svg"
             alt="Logout"
-            active={UserProfileItem.Logout}
             userName={id}
-            routerPush={UserProfileItem.Logout}
+            onClick={() => {
+              deleteCookie("access");
+              deleteCookie("refresh");
+              router.push("/");
+            }}
           />
         </div>
       </div>

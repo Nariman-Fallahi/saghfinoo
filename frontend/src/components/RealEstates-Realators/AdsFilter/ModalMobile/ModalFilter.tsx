@@ -1,11 +1,10 @@
-import { Modal, ModalContent, ModalBody, ModalFooter } from "@nextui-org/modal";
+import { Modal, ModalContent, ModalBody } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
 import Image from "next/image";
 import { AdsFilterDataType, optionType } from "@/types/Type";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { TextError, SelectTitle } from "@/constant/Constants";
 import Select from "react-select";
-import { ProvinceType } from "../../Ads";
 import { SelectStyle } from "../Filter";
 import { Dispatch, SetStateAction } from "react";
 import Input from "../Input";
@@ -204,7 +203,6 @@ export default function ModalFilter({
                 </form>
               </div>
             </ModalBody>
-            <ModalFooter></ModalFooter>
           </>
         )}
       </ModalContent>

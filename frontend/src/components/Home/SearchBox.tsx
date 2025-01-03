@@ -1,6 +1,10 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
+import { Api, useGetRequest } from "@/ApiService";
+import { CitiesType } from "@/types/Type";
+import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
+import { useRouter } from "next-nprogress-bar";
 
 type TabSearchBoxType = {
   title: string;
@@ -24,9 +28,18 @@ const TabSearchBox = ({ title, isSelected, onClick }: TabSearchBoxType) => {
 };
 
 export default function SearchBox() {
-  const [nameTheSelectedTab, setNameTheSelectedTab] = useState<
-    "rent" | "shopping"
-  >("rent");
+  const [typeOfTransaction, setTypeOfTransaction] = useState<"اجاره" | "خرید">(
+    "اجاره"
+  );
+
+  const router = useRouter();
+
+  const { data, isPending } = useGetRequest<{ data: CitiesType[] }>({
+    url: Api.SearchCity,
+    key: ["getAllCities"],
+    enabled: true,
+    staleTime: 10 * 60 * 10,
+  });
 
   return (
     <div
@@ -54,31 +67,48 @@ export default function SearchBox() {
         <div className="flex items-center">
           <TabSearchBox
             title="اجاره"
-            isSelected={nameTheSelectedTab === "rent"}
-            onClick={() => setNameTheSelectedTab("rent")}
+            isSelected={typeOfTransaction === "اجاره"}
+            onClick={() => setTypeOfTransaction("اجاره")}
           />
           <TabSearchBox
             title="خرید"
-            isSelected={nameTheSelectedTab === "shopping"}
-            onClick={() => setNameTheSelectedTab("shopping")}
+            isSelected={typeOfTransaction === "خرید"}
+            onClick={() => setTypeOfTransaction("خرید")}
           />
         </div>
 
-        <div className="flex items-center mt-2 md:mt-3">
-          <Image
-            width={16}
-            height={16}
-            src="/icons/search-normal.svg"
-            alt=""
-            className="lg:w-6 lg:h-6"
-          />
-          <input
-            className="mr-2 text-sm font-normal md:text-base outline-none w-full
-             lg:text-lg"
-            type="text"
-            placeholder="شهر مورد نظر را جستجو کنید."
-          />
-        </div>
+        <Autocomplete
+          isLoading={isPending}
+          placeholder="شهر مورد نظر را جستجو کنید"
+          radius="sm"
+          defaultItems={data?.data || []}
+          onSelectionChange={(value) =>
+            router.push(
+              `/searchResults?type_of_transaction_name=${typeOfTransaction}&city=${
+                value ? value.toString() : ""
+              }`
+            )
+          }
+          inputProps={{
+            classNames: {
+              inputWrapper: "!bg-white !shadow-none",
+              input: "lg:!text-base mr-2",
+            },
+          }}
+          startContent={
+            <Image
+              width="16"
+              height="16"
+              className="md:w-[18px] md:h-[18px] lg:w-5 lg:h-5"
+              src="/icons/search-normal.svg"
+              alt="search icon"
+            />
+          }
+        >
+          {(city) => (
+            <AutocompleteItem key={city.name}>{city.name}</AutocompleteItem>
+          )}
+        </Autocomplete>
       </div>
     </div>
   );

@@ -71,7 +71,7 @@ export default function Filter({ filterData, setFilterData }: FilterType) {
     staleTime: 10 * 60 * 1000,
   });
 
-  // Get propertyTypeDataS
+  // Get propertyTypeData
   const { data: propertyTypeData } = useGetRequest<{
     data: SelectionDataType[];
   }>({

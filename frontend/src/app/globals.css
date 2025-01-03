@@ -13,8 +13,8 @@ h6 {
   direction: rtl;
 }
 
-.primaryColor {
-  
+input:focus {
+  outline: none; 
 }
 
 .openMenu {
@@ -112,13 +112,6 @@ h6 {
 
 .selectBtn::-webkit-scrollbar-thumb:active {
   background: #555;
-}
-
-.react-select__menu,
-.react-select__menu-list,
-.react-select__option,
-.react-select__indicators {
-  background-color: red !important;
 }
 
 .blueShadow {
