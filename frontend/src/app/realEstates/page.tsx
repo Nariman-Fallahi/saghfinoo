@@ -2,12 +2,12 @@ import { Api, baseURL } from "@/ApiService";
 import { allrealEstateOfficesDataType } from "@/types/Type";
 import ErrNoData from "@/components/ErrNoData";
 import SearchDataNotFound from "@/components/RealEstates-Realators/SearchDataNotFound";
+import { Metadata } from "next";
 
 // Components
 import SearchBox from "@/components/RealEstates-Realators/SearchBox";
 import RealEstatesCards from "@/components/RealEstatesCards";
 import PaginationComponent from "@/components/Pagination";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "املاک و مستغلات",
