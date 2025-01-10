@@ -112,7 +112,7 @@ export default function AdFormContainer() {
 
   const { mutate: adPostinMutate, data: adPosting } =
     usePostRequest<AdPostingApi>({
-      url: Api.Ad,
+      url: `${Api.Ad}/`,
       key: "adPosting",
       headers: {
         Authorization: `Bearer ${access}`,

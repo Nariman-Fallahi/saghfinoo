@@ -25,7 +25,7 @@ export enum Api {
 
   // ads Api
   Ad = "/api/v1/ads",
-  GetSelectionData = "/api/v1/ads/choices",
+  GetSelectionData = "/api/v1/ads/choice",
   DeleteAllMyAds = "/api/v1/ads/self-all",
   GetAllMyAds = "/api/v1/ads/self",
   AdsSaved = "/api/v1/ads/saved",
