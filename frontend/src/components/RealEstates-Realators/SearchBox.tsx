@@ -1,7 +1,7 @@
 "use client";
 import { Title } from "@/constant/Constants";
 import { Api } from "@/ApiService";
-import { useGetRequest } from "@/ApiService";
+import { useGetRequest, dataKey } from "@/ApiService";
 import { CitiesType } from "@/types/Type";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -19,7 +19,7 @@ export default function SearchBox({ title, className }: SearchBoxType) {
 
   const { data, isLoading } = useGetRequest<{ data: CitiesType[] }>({
     url: Api.SearchCity,
-    key: ["getAllCities"],
+    key: [dataKey.GET_ALL_CITY],
     enabled: true,
     staleTime: 10 * 60 * 1000,
   });

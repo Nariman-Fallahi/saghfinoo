@@ -2,7 +2,7 @@
 import { useDisclosure } from "@nextui-org/modal";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { baseURL, useGetRequest } from "@/ApiService";
+import { baseURL, dataKey, useGetRequest } from "@/ApiService";
 import { Api } from "@/ApiService";
 import {
   AdsDataType,
@@ -98,7 +98,7 @@ export default function Page() {
   }>({
     url: adsUrl,
     key: [
-      "getRealEstateAds",
+      dataKey.GET_REAL_ESTATE_ADS,
       JSON.stringify(adsfilterData),
       adsPageNumber.toString(),
     ],
@@ -113,7 +113,7 @@ export default function Page() {
     data: CommentType[];
   }>({
     url: `${Api.Reos}/${params.userName}/comments?page=${commentPageNumber}`,
-    key: ["getRealEstateComments", params.userName.toString()],
+    key: [dataKey.GET_REAL_ESTATE_COMMENTS, params.userName.toString()],
     enabled: true,
     staleTime: 10 * 60 * 1000,
   });

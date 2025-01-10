@@ -4,7 +4,7 @@ import DesktopMenu from "./DesktopMenu";
 import { navigationMenuType } from "@/types/Type";
 import { getCookie } from "cookies-next";
 import Register from "@/components/Register/Register";
-import { Api } from "@/ApiService";
+import { Api, dataKey } from "@/ApiService";
 import { useGetRequest } from "@/ApiService";
 import { userInfoDataType } from "@/types/Type";
 import Link from "next/link";
@@ -23,7 +23,7 @@ export default function Menu() {
 
   const { data, status, refetch } = useGetRequest<userInfoDataType>({
     url: Api.GetUserInfo,
-    key: ["getUserInfo"],
+    key: [dataKey.GET_USER_INFO],
     headers: {
       Authorization: `Bearer ${access}`,
     },

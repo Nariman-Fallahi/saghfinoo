@@ -3,7 +3,7 @@ import CustomButton from "@/components/CustomButton";
 import Image from "next/image";
 import { useState, useEffect, SetStateAction, Dispatch } from "react";
 import ModalFilter from "./ModalMobile/ModalFilter";
-import { useGetRequest } from "@/ApiService";
+import { dataKey, useGetRequest } from "@/ApiService";
 import { Api } from "@/ApiService";
 import {
   AdsFilterDataType,
@@ -58,7 +58,7 @@ export default function Filter({ filterData, setFilterData }: FilterType) {
     data: ProvincesType[];
   }>({
     url: Api.GetProvinces_Cities,
-    key: ["getProvinces"],
+    key: [dataKey.GET_PROVINCES],
     enabled: true,
     staleTime: 10 * 60 * 1000,
   });
@@ -66,7 +66,7 @@ export default function Filter({ filterData, setFilterData }: FilterType) {
   // Get provinceCities
   const { data: citiesData, refetch } = useGetRequest<{ data: CitiesType[] }>({
     url: `${Api.GetProvinces_Cities}/${filterData?.province?.id}/cities`,
-    key: ["getCities", JSON.stringify(filterData?.province?.id)],
+    key: [dataKey.GET_CITIES, JSON.stringify(filterData?.province?.id)],
     enabled: false,
     staleTime: 10 * 60 * 1000,
   });
@@ -76,7 +76,7 @@ export default function Filter({ filterData, setFilterData }: FilterType) {
     data: SelectionDataType[];
   }>({
     url: `${Api.GetSelectionData}?key=property_type`,
-    key: ["getPropertyType"],
+    key: [dataKey.GET_PROPERTY_TYPE],
     enabled: true,
     staleTime: 10 * 60 * 1000,
     headers: {

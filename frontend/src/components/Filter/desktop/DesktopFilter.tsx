@@ -5,7 +5,7 @@ import {
   SelectionDataType,
 } from "@/types/Type";
 import { useCallback, useEffect, useState } from "react";
-import { Api, useGetRequest } from "@/ApiService";
+import { Api, dataKey, useGetRequest } from "@/ApiService";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 import { Select, SelectItem } from "@nextui-org/select";
@@ -61,7 +61,7 @@ export default function DesktopFilter({
     data: CitiesType[];
   }>({
     url: Api.SearchCity,
-    key: ["getAllCities"],
+    key: [dataKey.GET_ALL_CITY],
     enabled: true,
     staleTime: 10 * 60 * 10,
   });
@@ -72,7 +72,7 @@ export default function DesktopFilter({
       data: SelectionDataType[];
     }>({
       url: `${Api.GetSelectionData}?key=property_type`,
-      key: ["getPropertyType"],
+      key: [dataKey.GET_PROPERTY_TYPE],
       enabled: true,
       staleTime: 10 * 60 * 1000,
     });

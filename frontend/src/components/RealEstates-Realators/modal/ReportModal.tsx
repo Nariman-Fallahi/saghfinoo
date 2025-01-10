@@ -1,7 +1,7 @@
 import { DataModalREA, ReportModaltDataType } from "@/types/Type";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import UserIcon from "./UserIcon";
-import { Api, useGetRequest, usePostRequest } from "@/ApiService";
+import { Api, dataKey, useGetRequest, usePostRequest } from "@/ApiService";
 import CustomButton from "@/components/CustomButton";
 import { CookieValueTypes } from "cookies-next";
 import { Spinner } from "@nextui-org/spinner";
@@ -38,7 +38,7 @@ export default function ReportModal({
         page === "realEstate"
           ? `${Api.Reos}/${id}/report/reasons`
           : Api.GetAllReportReasonsRealtors,
-      key: ["getReportData"],
+      key: [dataKey.GET_REPORT_DATA],
       enabled: true,
       staleTime: 10 * 60 * 1000,
     });
@@ -52,7 +52,7 @@ export default function ReportModal({
       page === "realEstate"
         ? `${Api.CreateReportRealEstate}${id}`
         : `${Api.realtors}/{id}/report`,
-    key: "createReport",
+    key: dataKey.CREATE_REPORT,
     headers: {
       Authorization: `Bearer ${access}`,
     },

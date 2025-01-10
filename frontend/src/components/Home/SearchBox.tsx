@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
-import { Api, useGetRequest } from "@/ApiService";
+import { Api, dataKey, useGetRequest } from "@/ApiService";
 import { CitiesType } from "@/types/Type";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 import { useRouter } from "next-nprogress-bar";
@@ -36,7 +36,7 @@ export default function SearchBox() {
 
   const { data, isPending } = useGetRequest<{ data: CitiesType[] }>({
     url: Api.SearchCity,
-    key: ["getAllCities"],
+    key: [dataKey.GET_ALL_CITY],
     enabled: true,
     staleTime: 10 * 60 * 10,
   });

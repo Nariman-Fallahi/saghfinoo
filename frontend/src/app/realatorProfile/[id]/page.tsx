@@ -1,5 +1,5 @@
 "use client";
-import { Api, baseURL } from "@/ApiService";
+import { Api, baseURL, dataKey } from "@/ApiService";
 import { useGetRequest } from "@/ApiService";
 import { useParams } from "next/navigation";
 import { AdsDataType, AdsFilterDataType, RealtorDataType } from "@/types/Type";
@@ -28,7 +28,7 @@ export default function RealatorProfile() {
     status: number;
   }>({
     url: `${Api.realtors}/${params.id}`,
-    key: ["getRealtor", params.id.toString()],
+    key: [dataKey.GET_REALTOR, params.id.toString()],
     enabled: true,
     staleTime: 5 * 60 * 1000,
   });
@@ -36,7 +36,7 @@ export default function RealatorProfile() {
   const { data: realtorCommentsData, status: realtorCommentsStatus } =
     useGetRequest<{ data: CommentType[] }>({
       url: `${Api.realtors}/${params.id}/comments?page=${commentPageNumber}`,
-      key: ["getRealtorComments", commentPageNumber.toString()],
+      key: [dataKey.GET_REALTOR_COMMENTS, commentPageNumber.toString()],
       enabled: true,
       staleTime: 10 * 60 * 1000,
     });
@@ -78,7 +78,7 @@ export default function RealatorProfile() {
   }>({
     url: adsUrl,
     key: [
-      "getRealatorAds",
+      dataKey.GET_REALATOR_ADS,
       JSON.stringify(adsfilterData),
       adsPageNumber.toString(),
     ],

@@ -1,6 +1,6 @@
 import CustomButton from "@/components/CustomButton";
 import { useEffect } from "react";
-import { usePostRequest, useGetRequest } from "@/ApiService";
+import { usePostRequest, useGetRequest, dataKey } from "@/ApiService";
 import { Api } from "@/ApiService";
 import { DataModalREA, ScoreReasonsType } from "@/types/Type";
 import { Spinner } from "@nextui-org/spinner";
@@ -67,7 +67,7 @@ export default function ScoreModal({
       data: ScoreReasonsType[];
     }>({
       url: `${Api.GetAllScoreReasons}?score=${watch("score")}`,
-      key: ["getAllScoreReasons", watch("score").toString()],
+      key: [dataKey.GET_ALL_SCORE_REASONS, watch("score").toString()],
       enabled: true,
       staleTime: 10 * 60 * 1000,
     });

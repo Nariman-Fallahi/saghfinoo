@@ -9,7 +9,7 @@ import { useSearchParams } from "next/navigation";
 import { AdsDataType, FilterDataType } from "@/types/Type";
 import { Select, SelectItem } from "@nextui-org/select";
 import Image from "next/image";
-import { Api, useGetRequest } from "@/ApiService";
+import { Api, dataKey, useGetRequest } from "@/ApiService";
 import AdsCart from "@/components/AdsCart";
 
 export const NumberOfItemsFound = ({ number }: { number: number }) => {
@@ -90,7 +90,7 @@ export default function SearchResults() {
     totalPages: number;
   }>({
     url: `${Api.Ad}/?${queryString}&page=1`,
-    key: [`searchResults${queryString}`],
+    key: [dataKey.SEARCH_RESULTS, queryString],
     enabled: true,
     staleTime: 10 * 60 * 1000,
   });

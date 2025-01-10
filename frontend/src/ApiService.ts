@@ -43,6 +43,22 @@ export enum dataKey {
   GET_CITIES = "getCities",
   GET_ALL_CITY = "getAllCity",
   GET_SELECTION_DATA = "getSelectionData",
+  GET_ADS_SAVED = "getAdsSaved",
+  DELETE_ALL_ADS_SAVED = "deleteAllAdsSaved",
+  GET_ALL_MY_ADS = 'getAllMyAds',
+  GET_USER_INFO = "getUserInfo",
+  GET_ALL_SCORE_REASONS = 'getAllScoreReasons',
+  GET_REPORT_DATA = "getReportData",
+  CREATE_REPORT = "createReport",
+  GET_PROPERTY_TYPE = "getPropertyType",
+  GET_NEWEST_HOUSE_RENT = "getNewestHouseRentData",
+  GET_REAL_ESTATE_CONSULTANTS = "getRealEstateConsultants",
+  SEARCH_RESULTS  = "searchResults",
+  GET_REAL_ESTATE_ADS = "getRealEstateAds",
+  GET_REAL_ESTATE_COMMENTS  = "getRealEstateComments",
+  GET_REALTOR = "getRealtor",
+  GET_REALATOR_ADS = "getRealatorAds",
+  GET_REALTOR_COMMENTS = "getRealtorComments"
 }
 
 export const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;

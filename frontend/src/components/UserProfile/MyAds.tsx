@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Button } from "@nextui-org/button";
 import NoData from "./NoData";
 import DeleteAllAdsBtn from "./DeleteAllAdsBtn";
-import { Api } from "@/ApiService";
+import { Api, dataKey } from "@/ApiService";
 import { usePostRequest } from "@/ApiService";
 import { useEffect, useState } from "react";
 import { Success } from "@/notification/Success";
@@ -52,7 +52,7 @@ export default function MyAds() {
 
   const { data, isPending, refetch } = useGetRequest<{ data: AdsDataType[] }>({
     url: `${Api.GetAllMyAds}?page=${pageNumber}`,
-    key: ["getALlMyAds", pageNumber.toString()],
+    key: [dataKey.GET_ALL_MY_ADS, pageNumber.toString()],
     enabled: true,
     staleTime: 10 * 60 * 1000,
     headers: {

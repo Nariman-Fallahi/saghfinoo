@@ -16,7 +16,7 @@ import {
   SelectionDataType,
   FilterDataType,
 } from "@/types/Type";
-import { Api, useGetRequest } from "@/ApiService";
+import { Api, dataKey, useGetRequest } from "@/ApiService";
 import { useEffect, useState } from "react";
 import Input from "./Input";
 import MoreItems from "./MoreItems";
@@ -90,7 +90,7 @@ export default function MobileFilter({
     data: CitiesType[];
   }>({
     url: Api.SearchCity,
-    key: ["getAllCities"],
+    key: [dataKey.GET_ALL_CITY],
     enabled: true,
     staleTime: 10 * 60 * 10,
   });
@@ -100,7 +100,7 @@ export default function MobileFilter({
     data: SelectionDataType[];
   }>({
     url: Api.GetSelectionData,
-    key: ["getSelectionData"],
+    key: [dataKey.GET_SELECTION_DATA],
     enabled: true,
     staleTime: 10 * 60 * 1000,
   });

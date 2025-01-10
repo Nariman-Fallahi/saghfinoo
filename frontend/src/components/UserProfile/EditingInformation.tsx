@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from "react";
 import InputRegister from "../InputRegister";
 import { changePasswordType, userInfoDataType } from "@/types/Type";
 import { Title } from "@/app/userProfile/[id]/page";
-import { useGetRequest, usePostRequest } from "@/ApiService";
+import { dataKey, useGetRequest, usePostRequest } from "@/ApiService";
 import { Api } from "@/ApiService";
 import { getCookie } from "cookies-next";
 import { Success } from "@/notification/Success";
@@ -41,7 +41,7 @@ export default function EditingInformation() {
     isPending: userInfoPending,
   } = useGetRequest<userInfoDataType>({
     url: Api.GetUserInfo,
-    key: ["getUserInfo"],
+    key: [dataKey.GET_USER_INFO],
     enabled: true,
     staleTime: 5 * 60 * 1000,
     headers: {
