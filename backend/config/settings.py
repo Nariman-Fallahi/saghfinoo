@@ -155,6 +155,11 @@ if os.getenv("CACHE_DB") == 'redis':
             'BACKEND': 'django.core.cache.backends.redis.RedisCache',
             'LOCATION': 'redis://127.0.0.1:6379',
             'TIMEOUT': 1*60*60,
+        },
+        'cache-for-ratelimiting': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': 'redis://127.0.0.1:6379',
+            'TIMEOUT': 1*60*60,
         }
     }
 else:
@@ -172,6 +177,11 @@ else:
             'TIMEOUT': 10*60
         },
         'ip': {
+            'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+            'LOCATION': 'ip_cache',
+            'TIMEOUT': 1*60*60
+        },
+        'cache-for-ratelimiting': {
             'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
             'LOCATION': 'ip_cache',
             'TIMEOUT': 1*60*60
@@ -327,3 +337,7 @@ NUMBER_DELAY = timedelta(minutes=1, seconds=30)
 REALTOR_DEFAULT_SCORE = 4
 ADVERTISEMENT_MEDIA_LIMIT = 6
 SUGGESTED_SEARCH_LIMIT = 12
+
+RATELIMIT_USE_CACHE = 'cache-for-ratelimiting'
+DEFAULT_RATE_READ = '10/m'
+DEFAULT_RATE_WRITE = '5/m'

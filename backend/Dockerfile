@@ -1,11 +1,11 @@
-FROM python:3.11.4-slim-buster
+FROM python:3.13-alpine
 
 WORKDIR /app
 
 copy . .
 
-run pip install -r requirements.txt
+run pip install -r requirements.txt 
 
-CMD ['python', 'manage.py', 'runserver', '0.0.0.0:3000']
+EXPOSE 8000
 
-EXPOSE 3000
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]

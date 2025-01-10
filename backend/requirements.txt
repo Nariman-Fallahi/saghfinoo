@@ -1,4 +1,4 @@
-django
+django==5.0
 djangorestframework
 markdown
 django-cors-headers
@@ -12,3 +12,4 @@ boto3
 django-storages
 gunicorn
 pillow
+django-ratelimit

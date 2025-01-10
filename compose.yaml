@@ -1,0 +1,42 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    networks:
+      - backend-net
+      - frontend-net
+    depends_on:
+      - redis
+      - db
+
+  redis:
+    image: "redis"
+    networks:
+      - backend-net
+
+  db:
+    image: "postgres"
+    networks:
+      - backend-net
+    environment:
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=saghfinoo
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - frontend-net
+
+networks:
+  backend-net:
+  
+  frontend-net:
+    
+
+volumes:
+  pgdata:
