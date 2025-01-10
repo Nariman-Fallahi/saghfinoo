@@ -48,7 +48,7 @@ export default async function RealEstates({
 
   return (
     <>
-     <div className="mt-[82px] md:mt-[180px]">
+     <div className="mt-[82px] md:mt-[180px] md:1/3">
      <SearchBox title="املاک و مستغلات" />
     </div>
     

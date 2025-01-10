@@ -40,6 +40,11 @@ export default function SearchBox({ title, className }: SearchBoxType) {
           variant="bordered"
           radius="sm"
           defaultItems={data?.data || []}
+          inputProps={{
+            classNames: {
+              inputWrapper: "w-full md:w-1/3",
+            },
+          }}
           startContent={
             <i className="pl-3">
               <Image
