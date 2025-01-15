@@ -2,15 +2,18 @@
 import SearchBox from "../RealEstates-Realators/SearchBox";
 import { Button } from "@nextui-org/button";
 import Image from "next/image";
-import Select, { components } from "react-select";
-import { NumberOfItemsFound } from "@/app/searchResults/page";
-import { DateRangeSelector } from "@/app/searchResults/page";
+import DateRangeSelector from "./DateRangeSelector";
+import NumberItemsFound from "./NumberItemsFound";
 
 type SearchAndFilterType = {
   setOpenModal: (value: boolean) => void;
+  numberItemsFound: number;
 };
 
-export default function SearchAndFilter({ setOpenModal }: SearchAndFilterType) {
+export default function SearchAndFilter({
+  setOpenModal,
+  numberItemsFound,
+}: SearchAndFilterType) {
   return (
     <div className="w-full flex flex-col mt-16 md:mt-[180px] md:hidden">
       <div className="w-full flex flex-col items-center">
@@ -19,7 +22,7 @@ export default function SearchAndFilter({ setOpenModal }: SearchAndFilterType) {
       </div>
 
       <div className="w-full justify-between flex mt-3 items-center">
-        <NumberOfItemsFound number={200000} />
+        <NumberItemsFound number={numberItemsFound} />
 
         <div className="flex w-[65%] gap-3 items-center">
           <Button

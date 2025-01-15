@@ -26,7 +26,7 @@ type DesktopFilterType = {
 
 export default function DesktopFilter({
   isViewMore,
-  urlQuery,
+  // urlQuery,
 }: DesktopFilterType) {
   const [isTablet, setIsTablet] = useState<boolean>();
   const [openCustomMenu, setOpenCustomMenu] = useState<OpenCustomMenu>(null);
@@ -86,10 +86,10 @@ export default function DesktopFilter({
     formState: { errors },
   } = useForm<FilterDataType>();
 
-  useEffect(() => {
-    reset(urlQuery);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   reset(urlQuery);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const onSubmit: SubmitHandler<FilterDataType> = (data) => {
     const filters = {
@@ -148,7 +148,7 @@ export default function DesktopFilter({
         aria-label="propertyType"
         variant="bordered"
         radius="sm"
-        defaultSelectedKey={urlQuery?.propertyType}
+        // defaultSelectedKey={urlQuery?.propertyType}
         defaultItems={propertyTypeData?.data || []}
         size={isTablet ? "sm" : "md"}
         onSelectionChange={(value) =>

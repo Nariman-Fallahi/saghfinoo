@@ -1,6 +1,5 @@
 import AdsCart from "../AdsCart";
 import { Title } from "@/constant/Constants";
-import Filter from "./AdsFilter/Filter";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { AdsDataType, AdsFilterDataType } from "@/types/Type";
 import PaginationComponent from "../Pagination";
@@ -52,8 +51,6 @@ export default function Ads({
       ) : (
         <Title title={title} />
       )}
-
-      <Filter filterData={adsfilterData} setFilterData={setAdsFilterData} />
 
       <AdsCart
         data={data}

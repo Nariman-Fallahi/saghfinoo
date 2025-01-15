@@ -10,7 +10,7 @@ export async function middleware(req: NextRequest) {
   const pathname = url.pathname;
 
   const isProtectedPath = (path: string) => {
-    const protectedPatterns = [/^\/proUser/, /^\/userProfile/];
+    const protectedPatterns = [/^\/proUser/, /^\/adPosting/, /^\/userProfile/];
 
     return protectedPatterns.some((pattern) => pattern.test(path));
   };

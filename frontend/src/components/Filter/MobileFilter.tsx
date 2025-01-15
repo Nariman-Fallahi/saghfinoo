@@ -1,21 +1,10 @@
 "use client";
-import {
-  Modal,
-  ModalContent,
-  ModalBody,
-  useDisclosure,
-} from "@nextui-org/modal";
+import { Modal, ModalContent, ModalBody } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
 import Image from "next/image";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { SelectTitle, TextError } from "@/constant/Constants";
-import Select from "react-select";
-import {
-  CitiesType,
-  ProvincesType,
-  SelectionDataType,
-  FilterDataType,
-} from "@/types/Type";
+import { CitiesType, SelectionDataType, FilterDataType } from "@/types/Type";
 import { Api, dataKey, useGetRequest } from "@/ApiService";
 import { useEffect, useState } from "react";
 import Input from "./Input";
@@ -23,14 +12,15 @@ import MoreItems from "./MoreItems";
 import { useRouter } from "next-nprogress-bar";
 import { usePathname } from "next/navigation";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
+import AutocompleteMobile from "./AutocompleteMobile";
 
 type MobileFilterType = {
   isViewMore: boolean;
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
-  queryObject: {
-    [key: string]: string | undefined;
-  };
+  // queryObject: {
+  //   [key: string]: string | undefined;
+  // };
   urlQuery: FilterDataType | undefined;
 };
 
@@ -38,7 +28,7 @@ export default function MobileFilter({
   isViewMore,
   isOpen,
   setIsOpen,
-  queryObject,
+  // // queryObject,
   urlQuery,
 }: MobileFilterType) {
   const [viewMore, setViewMore] = useState<boolean>(false);
@@ -46,30 +36,22 @@ export default function MobileFilter({
   const router = useRouter();
   const pathname = usePathname();
 
-  const SelectStyle = {
-    control: (state: { menuIsOpen: any }) =>
-      `!cursor-pointer text-xs lg:text-base ${
-        state.menuIsOpen ? "blueShadow" : ""
-      }`,
-    menu: () => "!w-[70%] md:!w-full text-sm md:text-[15.5px] lg:text-base",
-  };
-
-  const findDefaultValue = (
-    options:
-      | {
-          value: number | string;
-          label: string;
-        }[]
-      | undefined,
-    key: string,
-    parseToInt = false
-  ) => {
-    const value = queryObject[key];
-    if (value === undefined || value === null) return undefined;
-    return options?.find(
-      (option) => option.value === (parseToInt ? parseInt(value) : value)
-    );
-  };
+  // const findDefaultValue = (
+  //   options:
+  //     | {
+  //         value: number | string;
+  //         label: string;
+  //       }[]
+  //     | undefined,
+  //   key: string,
+  //   parseToInt = false
+  // ) => {
+  //   const value = queryObject[key];
+  //   if (value === undefined || value === null) return undefined;
+  //   return options?.find(
+  //     (option) => option.value === (parseToInt ? parseInt(value) : value)
+  //   );
+  // };
 
   const {
     register,
@@ -80,10 +62,10 @@ export default function MobileFilter({
     formState: { errors },
   } = useForm<FilterDataType>();
 
-  useEffect(() => {
-    reset(urlQuery);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   reset(urlQuery);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   // GetAllCity
   const { data: allCitiesData, isPending: allCitiesPending } = useGetRequest<{
@@ -95,45 +77,31 @@ export default function MobileFilter({
     staleTime: 10 * 60 * 10,
   });
 
-  // Get propertyTypeDataS
-  const { data: selectionData } = useGetRequest<{
-    data: SelectionDataType[];
-  }>({
-    url: Api.GetSelectionData,
-    key: [dataKey.GET_SELECTION_DATA],
-    enabled: true,
-    staleTime: 10 * 60 * 1000,
-  });
+  // Get SelectionData
+  const { data: selectionData, isPending: selectionDataPending } =
+    useGetRequest<{
+      data: SelectionDataType[];
+    }>({
+      url: Api.GetSelectionData,
+      key: [dataKey.GET_SELECTION_DATA],
+      enabled: true,
+      staleTime: 10 * 60 * 1000,
+    });
 
   // property_type
   const property_type = selectionData?.data.filter(
     (item) => item.key === "propertyType"
   );
 
-  const optionsPropertyType = property_type?.map((item) => ({
-    value: item.id,
-    label: item.value,
-  }));
-
   // cooling_system
   const cooling_system = selectionData?.data.filter(
     (item) => item.key === "coolingSystem"
   );
 
-  const optionsCoolingSystem = cooling_system?.map((item) => ({
-    value: item.id,
-    label: item.value,
-  }));
-
   // heating_system
   const heating_system = selectionData?.data.filter(
     (item) => item.key === "heatingSystem"
   );
-
-  const optionsHeatingSystem = heating_system?.map((item) => ({
-    value: item.id,
-    label: item.value,
-  }));
 
   const onSubmit: SubmitHandler<FilterDataType> = (data) => {
     const filters = {
@@ -165,25 +133,21 @@ export default function MobileFilter({
     router.push(`${pathname}?${updatedSearchParams}`);
   };
 
-  const propertyTypeDefaultValue = findDefaultValue(
-    optionsPropertyType,
-    "propertyType",
-    true
-  );
-  const coolingSystemDefaultValue = findDefaultValue(
-    optionsCoolingSystem,
-    "coolingSystem",
-    true
-  );
-  const heatingSystemDefaultValue = findDefaultValue(
-    optionsHeatingSystem,
-    "heatingSystem",
-    true
-  );
-
-  function createQueryString(arg0: string, arg1: string) {
-    throw new Error("Function not implemented.");
-  }
+  // const propertyTypeDefaultValue = findDefaultValue(
+  //   optionsPropertyType,
+  //   "propertyType",
+  //   true
+  // );
+  // const coolingSystemDefaultValue = findDefaultValue(
+  //   optionsCoolingSystem,
+  //   "coolingSystem",
+  //   true
+  // );
+  // const heatingSystemDefaultValue = findDefaultValue(
+  //   optionsHeatingSystem,
+  //   "heatingSystem",
+  //   true
+  // );
 
   return (
     <>
@@ -243,25 +207,14 @@ export default function MobileFilter({
                       <TextError text="لطفا شهرستان خود را انتخاب کنید" />
                     )}
 
-                    <div className="w-full flex flex-col">
-                      <SelectTitle text="نوع ملک" />
-                      <Controller
-                        name="propertyType"
-                        control={control}
-                        render={({ field: { onChange, name } }) => (
-                          <Select
-                            inputId={name}
-                            placeholder="نوع ملک را انتخاب کنید"
-                            options={optionsPropertyType}
-                            onChange={(option) => {
-                              onChange(option?.value);
-                            }}
-                            classNames={SelectStyle}
-                            defaultValue={propertyTypeDefaultValue}
-                          />
-                        )}
-                      />
-                    </div>
+                    <AutocompleteMobile
+                      label="نوع ملک"
+                      control={control}
+                      name="propertyType"
+                      isLoading={selectionDataPending}
+                      defaultItems={property_type}
+                      placeholder="نوع ملک خود را وارد کنید"
+                    />
 
                     <Input
                       title="قیمت اجاره"
@@ -316,45 +269,23 @@ export default function MobileFilter({
                       <>
                         <MoreItems control={control} watch={watch} />
 
-                        <div className="w-full flex flex-col">
-                          <SelectTitle text="سیستم سرمایش" />
-                          <Controller
-                            name="coolingSystem"
-                            control={control}
-                            render={({ field: { onChange, name } }) => (
-                              <Select
-                                inputId={name}
-                                placeholder="انتخاب سیستم"
-                                options={optionsCoolingSystem}
-                                onChange={(option) => {
-                                  onChange(option?.value);
-                                }}
-                                classNames={SelectStyle}
-                                defaultValue={coolingSystemDefaultValue}
-                              />
-                            )}
-                          />
-                        </div>
+                        <AutocompleteMobile
+                          label="سیستم سرمایش"
+                          control={control}
+                          name="coolingSystem"
+                          isLoading={selectionDataPending}
+                          defaultItems={cooling_system}
+                          placeholder="نوع سیستم سرمایشی را انتخاب کنید"
+                        />
 
-                        <div className="w-full flex flex-col">
-                          <SelectTitle text="سیستم گرمایش" />
-                          <Controller
-                            name="heatingSystem"
-                            control={control}
-                            render={({ field: { onChange, name } }) => (
-                              <Select
-                                inputId={name}
-                                placeholder="انتخاب سیستم"
-                                options={optionsHeatingSystem}
-                                onChange={(option) => {
-                                  onChange(option?.value);
-                                }}
-                                classNames={SelectStyle}
-                                defaultValue={heatingSystemDefaultValue}
-                              />
-                            )}
-                          />
-                        </div>
+                        <AutocompleteMobile
+                          label="سیستم گرمایش"
+                          control={control}
+                          name="heatingSystem"
+                          isLoading={selectionDataPending}
+                          defaultItems={heating_system}
+                          placeholder="نوع سیستم گرمایشی را انتخاب کنید"
+                        />
                       </>
                     )}
 
