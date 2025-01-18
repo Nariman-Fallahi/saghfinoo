@@ -59,7 +59,7 @@ export default function SearchBox({ title, className }: SearchBoxType) {
           onSelectionChange={(value) => handleSelectChange(value)}
         >
           {(city) => (
-            <AutocompleteItem key={city.slug}>{city.name}</AutocompleteItem>
+            <AutocompleteItem key={city.name}>{city.name}</AutocompleteItem>
           )}
         </Autocomplete>
       </div>

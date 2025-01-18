@@ -170,40 +170,6 @@ export default function MobileFilter({
                     onSubmit={handleSubmit(onSubmit)}
                     className="mt-5 w-full flex gap-3 justify-between flex-wrap"
                   >
-                    {/* <SelectTitle text="انتخاب شهرستان" />
-                    <Controller
-                      name="city"
-                      control={control}
-                      rules={{
-                        required: watch("city") ? true : false,
-                      }}
-                      render={({ field: { onChange } }) => (
-                        <Autocomplete
-                          isLoading={allCitiesPending}
-                          placeholder="شهرستان‌"
-                          aria-label="cities"
-                          variant="bordered"
-                          radius="sm"
-                          defaultItems={allCitiesData?.data || []}
-                          size="sm"
-                          inputProps={{
-                            classNames: {
-                              input: "text-[13px]",
-                            },
-                          }}
-                          onSelectionChange={(city) => onChange(city)}
-                        >
-                          {(city) => (
-                            <AutocompleteItem key={city.name}>
-                              {city.name}
-                            </AutocompleteItem>
-                          )}
-                        </Autocomplete>
-                      )}
-                    />
-                    {errors.city && (
-                      <TextError text="لطفا شهرستان خود را انتخاب کنید" />
-                    )} */}
                     <AutocompleteMobile
                       label="شهرستان"
                       control={control}

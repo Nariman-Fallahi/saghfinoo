@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   description: "سقفینو، سقفی برای همه",
 };
 
-export default async function Home() {
+export default async function ProUserHomePage() {
   const [suggestedSearches, topRealEstateData, topRealtorsData]: [
     { data: SuggestedSearchesDataType[] },
     { data: allrealEstateOfficesDataType[] },

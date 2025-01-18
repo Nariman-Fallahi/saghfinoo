@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 import InputRegister from "../InputRegister";
 import { changePasswordType, userInfoDataType } from "@/types/Type";
-import { Title } from "@/app/userProfile/[id]/page";
+import Title from "./Title";
 import { dataKey, useGetRequest, usePostRequest } from "@/ApiService";
 import { Api } from "@/ApiService";
 import { getCookie } from "cookies-next";

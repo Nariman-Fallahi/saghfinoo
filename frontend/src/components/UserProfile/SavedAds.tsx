@@ -1,5 +1,5 @@
 "use client";
-import { Title } from "@/app/userProfile/[id]/page";
+import Title from "./Title";
 import NoData from "./NoData";
 import DeleteAllAdsBtn from "./DeleteAllAdsBtn";
 import AdsCart from "../AdsCart";

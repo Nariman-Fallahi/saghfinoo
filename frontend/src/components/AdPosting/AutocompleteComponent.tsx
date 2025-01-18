@@ -30,6 +30,7 @@ export default function AutocompleteComponent({
       <Autocomplete
         placeholder={placeholder}
         isLoading={isLoading}
+        aria-label={title}
         variant="bordered"
         radius="sm"
         defaultItems={data || []}

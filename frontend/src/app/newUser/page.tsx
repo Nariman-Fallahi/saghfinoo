@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   description: "سقفینو، سقفی برای همه",
 };
 
-export default async function Home({
+export default async function NewUserHomePage({
   searchParams,
 }: {
   searchParams: { pageNumber: string };

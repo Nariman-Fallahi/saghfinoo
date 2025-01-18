@@ -80,6 +80,7 @@ export default function SearchBox() {
         <Autocomplete
           isLoading={isPending}
           placeholder="شهر مورد نظر را جستجو کنید"
+          aria-label="search city"
           radius="sm"
           defaultItems={data?.data || []}
           onSelectionChange={(value) =>
