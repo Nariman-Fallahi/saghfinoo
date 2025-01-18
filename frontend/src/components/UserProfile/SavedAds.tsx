@@ -79,7 +79,7 @@ export default function SavedAds() {
           title="هنوز آگهی ذخیره نکردید !"
           description="صفحه املاک اجاره ای سقفینو را ببینید و از میان آنها آگهی های دلخواه را ذخیره کنید"
           titleBtn="املاک اجاره ای"
-          linkBtn="/" //TODO این قسمت باید تغییر کند
+          linkBtn="/searchResults?type_of_transaction_name=اجاره"
         />
       )}
     </>

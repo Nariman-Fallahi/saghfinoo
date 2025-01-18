@@ -19,14 +19,12 @@ import ModalREA from "@/components/RealEstates-Realators/modal/ModalREA";
 import Consultants from "@/components/Consultants";
 import Ads from "@/components/RealEstates-Realators/Ads";
 import Comments from "@/components/RealEstates-Realators/Comments";
+import { useQueryURL } from "@/hooks/useQueryURL";
 
-export default function Page() {
+export default function RealEstateProfilePage() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const params = useParams();
   const [commentPageNumber, setCommentPageNumber] = useState<number>(1);
-  const [adsUrl, setAdsUrl] = useState<string>("");
-  const [adsfilterData, setAdsFilterData] = useState<AdsFilterDataType>(); //TODO Delete
-  const [adsPageNumber, setAdsPageNumber] = useState<number>(1); //TODO Delete
   const access = getCookie("access");
 
   const {
@@ -40,31 +38,9 @@ export default function Page() {
     staleTime: 10 * 60 * 1000,
   });
 
-  useEffect(() => {
-    const adsUrl = new URL(Api.Ad, baseURL);
-
-    adsUrl.searchParams.append("page", adsPageNumber.toString());
-    adsUrl.searchParams.append("reo_username", params.userName.toString());
-
-    const filters = {
-      province: adsfilterData?.province?.value,
-      city: adsfilterData?.city,
-      area_from: adsfilterData?.metre?.min,
-      area_to: adsfilterData?.metre?.max,
-      deposit_from: adsfilterData?.depositPrice?.min,
-      deposit_to: adsfilterData?.depositPrice?.max,
-      rent_from: adsfilterData?.rentalPrice?.min,
-      rent_to: adsfilterData?.rentalPrice?.max,
-    };
-
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value) {
-        adsUrl.searchParams.append(key, value.toString());
-      }
-    });
-
-    setAdsUrl(adsUrl.toString());
-  }, [adsPageNumber, params.userName, adsfilterData]);
+  const adsURL = useQueryURL(Api.Ad, {
+    reo_username: params.userName.toString(),
+  });
 
   const {
     data: adsData,
@@ -75,12 +51,8 @@ export default function Page() {
     data: AdsDataType[];
     totalPages: number;
   }>({
-    url: adsUrl,
-    key: [
-      dataKey.GET_REAL_ESTATE_ADS,
-      JSON.stringify(adsfilterData),
-      adsPageNumber.toString(),
-    ],
+    url: adsURL,
+    key: [dataKey.GET_REAL_ESTATE_ADS, adsURL],
     enabled: true,
     staleTime: 10 * 60 * 1000,
     headers: {
@@ -143,8 +115,6 @@ export default function Page() {
         status={adsStatus}
         title={`آگهی های املاک ${realEstateData?.data.name}`}
         totalPages={adsData?.totalPages}
-        adsfilterData={adsfilterData}
-        setAdsFilterData={setAdsFilterData}
         refetch={adsRefetch}
         isFetching={adsFetching}
       />

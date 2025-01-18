@@ -1,12 +1,14 @@
 import AdsCart from "../AdsCart";
 import { Title } from "@/constant/Constants";
-import { Dispatch, SetStateAction, useEffect } from "react";
-import { AdsDataType, AdsFilterDataType } from "@/types/Type";
+import { AdsDataType } from "@/types/Type";
 import PaginationComponent from "../Pagination";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import Image from "next/image";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
+import MobileFilter from "../Filter/MobileFilter";
+import { useState } from "react";
+import DesktopFilter from "../Filter/desktop/DesktopFilter";
 
 export type ProvinceType =
   | { name: string | undefined; id: number | undefined }
@@ -17,8 +19,6 @@ type AdsType = {
   status: "error" | "success" | "pending";
   data: AdsDataType[] | undefined;
   totalPages: number | undefined;
-  adsfilterData: AdsFilterDataType | undefined;
-  setAdsFilterData: Dispatch<SetStateAction<AdsFilterDataType | undefined>>;
   refetch: (options?: RefetchOptions) => Promise<
     QueryObserverResult<
       {
@@ -35,11 +35,12 @@ export default function Ads({
   status,
   data,
   totalPages,
-  adsfilterData,
-  setAdsFilterData,
   refetch,
   isFetching,
 }: AdsType) {
+  const [isOpenFilterMobileModal, setIsOpenFilterMobileModal] =
+    useState<boolean>(false);
+
   return (
     <div className="mt-10 flex flex-col p-4 md:mt-14 md:p-8">
       {status === "pending" ? (
@@ -49,7 +50,18 @@ export default function Ads({
           className="md:!w-[300px] md:!h-[30px]"
         />
       ) : (
-        <Title title={title} />
+        <>
+          <Title title={title} />
+
+          <div className="w-full mt-5">
+            <MobileFilter
+              isOpen={isOpenFilterMobileModal}
+              setIsOpen={setIsOpenFilterMobileModal}
+              isViewMore={false}
+            />
+            <DesktopFilter isViewMore={false} />
+          </div>
+        </>
       )}
 
       <AdsCart

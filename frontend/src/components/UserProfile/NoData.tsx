@@ -19,8 +19,6 @@ export default function NoData({
   linkBtn,
 }: NoData) {
   const router = useRouter();
-  // const { sizeBtn } = useSizeBtn();
-
   return (
     <div className="flex flex-col mt-6 w-full justify-center items-center md:mt-7">
       <Image

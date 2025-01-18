@@ -13,15 +13,12 @@ import { getCookie } from "cookies-next";
 import Info from "@/components/RealEstates-Realators/Info";
 import Ads from "@/components/RealEstates-Realators/Ads";
 import Comments from "@/components/RealEstates-Realators/Comments";
+import { useQueryURL } from "@/hooks/useQueryURL";
 
 export default function RealatorProfile() {
   const params = useParams();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [adsUrl, setAdsUrl] = useState<string>("");
   const [commentPageNumber, setCommentpageNumber] = useState(1);
-  const [adsfilterData, setAdsFilterData] = useState<AdsFilterDataType>();
-  const [adsPageNumber, setAdsPageNumber] = useState<number>(1);
-  const access = getCookie("access");
 
   const { data: realtorData, isPending: realtorPending } = useGetRequest<{
     data: RealtorDataType;
@@ -41,31 +38,7 @@ export default function RealatorProfile() {
       staleTime: 10 * 60 * 1000,
     });
 
-  useEffect(() => {
-    const adsUrl = new URL(Api.Ad, baseURL);
-
-    adsUrl.searchParams.append("page", adsPageNumber.toString());
-    adsUrl.searchParams.append("owner", params.id.toString());
-
-    const filters = {
-      province: adsfilterData?.province?.value,
-      city: adsfilterData?.city,
-      area_from: adsfilterData?.metre?.min,
-      area_to: adsfilterData?.metre?.max,
-      deposit_from: adsfilterData?.depositPrice?.min,
-      deposit_to: adsfilterData?.depositPrice?.max,
-      rent_from: adsfilterData?.rentalPrice?.min,
-      rent_to: adsfilterData?.rentalPrice?.max,
-    };
-
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value) {
-        adsUrl.searchParams.append(key, value.toString());
-      }
-    });
-
-    setAdsUrl(adsUrl.toString());
-  }, [adsPageNumber, adsfilterData, params.id]);
+  const adsURL = useQueryURL(Api.Ad, { owner: params.id.toString() });
 
   const {
     data: adsData,
@@ -76,17 +49,10 @@ export default function RealatorProfile() {
     data: AdsDataType[];
     totalPages: number;
   }>({
-    url: adsUrl,
-    key: [
-      dataKey.GET_REALATOR_ADS,
-      JSON.stringify(adsfilterData),
-      adsPageNumber.toString(),
-    ],
+    url: adsURL,
+    key: [dataKey.GET_REALATOR_ADS, adsURL],
     enabled: true,
     staleTime: 10 * 60 * 1000,
-    headers: {
-      Authorization: `Bearer ${access}`,
-    },
   });
 
   return (
@@ -127,8 +93,6 @@ export default function RealatorProfile() {
         }}
       />
       <Ads
-        adsfilterData={adsfilterData}
-        setAdsFilterData={setAdsFilterData}
         data={adsData?.data}
         status={adsStatus}
         title={`آگهی های مشاور ${realtorData?.data.user.firstName} ${realtorData?.data.user.lastName}`}

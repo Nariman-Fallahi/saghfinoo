@@ -165,14 +165,14 @@ export default function MyAds() {
                     </p>
                   </div>
                   <div className="absolute z-10 w-full flex justify-between p-2 items-center">
-                    <div
+                    {/* <div
                       className={`${
                         item.is_confirmed ? "bg-gray-300" : "bg-red-300"
                       } opacity-70 text-xs md:text-sm lg:text-base rounded
                       flex items-center justify-center p-1 cursor-default`}
                     >
                       {item.is_confirmed ? "تایید شده‌" : "در انتظار تایید"}
-                    </div>
+                    </div> */}
                     <Button
                       isIconOnly
                       radius="full"

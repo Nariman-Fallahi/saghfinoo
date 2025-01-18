@@ -16,10 +16,10 @@ export const metadata: Metadata = {
 export default async function Realators({
   searchParams,
 }: {
-  searchParams: { city?: string | string[]; pageNumber: string };
+  searchParams: { city?: string | string[]; page: string };
 }) {
   const cities = searchParams.city || "";
-  const pageNumber = searchParams.pageNumber || "1";
+  const pageNumber = searchParams.page || "1";
   const params = new URLSearchParams();
 
   params.append("page", pageNumber);

@@ -8,7 +8,6 @@ import { useCallback, useEffect, useState } from "react";
 import { Api, dataKey, useGetRequest } from "@/ApiService";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
-import { Select, SelectItem } from "@nextui-org/select";
 import SelectionCustomMenu from "./SelectionCustomMenu";
 import { Button } from "@nextui-org/button";
 import Image from "next/image";
@@ -21,7 +20,7 @@ export type OpenCustomMenu = "rent" | "deposit" | "metre" | null;
 
 type DesktopFilterType = {
   isViewMore: boolean;
-  urlQuery: FilterDataType | undefined;
+  // urlQuery: FilterDataType | undefined;
 };
 
 export default function DesktopFilter({

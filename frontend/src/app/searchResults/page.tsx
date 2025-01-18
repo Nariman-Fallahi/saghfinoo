@@ -39,11 +39,11 @@ export default function SearchResults() {
         isOpen={isOpenFilterMobileModal}
         setIsOpen={setIsOpenFilterMobileModal}
         // queryObject={queryObject}
-        urlQuery={urlQuery}
+        // urlQuery={urlQuery}
       />
 
       <div className="mt-36 flex-col hidden md:flex">
-        <DesktopFilter isViewMore={true} urlQuery={urlQuery} />
+        <DesktopFilter isViewMore={true} />
 
         <p className="font-bold mt-4 text-lg">املاک اجاره ای</p>
 

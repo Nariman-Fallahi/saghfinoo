@@ -2,8 +2,7 @@
 import { Modal, ModalContent, ModalBody } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
 import Image from "next/image";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { SelectTitle, TextError } from "@/constant/Constants";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { CitiesType, SelectionDataType, FilterDataType } from "@/types/Type";
 import { Api, dataKey, useGetRequest } from "@/ApiService";
 import { useEffect, useState } from "react";
@@ -11,7 +10,6 @@ import Input from "./Input";
 import MoreItems from "./MoreItems";
 import { useRouter } from "next-nprogress-bar";
 import { usePathname } from "next/navigation";
-import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 import AutocompleteMobile from "./AutocompleteMobile";
 
 type MobileFilterType = {
@@ -21,7 +19,7 @@ type MobileFilterType = {
   // queryObject: {
   //   [key: string]: string | undefined;
   // };
-  urlQuery: FilterDataType | undefined;
+  // urlQuery: FilterDataType | undefined;
 };
 
 export default function MobileFilter({
@@ -29,7 +27,7 @@ export default function MobileFilter({
   isOpen,
   setIsOpen,
   // // queryObject,
-  urlQuery,
+  // urlQuery,
 }: MobileFilterType) {
   const [viewMore, setViewMore] = useState<boolean>(false);
 
@@ -172,7 +170,7 @@ export default function MobileFilter({
                     onSubmit={handleSubmit(onSubmit)}
                     className="mt-5 w-full flex gap-3 justify-between flex-wrap"
                   >
-                    <SelectTitle text="انتخاب شهرستان" />
+                    {/* <SelectTitle text="انتخاب شهرستان" />
                     <Controller
                       name="city"
                       control={control}
@@ -205,7 +203,19 @@ export default function MobileFilter({
                     />
                     {errors.city && (
                       <TextError text="لطفا شهرستان خود را انتخاب کنید" />
-                    )}
+                    )} */}
+                    <AutocompleteMobile
+                      label="شهرستان"
+                      control={control}
+                      name="city"
+                      isLoading={allCitiesPending}
+                      defaultItems={allCitiesData?.data.map((city, index) => ({
+                        value: city.name,
+                        id: index,
+                        key: city.name,
+                      }))}
+                      placeholder="شهرستان‌"
+                    />
 
                     <AutocompleteMobile
                       label="نوع ملک"

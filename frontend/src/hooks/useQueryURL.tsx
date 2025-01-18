@@ -1,10 +1,13 @@
 import { baseURL } from "@/ApiService";
 import { useSearchParams } from "next/navigation";
 
-export const useQueryURL = (apiURL: string) => {
+export const useQueryURL = (
+  apiURL: string,
+  customQueries?: { [key: string]: string }
+) => {
   const searchParams = useSearchParams();
 
-  const queryObject: { [key: string]: string | undefined } = {};
+  const queryObject: { [key: string]: string } = { ...customQueries };
 
   searchParams.forEach((value, key) => {
     queryObject[key] = value;
