@@ -1,4 +1,4 @@
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 
 export default function useAddQuery() {

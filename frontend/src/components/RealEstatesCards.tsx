@@ -14,7 +14,10 @@ export default function RealEstatesCards({ data }: RealEstatesCardsType) {
 
   return (
     <>
-      <div className="w-full flex flex-wrap p-3 justify-between md:p-5">
+      <div
+        className="w-full grid grid-cols-2 md:grid-cols-3 p-3 gap-6 justify-between
+       md:p-5"
+      >
         {data.map((item, index) => (
           <div
             onClick={() =>
@@ -22,8 +25,8 @@ export default function RealEstatesCards({ data }: RealEstatesCardsType) {
                 ? router.push(`/realEstateProfile/${item.username}`)
                 : null
             }
-            className="w-[48%] shadow rounded-2xl flex flex-col p-2 items-center
-                 text-xs md:w-[30%] border border-[#E1E1E1] mt-6"
+            className="shadow rounded-2xl flex flex-col p-2 items-center
+                 text-xs border border-[#E1E1E1] mt-6"
             key={index}
           >
             <Image

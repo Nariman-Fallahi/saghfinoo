@@ -1,3 +1,4 @@
+import useAddQuery from "@/hooks/useAddQuery";
 import S_Comments from "@/skeleton/S_Comments";
 import { useRouter } from "next-nprogress-bar";
 import { usePathname } from "next/navigation";
@@ -28,6 +29,7 @@ export default function CustomSwiper({
   const [pageNumber, setPageNumber] = useState<number>(1);
   const swiperRef: MutableRefObject<any> = useRef(null);
   const [isSkeleton, setIsSkeleton] = useState(true);
+  const { setQuery } = useAddQuery();
 
   const router = useRouter();
   const pathname = usePathname();
@@ -38,9 +40,7 @@ export default function CustomSwiper({
 
       swiperInstance.on("reachEnd", () => {
         setPageNumber((prevState) => prevState + 1);
-        router.push(`${pathname}?swiperPageNumber=${pageNumber}`, {
-          scroll: false,
-        });
+        setQuery("swiperPageNumber", pageNumber.toString());
         setIsSkeleton(false);
       });
 
@@ -48,7 +48,7 @@ export default function CustomSwiper({
         swiperInstance.off("reachEnd");
       };
     }
-  }, [pageNumber, pathname, router, setPageNumber]);
+  }, [pageNumber, pathname, router, setPageNumber, setQuery]);
 
   useEffect(() => {
     if (pageNumber > 1 && dataLength < 1) {
