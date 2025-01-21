@@ -3,7 +3,7 @@ import { Api, baseURL, dataKey } from "@/ApiService";
 import { useGetRequest } from "@/ApiService";
 import { useParams } from "next/navigation";
 import { AdsDataType, AdsFilterDataType, RealtorDataType } from "@/types/Type";
-import { useDisclosure } from "@nextui-org/modal";
+import { useDisclosure } from "@heroui/modal";
 import ModalREA from "@/components/RealEstates-Realators/modal/ModalREA";
 import { CommentType } from "@/types/Type";
 import { useEffect, useState } from "react";

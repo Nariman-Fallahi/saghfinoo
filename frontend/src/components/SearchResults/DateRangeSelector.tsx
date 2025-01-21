@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Select, SelectItem } from "@nextui-org/select";
+import { Select, SelectItem } from "@heroui/select";
 
 export default function DateRangeSelector() {
   const options = [

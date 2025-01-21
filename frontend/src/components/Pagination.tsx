@@ -1,5 +1,5 @@
 "use client";
-import { Pagination } from "@nextui-org/pagination";
+import { Pagination } from "@heroui/pagination";
 import { isMobile } from "@/constant/Constants";
 import { useRouter } from "next-nprogress-bar";
 import { usePathname } from "next/navigation";

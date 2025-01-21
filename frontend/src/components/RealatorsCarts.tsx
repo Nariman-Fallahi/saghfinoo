@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import { allRealtorDataType } from "@/types/Type";
 import "react-loading-skeleton/dist/skeleton.css";
 import { isMobile } from "@/constant/Constants";

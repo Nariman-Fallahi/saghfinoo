@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import { allrealEstateOfficesDataType } from "@/types/Type";
 import { useRouter } from "next-nprogress-bar";
 import { isMobile } from "@/constant/Constants";

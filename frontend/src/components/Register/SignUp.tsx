@@ -1,9 +1,9 @@
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import { useEffect } from "react";
 import { ErrorNotification } from "@/notification/Error";
 import { Success } from "@/notification/Success";
 import { useModalStore } from "@/store/Register";
-import { Spinner } from "@nextui-org/spinner";
+import { Spinner } from "@heroui/spinner";
 import { useRegisterStatus } from "@/store/Register";
 import { RegisterStatusValue } from "@/constant/Constants";
 import { setCookie } from "cookies-next";
@@ -75,7 +75,7 @@ export default function SignUp({ token, phoneNumber }: SignUpType) {
   }, [isSuccess, data, setRegisterStatus, setOpen, router]);
 
   return (
-    <form
+    (<form
       onSubmit={handleSubmit(onSubmit)}
       className="w-full flex flex-col items-center"
     >
@@ -84,7 +84,6 @@ export default function SignUp({ token, phoneNumber }: SignUpType) {
         <br />
         برای ثبت نام اطلاعات زیر را کامل کنید.
       </p>
-
       <div className="flex flex-col w-full">
         <InputRegister
           name="fristName"
@@ -157,7 +156,6 @@ export default function SignUp({ token, phoneNumber }: SignUpType) {
           error={errors.password?.message}
         />
       </div>
-
       <div className="w-full flex justify-center">
         <Button
           type="submit"
@@ -169,6 +167,6 @@ export default function SignUp({ token, phoneNumber }: SignUpType) {
           {isPending ? "" : "ثبت اطلاعات"}
         </Button>
       </div>
-    </form>
+    </form>)
   );
 }

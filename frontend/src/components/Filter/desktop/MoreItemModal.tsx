@@ -1,5 +1,5 @@
-import { Button } from "@nextui-org/button";
-import { Modal, ModalBody, ModalContent, ModalFooter } from "@nextui-org/modal";
+import { Button } from "@heroui/button";
+import { Modal, ModalBody, ModalContent, ModalFooter } from "@heroui/modal";
 import MoreItems from "../MoreItems";
 import {
   Control,

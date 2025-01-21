@@ -1,6 +1,6 @@
 import { SelectTitle } from "@/constant/Constants";
 import { SelectionDataType } from "@/types/Type";
-import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
+import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
 
 type AutocompleteMobileType<T extends FieldValues> = {

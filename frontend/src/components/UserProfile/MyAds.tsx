@@ -1,7 +1,7 @@
 "use client";
 import Title from "./Title";
 import Image from "next/image";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import NoData from "./NoData";
 import DeleteAllAdsBtn from "./DeleteAllAdsBtn";
 import { Api, dataKey } from "@/ApiService";
@@ -15,7 +15,7 @@ import { getCookie } from "cookies-next";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { isMobile } from "@/constant/Constants";
-import { Spinner } from "@nextui-org/spinner";
+import { Spinner } from "@heroui/spinner";
 
 //TODO EDIT
 

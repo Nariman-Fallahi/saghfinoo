@@ -1,5 +1,5 @@
 "use client";
-import { useDisclosure } from "@nextui-org/modal";
+import { useDisclosure } from "@heroui/modal";
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { baseURL, dataKey, useGetRequest } from "@/ApiService";

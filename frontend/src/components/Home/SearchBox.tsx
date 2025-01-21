@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Api, dataKey, useGetRequest } from "@/ApiService";
 import { CitiesType } from "@/types/Type";
-import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
+import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
 import { useRouter } from "next-nprogress-bar";
 
 type TabSearchBoxType = {

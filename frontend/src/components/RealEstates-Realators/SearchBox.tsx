@@ -6,7 +6,7 @@ import { CitiesType } from "@/types/Type";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next-nprogress-bar";
-import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
+import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
 
 type SearchBoxType = {
   title?: string;

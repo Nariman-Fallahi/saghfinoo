@@ -1,6 +1,6 @@
 "use client";
 import SearchBox from "../RealEstates-Realators/SearchBox";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import Image from "next/image";
 import DateRangeSelector from "./DateRangeSelector";
 import NumberItemsFound from "./NumberItemsFound";

@@ -7,11 +7,11 @@ import {
 import { useEffect, useState } from "react";
 import { Api, dataKey, useGetRequest } from "@/ApiService";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
+import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
 import SelectionCustomMenu from "./SelectionCustomMenu";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import Image from "next/image";
-import { useDisclosure } from "@nextui-org/modal";
+import { useDisclosure } from "@heroui/modal";
 import MoreItemModal from "./MoreItemModal";
 import { useRouter } from "next-nprogress-bar";
 import { usePathname } from "next/navigation";

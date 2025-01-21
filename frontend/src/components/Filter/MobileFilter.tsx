@@ -1,6 +1,6 @@
 "use client";
-import { Modal, ModalContent, ModalBody } from "@nextui-org/modal";
-import { Button } from "@nextui-org/button";
+import { Modal, ModalContent, ModalBody } from "@heroui/modal";
+import { Button } from "@heroui/button";
 import Image from "next/image";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { CitiesType, SelectionDataType, FilterDataType } from "@/types/Type";

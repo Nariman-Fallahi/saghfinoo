@@ -4,7 +4,7 @@ import UserIcon from "./UserIcon";
 import { Api, dataKey, useGetRequest, usePostRequest } from "@/ApiService";
 import CustomButton from "@/components/CustomButton";
 import { CookieValueTypes } from "cookies-next";
-import { Spinner } from "@nextui-org/spinner";
+import { Spinner } from "@heroui/spinner";
 import { TextError } from "@/constant/Constants";
 import { Success } from "@/notification/Success";
 import { ErrorNotification } from "@/notification/Error";
