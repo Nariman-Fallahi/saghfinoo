@@ -20,6 +20,8 @@ type SliderType = {
   totalPages: number;
 };
 
+//TODO Edit Component
+
 export default function Slider({ pageName, data, totalPages }: SliderType) {
   const swiperRef: MutableRefObject<any> = useRef(null);
   const router = useRouter();
@@ -49,7 +51,7 @@ export default function Slider({ pageName, data, totalPages }: SliderType) {
         swiperInstance.off("reachEnd");
       };
     }
-  }, []);
+  }, [pageName, pathName, router, totalPages]);
 
   // useEffect(() => {
   //     if (status === "success" && data) {

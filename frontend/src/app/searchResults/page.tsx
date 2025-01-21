@@ -1,7 +1,5 @@
 "use client";
 import { useState } from "react";
-import { numberToPersian } from "@/constant/Constants";
-
 import SearchAndFilter from "@/components/SearchResults/SearchAndFilter";
 import MobileFilter from "@/components/Filter/MobileFilter";
 import DesktopFilter from "@/components/Filter/desktop/DesktopFilter";
@@ -15,15 +13,16 @@ import NumberItemsFound from "@/components/SearchResults/NumberItemsFound";
 export default function SearchResults() {
   const [isOpenFilterMobileModal, setIsOpenFilterMobileModal] =
     useState<boolean>(false);
-  const [urlQuery, setUrlQuery] = useState<FilterDataType>();
-  const adsURL = useQueryURL(Api.Ad);
+  // const [urlQuery, setUrlQuery] = useState<FilterDataType>();
+  
+  // const adsURL = useQueryURL(Api.Ad);
 
   const { data, isFetching, isPending, refetch } = useGetRequest<{
     data: AdsDataType[];
     totalPages: number;
   }>({
-    url: adsURL,
-    key: [dataKey.SEARCH_RESULTS, adsURL],
+    url: '',
+    key: [dataKey.SEARCH_RESULTS, ],
     enabled: true,
     staleTime: 10 * 60 * 1000,
   });

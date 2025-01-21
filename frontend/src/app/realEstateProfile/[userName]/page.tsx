@@ -1,7 +1,7 @@
 "use client";
 import { useDisclosure } from "@nextui-org/modal";
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { baseURL, dataKey, useGetRequest } from "@/ApiService";
 import { Api } from "@/ApiService";
 import {
@@ -24,8 +24,9 @@ import { useQueryURL } from "@/hooks/useQueryURL";
 export default function RealEstateProfilePage() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const params = useParams();
-  const [commentPageNumber, setCommentPageNumber] = useState<number>(1);
   const access = getCookie("access");
+  const searchParams = useSearchParams();
+  const swiperPageNumber = searchParams.get("swiperPageNumber") || "1";
 
   const {
     data: realEstateData,
@@ -63,8 +64,12 @@ export default function RealEstateProfilePage() {
   const { data: commentData, status: commentStatus } = useGetRequest<{
     data: CommentType[];
   }>({
-    url: `${Api.Reos}/${params.userName}/comments?page=${commentPageNumber}`,
-    key: [dataKey.GET_REAL_ESTATE_COMMENTS, params.userName.toString()],
+    url: `${Api.Reos}/${params.userName}/comments?page=${swiperPageNumber}`,
+    key: [
+      dataKey.GET_REAL_ESTATE_COMMENTS,
+      params.userName.toString(),
+      swiperPageNumber,
+    ],
     enabled: true,
     staleTime: 10 * 60 * 1000,
   });
@@ -118,12 +123,7 @@ export default function RealEstateProfilePage() {
         refetch={adsRefetch}
         isFetching={adsFetching}
       />
-      <Comments
-        pageNumber={commentPageNumber}
-        setPageNumber={setCommentPageNumber}
-        data={commentData?.data}
-        status={commentStatus}
-      />
+      <Comments data={commentData?.data} status={commentStatus} />
     </>
   );
 }

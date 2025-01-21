@@ -8,6 +8,7 @@ import ModalREA from "@/components/RealEstates-Realators/modal/ModalREA";
 import { CommentType } from "@/types/Type";
 import { useEffect, useState } from "react";
 import { getCookie } from "cookies-next";
+import { useSearchParams } from "next/navigation";
 
 // Components
 import Info from "@/components/RealEstates-Realators/Info";
@@ -18,7 +19,8 @@ import { useQueryURL } from "@/hooks/useQueryURL";
 export default function RealatorProfile() {
   const params = useParams();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [commentPageNumber, setCommentpageNumber] = useState(1);
+  const searchParams = useSearchParams();
+  const swiperPageNumber = searchParams.get("swiperPageNumber") || "1";
 
   const { data: realtorData, isPending: realtorPending } = useGetRequest<{
     data: RealtorDataType;
@@ -32,8 +34,8 @@ export default function RealatorProfile() {
 
   const { data: realtorCommentsData, status: realtorCommentsStatus } =
     useGetRequest<{ data: CommentType[] }>({
-      url: `${Api.realtors}/${params.id}/comments?page=${commentPageNumber}`,
-      key: [dataKey.GET_REALTOR_COMMENTS, commentPageNumber.toString()],
+      url: `${Api.realtors}/${params.id}/comments?page=${swiperPageNumber}`,
+      key: [dataKey.GET_REALTOR_COMMENTS, swiperPageNumber],
       enabled: true,
       staleTime: 10 * 60 * 1000,
     });
@@ -103,8 +105,6 @@ export default function RealatorProfile() {
       <Comments
         data={realtorCommentsData?.data}
         status={realtorCommentsStatus}
-        pageNumber={commentPageNumber}
-        setPageNumber={setCommentpageNumber}
       />
     </>
   );

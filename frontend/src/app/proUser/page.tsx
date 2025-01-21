@@ -25,17 +25,13 @@ export default async function ProUserHomePage() {
     { data: allrealEstateOfficesDataType[] },
     { data: allRealtorDataType[] }
   ] = await Promise.all([
-    fetch(
-      `${baseURL}${Api.Ad}/suggested-searchs`
-    ).then((response) => response.json()),
-
-    fetch(`${baseURL}${Api.Reos}/top`).then(
-      (response) => response.json()
+    fetch(`${baseURL}${Api.Ad}suggested-searchs`).then((response) =>
+      response.json()
     ),
 
-    fetch(`${baseURL}${Api.realtors}/top`).then(
-      (response) => response.json()
-    ),
+    fetch(`${baseURL}${Api.Reos}/top`).then((response) => response.json()),
+
+    fetch(`${baseURL}${Api.realtors}/top`).then((response) => response.json()),
   ]);
 
   return (

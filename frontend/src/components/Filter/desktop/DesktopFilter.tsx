@@ -4,7 +4,7 @@ import {
   ProvincesType,
   SelectionDataType,
 } from "@/types/Type";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Api, dataKey, useGetRequest } from "@/ApiService";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
@@ -14,7 +14,8 @@ import Image from "next/image";
 import { useDisclosure } from "@nextui-org/modal";
 import MoreItemModal from "./MoreItemModal";
 import { useRouter } from "next-nprogress-bar";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
+import useAddQuery from "@/hooks/useAddQuery";
 
 export type OpenCustomMenu = "rent" | "deposit" | "metre" | null;
 
@@ -25,25 +26,16 @@ type DesktopFilterType = {
 
 export default function DesktopFilter({
   isViewMore,
-  // urlQuery,
-}: DesktopFilterType) {
+}: // urlQuery,
+DesktopFilterType) {
   const [isTablet, setIsTablet] = useState<boolean>();
   const [openCustomMenu, setOpenCustomMenu] = useState<OpenCustomMenu>(null);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
+  const { setQuery } = useAddQuery();
+
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set(name, value);
-
-      return params.toString();
-    },
-    [searchParams]
-  );
 
   useEffect(() => {
     setIsTablet(
@@ -128,13 +120,7 @@ export default function DesktopFilter({
         radius="sm"
         defaultItems={allCitiesData?.data || []}
         size={isTablet ? "sm" : "md"}
-        onSelectionChange={(city) =>
-          router.push(
-            pathname +
-              "?" +
-              createQueryString("city", city ? city.toString() : "")
-          )
-        }
+        onSelectionChange={(city) => setQuery("city", city?.toString())}
       >
         {(city) => (
           <AutocompleteItem key={city.name}>{city.name}</AutocompleteItem>
@@ -151,11 +137,7 @@ export default function DesktopFilter({
         defaultItems={propertyTypeData?.data || []}
         size={isTablet ? "sm" : "md"}
         onSelectionChange={(value) =>
-          router.push(
-            pathname +
-              "?" +
-              createQueryString("propertyType", value ? value.toString() : "")
-          )
+          setQuery("propertyType", value?.toString())
         }
       >
         {(item) => (
