@@ -40,7 +40,7 @@ export default function RealatorProfile() {
       staleTime: 10 * 60 * 1000,
     });
 
-  const adsURL = useQueryURL(Api.Ad, { owner: params.id.toString() });
+  const adsURL = useQueryURL(`${Api.Ad}/`, { owner: params.id.toString() });
 
   const {
     data: adsData,

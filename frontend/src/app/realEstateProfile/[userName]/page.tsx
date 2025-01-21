@@ -39,7 +39,7 @@ export default function RealEstateProfilePage() {
     staleTime: 10 * 60 * 1000,
   });
 
-  const adsURL = useQueryURL(Api.Ad, {
+  const adsURL = useQueryURL(`${Api.Ad}/`, {
     reo_username: params.userName.toString(),
   });
 

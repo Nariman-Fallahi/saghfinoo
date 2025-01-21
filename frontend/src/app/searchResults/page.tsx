@@ -14,15 +14,15 @@ export default function SearchResults() {
   const [isOpenFilterMobileModal, setIsOpenFilterMobileModal] =
     useState<boolean>(false);
   // const [urlQuery, setUrlQuery] = useState<FilterDataType>();
-  
-  // const adsURL = useQueryURL(Api.Ad);
+
+  const adsURL = useQueryURL(`${Api.Ad}/`);
 
   const { data, isFetching, isPending, refetch } = useGetRequest<{
     data: AdsDataType[];
     totalPages: number;
   }>({
-    url: '',
-    key: [dataKey.SEARCH_RESULTS, ],
+    url: adsURL,
+    key: [dataKey.SEARCH_RESULTS, adsURL],
     enabled: true,
     staleTime: 10 * 60 * 1000,
   });

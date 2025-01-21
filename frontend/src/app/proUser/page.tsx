@@ -25,7 +25,7 @@ export default async function ProUserHomePage() {
     { data: allrealEstateOfficesDataType[] },
     { data: allRealtorDataType[] }
   ] = await Promise.all([
-    fetch(`${baseURL}${Api.Ad}suggested-searchs`).then((response) =>
+    fetch(`${baseURL}${Api.Ad}/suggested-searchs`).then((response) =>
       response.json()
     ),
 

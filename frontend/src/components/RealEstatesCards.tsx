@@ -14,10 +14,7 @@ export default function RealEstatesCards({ data }: RealEstatesCardsType) {
 
   return (
     <>
-      <div
-        className="w-full grid grid-cols-2 md:grid-cols-3 p-3 gap-6 justify-between
-       md:p-5"
-      >
+      <div className="w-full grid grid-cols-2 md:grid-cols-3 p-3 gap-6 md:gap-8 md:p-5">
         {data.map((item, index) => (
           <div
             onClick={() =>

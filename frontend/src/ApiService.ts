@@ -24,7 +24,7 @@ export enum Api {
   GetAllReportReasonsRealtors = "/api/v1/realtors/report/reasons",
 
   // ads Api
-  Ad = "/api/v1/ads/",
+  Ad = "/api/v1/ads",
   GetSelectionData = "/api/v1/ads/choices",
   DeleteAllMyAds = "/api/v1/ads/self-all",
   GetAllMyAds = "/api/v1/ads/self",

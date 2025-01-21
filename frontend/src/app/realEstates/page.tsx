@@ -18,23 +18,9 @@ export default async function RealEstates({
 }: {
   searchParams: { city?: string | string[]; page: string };
 }) {
-  const cities = searchParams.city || "";
   const pageNumber = searchParams.page || "1";
-  const params = new URLSearchParams();
 
-  params.append("page", pageNumber);
-
-  if (Array.isArray(cities)) {
-    cities?.forEach((city) => {
-      params.append("city", city);
-    });
-  } else {
-    params.append("city", cities);
-  }
-
-  let data = await fetch(
-    `${baseURL}${Api.Reos}/?${params}`
-  );
+  let data = await fetch(`${baseURL}${Api.Reos}/?${pageNumber}`);
 
   let realEstateData: {
     data: allrealEstateOfficesDataType[];
@@ -48,10 +34,10 @@ export default async function RealEstates({
 
   return (
     <>
-     <div className="mt-[82px] md:mt-[180px] md:1/3">
-     <SearchBox title="املاک و مستغلات" />
-    </div>
-    
+      <div className="mt-[82px] md:mt-[180px] md:1/3">
+        <SearchBox title="املاک و مستغلات" />
+      </div>
+
       {realEstateData.data &&
         data.status === 200 &&
         realEstateData.data.length >= 1 && (

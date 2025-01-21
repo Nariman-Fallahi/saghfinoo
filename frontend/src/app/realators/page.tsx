@@ -18,21 +18,9 @@ export default async function Realators({
 }: {
   searchParams: { city?: string | string[]; page: string };
 }) {
-  const cities = searchParams.city || "";
   const pageNumber = searchParams.page || "1";
-  const params = new URLSearchParams();
 
-  params.append("page", pageNumber);
-
-  if (Array.isArray(cities)) {
-    cities?.forEach((city) => {
-      params.append("city", city);
-    });
-  } else {
-    params.append("city", cities);
-  }
-
-  let data = await fetch(`${baseURL}${Api.realtors}/?${params}`);
+  let data = await fetch(`${baseURL}${Api.realtors}/?page=${pageNumber}`);
 
   let realatorsData: {
     data: allRealtorDataType[];
@@ -43,6 +31,7 @@ export default async function Realators({
   if (!data.ok) {
     return <ErrNoData />;
   }
+
   return (
     <>
       <div className="mt-[82px] md:mt-[180px]">

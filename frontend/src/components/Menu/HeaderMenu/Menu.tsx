@@ -35,7 +35,7 @@ export default function Menu() {
     if (access) {
       refetch();
     }
-  }, [access]);
+  }, [access, refetch]);
 
   const isLogin: boolean = !!access && !!data?.data && status === "success";
 
@@ -43,12 +43,12 @@ export default function Menu() {
     {
       title: "اجاره",
       icon: "/icons/house.svg",
-      link: "",
+      link: "/searchResults?type_of_transaction_name=اجاره",
     },
     {
       title: "خرید",
       icon: "/icons/key.svg",
-      link: "",
+      link: "/searchResults?type_of_transaction_name=خرید",
     },
     {
       title: "املاک و مستغلات",
