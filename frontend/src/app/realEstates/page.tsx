@@ -3,6 +3,7 @@ import { allrealEstateOfficesDataType } from "@/types/Type";
 import ErrNoData from "@/components/ErrNoData";
 import SearchDataNotFound from "@/components/RealEstates-Realators/SearchDataNotFound";
 import { Metadata } from "next";
+import { useQueryURL } from "@/hooks/useQueryURL";
 
 // Components
 import SearchBox from "@/components/RealEstates-Realators/SearchBox";
@@ -16,11 +17,21 @@ export const metadata: Metadata = {
 export default async function RealEstates({
   searchParams,
 }: {
-  searchParams: { city?: string | string[]; page: string };
+  searchParams: { city?: string; page: string };
 }) {
-  const pageNumber = searchParams.page || "1";
+  const { page } = searchParams || "1";
+  const { city } = searchParams;
 
-  let data = await fetch(`${baseURL}${Api.Reos}/?${pageNumber}`);
+  const params = new URLSearchParams();
+  params.append("page", page);
+
+  if (city == "null" || !city) {
+    params.delete("city");
+  } else {
+    params.append("city", city);
+  }
+
+  let data = await fetch(`${baseURL}${Api.Reos}/?${params}`);
 
   let realEstateData: {
     data: allrealEstateOfficesDataType[];

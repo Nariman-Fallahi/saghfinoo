@@ -25,7 +25,7 @@ export default function SearchBox({ title, className }: SearchBoxType) {
   });
 
   const handleSelectChange = (city: any) => {
-    router.push(`${pathname}?city${city}`);
+    router.push(`${pathname}?city=${city}`);
   };
 
   return (

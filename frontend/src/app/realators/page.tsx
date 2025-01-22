@@ -16,11 +16,21 @@ export const metadata: Metadata = {
 export default async function Realators({
   searchParams,
 }: {
-  searchParams: { city?: string | string[]; page: string };
+  searchParams: { city?: string; page: string };
 }) {
-  const pageNumber = searchParams.page || "1";
+  const { page } = searchParams || "1";
+  const { city } = searchParams;
 
-  let data = await fetch(`${baseURL}${Api.realtors}/?page=${pageNumber}`);
+  const params = new URLSearchParams();
+  params.append("page", page);
+
+  if (city == "null" || !city) {
+    params.delete("city");
+  } else {
+    params.append("city", city);
+  }
+
+  let data = await fetch(`${baseURL}${Api.realtors}/?${params}`);
 
   let realatorsData: {
     data: allRealtorDataType[];
