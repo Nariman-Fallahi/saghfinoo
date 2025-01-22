@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import SearchAndFilter from "@/components/SearchResults/SearchAndFilter";
 import MobileFilter from "@/components/Filter/MobileFilter";
 import DesktopFilter from "@/components/Filter/desktop/DesktopFilter";
@@ -28,37 +28,39 @@ export default function SearchResults() {
   });
 
   return (
-    <div className="p-4">
-      <SearchAndFilter
-        setOpenModal={setIsOpenFilterMobileModal}
-        numberItemsFound={data?.data ? data.data.length : 0}
-      />
-      <MobileFilter
-        isViewMore={true}
-        isOpen={isOpenFilterMobileModal}
-        setIsOpen={setIsOpenFilterMobileModal}
-        // queryObject={queryObject}
-        // urlQuery={urlQuery}
-      />
+    <Suspense>
+      <div className="p-4">
+        <SearchAndFilter
+          setOpenModal={setIsOpenFilterMobileModal}
+          numberItemsFound={data?.data ? data.data.length : 0}
+        />
+        <MobileFilter
+          isViewMore={true}
+          isOpen={isOpenFilterMobileModal}
+          setIsOpen={setIsOpenFilterMobileModal}
+          // queryObject={queryObject}
+          // urlQuery={urlQuery}
+        />
 
-      <div className="mt-36 flex-col hidden md:flex">
-        <DesktopFilter isViewMore={true} />
+        <div className="mt-36 flex-col hidden md:flex">
+          <DesktopFilter isViewMore={true} />
 
-        <p className="font-bold mt-4 text-lg">املاک اجاره ای</p>
+          <p className="font-bold mt-4 text-lg">املاک اجاره ای</p>
 
-        <div className="flex justify-between items-center">
-          <NumberItemsFound number={200} />
+          <div className="flex justify-between items-center">
+            <NumberItemsFound number={200} />
 
-          <DateRangeSelector />
+            <DateRangeSelector />
+          </div>
         </div>
-      </div>
 
-      <AdsCart
-        data={data?.data}
-        isFetching={isFetching}
-        isloading={isPending}
-        refetch={refetch}
-      />
-    </div>
+        <AdsCart
+          data={data?.data}
+          isFetching={isFetching}
+          isloading={isPending}
+          refetch={refetch}
+        />
+      </div>
+    </Suspense>
   );
 }

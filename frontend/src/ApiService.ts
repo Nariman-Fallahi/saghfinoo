@@ -10,7 +10,6 @@ export enum Api {
   CompleteSignup = "/api/v1/users/complete-signup",
   ChangePassword = "/api/v1/users/change-password",
   EditUserProfile = "/api/v1/users/edit-user",
-  Refresh = "/api/v1/users/token/refresh",
   GetUserInfo = "/api/v1/users/user-info",
   UploadProfileImage = "/api/v1/users/upload-profile-image",
 
