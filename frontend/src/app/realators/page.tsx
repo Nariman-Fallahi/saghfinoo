@@ -38,6 +38,9 @@ export default async function Realators({
     status: number;
   } = await data.json();
 
+  console.log(realatorsData);
+  console.log(`${baseURL}${Api.realtors}/?${params}`);
+  
   if (!data.ok) {
     return <ErrNoData />;
   }
