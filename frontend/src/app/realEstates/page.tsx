@@ -3,7 +3,6 @@ import { allrealEstateOfficesDataType } from "@/types/Type";
 import ErrNoData from "@/components/ErrNoData";
 import SearchDataNotFound from "@/components/RealEstates-Realators/SearchDataNotFound";
 import { Metadata } from "next";
-import { useQueryURL } from "@/hooks/useQueryURL";
 
 // Components
 import SearchBox from "@/components/RealEstates-Realators/SearchBox";
@@ -19,7 +18,7 @@ export default async function RealEstates({
 }: {
   searchParams: { city?: string; page: string };
 }) {
-  const { page } = searchParams || "1";
+  const page = searchParams.page || "1";
   const { city } = searchParams;
 
   const params = new URLSearchParams();
@@ -38,6 +37,8 @@ export default async function RealEstates({
     status: number;
     total_pages: number;
   } = await data.json();
+
+  console.log(realEstateData);
 
   if (!data.ok) {
     return <ErrNoData />;

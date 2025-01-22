@@ -18,7 +18,7 @@ export default async function Realators({
 }: {
   searchParams: { city?: string; page: string };
 }) {
-  const { page } = searchParams || "1";
+  const page = searchParams.page || "1";
   const { city } = searchParams;
 
   const params = new URLSearchParams();
