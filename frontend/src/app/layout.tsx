@@ -7,6 +7,7 @@ import ReactQueryProvider from "@/components/ReactQueryProvider";
 import Menu from "@/components/Menu/HeaderMenu/Menu";
 import FooterMenu from "@/components/Menu/FooterMenu/FooterMenu";
 import { HeroUIProvider } from "@heroui/system";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const Shabnam = localFont({ src: "../../public/fonts/Shabnam.ttf" });
 
@@ -34,6 +35,7 @@ export default function RootLayout({
           <FooterMenu />
         </ReactQueryProvider>
         <ToastContainer rtl />
+        <SpeedInsights />
       </body>
     </html>
   );
