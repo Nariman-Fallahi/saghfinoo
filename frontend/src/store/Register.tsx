@@ -1,4 +1,4 @@
-import create from "zustand";
+import {create} from "zustand";
 import { RegisterStatusValue } from "../constant/Constants";
 
 interface ModalState {

@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import { allRealtorDataType } from "@/types/Type";
 import "react-loading-skeleton/dist/skeleton.css";
 import { isMobile } from "@/constant/Constants";
@@ -15,15 +15,15 @@ export default function RealatorsCarts({ data }: RealatorsCartsType) {
 
   return (
     <>
-      <div className="w-full flex flex-wrap p-3 justify-between md:p-5">
+      <div className="w-full grid grid-cols-2 md:grid-cols-3 p-3 gap-6 md:gap-8 md:p-5">
         {data?.map((item) => (
           <div
             key={item.id}
             onClick={() =>
               isMobile ? router.push(`/realatorProfile/${item.id}`) : null
             }
-            className="w-[45%] shadow rounded-2xl flex flex-col p-2 items-center text-xs
-                md:w-[30%] border border-[#E1E1E1] mt-6"
+            className="shadow rounded-2xl flex flex-col p-2 items-center text-xs
+            border border-[#E1E1E1] mt-6"
           >
             <Image
               width={80}

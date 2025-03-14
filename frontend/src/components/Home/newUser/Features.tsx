@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import { FeaturesDataNewUserHome } from "@/constant/Constants";
 import { Title } from "@/constant/Constants";
 

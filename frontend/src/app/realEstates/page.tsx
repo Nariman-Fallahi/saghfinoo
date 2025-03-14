@@ -2,12 +2,12 @@ import { Api, baseURL } from "@/ApiService";
 import { allrealEstateOfficesDataType } from "@/types/Type";
 import ErrNoData from "@/components/ErrNoData";
 import SearchDataNotFound from "@/components/RealEstates-Realators/SearchDataNotFound";
+import { Metadata } from "next";
 
 // Components
 import SearchBox from "@/components/RealEstates-Realators/SearchBox";
 import RealEstatesCards from "@/components/RealEstatesCards";
 import PaginationComponent from "@/components/Pagination";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "املاک و مستغلات",
@@ -16,25 +16,21 @@ export const metadata: Metadata = {
 export default async function RealEstates({
   searchParams,
 }: {
-  searchParams: { city?: string | string[]; pageNumber: string };
+  searchParams: { city?: string; page: string };
 }) {
-  const cities = searchParams.city || "";
-  const pageNumber = searchParams.pageNumber || "1";
+  const page = searchParams.page || "1";
+  const { city } = searchParams;
+
   const params = new URLSearchParams();
+  params.append("page", page);
 
-  params.append("page", pageNumber);
-
-  if (Array.isArray(cities)) {
-    cities?.forEach((city) => {
-      params.append("city", city);
-    });
+  if (city == "null" || !city) {
+    params.delete("city");
   } else {
-    params.append("city", cities);
+    params.append("city", city);
   }
 
-  let data = await fetch(
-    `${baseURL}${Api.Reos}/?${params}`
-  );
+  let data = await fetch(`${baseURL}${Api.Reos}/?${params}`);
 
   let realEstateData: {
     data: allrealEstateOfficesDataType[];
@@ -42,16 +38,18 @@ export default async function RealEstates({
     total_pages: number;
   } = await data.json();
 
+  console.log(realEstateData);
+
   if (!data.ok) {
     return <ErrNoData />;
   }
 
   return (
     <>
-     <div className="mt-[82px] md:mt-[180px]">
-     <SearchBox title="املاک و مستغلات" />
-    </div>
-    
+      <div className="mt-[82px] md:mt-[180px] md:1/3">
+        <SearchBox title="املاک و مستغلات" />
+      </div>
+
       {realEstateData.data &&
         data.status === 200 &&
         realEstateData.data.length >= 1 && (

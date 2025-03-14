@@ -1,6 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { getCookie, setCookie } from "cookies-next";
-import { Api, baseURL } from "./ApiService";
 
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl;
@@ -10,20 +9,23 @@ export async function middleware(req: NextRequest) {
   const pathname = url.pathname;
 
   const isProtectedPath = (path: string) => {
-    const protectedPatterns = [/^\/proUser/, /^\/userProfile/];
+    const protectedPatterns = [/^\/proUser/, /^\/adPosting/, /^\/userProfile/];
 
     return protectedPatterns.some((pattern) => pattern.test(path));
   };
 
   if (access === undefined && refresh !== undefined) {
     try {
-      const response = await fetch(`${baseURL}/${Api.Refresh}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ refresh }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/users/token/refresh`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ refresh }),
+        }
+      );
       if (response.ok) {
         const data = await response.json();
         if (data.access && refresh) {

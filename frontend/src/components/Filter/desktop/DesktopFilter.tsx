@@ -4,47 +4,38 @@ import {
   ProvincesType,
   SelectionDataType,
 } from "@/types/Type";
-import { useCallback, useEffect, useState } from "react";
-import { Api, useGetRequest } from "@/ApiService";
+import { useEffect, useState } from "react";
+import { Api, dataKey, useGetRequest } from "@/ApiService";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
-import { Select, SelectItem } from "@nextui-org/select";
+import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
 import SelectionCustomMenu from "./SelectionCustomMenu";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import Image from "next/image";
-import { useDisclosure } from "@nextui-org/modal";
+import { useDisclosure } from "@heroui/modal";
 import MoreItemModal from "./MoreItemModal";
 import { useRouter } from "next-nprogress-bar";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
+import useAddQuery from "@/hooks/useAddQuery";
 
 export type OpenCustomMenu = "rent" | "deposit" | "metre" | null;
 
 type DesktopFilterType = {
   isViewMore: boolean;
-  urlQuery: FilterDataType | undefined;
+  // urlQuery: FilterDataType | undefined;
 };
 
 export default function DesktopFilter({
   isViewMore,
-  urlQuery,
-}: DesktopFilterType) {
+}: // urlQuery,
+DesktopFilterType) {
   const [isTablet, setIsTablet] = useState<boolean>();
   const [openCustomMenu, setOpenCustomMenu] = useState<OpenCustomMenu>(null);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
+  const { setQuery } = useAddQuery();
+
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set(name, value);
-
-      return params.toString();
-    },
-    [searchParams]
-  );
 
   useEffect(() => {
     setIsTablet(
@@ -61,7 +52,7 @@ export default function DesktopFilter({
     data: CitiesType[];
   }>({
     url: Api.SearchCity,
-    key: ["getAllCities"],
+    key: [dataKey.GET_ALL_CITY],
     enabled: true,
     staleTime: 10 * 60 * 10,
   });
@@ -72,7 +63,7 @@ export default function DesktopFilter({
       data: SelectionDataType[];
     }>({
       url: `${Api.GetSelectionData}?key=property_type`,
-      key: ["getPropertyType"],
+      key: [dataKey.GET_PROPERTY_TYPE],
       enabled: true,
       staleTime: 10 * 60 * 1000,
     });
@@ -86,10 +77,10 @@ export default function DesktopFilter({
     formState: { errors },
   } = useForm<FilterDataType>();
 
-  useEffect(() => {
-    reset(urlQuery);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   reset(urlQuery);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const onSubmit: SubmitHandler<FilterDataType> = (data) => {
     const filters = {
@@ -129,13 +120,7 @@ export default function DesktopFilter({
         radius="sm"
         defaultItems={allCitiesData?.data || []}
         size={isTablet ? "sm" : "md"}
-        onSelectionChange={(city) =>
-          router.push(
-            pathname +
-              "?" +
-              createQueryString("city", city ? city.toString() : "")
-          )
-        }
+        onSelectionChange={(city) => setQuery("city", city?.toString())}
       >
         {(city) => (
           <AutocompleteItem key={city.name}>{city.name}</AutocompleteItem>
@@ -148,15 +133,11 @@ export default function DesktopFilter({
         aria-label="propertyType"
         variant="bordered"
         radius="sm"
-        defaultSelectedKey={urlQuery?.propertyType}
+        // defaultSelectedKey={urlQuery?.propertyType}
         defaultItems={propertyTypeData?.data || []}
         size={isTablet ? "sm" : "md"}
         onSelectionChange={(value) =>
-          router.push(
-            pathname +
-              "?" +
-              createQueryString("propertyType", value ? value.toString() : "")
-          )
+          setQuery("propertyType", value?.toString())
         }
       >
         {(item) => (

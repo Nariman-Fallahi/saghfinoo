@@ -37,7 +37,7 @@ export default function AdFormContainer() {
   const access = getCookie("access");
 
   const { data: selectionData } = useGetRequest<{ data: SelectionDataType[] }>({
-    url: `${Api.GetSelectionData}`,
+    url: Api.GetSelectionData,
     key: [dataKey.GET_SELECTION_DATA],
     enabled: true,
     staleTime: 10 * 60 * 1000,
@@ -112,7 +112,7 @@ export default function AdFormContainer() {
 
   const { mutate: adPostinMutate, data: adPosting } =
     usePostRequest<AdPostingApi>({
-      url: Api.Ad,
+      url: `${Api.Ad}/`,
       key: "adPosting",
       headers: {
         Authorization: `Bearer ${access}`,

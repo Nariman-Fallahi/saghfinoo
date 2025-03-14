@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import "react-loading-skeleton/dist/skeleton.css";
 import S_Ads from "@/skeleton/S_Ads";
 import { AdsDataType } from "@/types/Type";
@@ -11,7 +11,7 @@ import { getCookie } from "cookies-next";
 import { ErrorNotification } from "@/notification/Error";
 import { LoginErrorText, numberToPersian } from "@/constant/Constants";
 import { Success } from "@/notification/Success";
-import { Spinner } from "@nextui-org/spinner";
+import { Spinner } from "@heroui/spinner";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 
 type AdsCartType = {

@@ -19,23 +19,19 @@ export const metadata: Metadata = {
   description: "سقفینو، سقفی برای همه",
 };
 
-export default async function Home() {
+export default async function ProUserHomePage() {
   const [suggestedSearches, topRealEstateData, topRealtorsData]: [
     { data: SuggestedSearchesDataType[] },
     { data: allrealEstateOfficesDataType[] },
     { data: allRealtorDataType[] }
   ] = await Promise.all([
-    fetch(
-      `${baseURL}${Api.Ad}/suggested-searchs`
-    ).then((response) => response.json()),
-
-    fetch(`${baseURL}${Api.Reos}/top`).then(
-      (response) => response.json()
+    fetch(`${baseURL}${Api.Ad}/suggested-searchs`).then((response) =>
+      response.json()
     ),
 
-    fetch(`${baseURL}${Api.realtors}/top`).then(
-      (response) => response.json()
-    ),
+    fetch(`${baseURL}${Api.Reos}/top`).then((response) => response.json()),
+
+    fetch(`${baseURL}${Api.realtors}/top`).then((response) => response.json()),
   ]);
 
   return (

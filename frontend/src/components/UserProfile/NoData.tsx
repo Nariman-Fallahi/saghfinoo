@@ -1,4 +1,4 @@
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import Image from "next/image";
 import { useRouter } from "next-nprogress-bar";
 // import { useSizeBtn } from "@/store/Size";
@@ -19,8 +19,6 @@ export default function NoData({
   linkBtn,
 }: NoData) {
   const router = useRouter();
-  // const { sizeBtn } = useSizeBtn();
-
   return (
     <div className="flex flex-col mt-6 w-full justify-center items-center md:mt-7">
       <Image

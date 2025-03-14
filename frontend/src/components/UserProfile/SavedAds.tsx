@@ -1,11 +1,11 @@
 "use client";
-import { Title } from "@/app/userProfile/[id]/page";
+import Title from "./Title";
 import NoData from "./NoData";
 import DeleteAllAdsBtn from "./DeleteAllAdsBtn";
 import AdsCart from "../AdsCart";
-import { usePostRequest, Api, useGetRequest } from "@/ApiService";
+import { usePostRequest, Api, useGetRequest, dataKey } from "@/ApiService";
 import { getCookie } from "cookies-next";
-import { Spinner } from "@nextui-org/spinner";
+import { Spinner } from "@heroui/spinner";
 import { useParams } from "next/navigation";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -25,7 +25,7 @@ export default function SavedAds() {
     totalPages: number;
   }>({
     url: `${Api.AdsSaved}?page=${pageNumber || 1}`,
-    key: ["getAdsSaved"],
+    key: [dataKey.GET_ADS_SAVED],
     enabled: true,
     staleTime: 10 * 60 * 1000,
     headers: {
@@ -33,10 +33,10 @@ export default function SavedAds() {
     },
   });
 
-  const { mutate: deleteAllAdsSaves, isPending: deleteAllAdsSavedPending } =
+  const { mutate: deleteAllAdsSaved, isPending: deleteAllAdsSavedPending } =
     usePostRequest({
       url: Api.AdsSaved,
-      key: "deleteAllAdsSaves",
+      key: dataKey.DELETE_ALL_ADS_SAVED,
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${access}`,
@@ -53,7 +53,7 @@ export default function SavedAds() {
         (!deleteAllAdsSavedPending ? (
           <DeleteAllAdsBtn
             onPress={() => {
-              deleteAllAdsSaves({});
+              deleteAllAdsSaved({});
             }}
           />
         ) : (
@@ -79,7 +79,7 @@ export default function SavedAds() {
           title="هنوز آگهی ذخیره نکردید !"
           description="صفحه املاک اجاره ای سقفینو را ببینید و از میان آنها آگهی های دلخواه را ذخیره کنید"
           titleBtn="املاک اجاره ای"
-          linkBtn="/" //TODO این قسمت باید تغییر کند
+          linkBtn="/searchResults?type_of_transaction_name=اجاره"
         />
       )}
     </>

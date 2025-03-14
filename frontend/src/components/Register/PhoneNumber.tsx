@@ -1,6 +1,6 @@
-import { Button } from "@nextui-org/button";
-import { Checkbox } from "@nextui-org/checkbox";
-import { Spinner } from "@nextui-org/spinner";
+import { Button } from "@heroui/button";
+import { Checkbox } from "@heroui/checkbox";
+import { Spinner } from "@heroui/spinner";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { TextError } from "@/constant/Constants";
 
@@ -35,7 +35,7 @@ export default function PhoneNumber({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-full rtl">
+    (<form onSubmit={handleSubmit(onSubmit)} className="w-full rtl">
       <input
         {...register("phoneNumber", {
           required: "لطفا شماره تلفن خود را وارد کنید",
@@ -85,6 +85,6 @@ export default function PhoneNumber({
       >
         {isPendingVerifyNumber ? "" : "ورود"}
       </Button>
-    </form>
+    </form>)
   );
 }

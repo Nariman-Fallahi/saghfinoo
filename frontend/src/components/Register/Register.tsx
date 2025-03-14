@@ -1,6 +1,6 @@
 "use client";
-import { Modal, ModalContent, ModalBody } from "@nextui-org/modal";
-import { Button } from "@nextui-org/button";
+import { Modal, ModalContent, ModalBody } from "@heroui/modal";
+import { Button } from "@heroui/button";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Otp from "./Otp";
@@ -8,7 +8,7 @@ import PhoneNumber from "./PhoneNumber";
 import { RegisterStatusValue } from "@/constant/Constants";
 import SignUp from "./SignUp";
 import { ErrorNotification } from "@/notification/Error";
-import { Spinner } from "@nextui-org/spinner";
+import { Spinner } from "@heroui/spinner";
 import { Success } from "@/notification/Success";
 import { useModalStore } from "@/store/Register";
 import { useRegisterStatus } from "@/store/Register";

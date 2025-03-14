@@ -1,4 +1,4 @@
-import { Modal, ModalContent, ModalBody } from "@nextui-org/modal";
+import { Modal, ModalContent, ModalBody } from "@heroui/modal";
 import { isMobile } from "@/constant/Constants";
 import { useActiveModalName } from "@/store/ReaModalActive";
 import { DataModalREA } from "@/types/Type";

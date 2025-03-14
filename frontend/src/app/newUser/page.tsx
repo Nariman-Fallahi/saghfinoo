@@ -15,15 +15,15 @@ export const metadata: Metadata = {
   description: "سقفینو، سقفی برای همه",
 };
 
-export default async function Home({
+export default async function NewUserHomePage({
   searchParams,
 }: {
-  searchParams: { pageNumber: string };
+  searchParams: { swiperPageNumber: string };
 }) {
-  const pageNumber = searchParams.pageNumber || "1";
+  const swiperPageNumber = searchParams.swiperPageNumber || "1";
 
   let data = await fetch(
-    `${baseURL}${Api.News}/?page=${pageNumber}&special=0`
+    `${baseURL}${Api.News}/?page=${swiperPageNumber}&special=0`
   );
 
   let newsData: {

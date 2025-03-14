@@ -1,7 +1,7 @@
 "use client";
 import { Title } from "@/constant/Constants";
 import AdsCart from "@/components/AdsCart";
-import { useGetRequest, Api } from "@/ApiService";
+import { useGetRequest, Api, dataKey } from "@/ApiService";
 import { AdsDataType } from "@/types/Type";
 import { getCookie } from "cookies-next";
 
@@ -13,7 +13,7 @@ export default function NewestHouseRent() {
     totalPages: number;
   }>({
     url: `${Api.Ad}/?page=1&type_of_transaction_name=اجاره&limit=6`,
-    key: ["getNewestHouseRentData"],
+    key: [dataKey.GET_NEWEST_HOUSE_RENT],
     enabled: true,
     staleTime: 10 * 60 * 1000,
     headers: {

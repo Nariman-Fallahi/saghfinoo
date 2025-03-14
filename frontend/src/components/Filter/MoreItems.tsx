@@ -56,7 +56,7 @@ export default function MoreItems({ control, watch }: MoreItemsType) {
       <div className="w-full flex flex-col">
         <SelectTitle text="اتاق خواب" />
         <Controller
-          name=""
+          name="numberOfBedroom"
           control={control}
           render={({ field: { onChange } }) => (
             <ButtonGroupComponent
