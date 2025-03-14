@@ -13,6 +13,7 @@ import { NewsDataType } from "@/types/Type";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { useRouter } from "next-nprogress-bar";
 import { usePathname } from "next/navigation";
+import CustomSwiper from "@/components/CustomSwiper";
 
 type LatestNewsType = {
   data: NewsDataType[];
@@ -25,28 +26,7 @@ export default function LatestNews({
   totalPages,
   status,
 }: LatestNewsType) {
-  const swiperRef: MutableRefObject<any> = useRef(null);
-  const router = useRouter();
-  const pathName = usePathname();
-
   const [completeData, setCompleteData] = useState<NewsDataType[]>([]);
-
-  useEffect(() => {
-    if (swiperRef.current) {
-      const swiperInstance = swiperRef.current.swiper;
-      let PageNumber = 1;
-
-      swiperInstance.on("reachEnd", () => {
-        if (PageNumber < totalPages) {
-          router.push(`${pathName}?pageNumber${PageNumber}`, { scroll: false });
-        }
-      });
-
-      return () => {
-        swiperInstance.off("reachEnd");
-      };
-    }
-  }, []);
 
   useEffect(() => {
     if (status === 200 && data) {
@@ -65,14 +45,16 @@ export default function LatestNews({
         <Title title="آخرین اخبار املاک را از سقفینو دنبال کنید" />
 
         <div className="w-full pr-3 mt-4 lg:mt-10">
-          <Swiper
+          <CustomSwiper
+            dataLength={data.length}
+            isPending={false}
             navigation={true}
             modules={[Navigation]}
             slidesPerView={"auto"}
             spaceBetween={20}
             loop={false}
             freeMode={true}
-            className="mySwiper w-full"
+            className="w-full"
           >
             {completeData.map((item) => {
               return (
@@ -103,7 +85,7 @@ export default function LatestNews({
                 </SwiperSlide>
               );
             })}
-          </Swiper>
+          </CustomSwiper>
         </div>
       </div>
     </>

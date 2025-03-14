@@ -1,3 +1,4 @@
+"use client";
 import { Title } from "@/constant/Constants";
 import RealEstatesCards from "@/components/RealEstatesCards";
 import { allrealEstateOfficesDataType } from "@/types/Type";

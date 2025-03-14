@@ -6,7 +6,8 @@ import { ToastContainer } from "react-toastify";
 import ReactQueryProvider from "@/components/ReactQueryProvider";
 import Menu from "@/components/Menu/HeaderMenu/Menu";
 import FooterMenu from "@/components/Menu/FooterMenu/FooterMenu";
-import { NextUIProvider } from "@nextui-org/system";
+import { HeroUIProvider } from "@heroui/system";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const Shabnam = localFont({ src: "../../public/fonts/Shabnam.ttf" });
 
@@ -28,12 +29,13 @@ export default function RootLayout({
       <body className={Shabnam.className}>
         <ReactQueryProvider>
           <Menu />
-          <NextUIProvider>
+          <HeroUIProvider>
             <Providers>{children}</Providers>
-          </NextUIProvider>
+          </HeroUIProvider>
           <FooterMenu />
         </ReactQueryProvider>
         <ToastContainer rtl />
+        <SpeedInsights />
       </body>
     </html>
   );

@@ -16,20 +16,18 @@ export const metadata: Metadata = {
 export default async function Realators({
   searchParams,
 }: {
-  searchParams: { city?: string | string[]; pageNumber: string };
+  searchParams: { city?: string; page: string };
 }) {
-  const cities = searchParams.city || "";
-  const pageNumber = searchParams.pageNumber || "1";
+  const page = searchParams.page || "1";
+  const { city } = searchParams;
+
   const params = new URLSearchParams();
+  params.append("page", page);
 
-  params.append("page", pageNumber);
-
-  if (Array.isArray(cities)) {
-    cities?.forEach((city) => {
-      params.append("city", city);
-    });
+  if (city == "null" || !city) {
+    params.delete("city");
   } else {
-    params.append("city", cities);
+    params.append("city", city);
   }
 
   let data = await fetch(`${baseURL}${Api.realtors}/?${params}`);
@@ -40,9 +38,13 @@ export default async function Realators({
     status: number;
   } = await data.json();
 
+  console.log(realatorsData);
+  console.log(`${baseURL}${Api.realtors}/?${params}`);
+  
   if (!data.ok) {
     return <ErrNoData />;
   }
+
   return (
     <>
       <div className="mt-[82px] md:mt-[180px]">

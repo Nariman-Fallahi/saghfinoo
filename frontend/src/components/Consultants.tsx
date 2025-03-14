@@ -1,26 +1,27 @@
 import { Title } from "@/constant/Constants";
 import Image from "next/image";
-import { useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { Api } from "@/ApiService";
+import { Api, dataKey } from "@/ApiService";
 import { useGetRequest } from "@/ApiService";
 import PaginationComponent from "./Pagination";
 import { allRealtorDataType } from "@/types/Type";
+import { useSearchParams } from "next/navigation";
 
 type ConsultantsType = {
   userName: string | string[];
 };
 
 export default function Consultants({ userName }: ConsultantsType) {
-  const [pageNumber, setPageNumber] = useState(1);
+  const searchParams = useSearchParams();
+  const pageNumber = searchParams.get("page");
 
   const { data, isPending } = useGetRequest<{
     data: allRealtorDataType[];
     total_pages: number;
   }>({
     url: `${Api.realtors}/?reo_username=${userName}&page=${pageNumber}`,
-    key: ["getRealEstateConsultants"],
+    key: [dataKey.GET_REAL_ESTATE_CONSULTANTS],
     staleTime: 10 * 60 * 1000,
     enabled: true,
   });
@@ -87,11 +88,7 @@ export default function Consultants({ userName }: ConsultantsType) {
         )}
       </div>
 
-      <PaginationComponent
-        totalPages={data?.total_pages}
-        pageNumber={pageNumber}
-        setPageNumber={setPageNumber}
-      />
+      <PaginationComponent totalPages={data?.total_pages} />
     </div>
   );
 }

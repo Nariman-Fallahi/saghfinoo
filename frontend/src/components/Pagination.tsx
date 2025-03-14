@@ -1,5 +1,5 @@
 "use client";
-import { Pagination } from "@nextui-org/pagination";
+import { Pagination } from "@heroui/pagination";
 import { isMobile } from "@/constant/Constants";
 import { useRouter } from "next-nprogress-bar";
 import { usePathname } from "next/navigation";
@@ -18,7 +18,7 @@ export default function PaginationComponent({
   const [pageNumber, setPageNumber] = useState<number>(1);
 
   useEffect(() => {
-    router.push(`${pathname}?pageNumber=${pageNumber}`);
+    router.push(`${pathname}?page=${pageNumber}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber]);
 

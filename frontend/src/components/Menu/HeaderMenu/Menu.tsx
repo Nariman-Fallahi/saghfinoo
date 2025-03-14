@@ -4,7 +4,7 @@ import DesktopMenu from "./DesktopMenu";
 import { navigationMenuType } from "@/types/Type";
 import { getCookie } from "cookies-next";
 import Register from "@/components/Register/Register";
-import { Api } from "@/ApiService";
+import { Api, dataKey } from "@/ApiService";
 import { useGetRequest } from "@/ApiService";
 import { userInfoDataType } from "@/types/Type";
 import Link from "next/link";
@@ -23,7 +23,7 @@ export default function Menu() {
 
   const { data, status, refetch } = useGetRequest<userInfoDataType>({
     url: Api.GetUserInfo,
-    key: ["getUserInfo"],
+    key: [dataKey.GET_USER_INFO],
     headers: {
       Authorization: `Bearer ${access}`,
     },
@@ -35,7 +35,7 @@ export default function Menu() {
     if (access) {
       refetch();
     }
-  }, [access]);
+  }, [access, refetch]);
 
   const isLogin: boolean = !!access && !!data?.data && status === "success";
 
@@ -43,12 +43,12 @@ export default function Menu() {
     {
       title: "اجاره",
       icon: "/icons/house.svg",
-      link: "",
+      link: "/searchResults?type_of_transaction_name=اجاره",
     },
     {
       title: "خرید",
       icon: "/icons/key.svg",
-      link: "",
+      link: "/searchResults?type_of_transaction_name=خرید",
     },
     {
       title: "املاک و مستغلات",

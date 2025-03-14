@@ -1,11 +1,11 @@
 "use client";
 import Image from "next/image";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import { navigationMenuType } from "@/types/Type";
 import { useModalStore } from "@/store/Register";
 import Link from "next/link";
 import { userInfoDataType } from "@/types/Type";
-import { Spinner } from "@nextui-org/spinner";
+import { Spinner } from "@heroui/spinner";
 import { useRouter } from "next-nprogress-bar";
 
 type desktopMenuType = {

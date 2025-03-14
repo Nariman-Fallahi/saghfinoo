@@ -1,4 +1,4 @@
-import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
+import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
 import { isMobile, SelectTitle, TextError } from "@/constant/Constants";
 import { Key } from "react";
 
@@ -30,6 +30,7 @@ export default function AutocompleteComponent({
       <Autocomplete
         placeholder={placeholder}
         isLoading={isLoading}
+        aria-label={title}
         variant="bordered"
         radius="sm"
         defaultItems={data || []}

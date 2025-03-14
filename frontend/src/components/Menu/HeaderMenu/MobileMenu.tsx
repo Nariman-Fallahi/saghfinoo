@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import { navigationMenuType } from "@/types/Type";
 import { useModalStore } from "@/store/Register";
 import Link from "next/link";
@@ -23,7 +23,7 @@ export default function MobileMenu({
   AdPostingBtn,
   isLogin,
 }: mobileMenuType) {
-  const [openMenu, setOpenMenu] = useState<"open" | "close" | null>(null);
+  const [menuStatus, setMenuStatus] = useState<"open" | "close" | null>(null);
   const { setOpen } = useModalStore();
   const router = useRouter();
 
@@ -36,12 +36,12 @@ export default function MobileMenu({
   };
 
   useEffect(() => {
-    if (openMenu === "open" && typeof window !== "undefined") {
+    if (menuStatus === "open" && typeof window !== "undefined") {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
     }
-  }, [openMenu]);
+  }, [menuStatus]);
 
   return (
     <>
@@ -54,7 +54,7 @@ export default function MobileMenu({
           size="sm"
           radius="full"
           variant="light"
-          onPress={() => setOpenMenu("open")}
+          onPress={() => setMenuStatus("open")}
         >
           <Image width={24} height={24} src="/icons/menu.svg" alt="" />
         </Button>
@@ -64,9 +64,9 @@ export default function MobileMenu({
 
       <div
         className={`absolute w-full h-screen bg-white hidden z-50 top-0 overflow-y-auto ${
-          openMenu === "open"
+          menuStatus === "open"
             ? "openMenu"
-            : openMenu === "close"
+            : menuStatus === "close"
             ? "closeMenu"
             : ""
         }`}
@@ -77,7 +77,7 @@ export default function MobileMenu({
               isIconOnly
               size="sm"
               variant="light"
-              onPress={() => setOpenMenu("close")}
+              onPress={() => setMenuStatus("close")}
             >
               <Image
                 width={24}
@@ -132,6 +132,7 @@ export default function MobileMenu({
                 href={item.link}
                 key={index}
                 className="mt-7 flex items-center justify-between px-2"
+                onClick={() => setMenuStatus("close")}
               >
                 <div className="flex items-center">
                   <Image width={20} height={20} src={item.icon} alt="" />

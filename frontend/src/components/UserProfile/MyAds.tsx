@@ -1,10 +1,10 @@
 "use client";
-import { Title } from "@/app/userProfile/[id]/page";
+import Title from "./Title";
 import Image from "next/image";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import NoData from "./NoData";
 import DeleteAllAdsBtn from "./DeleteAllAdsBtn";
-import { Api } from "@/ApiService";
+import { Api, dataKey } from "@/ApiService";
 import { usePostRequest } from "@/ApiService";
 import { useEffect, useState } from "react";
 import { Success } from "@/notification/Success";
@@ -15,7 +15,7 @@ import { getCookie } from "cookies-next";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { isMobile } from "@/constant/Constants";
-import { Spinner } from "@nextui-org/spinner";
+import { Spinner } from "@heroui/spinner";
 
 //TODO EDIT
 
@@ -52,7 +52,7 @@ export default function MyAds() {
 
   const { data, isPending, refetch } = useGetRequest<{ data: AdsDataType[] }>({
     url: `${Api.GetAllMyAds}?page=${pageNumber}`,
-    key: ["getALlMyAds", pageNumber.toString()],
+    key: [dataKey.GET_ALL_MY_ADS, pageNumber.toString()],
     enabled: true,
     staleTime: 10 * 60 * 1000,
     headers: {
@@ -165,14 +165,14 @@ export default function MyAds() {
                     </p>
                   </div>
                   <div className="absolute z-10 w-full flex justify-between p-2 items-center">
-                    <div
+                    {/* <div
                       className={`${
                         item.is_confirmed ? "bg-gray-300" : "bg-red-300"
                       } opacity-70 text-xs md:text-sm lg:text-base rounded
                       flex items-center justify-center p-1 cursor-default`}
                     >
                       {item.is_confirmed ? "تایید شده‌" : "در انتظار تایید"}
-                    </div>
+                    </div> */}
                     <Button
                       isIconOnly
                       radius="full"

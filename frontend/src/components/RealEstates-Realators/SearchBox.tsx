@@ -1,12 +1,12 @@
 "use client";
 import { Title } from "@/constant/Constants";
 import { Api } from "@/ApiService";
-import { useGetRequest } from "@/ApiService";
+import { useGetRequest, dataKey } from "@/ApiService";
 import { CitiesType } from "@/types/Type";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next-nprogress-bar";
-import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
+import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
 
 type SearchBoxType = {
   title?: string;
@@ -19,13 +19,13 @@ export default function SearchBox({ title, className }: SearchBoxType) {
 
   const { data, isLoading } = useGetRequest<{ data: CitiesType[] }>({
     url: Api.SearchCity,
-    key: ["getAllCities"],
+    key: [dataKey.GET_ALL_CITY],
     enabled: true,
     staleTime: 10 * 60 * 1000,
   });
 
   const handleSelectChange = (city: any) => {
-    router.push(`${pathname}?city${city}`);
+    router.push(`${pathname}?city=${city}`);
   };
 
   return (
@@ -40,6 +40,11 @@ export default function SearchBox({ title, className }: SearchBoxType) {
           variant="bordered"
           radius="sm"
           defaultItems={data?.data || []}
+          inputProps={{
+            classNames: {
+              inputWrapper: "w-full md:w-1/3",
+            },
+          }}
           startContent={
             <i className="pl-3">
               <Image

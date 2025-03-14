@@ -12,6 +12,8 @@ import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import { NewsDataType } from "@/types/Type";
 
+//TODO Edit Component
+
 export default function Slider({ data }: { data: NewsDataType[] }) {
   const swiperRef: MutableRefObject<any> = useRef(null);
 
