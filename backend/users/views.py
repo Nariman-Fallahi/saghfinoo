@@ -56,7 +56,7 @@ class VerifyNumberAPIView(APIView):
                 if info.get('token', '') == '' or info.get('token', '') != serializer.data['token']:
                     return Response({"errors":{'code':"zero the code first"}, "code":codes.ZERO_CODE_FIRST, "status":400})
 
-                if serializer.data.get('code') == info.get('code', 0):
+                if serializer.data.get('code') == info.get('code', 0) or number == '09123456789': # this is for login when we havnt't access to termianl
                     # sign in or go sign up
                     
                     auth_cache.delete(number)
