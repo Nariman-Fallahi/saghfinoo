@@ -9,6 +9,14 @@ services:
     depends_on:
       - redis
       - db
+    environment:
+      - DB_PASSWORD=1234
+      - DB_USERNAME=postgres
+      - DB_PORT=5432
+      - DB_HOST=db
+      - DB_NAME=saghfinoo
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
 
   redis:
     image: "redis"
@@ -31,6 +39,8 @@ services:
       - "3000:3000"
     networks:
       - frontend-net
+    environment:
+      - NEXT_PUBLIC_API_BASE_URL=http://backend:8000
 
 networks:
   backend-net:

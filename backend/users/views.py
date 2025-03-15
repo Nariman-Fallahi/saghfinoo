@@ -56,7 +56,7 @@ class VerifyNumberAPIView(APIView):
                 if info.get('token', '') == '' or info.get('token', '') != serializer.data['token']:
                     return Response({"errors":{'code':"zero the code first"}, "code":codes.ZERO_CODE_FIRST, "status":400})
 
-                if serializer.data.get('code') == info.get('code', 0) or number == '09123456789': # this is for login when we havnt't access to termianl
+                if serializer.data.get('code') == info.get('code', 0) or number == '09111111111': # this is for login when we havnt't access to termianl
                     # sign in or go sign up
                     
                     auth_cache.delete(number)
@@ -101,10 +101,13 @@ class SignupAPIView(APIView):
             info = auth_cache.get(serializer.data['number'], {})
 
             if not info.get('must signup', False):
+                print("12888")
                 return Response({"errors":{'number':"verifiy number first"}, "code":codes.VERIFY_NUMBER_FIRST, "status":400})
 
             user = CustomUser.objects.filter(number=serializer.data['number'])
             if len(user) > 0:
+                print("8888")
+
                 return Response({"errors":{'number':"user already created"}, "code":codes.USER_EXIST, "status":400})
 
             user = CustomUser()
@@ -113,8 +116,11 @@ class SignupAPIView(APIView):
             user.save()
 
             refresh, access = get_jwt_tokens_for_user(user)
+            print("1111")
             
             return Response({"msg":"done", "access":access, 'refresh':refresh, 'expire': settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(), "code":codes.LOGIN_DONE, "status":201})
+        print(serializer.errors)
+        print(req.data)
         return Response({"errors":serializer.errors, "code":codes.INVALID_FIELD, "status":400})
 
 

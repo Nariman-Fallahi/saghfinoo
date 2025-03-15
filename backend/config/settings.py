@@ -138,27 +138,28 @@ if TESTING:
     }
 
 if os.getenv("CACHE_DB") == 'redis':
+    redis = f'redis://{os.getenv("REDIS_HOST")}:{os.getenv("REDIS_PORT")}'
     CACHES = {
         'default': {
             'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-            'LOCATION': 'redis://127.0.0.1:6379',
+            'LOCATION': redis,
             'TIMEOUT': 7*24*60*60
         },
         
         'auth': {
             'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-            'LOCATION': 'redis://127.0.0.1:6379',
+            'LOCATION': redis,
             'TIMEOUT': 10*60
         },
 
         'ip' :{
             'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-            'LOCATION': 'redis://127.0.0.1:6379',
+            'LOCATION': redis,
             'TIMEOUT': 1*60*60,
         },
         'cache-for-ratelimiting': {
             'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-            'LOCATION': 'redis://127.0.0.1:6379',
+            'LOCATION': redis,
             'TIMEOUT': 1*60*60,
         }
     }
