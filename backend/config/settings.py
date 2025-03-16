@@ -347,7 +347,9 @@ RATELIMIT_USE_CACHE = 'cache-for-ratelimiting'
 DEFAULT_RATE_READ = '10/m'
 DEFAULT_RATE_WRITE = '5/m'
 
-EMAIL_USE_TLS = bool(os.getenv("EMAIL_USE_TLS"))
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
 EMAIL_HOST = os.getenv("EMAIL_HOST")
 EMAIL_PORT = os.getenv("EMAIL_PORT")
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
