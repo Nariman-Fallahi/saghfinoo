@@ -13,7 +13,7 @@ import { useRouter } from "next-nprogress-bar";
 import { isMobile, LoginErrorText } from "@/constant/Constants";
 import { ErrorNotification } from "@/notification/Error";
 import CustomButton from "@/components/CustomButton";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 
 export default function Menu() {
   const access = getCookie("access");
@@ -128,14 +128,16 @@ export default function Menu() {
         AdPostingBtn={AdPostingBtn()}
         isLogin={isLogin}
       />
-      <DesktopMenu
-        NavigationMenu={navigationMenu}
-        userInfoData={data}
-        dataStatus={status}
-        iconMenu={iconMenu()}
-        AdPostingBtn={AdPostingBtn()}
-        isLogin={isLogin}
-      />
+      <Suspense fallback={<div></div>}>
+        <DesktopMenu
+          NavigationMenu={navigationMenu}
+          userInfoData={data}
+          dataStatus={status}
+          iconMenu={iconMenu()}
+          AdPostingBtn={AdPostingBtn()}
+          isLogin={isLogin}
+        />
+      </Suspense>
       <Register />
     </>
   );

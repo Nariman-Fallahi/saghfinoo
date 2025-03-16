@@ -32,6 +32,7 @@ export default function DesktopMenu({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+
   const fullURL = `${pathname}${
     searchParams.toString() ? `?${searchParams.toString()}` : ""
   }`;
