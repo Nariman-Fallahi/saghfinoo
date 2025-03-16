@@ -1,8 +1,7 @@
 "use client";
 import { useDisclosure } from "@heroui/modal";
-import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
-import { baseURL, dataKey, useGetRequest } from "@/ApiService";
+import { dataKey, useGetRequest } from "@/ApiService";
 import { Api } from "@/ApiService";
 import {
   AdsDataType,

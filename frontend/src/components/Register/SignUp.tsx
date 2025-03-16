@@ -16,7 +16,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 
 type SignUpType = {
   token: string;
-  phoneNumber: number | undefined;
+  email: string;
 };
 
 type Inputs = {
@@ -25,10 +25,11 @@ type Inputs = {
   password: string;
 };
 
-export default function SignUp({ token, phoneNumber }: SignUpType) {
+export default function SignUp({ token, email }: SignUpType) {
   const { setOpen } = useModalStore();
   const { setRegisterStatus } = useRegisterStatus();
   const router = useRouter();
+
   const { mutate, isSuccess, data, isPending } = usePostRequest<SignUpDataType>(
     {
       url: Api.CompleteSignup,
@@ -48,7 +49,7 @@ export default function SignUp({ token, phoneNumber }: SignUpType) {
       last_name: data.lastName,
       password: data.password,
       token: token,
-      number: phoneNumber,
+      email: email,
     });
   };
 
@@ -75,12 +76,12 @@ export default function SignUp({ token, phoneNumber }: SignUpType) {
   }, [isSuccess, data, setRegisterStatus, setOpen, router]);
 
   return (
-    (<form
+    <form
       onSubmit={handleSubmit(onSubmit)}
       className="w-full flex flex-col items-center"
     >
       <p className="text-sm text-[#353535] md:mt-2 md:text-base mt-[-30px] text-center">
-        با این شماره موبایل حساب کاربری وجود ندارد.
+        با این ایمیل حساب کاربری وجود ندارد.
         <br />
         برای ثبت نام اطلاعات زیر را کامل کنید.
       </p>
@@ -112,7 +113,7 @@ export default function SignUp({ token, phoneNumber }: SignUpType) {
 
         <InputRegister
           name="lastName"
-          placeholder="نام خانوادگی خود را  وارد نمایید"
+          placeholder="نام خانوادگی خود را وارد نمایید"
           alt="Last Name"
           type="text"
           icon="/icons/user.svg"
@@ -167,6 +168,6 @@ export default function SignUp({ token, phoneNumber }: SignUpType) {
           {isPending ? "" : "ثبت اطلاعات"}
         </Button>
       </div>
-    </form>)
+    </form>
   );
 }

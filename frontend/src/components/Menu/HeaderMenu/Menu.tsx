@@ -9,17 +9,15 @@ import { useGetRequest } from "@/ApiService";
 import { userInfoDataType } from "@/types/Type";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { useRouter } from "next-nprogress-bar";
 import { isMobile, LoginErrorText } from "@/constant/Constants";
 import { ErrorNotification } from "@/notification/Error";
 import CustomButton from "@/components/CustomButton";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 
 export default function Menu() {
   const access = getCookie("access");
   const router = useRouter();
-  const currentPath = usePathname();
 
   const { data, status, refetch } = useGetRequest<userInfoDataType>({
     url: Api.GetUserInfo,
@@ -60,11 +58,11 @@ export default function Menu() {
       icon: "/icons/people.svg",
       link: "/realators",
     },
-    {
-      title: "اخبار روز",
-      icon: "/icons/receipt-2.svg",
-      link: "/news",
-    },
+    // {
+    //   title: "اخبار روز",
+    //   icon: "/icons/receipt-2.svg",
+    //   link: "/news",
+    // },
   ];
 
   const loggedIn =
@@ -130,15 +128,16 @@ export default function Menu() {
         AdPostingBtn={AdPostingBtn()}
         isLogin={isLogin}
       />
-      <DesktopMenu
-        NavigationMenu={navigationMenu}
-        userInfoData={data}
-        dataStatus={status}
-        iconMenu={iconMenu()}
-        currentPath={currentPath}
-        AdPostingBtn={AdPostingBtn()}
-        isLogin={isLogin}
-      />
+      <Suspense fallback={<div></div>}>
+        <DesktopMenu
+          NavigationMenu={navigationMenu}
+          userInfoData={data}
+          dataStatus={status}
+          iconMenu={iconMenu()}
+          AdPostingBtn={AdPostingBtn()}
+          isLogin={isLogin}
+        />
+      </Suspense>
       <Register />
     </>
   );
