@@ -46,7 +46,7 @@ export type usePostRequestType = {
 };
 
 export type LoginDataType = {
-  number: number | undefined;
+  number: string;
   code: number | string;
   token: string;
 };
@@ -56,7 +56,7 @@ export type SignUpDataType = {
   last_name: string;
   password: string;
   token: number | string;
-  number: number | undefined;
+  email: string;
 };
 
 export type editUserProfileType = {

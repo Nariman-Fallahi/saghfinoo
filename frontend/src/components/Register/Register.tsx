@@ -4,7 +4,6 @@ import { Button } from "@heroui/button";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Otp from "./Otp";
-import PhoneNumber from "./PhoneNumber";
 import { RegisterStatusValue } from "@/constant/Constants";
 import SignUp from "./SignUp";
 import { ErrorNotification } from "@/notification/Error";
@@ -18,20 +17,22 @@ import { Api } from "@/ApiService";
 import { usePostRequest } from "@/ApiService";
 import { LoginDataType } from "@/types/Type";
 import { isMobile } from "@/constant/Constants";
+import EmailInput from "./EmailInput";
 
 export default function Register() {
   const router = useRouter();
   const { isOpen, setOpen } = useModalStore();
-  const [phoneNumber, setPhoneNumber] = useState<number>();
+  const [email, setEmail] = useState<string>();
   const [isSelected, setIsSelected] = useState<boolean>(false);
   const [otp, setOtp] = useState<string>("");
   const [focusedInput, setFocusedInput] = useState<number | null>(null);
   const [token, setToken] = useState<string>("");
   const { registerStatus, setRegisterStatus } = useRegisterStatus();
   const [time, setTime] = useState<number>(90);
+
   const { mutate, isSuccess, data, isPending } = usePostRequest<LoginDataType>({
-    url: Api.verifynumber,
-    key: "verifyNumber",
+    url: Api.VerifyEmail,
+    key: "verifyEmail",
   });
 
   // constants
@@ -42,12 +43,12 @@ export default function Register() {
     case RegisterStatusValue.status1:
       ModalRegisterTitle = "ورود/ثبت نام";
       ModalRegisterDescription =
-        "لطفا برای ورود یا ثبت نام شماره موبایل خود را وارد کنید.";
+        "لطفا برای ورود یا ثبت نام ایمیل خود را وارد کنید.";
       break;
 
     case RegisterStatusValue.status2:
       ModalRegisterTitle = "کد تایید";
-      ModalRegisterDescription = `کد ارسال شده به شماره تلفن ${phoneNumber} را وارد کنید.`;
+      ModalRegisterDescription = `کد ارسال شده به ایمیل ${email} را وارد کنید.`;
       break;
 
     case RegisterStatusValue.status3:
@@ -62,10 +63,10 @@ export default function Register() {
     setFocusedInput(null);
   };
 
-  const handleSendPhoneNumber = (phoneNumber?: number) => {
+  const handleSendEmail = (email?: string) => {
     if (isSelected) {
-      mutate({ number: phoneNumber, code: 0, token: "" });
-      setPhoneNumber(phoneNumber);
+      mutate({ number: email!, code: 0, token: "" });
+      setEmail(email);
     }
   };
 
@@ -87,7 +88,7 @@ export default function Register() {
     if (otp === "" || otp.length < 5) {
       ErrorNotification("لطفا کد را کامل وارد نمایید.");
     } else {
-      mutate({ number: phoneNumber, code: otp, token: token });
+      mutate({ number: email!, code: otp, token: token });
     }
   };
 
@@ -124,7 +125,7 @@ export default function Register() {
 
   const EditMN = () => {
     setRegisterStatus(RegisterStatusValue.status1);
-    setPhoneNumber(undefined);
+    setEmail(undefined);
   };
 
   return (
@@ -166,17 +167,17 @@ export default function Register() {
                   className="text-sm md:text-base mt-1 text-[#717171]
                  cursor-pointer"
                 >
-                  ویرایش شماره موبایل
+                  ویرایش ایمیل
                 </span>
               )}
 
               {registerStatus === RegisterStatusValue.status1 && (
-                <PhoneNumber
-                  setPhoneNumber={setPhoneNumber}
+                <EmailInput
+                  setEmail={setEmail}
                   isSelected={isSelected}
                   setIsSelected={setIsSelected}
-                  handleSendPhoneNumber={handleSendPhoneNumber}
-                  isPendingVerifyNumber={isPending}
+                  handleSendEmail={handleSendEmail}
+                  isPendingVerifyEmail={isPending}
                 />
               )}
 
@@ -190,7 +191,7 @@ export default function Register() {
                     focusedInput={focusedInput}
                     time={time}
                     setTime={setTime}
-                    handleSendPhoneNumber={handleSendPhoneNumber}
+                    handleSendPhoneNumber={handleSendEmail}
                   />
                   <Button
                     className="mt-[64px] w-full rounded-lg p-2 bg-primary
@@ -204,7 +205,7 @@ export default function Register() {
                 </div>
               )}
               {registerStatus === RegisterStatusValue.status3 && (
-                <SignUp token={token} phoneNumber={phoneNumber} />
+                <SignUp token={token} email={email!} />
               )}
             </div>
           </ModalBody>

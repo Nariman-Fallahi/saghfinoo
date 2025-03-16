@@ -7,13 +7,13 @@ import Link from "next/link";
 import { userInfoDataType } from "@/types/Type";
 import { Spinner } from "@heroui/spinner";
 import { useRouter } from "next-nprogress-bar";
+import { usePathname, useSearchParams } from "next/navigation";
 
 type desktopMenuType = {
   NavigationMenu: navigationMenuType;
   userInfoData: userInfoDataType | undefined;
   dataStatus: "error" | "success" | "pending";
   iconMenu: JSX.Element;
-  currentPath: string;
   AdPostingBtn: JSX.Element;
   isLogin: boolean;
 };
@@ -23,12 +23,18 @@ export default function DesktopMenu({
   userInfoData,
   dataStatus,
   iconMenu,
-  currentPath,
   AdPostingBtn,
   isLogin,
 }: desktopMenuType) {
   const { setOpen } = useModalStore();
   const router = useRouter();
+
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const fullURL = `${pathname}${
+    searchParams.toString() ? `?${searchParams.toString()}` : ""
+  }`;
 
   return (
     <div className="w-full justify-center hidden md:flex">
@@ -39,12 +45,24 @@ export default function DesktopMenu({
         <ul className="flex items-center text-sm lg:text-xl">
           {iconMenu}
           {NavigationMenu.map((item, index) => {
+            const isSearchResultsPage = pathname.startsWith("/searchResults");
+            let isActive: boolean;
+
+            console.log(isSearchResultsPage);
+            
+
+            if (isSearchResultsPage) {
+              isActive = decodeURIComponent(fullURL) === item.link;
+            } else {
+              isActive = pathname === item.link;
+            }
+            
             return (
               <Link
                 href={item.link}
                 key={index}
                 className={`mr-4 lg:mr-6 cursor-pointer hover:text-red-600 flex flex-col relative ${
-                  currentPath === item.link
+                  isActive
                     ? "after:bg-red-500 after:h-[3px] after:w-full after:content-[''] after:absolute after:mt-8 after:rounded text-red-500"
                     : null
                 }`}

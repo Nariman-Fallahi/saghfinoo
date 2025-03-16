@@ -5,24 +5,24 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { TextError } from "@/constant/Constants";
 
 type Inputs = {
-  phoneNumber: number;
+  email: string;
 };
 
-type PhoneNumberType = {
-  setPhoneNumber: (value: number) => void;
+type EmailType = {
+  setEmail: (value: string) => void;
   isSelected: boolean;
   setIsSelected: (value: boolean) => void;
-  handleSendPhoneNumber: (phoneNumber: number) => void;
-  isPendingVerifyNumber: boolean;
+  handleSendEmail: (email: string) => void;
+  isPendingVerifyEmail: boolean;
 };
 
-export default function PhoneNumber({
-  setPhoneNumber,
+export default function EmailInput({
+  setEmail,
   isSelected,
   setIsSelected,
-  handleSendPhoneNumber,
-  isPendingVerifyNumber,
-}: PhoneNumberType) {
+  handleSendEmail,
+  isPendingVerifyEmail,
+}: EmailType) {
   const {
     register,
     handleSubmit,
@@ -30,37 +30,29 @@ export default function PhoneNumber({
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    handleSendPhoneNumber(data.phoneNumber);
-    setPhoneNumber(data.phoneNumber);
+    handleSendEmail(data.email);
+    setEmail(data.email);
   };
 
   return (
-    (<form onSubmit={handleSubmit(onSubmit)} className="w-full rtl">
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full rtl">
       <input
-        {...register("phoneNumber", {
-          required: "لطفا شماره تلفن خود را وارد کنید",
+        {...register("email", {
+          required: "لطفا ایمیل خود را وارد کنید",
           pattern: {
-            value: /^09\d*$/,
-            message: "شماره تلفن معتبر نمیباشد",
-          },
-          minLength: {
-            value: 11,
-            message: "شماره تلفن نمیتواند کم تر از ۱۱ رقم باشد",
-          },
-          maxLength: {
-            value: 11,
-            message: "شماره تلفن نمیتواند بیشتر از ۱۱ رقم باشد",
+            value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
+            message: "ایمیل معتبر نمی‌باشد",
           },
         })}
-        placeholder="09123456789"
-        type="number"
+        placeholder="example@email.com"
+        type="text"
         className="mt-[40px] p-2 rounded-lg w-full border-[#2F80ED] border
         outline-none text-sm md:p-3 md:mt-[24px]"
         style={{
           boxShadow: "0px 0px 0px 3px rgba(47, 128, 237, 0.19)",
         }}
       />
-      <TextError text={errors.phoneNumber?.message} />
+      <TextError text={errors.email?.message} />
       {/* CheckBox */}
       <div className="mt-[16px] w-full flex items-center">
         <Checkbox
@@ -79,12 +71,12 @@ export default function PhoneNumber({
       <Button
         type="submit"
         isDisabled={!isSelected}
-        isLoading={isPendingVerifyNumber}
+        isLoading={isPendingVerifyEmail}
         spinner={<Spinner color="white" size="sm" />}
         className="mt-[64px] w-full rounded-lg p-2 bg-primary text-white md:mt-[50px] md:text-lg"
       >
-        {isPendingVerifyNumber ? "" : "ورود"}
+        {isPendingVerifyEmail ? "" : "ورود"}
       </Button>
-    </form>)
+    </form>
   );
 }

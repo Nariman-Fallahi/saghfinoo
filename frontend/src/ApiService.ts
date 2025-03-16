@@ -6,7 +6,7 @@ import axios from "axios";
 
 export enum Api {
   // users Api
-  verifynumber = "/api/v1/users/verify-number",
+  VerifyEmail = "/api/v1/users/verify-number",
   CompleteSignup = "/api/v1/users/complete-signup",
   ChangePassword = "/api/v1/users/change-password",
   EditUserProfile = "/api/v1/users/edit-user",
