@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email as validate_email_django
 
 from common.utils import characters
 from common.utils.algorithms import binary_search
@@ -14,7 +16,12 @@ def validate_number(number: str):
         int(number)
     except:
         raise ValueError('invalid number character')
-    
+
+def validate_email(email: str):
+    try:
+        validate_email_django(email)
+    except ValidationError as e:
+        raise ValueError(string(e))
 
 def validate_landline_number(landline_number: str):
     if len(landline_number) < 5:

@@ -7,12 +7,17 @@ from common import codes
 
 class VerifyNumberSerializer(serializers.Serializer):
     code = serializers.IntegerField()
-    number = serializers.CharField(max_length=11)
+    number = serializers.CharField()
     token = serializers.CharField(max_length=512, allow_blank=True)
 
     def validate(self, attrs):
 
-        validations.validate_se('number', attrs['number'], validations.validate_number)
+        try:
+            validations.validate_se('number', attrs['number'], validations.validate_number)
+        except serializers.ValidationError:
+            validations.validate_se('email', attrs['number'], validations.validate_email)
+
+        
         
 
         if "'" in attrs.get('token'):

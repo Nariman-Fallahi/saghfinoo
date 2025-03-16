@@ -14,6 +14,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.core.files.storage import default_storage
+from django.core.mail import send_mail
 
 from common import codes
 from .serializers import VerifyNumberSerializer, SignupSerializer, CustomTokenObtainPairSerializer, CustomUserResponseSerializer, ChangePasswordSerializer, CustomUserSerializer
@@ -42,6 +43,18 @@ class VerifyNumberAPIView(APIView):
                 # todo: send code
                 if settings.DEBUG and not settings.TESTING:
                     print("code:", code)
+                
+                # check number is number or email
+                try:
+                    int(number)
+                    # send otp to number
+                except:
+                    # send otp to email
+                    print("sending email...", settings.EMAIL_HOST_USER, number)
+                    send_mail("Saghfinoo OTP Code", f"Hi. here is the OTP code: {code}", settings.EMAIL_HOST_USER, [number], fail_silently=False)
+                    print("email sent")
+
+
                 token = str(uuid.uuid4())
 
                 auth_cache.set(number, {"delay":now+settings.NUMBER_DELAY, "token":token, "code":code, "tries":0,})
