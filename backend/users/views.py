@@ -28,65 +28,58 @@ class VerifyNumberAPIView(APIView):
     def post(self, req):
 
         serializer = VerifyNumberSerializer(data=req.data)
+        
         if serializer.is_valid():
-            number = serializer.data['number']
+            email = serializer.data['email']
             if serializer.data.get('code') == 0:
-                # send code to number
+                # send code to email
             
                 now = datetime.datetime.now()
-                # delay for send code to a number
-                t = auth_cache.get(number, {}).get('delay', now)
+                # delay for send code to a email
+                t = auth_cache.get(email, {}).get('delay', now)
                 if t > now and not settings.TESTING:
-                    return Response({"errors":{'number':f"wait {round((t - now).total_seconds())} seconds"}, "code": codes.NUMBER_DELAY, "status":400})
+                    return Response({"errors":{'non_field':f"wait {round((t - now).total_seconds())} seconds"}, "code": codes.NUMBER_DELAY, "status":400})
                 
                 code = random.randint(10000, 99999)
                 # todo: send code
                 if settings.DEBUG and not settings.TESTING:
                     print("code:", code)
                 
-                # check number is number or email
-                try:
-                    int(number)
-                    # send otp to number
-                except:
-                    # send otp to email
-                    print("sending email...", settings.EMAIL_HOST_USER, number)
-                    send_mail("Saghfinoo OTP Code", f"Hi. here is the OTP code: {code}", settings.EMAIL_HOST_USER, [number], fail_silently=False)
-                    print("email sent")
+                # send otp to email
+                send_mail("Saghfinoo OTP Code", f"Hi. here is the OTP code: {code}", settings.EMAIL_HOST_USER, [email], fail_silently=False)
 
 
                 token = str(uuid.uuid4())
 
-                auth_cache.set(number, {"delay":now+settings.NUMBER_DELAY, "token":token, "code":code, "tries":0,})
+                auth_cache.set(email, {"delay":now+settings.NUMBER_DELAY, "token":token, "code":code, "tries":0,})
                 
-                return Response({"msg":"code sent to number", "code":codes.CODE_SENT_TO_NUMBER, "token":token, "status":200}, headers={"test":True})
+                return Response({"msg":"code sent to email", "code":codes.CODE_SENT_TO_NUMBER, "token":token, "status":200}, headers={"test":True})
             else:
                 # check code
-                info = auth_cache.get(number, {})
+                info = auth_cache.get(email, {})
                 if info.get('tries', 0) >= 5:
                     return Response({"errors":{'code':"to manay tries"}, "code":codes.TO_MANNY_TRIES, "status":400})
 
                 if info.get('token', '') == '' or info.get('token', '') != serializer.data['token']:
                     return Response({"errors":{'code':"zero the code first"}, "code":codes.ZERO_CODE_FIRST, "status":400})
 
-                if serializer.data.get('code') == info.get('code', 0) or number == '09111111111': # this is for login when we havnt't access to termianl
+                if serializer.data.get('code') == info.get('code', 0):
                     # sign in or go sign up
                     
-                    auth_cache.delete(number)
+                    auth_cache.delete(email)
 
-                    user = CustomUser.objects.filter(number=number)
+                    user = CustomUser.objects.filter(email=email)
 
                     if len(user) == 0:
                         # signup
                         # user not exist go to signup
                         
-                        auth_cache.set(number, {'token':serializer.data['token'],'must signup':True})
+                        auth_cache.set(email, {'token':serializer.data['token'],'must signup':True})
 
                         return Response({"msg":"Auth done. Go to /api/v1/complete-signup", "code":codes.COMPLETE_SIGNUP, "status":303})
                     else:
                         # login
                         
-                        # password = CustomUser.objects.first(number=serializer.data['number']).password
                         user = user[0]
                         refresh, access = get_jwt_tokens_for_user(user)
         
@@ -94,7 +87,7 @@ class VerifyNumberAPIView(APIView):
                 else:
                     # wrong code
                     info['tries'] = info.get('tries', 0) + 1
-                    auth_cache.set(number, info)
+                    auth_cache.set(email, info)
                     return Response({"errors":{'code':"wrong code"}, "code":codes.WRONG_CODE, "status":400})                
                 
             
@@ -104,24 +97,22 @@ class SignupAPIView(APIView):
     serializer_classes = SignupSerializer
 
     def post(self, req):
-    # check number is verified before
+    # check email is verified before
 
     # check is user created before
     
         serializer = SignupSerializer(data=req.data)
         if serializer.is_valid():
             
-            info = auth_cache.get(serializer.data['number'], {})
+            info = auth_cache.get(serializer.data['email'], {})
 
             if not info.get('must signup', False):
-                print("12888")
-                return Response({"errors":{'number':"verifiy number first"}, "code":codes.VERIFY_NUMBER_FIRST, "status":400})
+                return Response({"errors":{'email':"verifiy email first"}, "code":codes.VERIFY_NUMBER_FIRST, "status":400})
 
-            user = CustomUser.objects.filter(number=serializer.data['number'])
+            user = CustomUser.objects.filter(email=serializer.data['email'])
+
             if len(user) > 0:
-                print("8888")
-
-                return Response({"errors":{'number':"user already created"}, "code":codes.USER_EXIST, "status":400})
+                return Response({"errors":{'email':"user already created"}, "code":codes.USER_EXIST, "status":400})
 
             user = CustomUser()
             user.fill_from_dict(serializer.data)
@@ -129,11 +120,9 @@ class SignupAPIView(APIView):
             user.save()
 
             refresh, access = get_jwt_tokens_for_user(user)
-            print("1111")
             
             return Response({"msg":"done", "access":access, 'refresh':refresh, 'expire': settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(), "code":codes.LOGIN_DONE, "status":201})
-        print(serializer.errors)
-        print(req.data)
+
         return Response({"errors":serializer.errors, "code":codes.INVALID_FIELD, "status":400})
 
 

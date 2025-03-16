@@ -7,7 +7,7 @@ from .managers import CustomUserManager
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    number = models.CharField(max_length=12, unique=True)
+    number = models.CharField(max_length=12, unique=True, null=True)
     first_name = models.CharField(max_length=51)
     last_name = models.CharField(max_length=52)
     password = models.CharField(max_length=512)

@@ -7,15 +7,15 @@ from common import codes
 
 class VerifyNumberSerializer(serializers.Serializer):
     code = serializers.IntegerField()
-    number = serializers.CharField()
+    email = serializers.CharField()
     token = serializers.CharField(max_length=512, allow_blank=True)
 
     def validate(self, attrs):
 
         try:
-            validations.validate_se('number', attrs['number'], validations.validate_number)
+            validations.validate_se('email', attrs['email'], validations.validate_email)
         except serializers.ValidationError:
-            validations.validate_se('email', attrs['number'], validations.validate_email)
+            validations.validate_se('email', attrs['email'], validations.validate_email)
 
         
         
@@ -28,13 +28,15 @@ class VerifyNumberSerializer(serializers.Serializer):
 
 class SignupSerializer(serializers.ModelSerializer):
     token = serializers.CharField(max_length=512)
+    
     class Meta:
         model = CustomUser
-        fields = ['number', 'first_name', 'last_name', 'password', 'token']
+        fields = ['email', 'first_name', 'last_name', 'password', 'token']
 
     def validate(self, attrs):
 
-        validations.validate_se('number', attrs['number'], validations.validate_number)
+        print(attrs)
+        validations.validate_se('email', attrs['email'], validations.validate_email)
         validations.validate_se('first_name', attrs['first_name'], validations.validate_name)
         validations.validate_se('last_name', attrs['last_name'], validations.validate_name)
 
@@ -49,11 +51,13 @@ class SignupSerializer(serializers.ModelSerializer):
     def to_internal_value(self, data):
         data['first_name'] = data.get('firstName', None)
         data['last_name'] = data.get('lastName', None)
+        data['email'] = data.get('email', None)
+        
         return super().to_internal_value(data)
 
 
 class SigninSerializer(serializers.Serializer):
-    number = serializers.CharField(max_length=11)
+    email = serializers.CharField(max_length=11)
     password = serializers.CharField(max_length=512)
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -63,14 +67,14 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
         token['first_name'] = user.first_name
         token['last_name'] = user.last_name
-        token['number'] = user.number
+        token['email'] = user.email
         token['permisions'] = user.permisions
 
         return token
 
     def validate(self, attrs):
 
-        validations.validate_se('number', attrs['number'], validations.validate_number)
+        validations.validate_se('email', attrs['email'], validations.validate_email)
         
 
         # if "'" in attrs.get('token'):
@@ -83,7 +87,7 @@ class CustomUserResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'number', 'image_full_path', 'created_at', 'email', 'activity_type', 'number']
+        fields = ['first_name', 'last_name', 'image_full_path', 'created_at', 'email', 'activity_type', 'number']
 
     def to_representation(self, instance):
         return {

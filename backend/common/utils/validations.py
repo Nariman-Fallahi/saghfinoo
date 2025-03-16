@@ -21,7 +21,7 @@ def validate_email(email: str):
     try:
         validate_email_django(email)
     except ValidationError as e:
-        raise ValueError(string(e))
+        raise ValueError(f"{e} value is:  {email}")
 
 def validate_landline_number(landline_number: str):
     if len(landline_number) < 5:
