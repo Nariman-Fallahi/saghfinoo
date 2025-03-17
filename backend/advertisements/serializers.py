@@ -25,7 +25,7 @@ class AdvertisementSerializer(serializers.ModelSerializer):
             'property_type',
             'deposit',
             'rent',
-            # 'buy',
+            'buy',
             'convertible',
             'area',
             'room',
@@ -106,7 +106,7 @@ class AdvertisementSerializer(serializers.ModelSerializer):
         validations.validate_choice_se('coolingSystem', attrs['cooling_system'])
         validations.validate_choice_se('flooring', attrs['flooring'])
         validations.validate_choice_se('heatingSystem', attrs['heating_system'])
-        validations.validate_se('description', attrs['description'], validations.validate_description)
+        validations.validate_se('description', attrs.get('description', ''), validations.validate_description)
 
         return super().validate(attrs)
 
@@ -119,6 +119,7 @@ class AdvertisementSerializer(serializers.ModelSerializer):
         data['type_of_restroom'] = data.get('typeOfRestroom', data.get('type_of_restroom', None))
         data['cooling_system'] = data.get('coolingSystem', data.get('cooling_system', None))
         data['heating_system'] = data.get('heatingSystem', data.get('heating_system', None))
+        data['buy'] = data['rent']
         return super().to_internal_value(data)
 
 
