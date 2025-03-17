@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from django.utils import timezone
 from common.utils.database import formated_datetime_now
 
 from .managers import CustomUserManager
@@ -30,7 +29,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self) -> str:
         return self.first_name+' '+self.last_name+', '+self.number
-    
+
     def fill_from_dict(self, data: dict):
         """this fields with be filled: first_name, last_name
             number and email are optional fields
@@ -42,5 +41,3 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
         self.first_name = data['first_name']
         self.last_name = data['last_name']
-
-
