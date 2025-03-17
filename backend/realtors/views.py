@@ -79,6 +79,11 @@ class CreateSearchRealtor(APIView):
             query &= Q(real_estate_office__username=req.query_params['reo_username'])
             query &= Q(is_confirmed_by_real_estate_office=True)
 
+        # check for invalid keys
+        for key in req.query_params:
+            if key not in ["page", "reo_username", 'city']:
+                return Response({'errors':{key: f'this key not found'}, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
+
         realtors = Realtor.objects.filter(query)[page*limit: page*limit+limit]
         realtors = RealtorPreviewResponseSerializer(realtors, many=True).data
         total_pages = math.ceil(Realtor.objects.filter(query).count()/limit)
