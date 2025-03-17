@@ -46,14 +46,14 @@ export type usePostRequestType = {
 };
 
 export type LoginDataType = {
-  number: string;
+  email: string;
   code: number | string;
   token: string;
 };
 
 export type SignUpDataType = {
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   password: string;
   token: number | string;
   email: string;

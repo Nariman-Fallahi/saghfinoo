@@ -12,6 +12,7 @@ import { Success } from "@/notification/Success";
 import { useModalStore } from "@/store/Register";
 import { useRegisterStatus } from "@/store/Register";
 import { setCookie } from "cookies-next";
+// import { useRouter } from "@bprogress/next/app";
 import { useRouter } from "next-nprogress-bar";
 import { Api } from "@/ApiService";
 import { usePostRequest } from "@/ApiService";
@@ -65,7 +66,7 @@ export default function Register() {
 
   const handleSendEmail = (email?: string) => {
     if (isSelected) {
-      mutate({ number: email!, code: 0, token: "" });
+      mutate({ email: email!, code: 0, token: "" });
       setEmail(email);
     }
   };
@@ -88,7 +89,7 @@ export default function Register() {
     if (otp === "" || otp.length < 5) {
       ErrorNotification("لطفا کد را کامل وارد نمایید.");
     } else {
-      mutate({ number: email!, code: otp, token: token });
+      mutate({ email: email!, code: otp, token: token });
     }
   };
 
