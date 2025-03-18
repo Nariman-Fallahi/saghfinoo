@@ -42,11 +42,12 @@ class VerifyNumberAPIView(APIView):
 
                 code = random.randint(10000, 99999)
                 # todo: send code
-                if settings.DEBUG and not settings.TESTING:
-                    print("code:", code)
-
-                # send otp to email
-                send_mail("Saghfinoo OTP Code", f"Hi. here is the OTP code: {code}", settings.EMAIL_HOST_USER, [email], fail_silently=False)
+                if settings.DEBUG:
+                    if not settings.TESTING:
+                        print("code:", code)
+                else:
+                    # send otp to email
+                    send_mail("Saghfinoo OTP Code", f"Hi. here is the OTP code: {code}", settings.EMAIL_HOST_USER, [email], fail_silently=False)
 
 
                 token = str(uuid.uuid4())
