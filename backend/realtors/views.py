@@ -13,7 +13,7 @@ from django.db.models import Q
 from common.utils.request import get_page_and_limit
 from common import codes
 from common.utils import validations
-from common.utils.permissions import IsAdmin, IsOwner, IsRealtor
+from common.utils.permissions import IsOwner, IsRealtor
 from common.utils.database import formated_datetime_now, ScoreManager
 
 from .serializers import RealtorSerializer, RealtorResponseSerializer, RealtorPreviewResponseSerializer, CommentSerializer, CommentResponseSerializer, CommentScoreReasonResponseSerializer, ReportSerializer, ReportReasonResponseSerializer
@@ -37,7 +37,7 @@ class CreateSearchRealtor(APIView):
             realtor = serializer.save(user=req.user)
             return Response({"msg":"done", 'id':realtor.id, 'status':200})
         return Response({"errors":serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})
-    
+
 
     def get(self, req):
         qp = dict(req.query_params)
@@ -46,7 +46,7 @@ class CreateSearchRealtor(APIView):
         except ValueError as e:
             return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
 
-        
+
         query = None
         if qp.get('city', '') != '':
             if type(qp['city']) == list:
@@ -57,13 +57,13 @@ class CreateSearchRealtor(APIView):
                         validations.validate_name(c)
                     except ValueError as e:
                         return Response({'erorrs':{'city':str(e)}, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
-                    
+
                     if query:
                         query |= Q(real_estate_office__city=c)
                     else:
                         query = Q(real_estate_office__city=c)
-            
-            
+
+
         if query:
             query &= Q(is_confirmed=True)
         else:
@@ -75,15 +75,20 @@ class CreateSearchRealtor(APIView):
                 validations.validate_username(reou)
             except ValueError as e:
                 return Response({'errors':{'reo_username':str(e)}, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
-                
+
             query &= Q(real_estate_office__username=req.query_params['reo_username'])
             query &= Q(is_confirmed_by_real_estate_office=True)
+
+        # check for invalid keys
+        for key in req.query_params:
+            if key not in ["page", "reo_username", 'city']:
+                return Response({'errors':{key: f'this key not found'}, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
 
         realtors = Realtor.objects.filter(query)[page*limit: page*limit+limit]
         realtors = RealtorPreviewResponseSerializer(realtors, many=True).data
         total_pages = math.ceil(Realtor.objects.filter(query).count()/limit)
-        
-    
+
+
         return Response({'data':realtors, 'total_pages':total_pages, 'status':200})
 
 
@@ -95,7 +100,7 @@ class GetTopRealtorsAPIView(APIView):
             limit = int(req.query_params.get('limit', '8'))
         except:
             return Response({'errors':{'limit':'invalid limit'}, 'status':400})
-        
+
         reo = Realtor.objects.all().order_by('-score')[:limit]
         reo = RealtorPreviewResponseSerializer(reo, many=True).data
 
@@ -119,7 +124,7 @@ class GetEditDeleteRealtorAPIView(APIView):
             return Response({'status':404, 'code':codes.OBJ_NOT_FOUND})
 
         realtor = RealtorResponseSerializer(realtor).data
-        return Response({"data":realtor, 'status':200})        
+        return Response({"data":realtor, 'status':200})
 
     def put(self, req, realtor_id):
         serializer = RealtorSerializer(data=req.data)
@@ -128,7 +133,7 @@ class GetEditDeleteRealtorAPIView(APIView):
             req.realtor.fill_from_dict(serializer.data)
             req.realtor.save()
             return Response({'msg':'done', 'status':200})
-        
+
         return Response({'errors':serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})
 
 
@@ -142,7 +147,7 @@ class UploadRealtorBGImageAPIView(APIView):
 
             if Image.open(image).format not in ('PNG', 'JPEG'):
                 return Response({"errors":{"image":"invalid image format (accepted formats: PNG, JPEG)"}})
-            
+
             file_ext = image.name.split('.')[-1]
             file_name = f'{uuid.uuid4()}.{file_ext}'
             try:
@@ -157,7 +162,7 @@ class UploadRealtorBGImageAPIView(APIView):
             realtor.save()
 
             return Response({"msg":"done", 'status':200})
-    
+
 
 #####################################  comment ################################################
 
@@ -182,7 +187,7 @@ class CreateGetAllCommentAPIView(APIView):
             comment = serializer.save(owner=req.user, realtor=realtor)
             ScoreManager.increase_obj_score(comment.score, comment.realtor)
             return Response({'msg':'done', 'status':200})
-        
+
         return Response({'errors':serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})
 
     def get(self, req, realtor_id):
@@ -191,7 +196,7 @@ class CreateGetAllCommentAPIView(APIView):
             page, limit = get_page_and_limit(req, default_limit=16)
         except ValueError as e:
             return Response({'errors': e.dict, 'status':400, 'code':codes.INVALID_QUERY_PARAM})
-        
+
         comments = Comment.objects.filter(realtor=realtor_id).order_by('-created_at')[page*limit:page*limit+limit]
         comments = CommentResponseSerializer(comments, many=True).data
         return Response({'data':comments, 'status':200})
@@ -207,7 +212,7 @@ class EditDeleteCommentAPIView(APIView):
             try:
                 comment = Comment.objects.get(id=comment_id)
             except Comment.DoesNotExist:
-                return Response({'errors':{'non-field-error':'comment not found'}, 'status':404, 'code':codes.OBJ_NOT_FOUND}) 
+                return Response({'errors':{'non-field-error':'comment not found'}, 'status':404, 'code':codes.OBJ_NOT_FOUND})
 
             self.check_object_permissions(req, comment)
 
@@ -221,27 +226,27 @@ class EditDeleteCommentAPIView(APIView):
             ScoreManager.edit_obj_score(old_score, comment.score, comment.realtor)
 
             return Response({'msg':'done', 'status':200})
-        
+
         return Response({'errors':serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})
-    
+
     def delete(self, req, comment_id):
         try:
             comment = Comment.objects.get(id=comment_id)
         except Comment.DoesNotExist:
             return Response({'errors':{'non-field-error':'comment not found'}, 'status':404, 'code':codes.OBJ_NOT_FOUND})
-        
+
         self.check_object_permissions(req, comment)
-        
+
         comment.delete()
 
         ScoreManager.decrease_obj_score(comment.score, comment.realtor)
 
         return Response({'msg':'done', 'status':200})
-    
+
 class GetAllCommentScoreReasonAPIView(APIView):
-    
+
     def get(self, req):
-        
+
         score = req.query_params.get('score', 0)
         try:
             validations.validate_integer(score)
@@ -274,11 +279,11 @@ class CreateReportAPIView(APIView):
 
             serializer.save(user=req.user, realtor=realtor)
             return Response({'msg':'done', 'status':200})
-        
+
         return Response({'errors':serializer.errors, 'status':400, 'code':codes.INVALID_FIELD})
-    
+
 class GetAllReportReasonsAPIView(APIView):
-    
+
     def get(self, req):
         reasons = ReportReason.objects.all()
         reasons = ReportReasonResponseSerializer(reasons, many=True).data

@@ -1,9 +1,7 @@
-from typing import Any, Dict
 from .models import CustomUser
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from common.utils import validations
-from common import codes
 
 class VerifyNumberSerializer(serializers.Serializer):
     code = serializers.IntegerField()
@@ -17,8 +15,8 @@ class VerifyNumberSerializer(serializers.Serializer):
         except serializers.ValidationError:
             validations.validate_se('email', attrs['email'], validations.validate_email)
 
-        
-        
+
+
 
         if "'" in attrs.get('token'):
             raise serializers.ValidationError({'token': "invalid token c"})
@@ -28,7 +26,7 @@ class VerifyNumberSerializer(serializers.Serializer):
 
 class SignupSerializer(serializers.ModelSerializer):
     token = serializers.CharField(max_length=512)
-    
+
     class Meta:
         model = CustomUser
         fields = ['email', 'first_name', 'last_name', 'password', 'token']
@@ -46,13 +44,12 @@ class SignupSerializer(serializers.ModelSerializer):
 
 
         return super().validate(attrs)
-    
+
 
     def to_internal_value(self, data):
         data['first_name'] = data.get('firstName', None)
         data['last_name'] = data.get('lastName', None)
-        data['email'] = data.get('email', None)
-        
+
         return super().to_internal_value(data)
 
 
@@ -75,7 +72,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
 
         validations.validate_se('email', attrs['email'], validations.validate_email)
-        
+
 
         # if "'" in attrs.get('token'):
         #     raise serializers.ValidationError({'token': "invalid token c"})
@@ -101,7 +98,7 @@ class CustomUserResponseSerializer(serializers.ModelSerializer):
         }
 
 class CustomUserSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = CustomUser
         fields = ['first_name', 'last_name', 'email']
@@ -110,7 +107,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
         validations.validate_se('first_name', attrs['first_name'], validations.validate_name)
         validations.validate_se('last_name', attrs['last_name'], validations.validate_name)
-        
+
         return super().validate(attrs)
 
     def to_internal_value(self, data):

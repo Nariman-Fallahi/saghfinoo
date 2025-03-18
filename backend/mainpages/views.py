@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -24,7 +23,7 @@ class GetMainpageAPIView(APIView):
             validations.validate_username(page)
         except ValueError as v:
             return Response({'errors':{'page':str(v)}, 'status':400})
-        
+
         try:
             mainpage = Mainpage.objects.filter(page=page)
         except Mainpage.DoesNotExist:
@@ -33,17 +32,17 @@ class GetMainpageAPIView(APIView):
         mainpage = MainpageResponseSerializer(mainpage, many=True).data
 
         return Response({'data':mainpage, 'status':200})
-    
+
     def post(self, req, page):
         try:
             validations.validate_username(page)
         except ValueError as v:
             return Response({'errors':{'page':str(v)}, 'status':400})
- 
+
         serializer = MainpageSerializer(data=req.data)
         if serializer.is_valid():
             serializer.save(page=page)
-        
+
             return Response({'msg':'done', 'status':200})
 
         return Response({'errors':serializer.errors, 'status':400})

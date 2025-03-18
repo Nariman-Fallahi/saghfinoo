@@ -17,9 +17,8 @@ from common.utils.request import get_page_and_limit, get_client_ip
 from common import codes
 from common.utils import validations
 
-from .serializers import AdvertisementSerializer, AdvertisementPreviewResponseSerializer, AdvertisementResponseSerializer, SuggestedSearchResponseSerializer, RealtorAdvertisementPreviewResponseSerializer, RealtorAdvertisementResponseSerializer, UserSavedAdvertisementPreviewResponseSerializer, AdvertisementImageResponseSerializer, AdvertisementVideoResponseSerializer, AdvertisementChoiceResponseSerializer
+from .serializers import AdvertisementSerializer, AdvertisementPreviewResponseSerializer, AdvertisementResponseSerializer, SuggestedSearchResponseSerializer, UserSavedAdvertisementPreviewResponseSerializer, AdvertisementImageResponseSerializer, AdvertisementVideoResponseSerializer, AdvertisementChoiceResponseSerializer
 from .models import Advertisement, AdvertisementImage, AdvertisementChoice, SuggestedSearch, SavedAdvertisement, AdvertisementVideo
-from realtors.models import Realtor
 from django_ratelimit.decorators import ratelimit
 from django.utils.decorators import method_decorator
 
@@ -32,7 +31,7 @@ class CreateSearchAdvertisementAPIView(APIView):
     serializer_class = AdvertisementSerializer
     permission_classes = [IsAuthenticated, IsRealtor]
     authentication_classes = [JWTAuthentication]
-    
+
     def get_permissions(self):
 
         if self.request.method == "GET":
@@ -55,7 +54,7 @@ class CreateSearchAdvertisementAPIView(APIView):
 
             return Response({"msg": "done", 'id':ad.id, 'status':200})
         return Response({"errors": serializer.errors, 'code':codes.INVALID_FIELD, 'status':400})
-    
+
     @method_decorator(ratelimit(key='ip', method='GET', rate=settings.DEFAULT_RATE_READ))
     def get(self, req):
         """Search advertisements
@@ -64,7 +63,7 @@ class CreateSearchAdvertisementAPIView(APIView):
                                 heating_system: int, flooring: int, province: string, property_type: int, rent: int, city: string,
                                 main_street: string, side_street: string, type_of_transaction: int, deposit: int, area: int, number_of_floors: int,
                                 deposit_from: int, deposit_to: int, rent_from: int, rent_to: int
-                                
+
             equal or greater than values:
                                 room: 5,
                                 parking: 3,
@@ -72,7 +71,7 @@ class CreateSearchAdvertisementAPIView(APIView):
                                 restroom: 4,
                                 elevator: 3,
                                 floor: 5
-                    
+
         """
         qp = req.query_params
         queries = {                             # query_name:validation_function
@@ -88,7 +87,6 @@ class CreateSearchAdvertisementAPIView(APIView):
             'cooling_system': validations.validate_integer,
             'heating_system': validations.validate_integer,
             'flooring': validations.validate_integer,
-            'province': validations.validate_name,
             'property_type': validations.validate_integer,
             'rent': validations.validate_integer,
             'city':validations.validate_name,
@@ -105,7 +103,7 @@ class CreateSearchAdvertisementAPIView(APIView):
             'area_from': validations.validate_integer,
             'area_to': validations.validate_integer,
             'type_of_transaction_name': validations.validate_name,
-            
+
         }
         greater_than_exceptions = {
             'room': 5,
@@ -115,7 +113,7 @@ class CreateSearchAdvertisementAPIView(APIView):
             'elevator': 3,
             'floor': 5,
 
-        } 
+        }
 
         different_fields_name = {
             'reo_username': 'owner__real_estate_office__username',
@@ -157,7 +155,7 @@ class CreateSearchAdvertisementAPIView(APIView):
                 validate_func(value)
             except ValueError as e:
                 return Response({'errors':{field_name:str(e)}, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
-            
+
             ex = greater_than_exceptions.get(field_name, None)
             rg = ranged_fields_from.get(field_name, False) or ranged_fields_to.get(field_name, False)
 
@@ -167,7 +165,7 @@ class CreateSearchAdvertisementAPIView(APIView):
                 from_field_name = ranged_fields_from.get(field_name, None)
                 if from_field_name:
                     kwargs[f'{from_field_name}__gte'] = value
-                
+
                 to_field_name = ranged_fields_to.get(field_name, None)
                 if to_field_name:
                     kwargs[f'{to_field_name}__lte'] = value
@@ -185,7 +183,7 @@ class CreateSearchAdvertisementAPIView(APIView):
         total_pages = math.ceil(Advertisement.objects.filter(**kwargs).count()/limit)
 
         return Response({'data':ads, 'totalPages':total_pages, 'status':200})
-  
+
 
 class GetAllAdvertisementChoicesAPIView(APIView):
 
@@ -259,7 +257,7 @@ class GetEditDeleteAdvertisementAPIView(APIView):
         for video in videos:
             default_storage.delete(video.video)
         videos.delete()
-        
+
 
         ad.owner.real_estate_office.number_of_active_ads -= 1
         ad.owner.real_estate_office.save()
@@ -270,7 +268,7 @@ class GetEditDeleteAdvertisementAPIView(APIView):
         ad.delete()
 
         return Response({'msg':'done', 'status':200})
-    
+
     @method_decorator(ratelimit(key='ip', method='GET', rate=settings.DEFAULT_RATE_READ))
     def get(self, req, advertisement_id):
         """Get one advertisement by id"""
@@ -294,14 +292,14 @@ class GetEditDeleteAdvertisementAPIView(APIView):
 
 
             ad = AdvertisementResponseSerializer(ad).data
-            
+
             ad['images'] = AdvertisementImageResponseSerializer(AdvertisementImage.objects.filter(advertisement=ad['id']), many=True).data
             ad['videos'] = AdvertisementVideoResponseSerializer(AdvertisementVideo.objects.filter(advertisement=ad['id']), many=True).data
-            
+
         except Advertisement.DoesNotExist:
             return Response({'status':404, 'code':codes.OBJ_NOT_FOUND})
-        
-        return Response({"data":ad, 'status':200})        
+
+        return Response({"data":ad, 'status':200})
 
 class GetAllRealtorAdvertisementsAPIView(APIView):
     """get a realtor ads. confirmed or not confirmed"""
@@ -315,15 +313,15 @@ class GetAllRealtorAdvertisementsAPIView(APIView):
             page, limit = get_page_and_limit(req)
         except ValueError as e:
             return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
-        
+
         ads = Advertisement.objects.filter(owner=req.realtor.id)[page*limit:page*limit+limit]
         ads = AdvertisementPreviewResponseSerializer(ads, many=True)
 
         total_pages = math.ceil(Advertisement.objects.filter(owner=req.realtor.id).count()/limit)
 
-        
+
         return Response({'data':ads.data, 'totalPages': total_pages, 'status':200})
-    
+
 
 class GetRealtorAdvertisementAPIView(APIView):
     """get a realtor ad by id. confrimed or not confirmed"""
@@ -338,7 +336,7 @@ class GetRealtorAdvertisementAPIView(APIView):
             ad = AdvertisementResponseSerializer(ad).data
             ad['images'] = AdvertisementImageResponseSerializer(AdvertisementImage.objects.filter(advertisement=ad['id']), many=True).data
             ad['videos'] = AdvertisementVideoResponseSerializer(AdvertisementVideo.objects.filter(advertisement=ad['id']), many=True).data
-            
+
         except Advertisement.DoesNotExist:
             return Response({'status':404, 'errors':{'non-field-error': 'advertisement not found'}, 'code':codes.OBJ_NOT_FOUND})
 
@@ -347,7 +345,7 @@ class GetRealtorAdvertisementAPIView(APIView):
 class UploadAdvertisementImageAPIView(APIView):
     permission_classes = [IsAuthenticated, IsAdvertisementOwner]
     authentication_classes = [JWTAuthentication]
-    
+
     @method_decorator(ratelimit(key='ip', method='POST', rate=settings.DEFAULT_RATE_WRITE))
     def post(self, req, advertisement_id):
         """upload advertisement image.
@@ -358,7 +356,7 @@ class UploadAdvertisementImageAPIView(APIView):
 
         if Image.open(image).format not in ('PNG', 'JPEG'):
             return Response({"errors":{"image":"invalid image format (accepted formats: PNG, JPEG)"}, 'status':400, 'code':codes.INVALID_FILE_FORMAT})
-    
+
         try:
             re = Advertisement.objects.get(id=advertisement_id)
         except Advertisement.DoesNotExist:
@@ -397,7 +395,7 @@ class DeleteAdvertisementUploadedImageAPIView(APIView):
             image = AdvertisementImage.objects.get(id=image_id)
         except AdvertisementImage.DoesNotExist:
             return Response({'errors':{"non-field-error":'image not found'}, 'status':404, 'code':codes.OBJ_NOT_FOUND})
-        
+
         self.check_object_permissions(req, image.advertisement)
 
         default_storage.delete(image.image)
@@ -420,10 +418,10 @@ class SetAdvertisementPrimaryImageAPIView(APIView):
             return Response({'errors':{"non-field-error":'image not found'}, 'status':404, 'code':codes.OBJ_NOT_FOUND})
 
         self.check_object_permissions(req, ad)
-        
+
         if image.advertisement != ad:
             return Response({'errors':{'image':'this image is not for this advertisement'}})
-        
+
         ad.image_full_path = image.image_full_path
         ad.save()
 
@@ -448,9 +446,9 @@ class DeleteAllRealtorAdvertisementsAPIView(APIView):
         for video in videos:
             default_storage.delete(video.video)
         videos.delete()
-        
+
         Advertisement.objects.filter(owner=req.realtor.id).delete()
-        
+
         req.realtor.real_estate_office.number_of_active_ads -= req.realtor.number_of_active_ads
         req.realtor.real_estate_office.save()
 
@@ -482,7 +480,7 @@ class UploadAdvertisementVideoAPIView(APIView):
 
         file_ext = video.name.split('.')[-1]
         file_name = f'{uuid.uuid4()}.{file_ext}'
-        
+
 
         if AdvertisementImage.objects.filter(advertisement=re).count() + AdvertisementVideo.objects.filter(advertisement=re).count() >= settings.ADVERTISEMENT_MEDIA_LIMIT:
             return Response({'errors':{'non-field-error':'maximum image and video upload limit'}, 'status':400, 'code':codes.MAX_LIMIT_EXCEEDED})
@@ -499,7 +497,7 @@ class UploadAdvertisementVideoAPIView(APIView):
 
 class DeleteAdvertisementVideoAPIView(APIView):
     pass
-    
+
 
 
 ####################################     saved advertisements      ###################################################
@@ -523,14 +521,14 @@ class SaveUnsaveAdvertisementAPIView(APIView):
             return Response({'errors':{'non-field-error':'advertisement is already saved'}, 'code':codes.AD_ALREADY_SAVED, 'status':400})
         except SavedAdvertisement.DoesNotExist:
             pass
-        
+
         sad = SavedAdvertisement()
         sad.advertisement = ad
         sad.user = req.user
         sad.save()
 
         return Response({'msg':'done', 'status':200})
-        
+
     @method_decorator(ratelimit(key='ip', method='DELETE', rate=settings.DEFAULT_RATE_WRITE))
     def delete(self, req, advertisement_id):
         """unsave advertisement"""
@@ -538,12 +536,12 @@ class SaveUnsaveAdvertisementAPIView(APIView):
             sad = SavedAdvertisement.objects.get(advertisement=advertisement_id, user=req.user.id)
         except SavedAdvertisement.DoesNotExist:
             return Response({'errors':{'non-field-error':'this advertisement not saved'}, 'code':codes.AD_NOT_SAVED, 'status':400})
-        
+
         sad.delete()
         return Response({'msg':'done', 'status':200})
-    
 
-    
+
+
 
 class GetUserSavedAdvertisementAPIView(APIView):
     permission_classes = [IsAuthenticated]
@@ -556,12 +554,12 @@ class GetUserSavedAdvertisementAPIView(APIView):
             page, limit = get_page_and_limit(req)
         except ValueError as e:
             return Response({'errors':e.dict, 'code':codes.INVALID_QUERY_PARAM, 'status':400})
-        
+
         ads = SavedAdvertisement.objects.filter(user=req.user.id)[page*limit:page*limit+limit]
         ads = UserSavedAdvertisementPreviewResponseSerializer(ads, many=True).data
 
         total_pages = math.ceil(SavedAdvertisement.objects.filter(user=req.user.id).count()/limit)
-            
+
         return Response({'data':ads, 'totalPages':total_pages, 'status':200})
 
     @method_decorator(ratelimit(key='ip', method='DELETE', rate=settings.DEFAULT_RATE_WRITE))
@@ -570,7 +568,7 @@ class GetUserSavedAdvertisementAPIView(APIView):
         SavedAdvertisement.objects.filter(user=req.user.id).delete()
 
         return Response({"msg":"done", 'status':200})
-        
+
 
 ##################### suggested searchs  #######################
 
@@ -578,7 +576,7 @@ class GetAllSuggestedSearchsAPIView(APIView):
 
     @method_decorator(ratelimit(key='ip', method='GET', rate=settings.DEFAULT_RATE_READ))
     def get(self, req):
-        
+
         cs = SuggestedSearch.objects.all().order_by('-priority')[:settings.SUGGESTED_SEARCH_LIMIT]
         cs = SuggestedSearchResponseSerializer(cs, many=True).data
 
