@@ -119,7 +119,7 @@ class AdvertisementSerializer(serializers.ModelSerializer):
         data['type_of_restroom'] = data.get('typeOfRestroom', data.get('type_of_restroom', None))
         data['cooling_system'] = data.get('coolingSystem', data.get('cooling_system', None))
         data['heating_system'] = data.get('heatingSystem', data.get('heating_system', None))
-        data['buy'] = data['rent']
+
         return super().to_internal_value(data)
 
 
@@ -140,7 +140,7 @@ class UserSavedAdvertisementPreviewResponseSerializer(serializers.ModelSerialize
             'side_street': instance.advertisement.side_street,
             'deposit': instance.advertisement.deposit,
             'rent': instance.advertisement.rent,
-            'buy': instance.buy,
+            'buy': instance.advertisement.buy,
             'createdAt': instance.advertisement.created_at,
         }
 
