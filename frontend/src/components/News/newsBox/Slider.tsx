@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { MutableRefObject, useEffect, useRef } from "react";
 import { isMobile } from "@/constant/Constants";
 import SliderBox from "../SliderBox";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next/app";
 import { usePathname } from "next/navigation";
 import { NewsDataType } from "@/types/Type";
 

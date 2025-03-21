@@ -208,6 +208,7 @@ export type AdPostingFormDataType = {
   propertyType?: number;
   deposit?: number;
   rent?: number;
+  buy?: number;
 
   // Specifications
   area?: number;
@@ -245,20 +246,21 @@ export type optionType =
 export type AdPostingApi = {
   city: string | undefined;
   province: string | undefined;
-  main_street: string | undefined;
-  side_street: string | undefined;
-  type_of_transaction: number | undefined;
-  property_type: number | undefined;
+  mainStreet: string | undefined;
+  sideStreet: string | undefined;
+  typeOfTransaction: number | undefined;
+  propertyType: number | undefined;
   deposit: number | undefined;
   rent: number | undefined;
+  buy: number | undefined;
   convertible: boolean | undefined;
   area: number | undefined;
   room: number | undefined;
   floor: number | undefined;
-  number_of_floors: number | undefined;
+  numberOfFloors: number | undefined;
   parking: number | undefined;
   restroom: number | undefined;
-  type_of_restroom: number | undefined;
+  typeOfRestroom: number | undefined;
   storage: number | undefined;
   elevator: number | undefined;
   flooring: number | undefined;

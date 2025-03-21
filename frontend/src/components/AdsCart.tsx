@@ -102,7 +102,7 @@ export default function AdsCart({
     adsSavePending || adsDeletePending || isFetching;
 
   return (
-    <div className="flex flex-wrap justify-between w-full gap-2">
+    <div className="grid grid-cols-3 w-full gap-4 lg:gap-6">
       {isloading ? (
         <S_Ads />
       ) : (
@@ -110,8 +110,8 @@ export default function AdsCart({
           return (
             <div
               key={item.id}
-              className="w-[48%] h-fit flex flex-col border border-[#E1E1E1]
-             rounded-lg mt-6 lg:mt-8 lg:w-[30%] md:rounded-2xl"
+              className="h-fit flex flex-col border border-[#E1E1E1]
+             rounded-lg mt-6 lg:mt-8 md:rounded-2xl"
             >
               <Image
                 width={100}

@@ -34,7 +34,7 @@ export default function MobileMenu({
         {footerItems.map((item, index) => {
           return (
             <div key={index} className="flex flex-col">
-              <h2 className="font-normal text-sm">{item.title}</h2>
+              <p className="font-normal text-sm">{item.title}</p>
               <div className="mt-1 flex flex-col text-[10px]">
                 {item.items.map((subItem, innerIndex) => {
                   return typeof subItem === "string" ? (

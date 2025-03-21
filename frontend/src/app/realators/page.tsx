@@ -30,7 +30,7 @@ export default async function Realators({
     params.append("city", city);
   }
 
-  let data = await fetch(`${baseURL}${Api.realtors}/?${params}`);
+  let data = await fetch(`${baseURL}${Api.Realtors}/?${params}`);
 
   let realatorsData: {
     data: allRealtorDataType[];
@@ -39,7 +39,7 @@ export default async function Realators({
   } = await data.json();
 
   console.log(realatorsData);
-  console.log(`${baseURL}${Api.realtors}/?${params}`);
+  console.log(`${baseURL}${Api.Realtors}/?${params}`);
   
   if (!data.ok) {
     return <ErrNoData />;
