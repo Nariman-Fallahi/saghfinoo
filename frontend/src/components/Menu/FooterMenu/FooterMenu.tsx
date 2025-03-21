@@ -126,13 +126,14 @@ export default function FooterMenu() {
                         target="_blank"
                         key={indexContact}
                         href={itemContact.url}
+                        aria-label={item.fullName}
                       >
                         <Image
                           className="mr-2 ml-2 lg:w-[30px] lg:h-[30px]"
                           width={25}
                           height={25}
                           src={itemContact.image}
-                          alt=""
+                          alt={item.fullName}
                         />
                       </a>
                     );

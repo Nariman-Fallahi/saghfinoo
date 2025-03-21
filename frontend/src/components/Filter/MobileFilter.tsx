@@ -5,51 +5,31 @@ import Image from "next/image";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { CitiesType, SelectionDataType, FilterDataType } from "@/types/Type";
 import { Api, dataKey, useGetRequest } from "@/ApiService";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Input from "./Input";
 import MoreItems from "./MoreItems";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next/app";
 import { usePathname } from "next/navigation";
 import AutocompleteMobile from "./AutocompleteMobile";
+import useUpdateSearchParams from "./useUpdateSearchParams";
 
 type MobileFilterType = {
   isViewMore: boolean;
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
-  // queryObject: {
-  //   [key: string]: string | undefined;
-  // };
-  // urlQuery: FilterDataType | undefined;
 };
 
 export default function MobileFilter({
   isViewMore,
   isOpen,
   setIsOpen,
-  // // queryObject,
-  // urlQuery,
 }: MobileFilterType) {
   const [viewMore, setViewMore] = useState<boolean>(false);
 
   const router = useRouter();
   const pathname = usePathname();
 
-  // const findDefaultValue = (
-  //   options:
-  //     | {
-  //         value: number | string;
-  //         label: string;
-  //       }[]
-  //     | undefined,
-  //   key: string,
-  //   parseToInt = false
-  // ) => {
-  //   const value = queryObject[key];
-  //   if (value === undefined || value === null) return undefined;
-  //   return options?.find(
-  //     (option) => option.value === (parseToInt ? parseInt(value) : value)
-  //   );
-  // };
+  const updateSearchParams = useUpdateSearchParams();
 
   const {
     register,
@@ -59,11 +39,6 @@ export default function MobileFilter({
     watch,
     formState: { errors },
   } = useForm<FilterDataType>();
-
-  // useEffect(() => {
-  //   reset(urlQuery);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   // GetAllCity
   const { data: allCitiesData, isPending: allCitiesPending } = useGetRequest<{
@@ -102,50 +77,8 @@ export default function MobileFilter({
   );
 
   const onSubmit: SubmitHandler<FilterDataType> = (data) => {
-    const filters = {
-      city: data.city,
-      propertyType: data.propertyType,
-      rent_from: data.rent_from,
-      rent_to: data.rent_to,
-      deposit_from: data.deposit_from,
-      deposit_to: data.deposit_to,
-      numberOfBedroom: data.numberOfBedroom,
-      numberOfParking: data.numberOfParking,
-      numberOfStorageRoom: data.numberOfStorageRoom,
-      numberOfElevators: data.numberOfElevators,
-      numberOfRestrooms: data.numberOfRestrooms,
-      typeOfRestroom: data.typeOfRestroom,
-      numberOfFloors: data.numberOfFloors,
-      coolingSystem: data.coolingSystem,
-      heatingSystem: data.heatingSystem,
-    };
-
-    let updatedSearchParams = new URLSearchParams();
-
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value && value !== "undefined-undefined" && value !== "-") {
-        updatedSearchParams.set(key, value);
-      }
-    });
-
-    router.push(`${pathname}?${updatedSearchParams}`);
+    updateSearchParams(data);
   };
-
-  // const propertyTypeDefaultValue = findDefaultValue(
-  //   optionsPropertyType,
-  //   "propertyType",
-  //   true
-  // );
-  // const coolingSystemDefaultValue = findDefaultValue(
-  //   optionsCoolingSystem,
-  //   "coolingSystem",
-  //   true
-  // );
-  // const heatingSystemDefaultValue = findDefaultValue(
-  //   optionsHeatingSystem,
-  //   "heatingSystem",
-  //   true
-  // );
 
   return (
     <>

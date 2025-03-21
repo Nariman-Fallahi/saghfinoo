@@ -18,9 +18,9 @@ export default function DecktopMenu({
   return (
     <footer className="w-full mt-10 pt-7 bg-gray-200 flex-col pb-0 hidden md:flex">
       <div className="w-full flex justify-center">
-        <h2 className="text-lg font-semibold lg:text-[32px] lg:mt-5">
+        <p className="text-lg font-semibold lg:text-[32px] lg:mt-5">
           {staticFooterItems.titleFooterMenu}
-        </h2>
+        </p>
       </div>
 
       <div className="w-full flex justify-between mt-6 p-3 lg:px-12 lg:mt-10">
@@ -57,7 +57,7 @@ export default function DecktopMenu({
         {footerItems.map((item, index) => {
           return (
             <div key={index} className="flex flex-col">
-              <h2 className="text-sm font-normal">{item.title}</h2>
+              <p className="text-sm font-normal">{item.title}</p>
               <div className="mt-1 flex flex-col text-gray-700 text-xs">
                 {item.items.map((subItem, innerIndex) => {
                   return (

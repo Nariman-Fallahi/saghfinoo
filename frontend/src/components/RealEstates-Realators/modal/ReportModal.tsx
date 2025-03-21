@@ -51,7 +51,7 @@ export default function ReportModal({
     url:
       page === "realEstate"
         ? `${Api.CreateReportRealEstate}${id}`
-        : `${Api.realtors}/{id}/report`,
+        : `${Api.Realtors}/{id}/report`,
     key: dataKey.CREATE_REPORT,
     headers: {
       Authorization: `Bearer ${access}`,

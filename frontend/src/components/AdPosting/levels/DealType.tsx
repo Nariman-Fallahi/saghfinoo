@@ -6,10 +6,12 @@ import { useForm, SubmitHandler, Controller, Form } from "react-hook-form";
 import BtnSubmit from "../BtnSubmit";
 import AutocompleteComponent from "../AutocompleteComponent";
 import Input from "../Input";
+import { useWatch } from "react-hook-form";
 import FormWrapper from "../FormWrapper";
 
 type DealType = {
   formData: AdPostingFormDataType | undefined;
+
   setFormData: Dispatch<SetStateAction<AdPostingFormDataType | undefined>>;
   optionsTypeOfTransaction: optionType;
   propertyType: optionType;
@@ -21,10 +23,10 @@ type Inputs = {
   propertyType: number;
   deposit: number;
   rent: number;
+  buy: number;
 };
 
 export default function DealType({
-  formData,
   setFormData,
   optionsTypeOfTransaction,
   propertyType,
@@ -48,6 +50,11 @@ export default function DealType({
     setFormStage((prevState: number) => prevState + 1);
   };
 
+  const watchedTypeOfTransaction = useWatch({
+    control,
+    name: "typeOfTransaction",
+  });
+
   return (
     <FormWrapper handleSubmit={handleSubmit} onSubmit={onSubmit}>
       <Controller
@@ -67,6 +74,7 @@ export default function DealType({
           />
         )}
       />
+
       <Controller
         name="propertyType"
         control={control}
@@ -84,27 +92,42 @@ export default function DealType({
           />
         )}
       />
-      <Input
-        register={register}
-        name="deposit"
-        title="رهن"
-        placeholder={
-          formData?.typeOfTransaction !== 10
-            ? "۵,۰۰۰,۰۰۰"
-            : "وارد کردن رهن ممکن نمیباشد"
-        }
-        errors={errors}
-        disabled={formData?.typeOfTransaction === 10 ? true : false}
-        required={formData?.typeOfTransaction !== 10}
-      />
 
-      <Input
-        register={register}
-        name="rent"
-        title="اجاره"
-        placeholder="۲,۰۰۰,۰۰۰"
-        errors={errors}
-      />
+      {watchedTypeOfTransaction == 7 && (
+        <Input
+          register={register}
+          name="buy"
+          title="خرید"
+          placeholder="۵,۰۰۰,۰۰۰"
+          errors={errors}
+        />
+      )}
+
+      {watchedTypeOfTransaction != 7 && (
+        <>
+          <Input
+            register={register}
+            name="deposit"
+            title="رهن"
+            placeholder={
+              watchedTypeOfTransaction !== 10
+                ? "۵,۰۰۰,۰۰۰"
+                : "وارد کردن رهن ممکن نمیباشد"
+            }
+            errors={errors}
+            disabled={watchedTypeOfTransaction === 10 ? true : false}
+            required={watchedTypeOfTransaction !== 10}
+          />
+
+          <Input
+            register={register}
+            name="rent"
+            title="اجاره"
+            placeholder="۲,۰۰۰,۰۰۰"
+            errors={errors}
+          />
+        </>
+      )}
 
       <BtnSubmit />
     </FormWrapper>

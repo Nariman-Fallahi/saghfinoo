@@ -14,7 +14,11 @@ h6 {
 }
 
 input:focus {
-  outline: none; 
+  outline: none;
+}
+
+ul {
+  list-style: none;
 }
 
 .openMenu {

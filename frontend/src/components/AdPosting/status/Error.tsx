@@ -1,6 +1,6 @@
 import CustomButton from "@/components/CustomButton";
 import Image from "next/image";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next/app";
 
 export default function Error() {
   const router = useRouter();
