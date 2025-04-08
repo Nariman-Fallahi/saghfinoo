@@ -91,12 +91,12 @@ export default function Menu() {
           {
             title: "آگهی های من",
             icon: "/icons/receipt-text.svg",
-            link: "",
+            link: "/userProfile?id=MyAds",
           },
           {
             title: "آگهی های ذخیره شده",
             icon: "/icons/save.svg",
-            link: "",
+            link: "/userProfile?id=SavedAds",
           },
         ]
       : [];
