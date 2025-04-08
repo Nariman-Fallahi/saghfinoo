@@ -123,23 +123,29 @@ export default function AdFormContainer() {
       },
     });
 
-  const { mutate: uploadImageFileMutate, data: uploadImageFileData } =
-    usePostRequest({
-      url: `${Api.Ad}/${idForm}/image`,
-      key: "uploadImageFile",
-      headers: {
-        Authorization: `Bearer ${access}`,
-      },
-    });
+  const {
+    mutate: uploadImageFileMutate,
+    data: uploadImageFileData,
+    isPending: uploadImageFileIsPending,
+  } = usePostRequest({
+    url: `${Api.Ad}/${idForm}/image`,
+    key: "uploadImageFile",
+    headers: {
+      Authorization: `Bearer ${access}`,
+    },
+  });
 
-  const { mutate: uploadVideoFileMutate, data: uploadVideoFileData } =
-    usePostRequest({
-      url: `${Api.Ad}/${idForm}/video`,
-      key: "uploadVideoFile",
-      headers: {
-        Authorization: `Bearer ${access}`,
-      },
-    });
+  const {
+    mutate: uploadVideoFileMutate,
+    data: uploadVideoFileData,
+    isPending: uploadVideoFileIsPending,
+  } = usePostRequest({
+    url: `${Api.Ad}/${idForm}/video`,
+    key: "uploadVideoFile",
+    headers: {
+      Authorization: `Bearer ${access}`,
+    },
+  });
 
   useEffect(() => {
     switch (formStage) {
@@ -325,6 +331,7 @@ export default function AdFormContainer() {
                 files={files}
                 setFiles={setFiles}
                 submitAllFiles={submitAllFiles}
+                isLoading={uploadImageFileIsPending || uploadVideoFileIsPending}
               />
             )}
           </div>
