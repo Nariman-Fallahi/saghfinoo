@@ -102,7 +102,7 @@ export default function AdsCart({
     adsSavePending || adsDeletePending || isFetching;
 
   return (
-    <div className="grid grid-cols-3 w-full gap-4 lg:gap-6">
+    <div className="grid grid-cols-2 w-full gap-4 lg:gap-6 lg:grid-cols-3">
       {isloading ? (
         <S_Ads />
       ) : (
