@@ -6,7 +6,7 @@ import { navigationMenuType } from "@/types/Type";
 import { useModalStore } from "@/store/Register";
 import Link from "next/link";
 import { userInfoDataType } from "@/types/Type";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next/app";
 
 type mobileMenuType = {
   NavigationMenu: navigationMenuType;
@@ -55,8 +55,9 @@ export default function MobileMenu({
           radius="full"
           variant="light"
           onPress={() => setMenuStatus("open")}
+          aria-label="Open / Close Menu"
         >
-          <Image width={24} height={24} src="/icons/menu.svg" alt="" />
+          <Image width={24} height={24} src="/icons/menu.svg" alt="Menu Icon" />
         </Button>
         {iconMenu}
         {AdPostingBtn}
@@ -78,12 +79,13 @@ export default function MobileMenu({
               size="sm"
               variant="light"
               onPress={() => setMenuStatus("close")}
+              aria-label="Open / Close Menu"
             >
               <Image
                 width={24}
                 height={24}
                 src="/icons/close-circle.svg"
-                alt="User Profile"
+                alt="Close Menu"
               />
             </Button>
           </div>
@@ -108,7 +110,7 @@ export default function MobileMenu({
                 height={20}
                 src="/icons/edit.svg"
                 className="mr-2"
-                alt=""
+                alt="Edit Profile"
               />
             )}
             <p className="mr-2 text-xs">
@@ -122,7 +124,7 @@ export default function MobileMenu({
                 height={20}
                 src="/icons/arrow-left-2.svg"
                 className="mr-2"
-                alt=""
+                alt="Icon"
               />
             )}
           </div>
@@ -142,7 +144,7 @@ export default function MobileMenu({
                   width={20}
                   height={20}
                   src="/icons/arrow-left.svg"
-                  alt=""
+                  alt="Icon"
                 />
               </Link>
             );

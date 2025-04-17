@@ -11,7 +11,7 @@ import { Navigation } from "swiper/modules";
 import { Title } from "@/constant/Constants";
 import { NewsDataType } from "@/types/Type";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next/app";
 import { usePathname } from "next/navigation";
 import CustomSwiper from "@/components/CustomSwiper";
 

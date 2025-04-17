@@ -1,13 +1,11 @@
 "use client";
-import { Api, baseURL, dataKey } from "@/ApiService";
+import { Api, dataKey } from "@/ApiService";
 import { useGetRequest } from "@/ApiService";
 import { useParams } from "next/navigation";
-import { AdsDataType, AdsFilterDataType, RealtorDataType } from "@/types/Type";
+import { AdsDataType, RealtorDataType } from "@/types/Type";
 import { useDisclosure } from "@heroui/modal";
 import ModalREA from "@/components/RealEstates-Realators/modal/ModalREA";
 import { CommentType } from "@/types/Type";
-import { useEffect, useState } from "react";
-import { getCookie } from "cookies-next";
 import { useSearchParams } from "next/navigation";
 
 // Components
@@ -26,7 +24,7 @@ export default function RealatorProfile() {
     data: RealtorDataType;
     status: number;
   }>({
-    url: `${Api.realtors}/${params.id}`,
+    url: `${Api.Realtors}/${params.id}`,
     key: [dataKey.GET_REALTOR, params.id.toString()],
     enabled: true,
     staleTime: 5 * 60 * 1000,
@@ -34,7 +32,7 @@ export default function RealatorProfile() {
 
   const { data: realtorCommentsData, status: realtorCommentsStatus } =
     useGetRequest<{ data: CommentType[] }>({
-      url: `${Api.realtors}/${params.id}/comments?page=${swiperPageNumber}`,
+      url: `${Api.Realtors}/${params.id}/comments?page=${swiperPageNumber}`,
       key: [dataKey.GET_REALTOR_COMMENTS, swiperPageNumber],
       enabled: true,
       staleTime: 10 * 60 * 1000,

@@ -4,12 +4,11 @@ import DesktopMenu from "./DesktopMenu";
 import { navigationMenuType } from "@/types/Type";
 import { getCookie } from "cookies-next";
 import Register from "@/components/Register/Register";
-import { Api, dataKey } from "@/ApiService";
+import { Api, dataKey, usePostRequest } from "@/ApiService";
 import { useGetRequest } from "@/ApiService";
 import { userInfoDataType } from "@/types/Type";
-import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next/app";
 import { isMobile, LoginErrorText } from "@/constant/Constants";
 import { ErrorNotification } from "@/notification/Error";
 import CustomButton from "@/components/CustomButton";
@@ -19,7 +18,11 @@ export default function Menu() {
   const access = getCookie("access");
   const router = useRouter();
 
-  const { data, status, refetch } = useGetRequest<userInfoDataType>({
+  const {
+    data: userInfoData,
+    status,
+    refetch,
+  } = useGetRequest<userInfoDataType>({
     url: Api.GetUserInfo,
     key: [dataKey.GET_USER_INFO],
     headers: {
@@ -29,13 +32,25 @@ export default function Menu() {
     enabled: true,
   });
 
+  const { data: isRECData, mutate: isRECMutate } = usePostRequest({
+    url: `${Api.Ad}/`,
+    key: "isRealEstateConsultant",
+    headers: {
+      Authorization: `Bearer ${access}`,
+    },
+  });
+
   useEffect(() => {
+    isRECMutate({});
+
     if (access) {
       refetch();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [access, refetch]);
 
-  const isLogin: boolean = !!access && !!data?.data && status === "success";
+  const isLogin: boolean =
+    !!access && !!userInfoData?.data && status === "success";
 
   const baseMenu: navigationMenuType = [
     {
@@ -76,12 +91,12 @@ export default function Menu() {
           {
             title: "آگهی های من",
             icon: "/icons/receipt-text.svg",
-            link: "",
+            link: "/userProfile/MyAds",
           },
           {
             title: "آگهی های ذخیره شده",
             icon: "/icons/save.svg",
-            link: "",
+            link: "/userProfile/SavedAds",
           },
         ]
       : [];
@@ -90,26 +105,31 @@ export default function Menu() {
 
   const iconMenu = () => {
     return (
-      <Link href={access ? "/proUser" : "newUser"}>
-        <Image
-          width={72}
-          height={32}
-          className="md:w-[77px] md:h-[37px] lg:w-[131px] lg:h-[63px]"
-          src="/icons/Logo.svg"
-          alt=""
-        />
-      </Link>
+      <Image
+        width={72}
+        height={32}
+        className="md:w-[77px] md:h-[37px] lg:w-[131px] lg:h-[63px] cursor-pointer"
+        src="/icons/Logo.svg"
+        alt="Go to homepage"
+        onClick={() => {
+          router.push(access ? "/proUser" : "/newUser");
+        }}
+      />
     );
   };
 
   const AdPostingBtn = () => {
     return (
       <CustomButton
-        onPress={() =>
-          isLogin
-            ? router.push("/adPosting")
-            : ErrorNotification(LoginErrorText)
-        }
+        onPress={() => {
+          if (!isLogin) {
+            ErrorNotification(LoginErrorText);
+          } else if (isRECData.status == 403) {
+            ErrorNotification("فقط مشاور املاک میتواند آگهی ثبت کند.");
+          } else {
+            router.push("/adPosting");
+          }
+        }}
         variant="light"
         radius="sm"
         className="border border-primary text-primary"
@@ -123,15 +143,15 @@ export default function Menu() {
     <>
       <MobileMenu
         NavigationMenu={navigationMenu}
-        userInfoData={data}
+        userInfoData={userInfoData}
         iconMenu={iconMenu()}
         AdPostingBtn={AdPostingBtn()}
         isLogin={isLogin}
       />
-      <Suspense fallback={<div></div>}>
+      <Suspense fallback={null}>
         <DesktopMenu
           NavigationMenu={navigationMenu}
-          userInfoData={data}
+          userInfoData={userInfoData}
           dataStatus={status}
           iconMenu={iconMenu()}
           AdPostingBtn={AdPostingBtn()}

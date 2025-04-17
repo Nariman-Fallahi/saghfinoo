@@ -1,8 +1,7 @@
 "use client";
 import { Pagination } from "@heroui/pagination";
 import { isMobile } from "@/constant/Constants";
-import { useRouter } from "next-nprogress-bar";
-import { usePathname } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type PaginationComponent = {
@@ -14,11 +13,17 @@ export default function PaginationComponent({
 }: PaginationComponent) {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const [pageNumber, setPageNumber] = useState<number>(1);
 
   useEffect(() => {
-    router.push(`${pathname}?page=${pageNumber}`);
+    if (!totalPages) return;
+
+    const updatedSearchParams = new URLSearchParams(searchParams.toString());
+    updatedSearchParams.set("page", pageNumber.toString());
+
+    router.push(`${pathname}?${updatedSearchParams.toString()}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber]);
 

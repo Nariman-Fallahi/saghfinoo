@@ -10,7 +10,7 @@ import {
 } from "react-hook-form";
 import { FilterDataType } from "@/types/Type";
 import { BaseSyntheticEvent } from "react";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next/app";
 import { usePathname } from "next/navigation";
 
 type MoreItemModalType = {

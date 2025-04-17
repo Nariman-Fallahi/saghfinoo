@@ -13,9 +13,10 @@ import { Button } from "@heroui/button";
 import Image from "next/image";
 import { useDisclosure } from "@heroui/modal";
 import MoreItemModal from "./MoreItemModal";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next/app";
 import { usePathname } from "next/navigation";
 import useAddQuery from "@/hooks/useAddQuery";
+import useUpdateSearchParams from "../useUpdateSearchParams";
 
 export type OpenCustomMenu = "rent" | "deposit" | "metre" | null;
 
@@ -31,6 +32,8 @@ DesktopFilterType) {
   const [isTablet, setIsTablet] = useState<boolean>();
   const [openCustomMenu, setOpenCustomMenu] = useState<OpenCustomMenu>(null);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const updateSearchParams = useUpdateSearchParams();
 
   const { setQuery } = useAddQuery();
 
@@ -83,31 +86,7 @@ DesktopFilterType) {
   // }, []);
 
   const onSubmit: SubmitHandler<FilterDataType> = (data) => {
-    const filters = {
-      rent_from: data.rent_from,
-      rent_to: data.rent_to,
-      deposit_from: data.deposit_from,
-      deposit_to: data.deposit_to,
-      numberOfBedroom: data.numberOfBedroom,
-      numberOfParking: data.numberOfParking,
-      numberOfStorageRoom: data.numberOfStorageRoom,
-      numberOfElevators: data.numberOfElevators,
-      numberOfRestrooms: data.numberOfRestrooms,
-      typeOfRestroom: data.typeOfRestroom,
-      numberOfFloors: data.numberOfFloors,
-      coolingSystem: data.coolingSystem,
-      heatingSystem: data.heatingSystem,
-    };
-
-    let updatedSearchParams = new URLSearchParams();
-
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value && value !== "undefined-undefined" && value !== "-") {
-        updatedSearchParams.set(key, value);
-      }
-    });
-
-    router.push(`${pathname}?${updatedSearchParams}`);
+    updateSearchParams(data);
   };
 
   return (

@@ -41,7 +41,7 @@ export default function EmailInput({
           required: "لطفا ایمیل خود را وارد کنید",
           pattern: {
             value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
-            message: "ایمیل معتبر نمی‌باشد",
+            message: "ایمیل معتبر نمی‌باشد.",
           },
         })}
         placeholder="example@email.com"

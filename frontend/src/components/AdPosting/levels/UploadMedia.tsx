@@ -7,9 +7,15 @@ type UploadMediaType = {
   files: (File | null)[];
   setFiles: (files: (File | null)[]) => void;
   submitAllFiles: () => void;
+  isLoading: boolean;
 };
 
-export default function UploadMedia({ files, setFiles, submitAllFiles }: UploadMediaType) {
+export default function UploadMedia({
+  files,
+  setFiles,
+  submitAllFiles,
+  isLoading,
+}: UploadMediaType) {
   const { handleSubmit } = useForm();
   const fileInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -116,7 +122,7 @@ export default function UploadMedia({ files, setFiles, submitAllFiles }: UploadM
           </div>
         ))}
       </div>
-      <BtnSubmit label="ارسال اطلاعات" />
+      <BtnSubmit label="ارسال اطلاعات" isLoading={isLoading} />
     </form>
   );
 }

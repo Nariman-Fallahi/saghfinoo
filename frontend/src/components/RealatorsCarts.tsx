@@ -4,7 +4,7 @@ import { Button } from "@heroui/button";
 import { allRealtorDataType } from "@/types/Type";
 import "react-loading-skeleton/dist/skeleton.css";
 import { isMobile } from "@/constant/Constants";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next/app";
 
 type RealatorsCartsType = {
   data: allRealtorDataType[] | undefined;

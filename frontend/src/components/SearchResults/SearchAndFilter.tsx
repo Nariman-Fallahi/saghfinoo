@@ -8,16 +8,18 @@ import NumberItemsFound from "./NumberItemsFound";
 type SearchAndFilterType = {
   setOpenModal: (value: boolean) => void;
   numberItemsFound: number;
+  propertyTypeText: string;
 };
 
 export default function SearchAndFilter({
   setOpenModal,
   numberItemsFound,
+  propertyTypeText,
 }: SearchAndFilterType) {
   return (
     <div className="w-full flex flex-col mt-16 md:mt-[180px] md:hidden">
       <div className="w-full flex flex-col items-center">
-        <h4 className="font-bold text-sm">املاک اجاره ای</h4>
+        <h4 className="font-bold text-sm">{propertyTypeText}</h4>
         <SearchBox className="w-full p-0" />
       </div>
 
