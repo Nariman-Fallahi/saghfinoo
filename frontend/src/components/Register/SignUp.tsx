@@ -7,7 +7,7 @@ import { Spinner } from "@heroui/spinner";
 import { useRegisterStatus } from "@/store/Register";
 import { RegisterStatusValue } from "@/constant/Constants";
 import { setCookie } from "cookies-next";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next/app";
 import { usePostRequest } from "@/ApiService";
 import { Api } from "@/ApiService";
 import { SignUpDataType } from "@/types/Type";
@@ -45,8 +45,8 @@ export default function SignUp({ token, email }: SignUpType) {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     mutate({
-      first_name: data.fristName,
-      last_name: data.lastName,
+      firstName: data.fristName,
+      lastName: data.lastName,
       password: data.password,
       token: token,
       email: email,

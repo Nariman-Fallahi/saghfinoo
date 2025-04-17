@@ -18,7 +18,7 @@ export enum Api {
   CreateReportRealEstate = "/api/v1/reos/report/create/",
 
   // realtors Api
-  realtors = "/api/v1/realtors",
+  Realtors = "/api/v1/realtors",
   GetAllScoreReasons = "/api/v1/realtors/comments/score-reasons",
   GetAllReportReasonsRealtors = "/api/v1/realtors/report/reasons",
 

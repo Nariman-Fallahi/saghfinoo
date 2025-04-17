@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next/app";
 import CustomButton from "./CustomButton";
 
 export default function BackToHomeButton() {

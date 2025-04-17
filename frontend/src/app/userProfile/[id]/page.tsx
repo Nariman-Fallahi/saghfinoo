@@ -6,7 +6,7 @@ import SavedAds from "@/components/UserProfile/SavedAds";
 import ItemMenu from "@/components/UserProfile/ItemMenu";
 import { notFound } from "next/navigation";
 import { deleteCookie } from "cookies-next";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next/app";
 
 enum UserProfileItem {
   EditingInformation = "EditingInformation",

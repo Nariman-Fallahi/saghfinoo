@@ -1,20 +1,22 @@
 "use client";
 import { baseURL } from "@/ApiService";
+import { useSearchParams } from "next/navigation";
 
 export const useQueryURL = (
   apiURL: string,
   customQueries?: { [key: string]: string }
 ) => {
-  let searchParams;
+  const searchParams = useSearchParams();
+  let searchP;
 
   if (typeof window !== "undefined") {
-    searchParams = new URLSearchParams(window.location.search);
+    searchP = new URLSearchParams(searchParams.toString());
   }
 
   const queryObject: { [key: string]: string } = { ...customQueries };
 
-  searchParams?.forEach((value, key) => {
-    queryObject[key] = value;
+  searchP?.forEach((value, key) => {
+    queryObject[key] = decodeURIComponent(value);
   });
 
   const url = new URL(apiURL, baseURL);

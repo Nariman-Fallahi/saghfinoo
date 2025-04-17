@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { Button } from "@heroui/button";
 import { allrealEstateOfficesDataType } from "@/types/Type";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next/app";
 import { isMobile } from "@/constant/Constants";
 
 type RealEstatesCardsType = {

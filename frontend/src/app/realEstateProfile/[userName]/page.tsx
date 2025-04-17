@@ -113,7 +113,7 @@ export default function RealEstateProfilePage() {
           },
         }}
       />
-      <Consultants userName={params.userName} />
+      <Consultants userName={params.userName.toString()} />
       <Ads
         data={adsData?.data}
         status={adsStatus}
