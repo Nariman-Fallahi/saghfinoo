@@ -6,8 +6,8 @@ import TypesEstate from "@/components/Home/newUser/TypesEstate";
 import LatestNews from "@/components/Home/newUser/LatestNews";
 import Services from "@/components/Home/Services";
 import SearchBox from "@/components/Home/SearchBox";
-import { NewsDataType } from "@/types/Type";
-import { Api, baseURL } from "@/ApiService";
+import { NewsDataType } from "@/Types";
+import { Api, baseURL } from "@/services/ApiService";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -22,11 +22,12 @@ export default async function NewUserHomePage({
 }) {
   const swiperPageNumber = searchParams.swiperPageNumber || "1";
 
-  let data = await fetch(
-    `${baseURL}${Api.News}/?page=${swiperPageNumber}&special=0`
+  const data = await fetch(
+    `${baseURL}${Api.News}/?page=${swiperPageNumber}&special=0`,
+    { cache: "no-store" }
   );
 
-  let newsData: {
+  const newsData: {
     data: NewsDataType[];
     total_pages: number;
     status: number;
@@ -42,11 +43,7 @@ export default async function NewUserHomePage({
         subtitle="اما در سقفینو مشاورین املاک کنار شما میمانند"
         data={ServicesDataNewUserHome}
       />
-      <LatestNews
-        data={newsData.data}
-        totalPages={newsData.total_pages}
-        status={newsData.status}
-      />
+      <LatestNews data={newsData.data} status={newsData.status} />
     </>
   );
 }

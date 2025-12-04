@@ -1,5 +1,5 @@
 import React, { useState, Dispatch, SetStateAction, useEffect } from "react";
-import { AdPostingFormDataType } from "@/types/Type";
+import { AdPostingFormDataType } from "@/Types";
 import BtnSubmit from "../BtnSubmit";
 import { useForm, SubmitHandler } from "react-hook-form";
 
@@ -30,7 +30,7 @@ const Input: React.FC<InputType> = ({ number, onchange }) => {
 export default function AdditionalInformation({
   setFormData,
   sendForm,
-  setFormStage
+  setFormStage,
 }: AdditionalInformationType) {
   const { handleSubmit } = useForm();
 

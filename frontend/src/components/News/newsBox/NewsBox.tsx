@@ -2,7 +2,7 @@ import { Title } from "@/constant/Constants";
 import Image from "next/image";
 import ReadingTimeCard from "../ReadingTimeCard";
 import Slider from "./Slider";
-import { NewsDataType } from "@/types/Type";
+import { NewsDataType } from "@/Types";
 
 type NewsBoxType = {
   title: string;
@@ -17,7 +17,7 @@ export default function NewsBox({
   importantNews,
   newsData,
   pageName,
-  totalPages
+  totalPages,
 }: NewsBoxType) {
   return (
     <div className="flex flex-col mt-6 md:mt-10">

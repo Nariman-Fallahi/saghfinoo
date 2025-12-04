@@ -8,9 +8,9 @@ import { useRegisterStatus } from "@/store/Register";
 import { RegisterStatusValue } from "@/constant/Constants";
 import { setCookie } from "cookies-next";
 import { useRouter } from "@bprogress/next/app";
-import { usePostRequest } from "@/ApiService";
-import { Api } from "@/ApiService";
-import { SignUpDataType } from "@/types/Type";
+import { usePostRequest } from "@/services/ApiService";
+import { Api } from "@/services/ApiService";
+import { SignUpDataType } from "@/Types";
 import InputRegister from "../InputRegister";
 import { useForm, SubmitHandler } from "react-hook-form";
 

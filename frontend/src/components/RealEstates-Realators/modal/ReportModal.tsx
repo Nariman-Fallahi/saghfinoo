@@ -1,7 +1,12 @@
-import { DataModalREA, ReportModaltDataType } from "@/types/Type";
+import { DataModalREA, ReportModaltDataType } from "@/Types";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import UserIcon from "./UserIcon";
-import { Api, dataKey, useGetRequest, usePostRequest } from "@/ApiService";
+import {
+  Api,
+  dataKey,
+  useGetRequest,
+  usePostRequest,
+} from "@/services/ApiService";
 import CustomButton from "@/components/CustomButton";
 import { CookieValueTypes } from "cookies-next";
 import { Spinner } from "@heroui/spinner";

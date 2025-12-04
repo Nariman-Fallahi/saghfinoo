@@ -3,9 +3,9 @@ import {
   FilterDataType,
   ProvincesType,
   SelectionDataType,
-} from "@/types/Type";
+} from "@/Types";
 import { useEffect, useState } from "react";
-import { Api, dataKey, useGetRequest } from "@/ApiService";
+import { Api, dataKey, useGetRequest } from "@/services/ApiService";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
 import SelectionCustomMenu from "./SelectionCustomMenu";

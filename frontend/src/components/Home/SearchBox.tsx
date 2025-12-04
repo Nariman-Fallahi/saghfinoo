@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
-import { Api, dataKey, useGetRequest } from "@/ApiService";
-import { CitiesType } from "@/types/Type";
+import { Api, dataKey, useGetRequest } from "@/services/ApiService";
+import { CitiesType } from "@/Types";
 import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
 import { useRouter } from "@bprogress/next/app";
 

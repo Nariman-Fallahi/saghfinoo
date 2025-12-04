@@ -1,6 +1,6 @@
 "use client";
 
-import { FilterDataType } from "@/types/Type";
+import { FilterDataType } from "@/Types";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 const useUpdateSearchParams = () => {

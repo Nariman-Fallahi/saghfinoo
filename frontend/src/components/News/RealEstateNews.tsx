@@ -2,7 +2,7 @@ import { Title } from "@/constant/Constants";
 import Image from "next/image";
 import CustomButton from "../CustomButton";
 import Card from "./ReadingTimeCard";
-import { NewsDataType } from "@/types/Type";
+import { NewsDataType } from "@/Types";
 
 export default function RealEstateNews({ data }: { data: NewsDataType }) {
   return (

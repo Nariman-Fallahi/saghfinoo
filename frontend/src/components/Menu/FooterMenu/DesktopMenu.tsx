@@ -1,19 +1,19 @@
 import Image from "next/image";
-import { dataMenuType } from "@/types/Type";
-import { staticFooterItemsType } from "@/types/Type";
+import { dataMenuType } from "@/Types";
+import { staticFooterItemsType } from "@/Types";
 
 type DecktopMenuType = {
   dynamicFooterItems: dataMenuType;
   footerItems: dataMenuType;
   staticFooterItems: staticFooterItemsType;
-  Developers: React.FC
+  Developers: React.FC;
 };
 
 export default function DecktopMenu({
   dynamicFooterItems,
   footerItems,
   staticFooterItems,
-  Developers
+  Developers,
 }: DecktopMenuType) {
   return (
     <footer className="w-full mt-10 pt-7 bg-gray-200 flex-col pb-0 hidden md:flex">

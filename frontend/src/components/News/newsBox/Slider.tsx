@@ -5,7 +5,7 @@ import { isMobile } from "@/constant/Constants";
 import SliderBox from "../SliderBox";
 import { useRouter } from "@bprogress/next/app";
 import { usePathname } from "next/navigation";
-import { NewsDataType } from "@/types/Type";
+import { NewsDataType } from "@/Types";
 
 // Import Swiper styles
 import "swiper/css";
@@ -76,7 +76,7 @@ export default function Slider({ pageName, data, totalPages }: SliderType) {
       initialSlide={0}
       mousewheel={!isMobile}
       scrollbar={{ draggable: !isMobile, enabled: !isMobile }}
-      className="w-full h-full mt-4 md:mt-0 md:w-[30%] md:rounded-lg"
+      className="size-full mt-4 md:mt-0 md:w-[30%] md:rounded-lg"
       direction={isMobile ? "horizontal" : "vertical"}
     >
       {data.map((item) => {

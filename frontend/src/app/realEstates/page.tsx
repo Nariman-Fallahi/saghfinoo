@@ -1,5 +1,5 @@
-import { Api, baseURL } from "@/ApiService";
-import { allrealEstateOfficesDataType } from "@/types/Type";
+import { Api, baseURL } from "@/services/ApiService";
+import { allrealEstateOfficesDataType } from "@/Types";
 import ErrNoData from "@/components/ErrNoData";
 import SearchDataNotFound from "@/components/RealEstates-Realators/SearchDataNotFound";
 import { Metadata } from "next";
@@ -30,15 +30,15 @@ export default async function RealEstates({
     params.append("city", city);
   }
 
-  let data = await fetch(`${baseURL}${Api.Reos}/?${params}`);
+  const data = await fetch(`${baseURL}${Api.Reos}/?${params}`, {
+    cache: "no-store",
+  });
 
-  let realEstateData: {
+  const realEstateData: {
     data: allrealEstateOfficesDataType[];
     status: number;
     total_pages: number;
   } = await data.json();
-
-  console.log(realEstateData);
 
   if (!data.ok) {
     return <ErrNoData />;

@@ -1,5 +1,5 @@
-import { Api, baseURL } from "@/ApiService";
-import { allRealtorDataType } from "@/types/Type";
+import { Api, baseURL } from "@/services/ApiService";
+import { allRealtorDataType } from "@/Types";
 import ErrNoData from "@/components/ErrNoData";
 
 // Components
@@ -30,17 +30,16 @@ export default async function Realators({
     params.append("city", city);
   }
 
-  let data = await fetch(`${baseURL}${Api.Realtors}/?${params}`);
+  const data = await fetch(`${baseURL}${Api.Realtors}/?${params}`, {
+    cache: "no-store",
+  });
 
-  let realatorsData: {
+  const realatorsData: {
     data: allRealtorDataType[];
     total_pages: number;
     status: number;
   } = await data.json();
 
-  console.log(realatorsData);
-  console.log(`${baseURL}${Api.Realtors}/?${params}`);
-  
   if (!data.ok) {
     return <ErrNoData />;
   }

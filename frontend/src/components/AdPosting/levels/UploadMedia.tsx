@@ -74,7 +74,7 @@ export default function UploadMedia({
                   type="file"
                   accept=".jpg, .jpeg, .png, .webp, .mp4"
                   onChange={fileChange(index)}
-                  className="w-full h-full hidden absolute"
+                  className="size-full hidden absolute"
                   ref={(el) => {
                     fileInputRefs.current[index] = el;
                   }}
@@ -85,7 +85,7 @@ export default function UploadMedia({
             {files[index] && (
               <>
                 <div
-                  className="w-full h-full items-start justify-end flex
+                  className="size-full items-start justify-end flex
                   absolute p-3 z-20"
                 >
                   <i

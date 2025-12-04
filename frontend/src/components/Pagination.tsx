@@ -6,10 +6,12 @@ import { useEffect, useState } from "react";
 
 type PaginationComponent = {
   totalPages: number | undefined;
+  paramKey?: string;
 };
 
 export default function PaginationComponent({
   totalPages,
+  paramKey,
 }: PaginationComponent) {
   const router = useRouter();
   const pathname = usePathname();
@@ -21,10 +23,9 @@ export default function PaginationComponent({
     if (!totalPages) return;
 
     const updatedSearchParams = new URLSearchParams(searchParams.toString());
-    updatedSearchParams.set("page", pageNumber.toString());
+    updatedSearchParams.set(paramKey || "page", pageNumber.toString());
 
     router.push(`${pathname}?${updatedSearchParams.toString()}`);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber]);
 
   return totalPages && totalPages > 1 ? (

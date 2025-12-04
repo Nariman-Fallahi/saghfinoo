@@ -1,8 +1,8 @@
 "use client";
 import { Title } from "@/constant/Constants";
 import AdsCart from "@/components/AdsCart";
-import { useGetRequest, Api, dataKey } from "@/ApiService";
-import { AdsDataType } from "@/types/Type";
+import { useGetRequest, Api, dataKey } from "@/services/ApiService";
+import { AdsDataType } from "@/Types";
 import { getCookie } from "cookies-next";
 
 export default function NewestHouseRent() {

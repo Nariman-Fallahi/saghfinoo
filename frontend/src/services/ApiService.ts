@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
-import { usePostRequestType } from "./types/Type";
+import { usePostRequestType } from "../Types";
 import { ErrorNotification } from "@/notification/Error";
-import { useGetRequestType } from "./types/Type";
+import { useGetRequestType } from "../Types";
 import axios from "axios";
 
 export enum Api {
@@ -60,6 +60,8 @@ export enum dataKey {
   GET_REALTOR_COMMENTS = "getRealtorComments",
 }
 
+const connectionErrorText = "در ارتباط با سرور مشکلی پیش آمد.";
+
 export const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const axiosInstance = axios.create({
@@ -91,7 +93,7 @@ export const usePostRequest = <dataType>({
       queryClient.invalidateQueries({ queryKey: [key] });
     },
     onError: () => {
-      ErrorNotification("در ارتباط با سرور مشکلی پیش آمد.");
+      ErrorNotification(connectionErrorText);
     },
   });
 };
@@ -115,7 +117,7 @@ export const useGetRequest = <dataType>({
       });
 
       if (response.status !== 200) {
-        ErrorNotification("در ارتباط با سرور مشکلی پیش آمد.");
+        ErrorNotification(connectionErrorText);
       }
 
       return response.data;

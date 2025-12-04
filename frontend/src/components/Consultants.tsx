@@ -2,10 +2,10 @@ import { Title } from "@/constant/Constants";
 import Image from "next/image";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { Api, dataKey } from "@/ApiService";
-import { useGetRequest } from "@/ApiService";
+import { Api, dataKey } from "@/services/ApiService";
+import { useGetRequest } from "@/services/ApiService";
 import PaginationComponent from "./Pagination";
-import { allRealtorDataType } from "@/types/Type";
+import { allRealtorDataType } from "@/Types";
 import { useSearchParams } from "next/navigation";
 
 type ConsultantsType = {

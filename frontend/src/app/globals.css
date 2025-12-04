@@ -13,6 +13,16 @@ h6 {
   direction: rtl;
 }
 
+@layer utilities {
+  .no-scrollbar {
+    @apply [scrollbar-width:none];
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+
 input:focus {
   outline: none;
 }
