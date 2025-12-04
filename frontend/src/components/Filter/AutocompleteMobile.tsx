@@ -1,5 +1,5 @@
 import { SelectTitle } from "@/constant/Constants";
-import { SelectionDataType } from "@/types/Type";
+import { SelectionDataType } from "@/Types";
 import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
 

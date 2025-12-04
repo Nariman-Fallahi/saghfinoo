@@ -1,6 +1,6 @@
 import AdsCart from "../AdsCart";
 import { Title } from "@/constant/Constants";
-import { AdsDataType } from "@/types/Type";
+import { AdsDataType } from "@/Types";
 import PaginationComponent from "../Pagination";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -29,6 +29,7 @@ type AdsType = {
     >
   >;
   isFetching: boolean;
+  paginationParamKey?: string;
 };
 export default function Ads({
   title,
@@ -37,9 +38,12 @@ export default function Ads({
   totalPages,
   refetch,
   isFetching,
+  paginationParamKey,
 }: AdsType) {
   const [isOpenFilterMobileModal, setIsOpenFilterMobileModal] =
     useState<boolean>(false);
+
+  const hasData = !!data && data.length > 0;
 
   return (
     <div className="mt-10 flex flex-col p-4 md:mt-14 md:p-8">
@@ -52,15 +56,16 @@ export default function Ads({
       ) : (
         <>
           <Title title={title} />
-
-          <div className="w-full mt-5">
-            <MobileFilter
-              isOpen={isOpenFilterMobileModal}
-              setIsOpen={setIsOpenFilterMobileModal}
-              isViewMore={false}
-            />
-            <DesktopFilter isViewMore={false} />
-          </div>
+          {hasData && (
+            <div className="w-full mt-5 overflow-x-auto no-scrollbar">
+              <MobileFilter
+                isOpen={isOpenFilterMobileModal}
+                setIsOpen={setIsOpenFilterMobileModal}
+                isViewMore={false}
+              />
+              <DesktopFilter isViewMore={false} />
+            </div>
+          )}
         </>
       )}
 
@@ -71,7 +76,7 @@ export default function Ads({
         isFetching={isFetching}
       />
 
-      {status === "success" && data && data?.length <= 0 && (
+      {!hasData && (
         <div className="flex flex-col items-center mt-5 w-full">
           <Image
             width={130}
@@ -86,7 +91,10 @@ export default function Ads({
         </div>
       )}
 
-      <PaginationComponent totalPages={totalPages} />
+      <PaginationComponent
+        totalPages={totalPages}
+        paramKey={paginationParamKey}
+      />
     </div>
   );
 }

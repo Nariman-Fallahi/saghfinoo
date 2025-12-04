@@ -2,7 +2,7 @@
 import { SwiperSlide } from "swiper/react";
 import Image from "next/image";
 import { Title } from "@/constant/Constants";
-import { CommentType } from "@/types/Type";
+import { CommentType } from "@/Types";
 import { numberToPersian } from "@/constant/Constants";
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 

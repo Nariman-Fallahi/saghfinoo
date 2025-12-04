@@ -1,17 +1,17 @@
 import Image from "next/image";
-import { dataMenuType } from "@/types/Type";
-import { staticFooterItemsType } from "@/types/Type";
+import { dataMenuType } from "@/Types";
+import { staticFooterItemsType } from "@/Types";
 
 type MobileMenuType = {
   footerItems: dataMenuType;
   staticFooterItems: staticFooterItemsType;
-  Developers: React.FC
+  Developers: React.FC;
 };
 
 export default function MobileMenu({
   footerItems,
   staticFooterItems,
-  Developers
+  Developers,
 }: MobileMenuType) {
   return (
     <footer className="w-full mt-10 p-3 pt-10 bg-[#F9F9F9] flex flex-col pb-0 md:hidden">

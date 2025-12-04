@@ -1,13 +1,13 @@
 "use client";
 import Stepper from "./Stepper";
 import { useState, useEffect } from "react";
-import { AdPostingFormDataType } from "@/types/Type";
-import { dataKey, useGetRequest } from "@/ApiService";
-import { Api } from "@/ApiService";
+import { AdPostingFormDataType } from "@/Types";
+import { dataKey, useGetRequest } from "@/services/ApiService";
+import { Api } from "@/services/ApiService";
 import { getCookie } from "cookies-next";
-import { usePostRequest } from "@/ApiService";
-import { SelectionDataType } from "@/types/Type";
-import { AdPostingApi } from "@/types/Type";
+import { usePostRequest } from "@/services/ApiService";
+import { SelectionDataType } from "@/Types";
+import { AdPostingApi } from "@/Types";
 import { isMobile } from "@/constant/Constants";
 
 // Components

@@ -1,8 +1,8 @@
 "use client";
 import { Title } from "@/constant/Constants";
-import { Api } from "@/ApiService";
-import { useGetRequest, dataKey } from "@/ApiService";
-import { CitiesType } from "@/types/Type";
+import { Api } from "@/services/ApiService";
+import { useGetRequest, dataKey } from "@/services/ApiService";
+import { CitiesType } from "@/Types";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useRouter } from "@bprogress/next/app";

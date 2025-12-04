@@ -2,13 +2,13 @@
 import Title from "./Title";
 import NoData from "./NoData";
 import DeleteAllAdsBtn from "./DeleteAllAdsBtn";
-import { Api, dataKey } from "@/ApiService";
-import { usePostRequest } from "@/ApiService";
+import { Api, dataKey } from "@/services/ApiService";
+import { usePostRequest } from "@/services/ApiService";
 import { useEffect, useState } from "react";
 import { Success } from "@/notification/Success";
 import { ErrorNotification } from "@/notification/Error";
-import { useGetRequest } from "@/ApiService";
-import { AdsDataType } from "@/types/Type";
+import { useGetRequest } from "@/services/ApiService";
+import { AdsDataType } from "@/Types";
 import { getCookie } from "cookies-next";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";

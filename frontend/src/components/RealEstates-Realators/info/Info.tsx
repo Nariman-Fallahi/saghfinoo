@@ -1,12 +1,12 @@
 import { Button } from "@heroui/button";
 import Image from "next/image";
-import { useState, useEffect } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useActiveModalName } from "@/store/ReaModalActive";
 import { isMobile, LoginErrorText } from "@/constant/Constants";
 import { getCookie } from "cookies-next";
 import { ErrorNotification } from "@/notification/Error";
+import MoreActions from "./MoreActions";
 
 type InfoType = {
   onOpen: () => void;
@@ -25,95 +25,30 @@ type InfoType = {
   isScore?: boolean;
 };
 
-type ActiveMoreBtnProps = {
-  title: string;
-  icon: string;
-  onPress: () => void;
-};
-
-const ActiveMoreBtn: React.FC<ActiveMoreBtnProps> = ({
-  title,
-  icon,
-  onPress,
-}) => {
-  return (
-    <div className="w-full">
-      <Button
-        className="rounded-none border-b h-10 w-full flex"
-        variant="light"
-        size="sm"
-        onPress={onPress}
-      >
-        <Image width={17} height={17} src={icon} alt="" />
-        {title}
-      </Button>
-    </div>
-  );
-};
-
 export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
-  const [activeMore, setActiveMore] = useState<boolean>(false);
   const { setActiveModalName } = useActiveModalName();
   const access = getCookie("access");
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const handleClickOutside = (event: any) => {
-        if (
-          !event.target.closest(".open-modal-btn") &&
-          !event.target.closest(".selectBtn")
-        ) {
-          setActiveMore(false);
-        }
-      };
-
-      document.addEventListener("click", handleClickOutside);
-
-      return () => {
-        document.removeEventListener("click", handleClickOutside);
-      };
-    }
-  }, []);
-
-  const handleContactInfoBtn = () => {
-    onOpen();
-    setActiveModalName("ContactInfo");
-  };
-
-  const handleShareBtn = () => {
-    onOpen();
-    setActiveModalName("Share");
-    setActiveMore(false);
-  };
-
-  const handleRegisterScoreBtn = () => {
-    if (access) {
-      onOpen();
-      setActiveModalName("Score");
-    } else {
+  const handleAction = (name: "ContactInfo" | "Share" | "Score" | "Report") => {
+    if (["Score", "Report"].includes(name) && !access) {
       ErrorNotification(LoginErrorText);
+      return;
     }
-  };
 
-  const handleViolationReport = () => {
-    if (access) {
-      onOpen();
-      setActiveModalName("Report");
-    } else {
-      ErrorNotification(LoginErrorText);
-    }
+    onOpen();
+    setActiveModalName(name);
   };
 
   return (
     <div className="w-full flex flex-col">
       <div className="w-full h-44 mt-[60px] md:h-[280px] md:mt-0">
         {isPending ? (
-          <div className="-mt-1 w-full h-full">
-            <Skeleton className="w-full h-full" />
+          <div className="-mt-1 size-full">
+            <Skeleton className="size-full" />
           </div>
         ) : (
           <Image
-            className="w-full h-full"
+            className="size-full"
             width={1000}
             height={500}
             quality={100}
@@ -171,56 +106,12 @@ export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
               )}
             </div>
 
-            <div className="flex flex-col items-end md:hidden">
-              {isPending ? (
-                <Skeleton circle width={18} height={18} />
-              ) : (
-                <Button
-                  isIconOnly
-                  size="sm"
-                  variant={activeMore ? "flat" : "light"}
-                  radius="full"
-                  className="open-modal-btn"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setActiveMore(!activeMore);
-                  }}
-                >
-                  <Image width={18} height={18} src="/icons/more.svg" alt="" />
-                </Button>
-              )}
-
-              {activeMore && (
-                <div
-                  className="w-[150px] h-[140px] bg-white absolute mt-10 z-20 rounded-lg
-                   border-[#E1E1E1] border flex flex-col overflow-y-auto selectBtn"
-                >
-                  <ActiveMoreBtn
-                    title="ذخیره"
-                    onPress={handleContactInfoBtn}
-                    icon="/icons/save.svg"
-                  />
-
-                  <ActiveMoreBtn
-                    title="اشتراک گذاری"
-                    onPress={handleShareBtn}
-                    icon="/icons/export.svg"
-                  />
-
-                  <ActiveMoreBtn
-                    title="امتیاز دهی به مشاور"
-                    onPress={handleRegisterScoreBtn}
-                    icon="/icons/like-dislike.svg"
-                  />
-
-                  <ActiveMoreBtn
-                    title="گزارش"
-                    onPress={handleViolationReport}
-                    icon="/icons/warning-2.svg"
-                  />
-                </div>
-              )}
-            </div>
+            <MoreActions
+              isPending={isPending}
+              handleRegisterScoreBtn={() => handleAction("Score")}
+              handleShareBtn={() => handleAction("Share")}
+              handleViolationReport={() => handleAction("Report")}
+            />
 
             <div className="items-center hidden md:flex">
               {isPending ? (
@@ -239,7 +130,7 @@ export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
                   variant="light"
                   radius="full"
                   className="mr-2"
-                  onPress={handleShareBtn}
+                  onPress={() => handleAction("Share")}
                 >
                   <Image
                     width={24}
@@ -306,7 +197,7 @@ export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
               color="danger"
               radius="sm"
               size={isMobile ? "sm" : "md"}
-              onClick={handleContactInfoBtn}
+              onPress={() => handleAction("ContactInfo")}
             >
               {data.titleContactInfoBtn}
             </Button>
@@ -325,7 +216,7 @@ export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
                 <p className="">چه امتیازی به {data.name} میدی؟</p>
 
                 <Button
-                  onPress={handleRegisterScoreBtn}
+                  onPress={() => handleAction("Score")}
                   radius="sm"
                   className="bg-primary text-white w-1/2 mt-2"
                 >
@@ -348,7 +239,7 @@ export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
               variant="light"
               radius="sm"
               className="mt-2"
-              onPress={handleViolationReport}
+              onPress={() => handleAction("Report")}
             >
               <Image width={24} height={24} src="/icons/warning-2.svg" alt="" />
               <span className="cursor-pointer">گزارش تخلف</span>

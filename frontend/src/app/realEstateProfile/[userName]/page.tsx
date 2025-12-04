@@ -1,31 +1,25 @@
 "use client";
 import { useDisclosure } from "@heroui/modal";
 import { useParams, useSearchParams } from "next/navigation";
-import { dataKey, useGetRequest } from "@/ApiService";
-import { Api } from "@/ApiService";
-import {
-  AdsDataType,
-  AdsFilterDataType,
-  CommentType,
-  realEstateOfficesType,
-} from "@/types/Type";
+import { dataKey, useGetRequest } from "@/services/ApiService";
+import { Api } from "@/services/ApiService";
+import { AdsDataType, CommentType, realEstateOfficesType } from "@/Types";
 import ErrNoData from "@/components/ErrNoData";
-import { getCookie } from "cookies-next";
 
 // Components
-import Info from "@/components/RealEstates-Realators/Info";
+import Info from "@/components/RealEstates-Realators/info/Info";
 import ModalREA from "@/components/RealEstates-Realators/modal/ModalREA";
 import Consultants from "@/components/Consultants";
 import Ads from "@/components/RealEstates-Realators/Ads";
 import Comments from "@/components/RealEstates-Realators/Comments";
-import { useQueryURL } from "@/hooks/useQueryURL";
 
 export default function RealEstateProfilePage() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const params = useParams();
-  const access = getCookie("access");
   const searchParams = useSearchParams();
   const swiperPageNumber = searchParams.get("swiperPageNumber") || "1";
+  const realatorAdsPageNumber =
+    searchParams.get("realEstateAdsPageNumber") || "1";
 
   const {
     data: realEstateData,
@@ -38,9 +32,9 @@ export default function RealEstateProfilePage() {
     staleTime: 10 * 60 * 1000,
   });
 
-  const adsURL = useQueryURL(`${Api.Ad}/`, {
-    reo_username: params.userName.toString(),
-  });
+  const adsURL = `${
+    Api.Ad
+  }/?page=${realatorAdsPageNumber}&reo_username=${params.userName.toString()}`;
 
   const {
     data: adsData,
@@ -55,9 +49,6 @@ export default function RealEstateProfilePage() {
     key: [dataKey.GET_REAL_ESTATE_ADS, adsURL],
     enabled: true,
     staleTime: 10 * 60 * 1000,
-    headers: {
-      Authorization: `Bearer ${access}`,
-    },
   });
 
   const { data: commentData, status: commentStatus } = useGetRequest<{
@@ -121,6 +112,7 @@ export default function RealEstateProfilePage() {
         totalPages={adsData?.totalPages}
         refetch={adsRefetch}
         isFetching={adsFetching}
+        paginationParamKey="realEstateAdsPageNumber"
       />
       <Comments data={commentData?.data} status={commentStatus} />
     </>

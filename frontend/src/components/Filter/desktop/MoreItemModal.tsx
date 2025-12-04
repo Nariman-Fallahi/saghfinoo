@@ -8,7 +8,7 @@ import {
   UseFormReset,
   UseFormWatch,
 } from "react-hook-form";
-import { FilterDataType } from "@/types/Type";
+import { FilterDataType } from "@/Types";
 import { BaseSyntheticEvent } from "react";
 import { useRouter } from "@bprogress/next/app";
 import { usePathname } from "next/navigation";

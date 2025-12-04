@@ -9,23 +9,16 @@ import "swiper/css/navigation";
 // import required modules
 import { Navigation } from "swiper/modules";
 import { Title } from "@/constant/Constants";
-import { NewsDataType } from "@/types/Type";
-import { MutableRefObject, useEffect, useRef, useState } from "react";
-import { useRouter } from "@bprogress/next/app";
-import { usePathname } from "next/navigation";
+import { NewsDataType } from "@/Types";
+import { useEffect, useState } from "react";
 import CustomSwiper from "@/components/CustomSwiper";
 
 type LatestNewsType = {
   data: NewsDataType[];
-  totalPages: number;
   status: number;
 };
 
-export default function LatestNews({
-  data,
-  totalPages,
-  status,
-}: LatestNewsType) {
+export default function LatestNews({ data, status }: LatestNewsType) {
   const [completeData, setCompleteData] = useState<NewsDataType[]>([]);
 
   useEffect(() => {
@@ -46,7 +39,7 @@ export default function LatestNews({
 
         <div className="w-full pr-3 mt-4 lg:mt-10">
           <CustomSwiper
-            dataLength={data.length}
+            dataLength={data?.length}
             isPending={false}
             navigation={true}
             modules={[Navigation]}

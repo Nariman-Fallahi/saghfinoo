@@ -1,4 +1,4 @@
-import { Api, baseURL } from "@/ApiService";
+import { Api, baseURL } from "@/services/ApiService";
 import SearchBox from "@/components/Home/SearchBox";
 import { ServicesDataProUserHome } from "@/constant/Constants";
 import { Metadata } from "next";
@@ -6,7 +6,7 @@ import {
   allrealEstateOfficesDataType,
   allRealtorDataType,
   SuggestedSearchesDataType,
-} from "@/types/Type";
+} from "@/Types";
 //  Components
 import Services from "@/components/Home/Services";
 import NewestHouseRent from "@/components/Home/proUser/NewestHouseRent";

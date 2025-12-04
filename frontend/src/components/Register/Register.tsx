@@ -13,9 +13,9 @@ import { useModalStore } from "@/store/Register";
 import { useRegisterStatus } from "@/store/Register";
 import { setCookie } from "cookies-next";
 import { useRouter } from "@bprogress/next/app";
-import { Api } from "@/ApiService";
-import { usePostRequest } from "@/ApiService";
-import { LoginDataType } from "@/types/Type";
+import { Api } from "@/services/ApiService";
+import { usePostRequest } from "@/services/ApiService";
+import { LoginDataType } from "@/Types";
 import { isMobile } from "@/constant/Constants";
 import EmailInput from "./EmailInput";
 

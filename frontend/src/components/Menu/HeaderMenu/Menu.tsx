@@ -1,12 +1,12 @@
 "use client";
 import MobileMenu from "./MobileMenu";
 import DesktopMenu from "./DesktopMenu";
-import { navigationMenuType } from "@/types/Type";
+import { navigationMenuType } from "@/Types";
 import { getCookie } from "cookies-next";
 import Register from "@/components/Register/Register";
-import { Api, dataKey, usePostRequest } from "@/ApiService";
-import { useGetRequest } from "@/ApiService";
-import { userInfoDataType } from "@/types/Type";
+import { Api, dataKey, usePostRequest } from "@/services/ApiService";
+import { useGetRequest } from "@/services/ApiService";
+import { userInfoDataType } from "@/Types";
 import Image from "next/image";
 import { useRouter } from "@bprogress/next/app";
 import { isMobile, LoginErrorText } from "@/constant/Constants";

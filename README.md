@@ -4,7 +4,7 @@
     سقفینو
   </h2>
 
-  <img src="./readmeAssets/image/Cover.png" alt="Cover" style="width: 500px; height: auto; border-radius: 5px" />
+  <img src="./Cover.png" alt="Cover" style="width: 500px; height: auto; border-radius: 5px" />
 </div>
 
 <!-- About -->
@@ -43,7 +43,7 @@
 
 <div dir="rtl">
   <ul>
-    <li>احراض هویت با شماره تلفن</li>
+    <li>احراض هویت با ایمیل</li>
     <li>قابلیت ویرایش اطلاعات کاربر</li>
     <li>اضافه کردن آگهی ها به لیست ‌‌‌ذخیره شده ها و دریافت آن در پروفایل</li>
     <li>قابلیت فیلتر پیشرفته بر روی آگهی ها</li>
@@ -58,16 +58,16 @@
 <div align="center">
   <h2 id="technologiesـusedـinـfrontend">تکنولوژی های استفاده شده در فرانت اند</h2>
 
-<img width="30" align="center" src="./readmeAssets/icon/NextJs.png"> `NextJs`
-<img width="30" align="center" src="./readmeAssets/icon/Ts.png"> `Ts`
-<img width="30" align="center" src="./readmeAssets/icon/Tailwind.png"> `Tailwind`
-<img width="25" align="center" src="./readmeAssets/icon/NextUi.png"> `NextUi`
-<img width="25" align="center" src="./readmeAssets/icon/React-query.ico"> `React Query`
-<img width="30" align="center" src="./readmeAssets/icon/Axios.png"> `Axios`
-<img width="25" align="center" src="./readmeAssets/icon/Swiper.svg"> `Swiper`
-<img width="30" align="center" src="./readmeAssets/icon/Zustand.png"> `Zustand`
+<img width="30" align="center" src="https://img.icons8.com/?size=100&id=uJM6fQYqDaZK&format=png&color=000000"> `Ts`
+<img width="30" align="center" src="https://img.icons8.com/?size=100&id=MWiBjkuHeMVq&format=png&color=000000"> `NextJs`
+<img width="30" align="center" src="https://img.icons8.com/?size=100&id=CIAZz2CYc6Kc&format=png&color=000000"> `Tailwind`
+<img width="25" align="center" src="https://raw.githubusercontent.com/heroui-inc/heroui/main/apps/docs/public/isotipo.png"> `NextUi`
+<img width="25" align="center" src="https://tanstack.com/images/logos/logo-color-100.png"> `React Query`
+<img width="30" align="center" src="https://hexmos.com/freedevtools/svg_icons/axios/axios-plain.svg"> `Axios`
+<img width="25" align="center" src="https://swiperjs.com/images/swiper-logo.svg"> `Swiper`
+<img width="30" align="center" src="https://user-images.githubusercontent.com/958486/218346783-72be5ae3-b953-4dd7-b239-788a882fdad6.svg"> `Zustand`
 
-<img width="25" align="center" src="./readmeAssets/icon/React-Hook-Form.png"> `React Hook Form`
+<img width="25" align="center" src="https://react-hook-form.com/images/logo/react-hook-form-logo-only.png"> `React Hook Form`
 
 </div>
 
@@ -175,5 +175,4 @@ python manage.py runserver
     <span>مریم شکاتی </span>،
     <span>امین خسروتاج </span>،
     <span>سردار وظیفه </span>
-    <!-- <br><span>Link: <a href="https://www.figma.com/design/rYySk0zqhnrBcDnP8l9Afk/🏡Saghfinoo---Real-Estate-Website-(Community)">Saghfinoo (Figma)</a></span> -->
 </div>

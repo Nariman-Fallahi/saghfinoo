@@ -6,7 +6,7 @@ import {
 } from "react-hook-form";
 import Input from "../Input";
 import { Button } from "@heroui/button";
-import { FilterDataType } from "@/types/Type";
+import { FilterDataType } from "@/Types";
 import { BaseSyntheticEvent, useState } from "react";
 import { OpenCustomMenu } from "./DesktopFilter";
 

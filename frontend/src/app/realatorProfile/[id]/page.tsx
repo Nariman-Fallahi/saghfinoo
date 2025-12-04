@@ -1,24 +1,25 @@
 "use client";
-import { Api, dataKey } from "@/ApiService";
-import { useGetRequest } from "@/ApiService";
+import { Api, dataKey } from "@/services/ApiService";
+import { useGetRequest } from "@/services/ApiService";
 import { useParams } from "next/navigation";
-import { AdsDataType, RealtorDataType } from "@/types/Type";
+import { AdsDataType, RealtorDataType } from "@/Types";
 import { useDisclosure } from "@heroui/modal";
 import ModalREA from "@/components/RealEstates-Realators/modal/ModalREA";
-import { CommentType } from "@/types/Type";
+import { CommentType } from "@/Types";
 import { useSearchParams } from "next/navigation";
 
 // Components
-import Info from "@/components/RealEstates-Realators/Info";
+import Info from "@/components/RealEstates-Realators/info/Info";
 import Ads from "@/components/RealEstates-Realators/Ads";
 import Comments from "@/components/RealEstates-Realators/Comments";
-import { useQueryURL } from "@/hooks/useQueryURL";
 
 export default function RealatorProfile() {
   const params = useParams();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const searchParams = useSearchParams();
   const swiperPageNumber = searchParams.get("swiperPageNumber") || "1";
+  const realatorAdsPageNumber =
+    searchParams.get("realatorAdsPageNumber") || "1";
 
   const { data: realtorData, isPending: realtorPending } = useGetRequest<{
     data: RealtorDataType;
@@ -38,7 +39,9 @@ export default function RealatorProfile() {
       staleTime: 10 * 60 * 1000,
     });
 
-  const adsURL = useQueryURL(`${Api.Ad}/`, { owner: params.id.toString() });
+  const adsURL = `${
+    Api.Ad
+  }/?page=${realatorAdsPageNumber}&owner=${params.id.toString()}`;
 
   const {
     data: adsData,
@@ -99,6 +102,7 @@ export default function RealatorProfile() {
         totalPages={adsData?.totalPages}
         refetch={adsRefetch}
         isFetching={adsFetching}
+        paginationParamKey="realatorAdsPageNumber"
       />
       <Comments
         data={realtorCommentsData?.data}

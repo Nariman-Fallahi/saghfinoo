@@ -1,5 +1,5 @@
 import { Title } from "@/constant/Constants";
-import { SuggestedSearchesDataType } from "@/types/Type";
+import { SuggestedSearchesDataType } from "@/Types";
 import Link from "next/link";
 
 type SuggestedSearchesType = {

@@ -1,6 +1,6 @@
 import { Title } from "@/constant/Constants";
 import RealatorsCarts from "@/components/RealatorsCarts";
-import { allRealtorDataType } from "@/types/Type";
+import { allRealtorDataType } from "@/Types";
 
 type TopRealtorsType = {
   data: allRealtorDataType[];

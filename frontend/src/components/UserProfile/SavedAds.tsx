@@ -3,13 +3,18 @@ import Title from "./Title";
 import NoData from "./NoData";
 import DeleteAllAdsBtn from "./DeleteAllAdsBtn";
 import AdsCart from "../AdsCart";
-import { usePostRequest, Api, useGetRequest, dataKey } from "@/ApiService";
+import {
+  usePostRequest,
+  Api,
+  useGetRequest,
+  dataKey,
+} from "@/services/ApiService";
 import { getCookie } from "cookies-next";
 import { Spinner } from "@heroui/spinner";
 import { useParams } from "next/navigation";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { AdsDataType } from "@/types/Type";
+import { AdsDataType } from "@/Types";
 
 export default function SavedAds() {
   const access = getCookie("access");
