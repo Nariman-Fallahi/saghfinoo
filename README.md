@@ -4,7 +4,7 @@
     سقفینو
   </h2>
 
-  <img src="./README_assets/image/Cover.png" alt="Cover" style="width: 500px; height: auto; border-radius: 5px" />
+  <img src="./readmeAssets/image/Cover.png" alt="Cover" style="width: 500px; height: auto; border-radius: 5px" />
 </div>
 
 <!-- About -->
@@ -58,16 +58,16 @@
 <div align="center">
   <h2 id="technologiesـusedـinـfrontend">تکنولوژی های استفاده شده در فرانت اند</h2>
 
-<img width="30" align="center" src="./README_assets/icon/NextJs.png"> `NextJs`
-<img width="30" align="center" src="./README_assets/icon/Ts.png"> `Ts`
-<img width="30" align="center" src="./README_assets/icon/Tailwind.png"> `Tailwind`
-<img width="25" align="center" src="./README_assets/icon/NextUi.png"> `NextUi`
-<img width="25" align="center" src="./README_assets/icon/React-query.ico"> `React Query`
-<img width="30" align="center" src="./README_assets/icon/Axios.png"> `Axios`
-<img width="25" align="center" src="./README_assets/icon/Swiper.svg"> `Swiper`
-<img width="30" align="center" src="./README_assets/icon/Zustand.png"> `Zustand`
+<img width="30" align="center" src="./readmeAssets/icon/NextJs.png"> `NextJs`
+<img width="30" align="center" src="./readmeAssets/icon/Ts.png"> `Ts`
+<img width="30" align="center" src="./readmeAssets/icon/Tailwind.png"> `Tailwind`
+<img width="25" align="center" src="./readmeAssets/icon/NextUi.png"> `NextUi`
+<img width="25" align="center" src="./readmeAssets/icon/React-query.ico"> `React Query`
+<img width="30" align="center" src="./readmeAssets/icon/Axios.png"> `Axios`
+<img width="25" align="center" src="./readmeAssets/icon/Swiper.svg"> `Swiper`
+<img width="30" align="center" src="./readmeAssets/icon/Zustand.png"> `Zustand`
 
-<img width="25" align="center" src="./README_assets/icon/React-Hook-Form.png"> `React Hook Form`
+<img width="25" align="center" src="./readmeAssets/icon/React-Hook-Form.png"> `React Hook Form`
 
 </div>
 

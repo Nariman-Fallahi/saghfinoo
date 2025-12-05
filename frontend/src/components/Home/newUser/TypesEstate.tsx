@@ -24,9 +24,9 @@ export default function TypesEstate() {
                 alt=""
                 sizes="(min-width: 1024px) 100%"
               />
-              <h2 className="mt-3 font-bold text-base lg:text-xl">
+              <p className="mt-3 font-bold text-base lg:text-xl">
                 {numberToPersian(item.number)}
-              </h2>
+              </p>
               <span className="mt-1 font-normal text-sm lg:text-base">
                 {item.title}
               </span>

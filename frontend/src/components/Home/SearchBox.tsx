@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Api, dataKey, useGetRequest } from "@/ApiService";
 import { CitiesType } from "@/types/Type";
 import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next/app";
 
 type TabSearchBoxType = {
   title: string;
@@ -43,22 +43,22 @@ export default function SearchBox() {
 
   return (
     <div
-      style={{ backgroundImage: "url(/image/bgSearch.png)" }}
+      style={{ backgroundImage: "url(/image/bgSearch.webp)" }}
       className="mt-[57px] md:mt-0 flex flex-col items-center p-5
      bg-center bg-cover pb-10 lg:h-screen"
     >
-      <h2
+      <h1
         className="text-white font-bold text-base md:mt-32 md:text-xl lg:text-[56px]
        lg:mt-52"
       >
         سقفینو سقفی برای همه
-      </h2>
-      <h4
+      </h1>
+      <h2
         className="font-bold text-xs text-white text-center mt-1 md:mt-3
        md:text-base lg:text-[32px] lg:mt-9"
       >
         آسانی و سرعت در پیدا کردن یک سقف تازه را در سقفینو تجربه کنید.
-      </h4>
+      </h2>
 
       <div
         className="w-full bg-white shadow rounded-lg flex flex-col p-3 mt-8

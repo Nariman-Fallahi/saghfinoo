@@ -24,9 +24,9 @@ export default function RealEstateNews({ data }: { data: NewsDataType }) {
         <div className="w-full flex flex-col p-3 mt-1 md:1/2">
           <Card time={20} />
 
-          <h2 className="font-bold mt-4 md:text-3xl lg:text-[40px] md:mt-6">
+          <h3 className="font-bold mt-4 md:text-3xl lg:text-[40px] md:mt-6">
             {data.title}
-          </h2>
+          </h3>
 
           <p
             className="text-xs text-[#353535] mt-4 line-clamp-2 md:text-base lg:text-lg

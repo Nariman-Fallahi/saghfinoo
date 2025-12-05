@@ -35,10 +35,6 @@ export default function Input<T extends FieldValues>({
         disabled={disabled}
         {...register(name, {
           required: required ? "لطفا این فیلد را خالی نگزارید" : false,
-          // pattern: {
-          //   value: /^[\u0600-\u06FF\s]+$/,
-          //   message: "لطفا فقط حروف فارسی وارد کنید",
-          // },
         })}
       />
 

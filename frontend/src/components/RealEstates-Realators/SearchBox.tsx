@@ -5,7 +5,7 @@ import { useGetRequest, dataKey } from "@/ApiService";
 import { CitiesType } from "@/types/Type";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next/app";
 import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
 
 type SearchBoxType = {

@@ -19,7 +19,7 @@ export default function ErrorPage({ icon, description, title }: ErrorPage) {
           src={icon}
           alt="ERROR"
         />
-        <h2 className="font-bold text-xl mt-8 md:text-2xl">{title}</h2>
+        <p className="font-bold text-xl mt-8 md:text-2xl">{title}</p>
         <p className="mt-3 text-sm text-center md:text-xl">{description}</p>
 
         <BackToHomeButton />

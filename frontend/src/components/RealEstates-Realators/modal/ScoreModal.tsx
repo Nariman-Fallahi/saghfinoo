@@ -35,7 +35,7 @@ export default function ScoreModal({
     isPending: createRealtorsCommentPending,
     data: createRealtorsCommentData,
   } = usePostRequest<Inputs>({
-    url: `${Api.realtors}${id}/comments`,
+    url: `${Api.Realtors}${id}/comments`,
     key: "createRealtorsComment",
     headers: {
       Authorization: `Bearer ${access}`,
