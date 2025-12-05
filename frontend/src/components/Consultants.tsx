@@ -14,13 +14,13 @@ type ConsultantsType = {
 
 export default function Consultants({ userName }: ConsultantsType) {
   const searchParams = useSearchParams();
-  const pageNumber = searchParams.get("page");
+  const pageNumber = searchParams.get("page") || 1;
 
   const { data, isPending } = useGetRequest<{
     data: allRealtorDataType[];
     total_pages: number;
   }>({
-    url: `${Api.realtors}/?reo_username=${userName}&page=${pageNumber}`,
+    url: `${Api.Realtors}/?reo_username=${userName}&page=${pageNumber}`,
     key: [dataKey.GET_REAL_ESTATE_CONSULTANTS],
     staleTime: 10 * 60 * 1000,
     enabled: true,

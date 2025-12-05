@@ -34,6 +34,10 @@ export default function AdFormContainer() {
   const [files, setFiles] = useState<(File | null)[]>([]);
   const [idForm, setIdForm] = useState<number | undefined>(undefined);
 
+  const [isOkRegisteredAd, setIsOkRegisteredAd] = useState<boolean | null>(
+    null
+  );
+
   const access = getCookie("access");
 
   const { data: selectionData } = useGetRequest<{ data: SelectionDataType[] }>({
@@ -119,23 +123,29 @@ export default function AdFormContainer() {
       },
     });
 
-  const { mutate: uploadImageFileMutate, data: uploadImageFile } =
-    usePostRequest({
-      url: `${Api.Ad}/${idForm}/image`,
-      key: "uploadImageFile",
-      headers: {
-        Authorization: `Bearer ${access}`,
-      },
-    });
+  const {
+    mutate: uploadImageFileMutate,
+    data: uploadImageFileData,
+    isPending: uploadImageFileIsPending,
+  } = usePostRequest({
+    url: `${Api.Ad}/${idForm}/image`,
+    key: "uploadImageFile",
+    headers: {
+      Authorization: `Bearer ${access}`,
+    },
+  });
 
-  const { mutate: uploadVideoFileMutate, data: uploadVideoFile } =
-    usePostRequest({
-      url: `${Api.Ad}/${idForm}/video`,
-      key: "uploadVideoFile",
-      headers: {
-        Authorization: `Bearer ${access}`,
-      },
-    });
+  const {
+    mutate: uploadVideoFileMutate,
+    data: uploadVideoFileData,
+    isPending: uploadVideoFileIsPending,
+  } = usePostRequest({
+    url: `${Api.Ad}/${idForm}/video`,
+    key: "uploadVideoFile",
+    headers: {
+      Authorization: `Bearer ${access}`,
+    },
+  });
 
   useEffect(() => {
     switch (formStage) {
@@ -187,20 +197,21 @@ export default function AdFormContainer() {
     adPostinMutate({
       city: formData?.city,
       province: formData?.province,
-      main_street: formData?.mainSt,
-      side_street: formData?.sideStreet,
-      type_of_transaction: formData?.typeOfTransaction,
-      property_type: formData?.propertyType,
-      deposit: formData?.typeOfTransaction !== 10 ? formData?.deposit : 0,
-      rent: formData?.rent,
+      mainStreet: formData?.mainSt,
+      sideStreet: formData?.sideStreet,
+      typeOfTransaction: formData?.typeOfTransaction,
+      propertyType: formData?.propertyType,
+      deposit: formData?.deposit || 0,
+      rent: formData?.rent || 0,
+      buy: formData?.buy || 0,
       convertible: false,
       area: formData?.area,
       room: formData?.room,
       floor: formData?.floor,
-      number_of_floors: formData?.numberFloors,
+      numberOfFloors: formData?.numberFloors,
       parking: formData?.parking,
       restroom: formData?.restroom,
-      type_of_restroom: formData?.typeOfRestroom,
+      typeOfRestroom: formData?.typeOfRestroom,
       storage: formData?.storage,
       elevator: formData?.elevator,
       flooring: formData?.flooring,
@@ -210,13 +221,29 @@ export default function AdFormContainer() {
     });
   };
 
-  console.log(adPosting);
-
   useEffect(() => {
     if (adPosting && adPosting.msg === "done") {
       setIdForm(adPosting.id);
     }
   }, [adPosting]);
+
+  useEffect(() => {
+    if (
+      adPosting &&
+      adPosting.msg === "done" &&
+      (uploadImageFileData?.msg === "done" ||
+        uploadVideoFileData?.msg === "done")
+    ) {
+      setIsOkRegisteredAd(true);
+    } else if (
+      adPosting &&
+      adPosting.msg !== "done" &&
+      (uploadImageFileData?.msg !== "done" ||
+        uploadVideoFileData?.msg !== "done")
+    ) {
+      setIsOkRegisteredAd(false);
+    }
+  }, [adPosting, uploadImageFileData, uploadVideoFileData]);
 
   return (
     <div
@@ -238,14 +265,14 @@ export default function AdFormContainer() {
         {adPosting && (
           <>
             <div className="w-full flex items-center justify-center flex-col">
-              {adPosting.msg === "done" && <Successful />}
+              {isOkRegisteredAd && <Successful />}
 
-              {adPosting.msg !== "done" && <Error />}
+              {isOkRegisteredAd === false && <Error />}
             </div>
           </>
         )}
 
-        {!adPosting && (
+        {!isOkRegisteredAd && (
           <div
             className="w-full z-10 flex flex-col items-center
           bg-white rounded-2xl p-3 justify-center"
@@ -256,65 +283,57 @@ export default function AdFormContainer() {
               {textTitle}
             </p>
 
-            <div
-              className="mt-1 flex w-full flex-col md:flex-row flex-wrap
-              md:justify-between md:items-center"
-            >
-              {formStage === 1 && (
-                <LocationDetails
-                  setFormData={setFormData}
-                  setFormStage={setFormStage}
-                />
-              )}
+            {formStage === 1 && (
+              <LocationDetails
+                setFormData={setFormData}
+                setFormStage={setFormStage}
+              />
+            )}
 
-              {formStage === 2 && (
-                <DealType
-                  formData={formData}
-                  setFormData={setFormData}
-                  optionsTypeOfTransaction={optionsTypeOfTransaction}
-                  propertyType={optionsPropertyType}
-                  setFormStage={setFormStage}
-                />
-              )}
+            {formStage === 2 && (
+              <DealType
+                formData={formData}
+                setFormData={setFormData}
+                optionsTypeOfTransaction={optionsTypeOfTransaction}
+                propertyType={optionsPropertyType}
+                setFormStage={setFormStage}
+              />
+            )}
 
-              {formStage === 3 && (
-                <Specifications
-                  setFormData={setFormData}
-                  setFormStage={setFormStage}
-                />
-              )}
+            {formStage === 3 && (
+              <Specifications
+                setFormData={setFormData}
+                setFormStage={setFormStage}
+              />
+            )}
 
-              {formStage === 4 && (
-                <Amenities
-                  setFormData={setFormData}
-                  optionsCoolingSystem={optionsCoolingSystem}
-                  optionsFlooring={optionsFlooring}
-                  optionsHeatingSystem={optionsHeatingSystem}
-                  optionsTypeOfRestroom={optionsTypeOfRestroom}
-                  setFormStage={setFormStage}
-                />
-              )}
+            {formStage === 4 && (
+              <Amenities
+                setFormData={setFormData}
+                optionsCoolingSystem={optionsCoolingSystem}
+                optionsFlooring={optionsFlooring}
+                optionsHeatingSystem={optionsHeatingSystem}
+                optionsTypeOfRestroom={optionsTypeOfRestroom}
+                setFormStage={setFormStage}
+              />
+            )}
 
-              {formStage === 5 && (
-                <AdditionalInformation
-                  setFormData={setFormData}
-                  sendForm={sendForm}
-                  setFormStage={setFormStage}
-                />
-              )}
+            {formStage === 5 && (
+              <AdditionalInformation
+                setFormData={setFormData}
+                sendForm={sendForm}
+                setFormStage={setFormStage}
+              />
+            )}
 
-              {formStage === 6 && (
-                <UploadMedia
-                  files={files}
-                  setFiles={setFiles}
-                  submitAllFiles={submitAllFiles}
-                />
-              )}
-
-              {adPosting && adPosting.msg !== "done" && (
-                <div className="w-full flex flex-col items-center justify-center"></div>
-              )}
-            </div>
+            {formStage === 6 && (
+              <UploadMedia
+                files={files}
+                setFiles={setFiles}
+                submitAllFiles={submitAllFiles}
+                isLoading={uploadImageFileIsPending || uploadVideoFileIsPending}
+              />
+            )}
           </div>
         )}
       </div>

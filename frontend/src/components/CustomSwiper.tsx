@@ -1,6 +1,6 @@
 import useAddQuery from "@/hooks/useAddQuery";
 import S_Comments from "@/skeleton/S_Comments";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next/app";
 import { usePathname } from "next/navigation";
 import {
   Dispatch,

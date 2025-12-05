@@ -31,7 +31,7 @@ export default async function ProUserHomePage() {
 
     fetch(`${baseURL}${Api.Reos}/top`).then((response) => response.json()),
 
-    fetch(`${baseURL}${Api.realtors}/top`).then((response) => response.json()),
+    fetch(`${baseURL}${Api.Realtors}/top`).then((response) => response.json()),
   ]);
 
   return (

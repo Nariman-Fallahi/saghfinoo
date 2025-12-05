@@ -1,7 +1,5 @@
 "use client";
 import Title from "./Title";
-import Image from "next/image";
-import { Button } from "@heroui/button";
 import NoData from "./NoData";
 import DeleteAllAdsBtn from "./DeleteAllAdsBtn";
 import { Api, dataKey } from "@/ApiService";
@@ -16,13 +14,16 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { isMobile } from "@/constant/Constants";
 import { Spinner } from "@heroui/spinner";
-
-//TODO EDIT
+import AdsCart from "../AdsCart";
+import { useSearchParams } from "next/navigation";
+import { Button } from "@heroui/button";
+import Image from "next/image";
 
 export default function MyAds() {
-  const [pageNumber, setPageNumber] = useState<number>(1);
-  const [adDeleteId, setAdDeleteId] = useState<number | undefined>(undefined);
   const access = getCookie("access");
+  const searchParams = useSearchParams();
+  const pageNumber = searchParams.get("pageNumber") || "1";
+  const [adDeleteId, setAdDeleteId] = useState<number>();
 
   const {
     mutate: deleteAllAdsDataMutate,
@@ -32,6 +33,19 @@ export default function MyAds() {
     url: Api.DeleteAllMyAds,
     key: "deleteAllAds",
     method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${access}`,
+    },
+  });
+
+  const { data, isPending, refetch, isFetching, isLoading } = useGetRequest<{
+    data: AdsDataType[];
+    totalPages: number;
+  }>({
+    url: `${Api.GetAllMyAds}?page=${pageNumber}`,
+    key: [dataKey.GET_ALL_MY_ADS, pageNumber.toString()],
+    enabled: true,
+    staleTime: 10 * 60 * 1000,
     headers: {
       Authorization: `Bearer ${access}`,
     },
@@ -50,17 +64,7 @@ export default function MyAds() {
     },
   });
 
-  const { data, isPending, refetch } = useGetRequest<{ data: AdsDataType[] }>({
-    url: `${Api.GetAllMyAds}?page=${pageNumber}`,
-    key: [dataKey.GET_ALL_MY_ADS, pageNumber.toString()],
-    enabled: true,
-    staleTime: 10 * 60 * 1000,
-    headers: {
-      Authorization: `Bearer ${access}`,
-    },
-  });
-
-  const clickDeleteAds = (id: number) => {
+  const handleDeleteAds = (id: number) => {
     setAdDeleteId(id);
     deleteAdsDataMutate({});
   };
@@ -83,6 +87,8 @@ export default function MyAds() {
     }
   }, [deleteAdsData, refetch]);
 
+  const isData = data?.data && data?.data.length >= 1 && !isPending;
+
   return (
     <>
       <Title title="آگهی های من" />
@@ -90,8 +96,7 @@ export default function MyAds() {
       {isPending ? (
         <Skeleton width={145} height={20} className="mt-4 md:!w-[180px]" />
       ) : (
-        data?.data &&
-        data?.data.length >= 1 &&
+        isData &&
         (!DeleteAllPending ? (
           <DeleteAllAdsBtn
             onPress={() => {
@@ -131,15 +136,27 @@ export default function MyAds() {
         </div>
       )}
 
-      {data?.data && data?.data.length >= 1 && !isPending && (
+      {isData && (
         <>
           <div className="flex flex-wrap justify-between w-full">
             {data?.data.map((item) => {
               return (
+                // <div className="flex flex-col" key={item.id}>
+                //   <AdsCart
+                //     data={data.data}
+                //     isFetching={isFetching}
+                //     isloading={isLoading}
+                //     refetch={refetch}
+                //   />
+
+                //   <Button className="w-full" radius="sm">
+                //     حذف این آگهی
+                //   </Button>
+                // </div>
                 <div
                   key={item.id}
                   className="w-[48%] rounded-lg flex flex-col items-center relative
-                  lg:w-[30%] border mt-5"
+                lg:w-[30%] border mt-5"
                 >
                   <Image
                     width={500}
@@ -166,19 +183,19 @@ export default function MyAds() {
                   </div>
                   <div className="absolute z-10 w-full flex justify-between p-2 items-center">
                     {/* <div
-                      className={`${
-                        item.is_confirmed ? "bg-gray-300" : "bg-red-300"
-                      } opacity-70 text-xs md:text-sm lg:text-base rounded
-                      flex items-center justify-center p-1 cursor-default`}
-                    >
-                      {item.is_confirmed ? "تایید شده‌" : "در انتظار تایید"}
-                    </div> */}
+                    className={`${
+                      item.is_confirmed ? "bg-gray-300" : "bg-red-300"
+                    } opacity-70 text-xs md:text-sm lg:text-base rounded
+                    flex items-center justify-center p-1 cursor-default`}
+                  >
+                    {item.is_confirmed ? "تایید شده‌" : "در انتظار تایید"}
+                  </div> */}
                     <Button
                       isIconOnly
                       radius="full"
                       variant="light"
                       onPress={() => {
-                        clickDeleteAds(item.id);
+                        handleDeleteAds(item.id);
                       }}
                     >
                       {!deleteAdsPending ? (
@@ -201,7 +218,7 @@ export default function MyAds() {
         </>
       )}
 
-      {data?.data && data?.data.length < 1 && !isPending && (
+      {!isPending && data?.data && data?.data.length < 1 && (
         <NoData
           title="هنوز آگهی ثبت نکردید !"
           description="با ثبت رایگان آگهی در هر جایی که هستید به سرعت ملکتان را معامله کنید."
