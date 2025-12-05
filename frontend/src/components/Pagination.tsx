@@ -26,7 +26,7 @@ export default function PaginationComponent({
     updatedSearchParams.set(paramKey || "page", pageNumber.toString());
 
     router.push(`${pathname}?${updatedSearchParams.toString()}`);
-  }, [pageNumber]);
+  }, [pageNumber, paramKey, pathname, router, searchParams, totalPages]);
 
   return totalPages && totalPages > 1 ? (
     <div className="w-full flex mt-8 ltr justify-center">

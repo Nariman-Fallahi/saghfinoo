@@ -4,7 +4,7 @@
     سقفینو
   </h2>
 
-  <img src="./Cover.png" alt="Cover" style="width: 500px; height: auto; border-radius: 5px" />
+  <img src="./Cover.jpg" alt="Cover" style="width: 500px; height: auto; border-radius: 5px" />
 </div>
 
 <!-- About -->
