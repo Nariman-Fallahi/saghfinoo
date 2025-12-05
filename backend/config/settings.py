@@ -35,9 +35,8 @@ if secret != None:
     SECRET_KEY += secret
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-if os.getenv("DJANGO_DEBUG") == 'true':
-    DEBUG = True
+DEBUG = bool(os.getenv("DJANGO_DEBUG", False))
+
 print('debug mode is', DEBUG)
 
 TESTING = sys.argv[1:2] == ['test']
@@ -248,6 +247,39 @@ STORAGES = {
     },
 }
 
+# LOGGING = {
+#     "version": 1,
+#     'disable_existing_loggers': False,
+
+#     "handlers": {
+#         "console": {
+#             "class": "logging.StreamHandler",
+#             "formatter": "verbose",
+#             "level": os.getenv("LOG_LEVEL", 'ERROR'),
+#         }
+#     },
+
+#     "formatters":{
+#         "verbose": {
+#             "format": "{levelname} {asctime} {name}:{lineno} -- {message}",
+#             "style": "{"
+#         }
+#     },
+    
+#     "loggers": {
+#         "django.request": {
+#             "handlers": ["console"],
+#             "level": "ERROR",
+#             "propagate": False
+#         },
+#         "django":{
+#             "handlers": ["console"],
+#             "level": "INFO",
+#             "propagate": True
+#         }
+#     }
+# }
+
 
 #  S3
 AWS_ACCESS_KEY_ID = os.getenv('S3_ACCESS_KEY')
@@ -354,3 +386,9 @@ EMAIL_HOST = os.getenv("EMAIL_HOST")
 EMAIL_PORT = os.getenv("EMAIL_PORT")
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+
+SMS_API_KEY = os.getenv("SMS_API_KEY")
+
+SEND_OTP_ALLOW_METHODS = ['sms']
+
+SMS_TEMPLATE_ID = int(os.getenv("SMS_TEMPLATE_ID", 321152))

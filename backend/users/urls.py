@@ -7,7 +7,8 @@ urlpatterns = [
     path('login', views.CustomTokenObtainPairView.as_view(), name="login"),
     path('token/refresh', views.CustomTokenRefreshView.as_view(), name='token_refresh'),
 
-    path("verify-number", views.VerifyNumberAPIView.as_view(), name='verify_number'),  
+    path("verify-otp", views.VerifyOTPAPIView.as_view(), name='verify_number'),
+    path('send-otp', views.SendOTPAPIView.as_view(), name='send_otp'),  
     path("complete-signup", views.SignupAPIView.as_view(), name='signup'),
     # path("login", views.login, name='login'),
     path('auth', obtain_auth_token, name='auth'),

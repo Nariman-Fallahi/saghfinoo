@@ -1,6 +1,6 @@
-import random
 import datetime
 import uuid
+from secrets import randbelow
 
 from PIL import Image
 
@@ -16,83 +16,108 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.core.files.storage import default_storage
 from django.core.mail import send_mail
 
+from common.utils.sms import send_sms_otp
 from common import codes
-from .serializers import VerifyNumberSerializer, SignupSerializer, CustomTokenObtainPairSerializer, CustomUserResponseSerializer, ChangePasswordSerializer, CustomUserSerializer
+from .serializers import SendOTPSerializer, VerifyOTPSerializer, SignupSerializer, CustomTokenObtainPairSerializer, CustomUserResponseSerializer, ChangePasswordSerializer, CustomUserSerializer
 from .models import CustomUser
 
 auth_cache = caches['auth']
 
-class VerifyNumberAPIView(APIView):
-    serializer_classes = VerifyNumberSerializer
+
+class SendOTPAPIView(APIView):
+    serializer_classes = SendOTPSerializer
 
     def post(self, req):
 
-        serializer = VerifyNumberSerializer(data=req.data)
-
+        serializer = SendOTPSerializer(data=req.data)
+        
         if serializer.is_valid():
-            email = serializer.data['email']
-            if serializer.data.get('code') == 0:
-                # send code to email
+            # send code to email or phone number
+            username = serializer.get_username_field()
 
-                now = datetime.datetime.now()
-                # delay for send code to a email
-                t = auth_cache.get(email, {}).get('delay', now)
-                if t > now and not settings.TESTING:
-                    return Response({"errors":{'non_field':f"wait {round((t - now).total_seconds())} seconds"}, "code": codes.NUMBER_DELAY, "status":400})
+            now = datetime.datetime.now()
+            # delay for send code to a email or phone number
+            t = auth_cache.get(username, {}).get('delay', now)
+            if t > now and not settings.TESTING:
+                return Response({"errors":{'non_field':f"wait {round((t - now).total_seconds())} seconds"}, "code": codes.NUMBER_DELAY, "status":400})
 
-                code = random.randint(10000, 99999)
-                # todo: send code
-                if settings.DEBUG:
-                    if not settings.TESTING:
-                        print("code:", code)
+            code = 10000 + randbelow(90000)
+            
+            if settings.DEBUG:
+                if not settings.TESTING:
+                    print("code:", code)
+            else:
+                # send otp to email or phone number
+                method = serializer.get_send_otp_method_name()
+
+                if method not in settings.SEND_OTP_ALLOW_METHODS:
+                    return Response({'errors': {'non_field': f'{method} is not currently supported'}, 'status':400})
+
+                if method == "sms":
+                    send_sms_otp(username, code)                    
                 else:
-                    # send otp to email
                     send_mail("Saghfinoo OTP Code", f"Hi. here is the OTP code: {code}", settings.EMAIL_HOST_USER, [email], fail_silently=False)
 
 
-                token = str(uuid.uuid4())
+            token = str(uuid.uuid4())
 
-                auth_cache.set(email, {"delay":now+settings.NUMBER_DELAY, "token":token, "code":code, "tries":0,})
+            auth_cache.set(username, {"delay":now+settings.NUMBER_DELAY, "token":token, "code":code, "tries":0,})
 
-                return Response({"msg":"code sent to email", "code":codes.CODE_SENT_TO_NUMBER, "token":token, "status":200}, headers={"test":True})
-            else:
-                # check code
-                info = auth_cache.get(email, {})
-                if info.get('tries', 0) >= 5:
-                    return Response({"errors":{'code':"to manay tries"}, "code":codes.TO_MANNY_TRIES, "status":400})
+            return Response({"msg":"code sent", "code":codes.OTP_SENT, "token":token, "status":200}, headers={"test":True})
 
-                if info.get('token', '') == '' or info.get('token', '') != serializer.data['token']:
-                    return Response({"errors":{'code':"zero the code first"}, "code":codes.ZERO_CODE_FIRST, "status":400})
+        return Response({"errors":serializer.errors, "code":codes.INVALID_FIELD, "status":400})
 
-                if serializer.data.get('code') == info.get('code', 0) or email == 'saghfinoo@ad.com':
-                    # sign in or go sign up
 
-                    auth_cache.delete(email)
+class VerifyOTPAPIView(APIView):
+    serializer_classes = VerifyOTPSerializer
 
-                    user = CustomUser.objects.filter(email=email)
+    def post(self, req):
 
-                    if len(user) == 0:
-                        # signup
-                        # user not exist go to signup
+        serializer = VerifyOTPSerializer(data=req.data)
 
-                        auth_cache.set(email, {'token':serializer.data['token'],'must signup':True})
+        if serializer.is_valid():
+            username = serializer.get_username_field()
 
-                        return Response({"msg":"Auth done. Go to /api/v1/complete-signup", "code":codes.COMPLETE_SIGNUP, "status":303})
-                    else:
-                        # login
+            info = auth_cache.get(username)
+            if not info:
+                return Response({"errors":{'phone_number': 'Session expired! Go send-otp'}})
+            if info.get('tries', 0) >= 5:
+                return Response({"errors":{'code':"to manay tries"}, "code":codes.TO_MANNY_TRIES, "status":400})
 
-                        user = user[0]
-                        refresh, access = get_jwt_tokens_for_user(user)
+            if info.get('token', '') == '' or info.get('token', '') != serializer.data['token']:
+                return Response({"errors":{'code':"invalid token"}, "code":codes.INVALID_FIELD, "status":400})
 
-                        return Response({"msg":"You are in!", 'access':access, 'refresh':refresh, 'expire': settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(), "code":codes.LOGIN_DONE, "status":200})
+            if info.get('code') and serializer.data.get('code') == info.get('code') or username == 'saghfinoo@ad.com': # by pass for test
+                # sign in or go sign up
+
+                auth_cache.delete(username)
+
+                user = CustomUser.objects.filter(email=username)
+
+                if len(user) == 0:
+                    # signup
+                    # user not exist go to signup
+
+                    auth_cache.delete(username)
+                    auth_cache.set(f'verified_{username}', {'token':serializer.data['token']})
+
+                    return Response({"msg":"Auth done. Go to /api/v1/complete-signup", "code":codes.COMPLETE_SIGNUP, "status":303})
                 else:
-                    # wrong code
-                    info['tries'] = info.get('tries', 0) + 1
-                    auth_cache.set(email, info)
-                    return Response({"errors":{'code':"wrong code"}, "code":codes.WRONG_CODE, "status":400})
+                    # login
+
+                    user = user[0]
+                    refresh, access = get_jwt_tokens_for_user(user)
+
+                    return Response({"msg":"You are in!", 'access':access, 'refresh':refresh, 'expire': settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(), "code":codes.LOGIN_DONE, "status":200})
+            else:
+                # wrong code
+                info['tries'] = info.get('tries', 0) + 1
+                auth_cache.set(username, info)
+                return Response({"errors":{'code':"wrong code"}, "code":codes.WRONG_CODE, "status":400})
 
 
         return Response({"errors":serializer.errors, "code":codes.INVALID_FIELD, "status":400})
+
 
 class SignupAPIView(APIView):
     serializer_classes = SignupSerializer
@@ -104,24 +129,22 @@ class SignupAPIView(APIView):
 
         serializer = SignupSerializer(data=req.data)
         if serializer.is_valid():
+            username = serializer.get_username_field()
+            info = auth_cache.get(f'verified_{username}')
 
-            info = auth_cache.get(serializer.data['email'], {})
+            if not info:
+                return Response({"errors":{'phone_number':"verifiy phone number or email first"}, "code":codes.VERIFY_NUMBER_FIRST, "status":400})
 
-            if not info.get('must signup', False):
-                return Response({"errors":{'email':"verifiy email first"}, "code":codes.VERIFY_NUMBER_FIRST, "status":400})
-
-            user = CustomUser.objects.filter(email=serializer.data['email'])
+            user = CustomUser.objects.filter(username=username)
 
             if len(user) > 0:
                 return Response({"errors":{'email':"user already created"}, "code":codes.USER_EXIST, "status":400})
 
-            user = CustomUser()
-            user.fill_from_dict(serializer.data)
-            user.set_password(serializer.data['password'])
-            user.save()
+            user = CustomUser.objects.create_user(username, serializer.data['password'], serializer.data['first_name'], serializer.data['last_name'])
 
             refresh, access = get_jwt_tokens_for_user(user)
 
+            auth_cache.delete(f'verified_{username}')
             return Response({"msg":"done", "access":access, 'refresh':refresh, 'expire': settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(), "code":codes.LOGIN_DONE, "status":201})
 
         return Response({"errors":serializer.errors, "code":codes.INVALID_FIELD, "status":400})

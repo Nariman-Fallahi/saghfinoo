@@ -7,7 +7,7 @@ verify_number_schema_responses = {
         examples={
             'application/json':{
                 "msg": "code sent to number",
-                "code": codes.CODE_SENT_TO_NUMBER,
+                "code": codes.OTP_SENT,
                 "token":"<token>",
                 "status":200 
             }

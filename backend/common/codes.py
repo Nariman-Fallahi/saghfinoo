@@ -11,7 +11,7 @@ SERVER_ERROR = 'server_error'
 # Users
 
 NUMBER_DELAY = 'number_delay'
-CODE_SENT_TO_NUMBER = 'code_sent_to_number'
+OTP_SENT = 'otp_sent'
 TO_MANNY_TRIES = 'to_manny_tries'
 ZERO_CODE_FIRST = 'zero_code_first'
 LOGIN_DONE =  'login_done'
