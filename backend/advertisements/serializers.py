@@ -1,13 +1,7 @@
 from rest_framework import serializers
-from rest_framework.views import APIView
-from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from common.utils.permissions import IsAdmin, IsRealtor
-from .models import Advertisement, AdvertisementImage, AdvertisementChoice, SavedAdvertisement, SuggestedSearch
+from .models import Advertisement, AdvertisementImage, AdvertisementChoice, SuggestedSearch
 from common.utils import validations
-from realtors.models import Realtor
-from users.models import CustomUser
-from real_estate_offices.models import RealEstateOffice
 
 
 class AdvertisementSerializer(serializers.ModelSerializer):

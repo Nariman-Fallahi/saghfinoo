@@ -30,7 +30,7 @@ class VerifyNumberTests(APITestCase):
 
         resp = self.client.post(self.url, data)
         self.assertEqual(resp.data['status'], 200, resp.data)
-        self.assertEqual(resp.data['code'], codes.CODE_SENT_TO_NUMBER, resp.data)
+        self.assertEqual(resp.data['code'], codes.OTP_SENT, resp.data)
 
     def test_to_manny_wrong_code(self):
         data1 = {'number':self.number, "code":0, 'token':''}
@@ -61,7 +61,7 @@ class VerifyNumberTests(APITestCase):
 
         resp = self.client.post(self.url, data)
         self.assertEqual(resp.data['status'], 200, resp.data)
-        self.assertEqual(resp.data['code'], codes.CODE_SENT_TO_NUMBER, resp.data)
+        self.assertEqual(resp.data['code'], codes.OTP_SENT, resp.data)
 
         data['code'] = auth_cache.get(data['number'])['code']
         data['token'] = resp.data['token']
@@ -77,7 +77,7 @@ class VerifyNumberTests(APITestCase):
         data = {'number':self.number, 'code':0, 'token':''}
         resp = self.client.post(self.url, data)
         self.assertEqual(resp.data['status'], 200, resp.data)
-        self.assertEqual(resp.data['code'], codes.CODE_SENT_TO_NUMBER, resp.data)
+        self.assertEqual(resp.data['code'], codes.OTP_SENT, resp.data)
 
         data['code'] = auth_cache.get(data['number'])['code']
         data['token'] = resp.data['token']
@@ -98,7 +98,7 @@ class VerifyNumberTests(APITestCase):
         data = {'number':self.number, 'code':0, 'token':''}
         resp = self.client.post(self.url, data)
         self.assertEqual(resp.data['status'], 200, resp.data)
-        self.assertEqual(resp.data['code'], codes.CODE_SENT_TO_NUMBER, resp.data)
+        self.assertEqual(resp.data['code'], codes.OTP_SENT, resp.data)
 
         data['code'] = auth_cache.get(data['number'])['code']
         data['token'] = resp.data['token']
@@ -161,7 +161,7 @@ class SignupTests(APITestCase):
         data = {'number':self.number, 'code':0, 'token':''}
         resp = self.client.post(self.verify_number_url, data)
         self.assertEqual(resp.data['status'], 200, resp.data)
-        self.assertEqual(resp.data['code'], codes.CODE_SENT_TO_NUMBER, resp.data)
+        self.assertEqual(resp.data['code'], codes.OTP_SENT, resp.data)
 
         data['code'] = auth_cache.get(data['number'])['code']
         data['token'] = resp.data['token']
@@ -178,7 +178,7 @@ class SignupTests(APITestCase):
         data = {'number':self.number, 'code':0, 'token':''}
         resp = self.client.post(self.verify_number_url, data)
         self.assertEqual(resp.data['status'], 200, resp.data)
-        self.assertEqual(resp.data['code'], codes.CODE_SENT_TO_NUMBER, resp.data)
+        self.assertEqual(resp.data['code'], codes.OTP_SENT, resp.data)
 
         data['code'] = auth_cache.get(data['number'])['code']
         data['token'] = resp.data['token']
@@ -205,7 +205,7 @@ class SignupTests(APITestCase):
         data = {'number':self.number, 'code':0, 'token':''}
         resp = self.client.post(self.verify_number_url, data)
         self.assertEqual(resp.data['status'], 200, resp.data)
-        self.assertEqual(resp.data['code'], codes.CODE_SENT_TO_NUMBER, resp.data)
+        self.assertEqual(resp.data['code'], codes.OTP_SENT, resp.data)
 
         data['code'] = auth_cache.get(data['number'])['code']
         data['token'] = resp.data['token']
