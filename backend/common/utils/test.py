@@ -66,7 +66,7 @@ def login(self, number):
         data = {'number':number, 'code':0, 'token':''}
         resp = self.client.post(reverse('verify_number'), data)
         self.assertEqual(resp.data['status'], 200, resp.data)
-        self.assertEqual(resp.data['code'], codes.CODE_SENT_TO_NUMBER, resp.data)
+        self.assertEqual(resp.data['code'], codes.OTP_SENT, resp.data)
 
         data['code'] = auth_cache.get(data['number'])['code']
         data['token'] = resp.data['token']
