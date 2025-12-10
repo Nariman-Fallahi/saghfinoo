@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { Button } from "@heroui/button";
 import { navigationMenuType } from "@/Types";
-import { useModalStore } from "@/store/Register";
+import { useModalStore } from "@/store/Auth";
 import Link from "next/link";
 import { userInfoDataType } from "@/Types";
 import { Spinner } from "@heroui/spinner";
@@ -14,7 +14,7 @@ type desktopMenuType = {
   userInfoData: userInfoDataType | undefined;
   dataStatus: "error" | "success" | "pending";
   iconMenu: JSX.Element;
-  AdPostingBtn: JSX.Element;
+  adPostingBtn: JSX.Element;
   isLogin: boolean;
 };
 
@@ -23,7 +23,7 @@ export default function DesktopMenu({
   userInfoData,
   dataStatus,
   iconMenu,
-  AdPostingBtn,
+  adPostingBtn: AdPostingBtn,
   isLogin,
 }: desktopMenuType) {
   const { setOpen } = useModalStore();
@@ -90,7 +90,7 @@ export default function DesktopMenu({
             <li>
               <Button
                 variant="light"
-                className="text-[13px] rounded-[0.35rem] ml-2 lg:ml-8"
+                className="text-[13px] rounded-[0.35rem] ml-2 lg:ml-8 lg:mt-1"
                 onPress={() => router.push("/userProfile/EditingInformation")}
               >
                 <Image

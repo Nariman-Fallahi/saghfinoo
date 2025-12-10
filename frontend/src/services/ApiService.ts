@@ -6,35 +6,36 @@ import axios from "axios";
 
 export enum Api {
   // users Api
-  VerifyEmail = "/api/v1/users/verify-number",
-  CompleteSignup = "/api/v1/users/complete-signup",
-  ChangePassword = "/api/v1/users/change-password",
-  EditUserProfile = "/api/v1/users/edit-user",
-  GetUserInfo = "/api/v1/users/user-info",
-  UploadProfileImage = "/api/v1/users/upload-profile-image",
+  SendOTP = "users/send-otp",
+  VerifyOTP = "users/verify-otp",
+  CompleteSignup = "users/complete-signup",
+  ChangePassword = "users/change-password",
+  EditUserProfile = "users/edit-user",
+  GetUserInfo = "users/user-info",
+  UploadProfileImage = "users/upload-profile-image",
 
   // reos Api
-  Reos = "/api/v1/reos",
-  CreateReportRealEstate = "/api/v1/reos/report/create/",
+  Reos = "reos",
+  CreateReportRealEstate = "reos/report/create/",
 
   // realtors Api
-  Realtors = "/api/v1/realtors",
-  GetAllScoreReasons = "/api/v1/realtors/comments/score-reasons",
-  GetAllReportReasonsRealtors = "/api/v1/realtors/report/reasons",
+  Realtors = "realtors",
+  GetAllScoreReasons = "realtors/comments/score-reasons",
+  GetAllReportReasonsRealtors = "realtors/report/reasons",
 
   // ads Api
-  Ad = "/api/v1/ads",
-  GetSelectionData = "/api/v1/ads/choices",
-  DeleteAllMyAds = "/api/v1/ads/self-all",
-  GetAllMyAds = "/api/v1/ads/self",
-  AdsSaved = "/api/v1/ads/saved",
+  Ad = "ads",
+  GetSelectionData = "ads/choices",
+  DeleteAllMyAds = "ads/self-all",
+  GetAllMyAds = "ads/self",
+  AdsSaved = "ads/saved",
 
   // tools Api
-  GetProvinces_Cities = "/api/v1/tools/provinces",
-  SearchCity = "/api/v1/tools/cities",
+  GetProvinces_Cities = "tools/provinces",
+  SearchCity = "tools/cities",
 
   // news Api
-  News = "/api/v1/news",
+  News = "news",
 }
 
 export enum dataKey {
@@ -62,7 +63,7 @@ export enum dataKey {
 
 const connectionErrorText = "در ارتباط با سرور مشکلی پیش آمد.";
 
-export const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+export const baseURL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/`;
 
 export const axiosInstance = axios.create({
   baseURL: baseURL,

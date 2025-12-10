@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Button } from "@heroui/button";
 import { navigationMenuType } from "@/Types";
-import { useModalStore } from "@/store/Register";
+import { useModalStore } from "@/store/Auth";
 import Link from "next/link";
 import { userInfoDataType } from "@/Types";
 import { useRouter } from "@bprogress/next/app";
@@ -12,7 +12,7 @@ type mobileMenuType = {
   NavigationMenu: navigationMenuType;
   userInfoData: userInfoDataType | undefined;
   iconMenu: JSX.Element;
-  AdPostingBtn: JSX.Element;
+  adPostingBtn: JSX.Element;
   isLogin: boolean;
 };
 
@@ -20,7 +20,7 @@ export default function MobileMenu({
   NavigationMenu,
   userInfoData,
   iconMenu,
-  AdPostingBtn,
+  adPostingBtn: AdPostingBtn,
   isLogin,
 }: mobileMenuType) {
   const [menuStatus, setMenuStatus] = useState<"open" | "close" | null>(null);

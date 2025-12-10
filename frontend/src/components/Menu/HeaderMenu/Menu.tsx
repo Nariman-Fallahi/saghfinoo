@@ -3,7 +3,7 @@ import MobileMenu from "./MobileMenu";
 import DesktopMenu from "./DesktopMenu";
 import { navigationMenuType } from "@/Types";
 import { getCookie } from "cookies-next";
-import Register from "@/components/Register/Register";
+import AuthModal from "@/components/Auth/AuthModal";
 import { Api, dataKey, usePostRequest } from "@/services/ApiService";
 import { useGetRequest } from "@/services/ApiService";
 import { userInfoDataType } from "@/Types";
@@ -46,8 +46,7 @@ export default function Menu() {
     if (access) {
       refetch();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [access, refetch]);
+  }, [access, isRECMutate, refetch]);
 
   const isLogin: boolean =
     !!access && !!userInfoData?.data && status === "success";
@@ -145,7 +144,7 @@ export default function Menu() {
         NavigationMenu={navigationMenu}
         userInfoData={userInfoData}
         iconMenu={iconMenu()}
-        AdPostingBtn={AdPostingBtn()}
+        adPostingBtn={AdPostingBtn()}
         isLogin={isLogin}
       />
       <Suspense fallback={null}>
@@ -154,11 +153,11 @@ export default function Menu() {
           userInfoData={userInfoData}
           dataStatus={status}
           iconMenu={iconMenu()}
-          AdPostingBtn={AdPostingBtn()}
+          adPostingBtn={AdPostingBtn()}
           isLogin={isLogin}
         />
       </Suspense>
-      <Register />
+      <AuthModal />
     </>
   );
 }
