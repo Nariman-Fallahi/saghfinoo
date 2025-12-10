@@ -46,17 +46,19 @@ export type usePostRequestType = {
 };
 
 export type LoginDataType = {
-  email: string;
+  phoneNumber: string;
   code: number | string;
   token: string;
 };
+
+export type AuthStepType = "phone" | "otp" | "signUp";
 
 export type SignUpDataType = {
   firstName: string;
   lastName: string;
   password: string;
   token: number | string;
-  email: string;
+  phoneNumber: string;
 };
 
 export type editUserProfileType = {

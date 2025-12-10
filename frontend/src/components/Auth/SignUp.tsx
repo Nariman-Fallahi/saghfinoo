@@ -1,22 +1,21 @@
 import { Button } from "@heroui/button";
-import { useEffect } from "react";
 import { ErrorNotification } from "@/notification/Error";
 import { Success } from "@/notification/Success";
-import { useModalStore } from "@/store/Register";
+import { useModalStore } from "@/store/Auth";
 import { Spinner } from "@heroui/spinner";
-import { useRegisterStatus } from "@/store/Register";
-import { RegisterStatusValue } from "@/constant/Constants";
 import { setCookie } from "cookies-next";
 import { useRouter } from "@bprogress/next/app";
-import { usePostRequest } from "@/services/ApiService";
+import { dataKey, usePostRequest } from "@/services/ApiService";
 import { Api } from "@/services/ApiService";
-import { SignUpDataType } from "@/Types";
+import { AuthStepType, SignUpDataType } from "@/Types";
 import InputRegister from "../InputRegister";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
 
 type SignUpType = {
+  phoneNumber: string;
   token: string;
-  email: string;
+  setAuthStep: (val: AuthStepType) => void;
 };
 
 type Inputs = {
@@ -25,17 +24,20 @@ type Inputs = {
   password: string;
 };
 
-export default function SignUp({ token, email }: SignUpType) {
+export default function SignUp({
+  token,
+  phoneNumber,
+  setAuthStep,
+}: SignUpType) {
   const { setOpen } = useModalStore();
-  const { setRegisterStatus } = useRegisterStatus();
   const router = useRouter();
 
-  const { mutate, isSuccess, data, isPending } = usePostRequest<SignUpDataType>(
-    {
-      url: Api.CompleteSignup,
-      key: "signUp",
-    }
-  );
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending } = usePostRequest<SignUpDataType>({
+    url: Api.CompleteSignup,
+    key: "signUp",
+  });
 
   const {
     register,
@@ -44,36 +46,40 @@ export default function SignUp({ token, email }: SignUpType) {
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    mutate({
-      firstName: data.fristName,
-      lastName: data.lastName,
-      password: data.password,
-      token: token,
-      email: email,
-    });
-  };
-
-  useEffect(() => {
-    if (isSuccess) {
-      if (data.code === "login_done") {
-        setCookie("access", data.access, {
-          maxAge: data.expire,
-          sameSite: "strict",
-        });
-        setCookie("refresh", data.refresh, {
-          sameSite: "strict",
-          httpOnly: true,
-        });
-        console.log(data);
-        Success("ثبت نام با موفقیت انجام شد.");
-        setRegisterStatus(RegisterStatusValue.status1);
-        setOpen(false);
-        router.push("/proUser");
-      } else {
-        ErrorNotification("در ارسال اطلاعات مشکلی پیش آمد.");
+    mutate(
+      {
+        firstName: data.fristName,
+        lastName: data.lastName,
+        password: data.password,
+        token: token,
+        phoneNumber: phoneNumber,
+      },
+      {
+        onSuccess: (data) => {
+          if (data.code === "login_done") {
+            setCookie("access", data.access, {
+              maxAge: data.expire,
+              sameSite: "strict",
+            });
+            setCookie("refresh", data.refresh, {
+              sameSite: "strict",
+              httpOnly: true,
+            });
+            Success("ثبت نام با موفقیت انجام شد.");
+            setAuthStep("phone");
+            setOpen(false);
+            queryClient.invalidateQueries({
+              queryKey: [dataKey.GET_USER_INFO],
+            });
+            router.push("/proUser");
+          }
+        },
+        onError: () => {
+          ErrorNotification("در ارسال اطلاعات مشکلی پیش آمد.");
+        },
       }
-    }
-  }, [isSuccess, data, setRegisterStatus, setOpen, router]);
+    );
+  };
 
   return (
     <form
@@ -81,7 +87,7 @@ export default function SignUp({ token, email }: SignUpType) {
       className="w-full flex flex-col items-center"
     >
       <p className="text-sm text-[#353535] md:mt-2 md:text-base mt-[-30px] text-center">
-        با این ایمیل حساب کاربری وجود ندارد.
+        با این شماره تلفن حساب کاربری وجود ندارد.
         <br />
         برای ثبت نام اطلاعات زیر را کامل کنید.
       </p>

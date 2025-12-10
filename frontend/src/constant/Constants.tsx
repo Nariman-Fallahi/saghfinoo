@@ -1,9 +1,3 @@
-export enum RegisterStatusValue {
-  status1 = "phoneNumber",
-  status2 = "codeSent",
-  status3 = "notRegistered",
-}
-
 type TitleType = {
   title: string;
 };

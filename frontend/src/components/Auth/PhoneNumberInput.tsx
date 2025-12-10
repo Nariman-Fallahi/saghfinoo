@@ -5,24 +5,24 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { TextError } from "@/constant/Constants";
 
 type Inputs = {
-  email: string;
+  phoneNumber: string;
 };
 
-type EmailType = {
-  setEmail: (value: string) => void;
+type PhoneNumberInputProps = {
+  setPhoneNumber: (value: string) => void;
   isSelected: boolean;
   setIsSelected: (value: boolean) => void;
-  handleSendEmail: (email: string) => void;
-  isPendingVerifyEmail: boolean;
+  handleSendOTP: (phoneNumber: string) => void;
+  sendOTPIsPending: boolean;
 };
 
-export default function EmailInput({
-  setEmail,
+export default function PhoneNumberInput({
+  setPhoneNumber,
   isSelected,
   setIsSelected,
-  handleSendEmail,
-  isPendingVerifyEmail,
-}: EmailType) {
+  handleSendOTP,
+  sendOTPIsPending,
+}: PhoneNumberInputProps) {
   const {
     register,
     handleSubmit,
@@ -30,21 +30,21 @@ export default function EmailInput({
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    handleSendEmail(data.email);
-    setEmail(data.email);
+    handleSendOTP(data.phoneNumber);
+    setPhoneNumber(data.phoneNumber);
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full rtl">
       <input
-        {...register("email", {
-          required: "لطفا ایمیل خود را وارد کنید",
+        {...register("phoneNumber", {
+          required: "لطفا شماره تلفن خود را وارد کنید",
           pattern: {
-            value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
-            message: "ایمیل معتبر نمی‌باشد.",
+            value: /^09\d{9}$/,
+            message: "شماره تلفن معتبر نمی‌باشد.",
           },
         })}
-        placeholder="example@email.com"
+        placeholder="مثال: ۰۹۹۳۱۲۳۴۵۶۷"
         type="text"
         className="mt-[40px] p-2 rounded-lg w-full border-[#2F80ED] border
         outline-none text-sm md:p-3 md:mt-[24px]"
@@ -52,7 +52,7 @@ export default function EmailInput({
           boxShadow: "0px 0px 0px 3px rgba(47, 128, 237, 0.19)",
         }}
       />
-      <TextError text={errors.email?.message} />
+      <TextError text={errors.phoneNumber?.message} />
       {/* CheckBox */}
       <div className="mt-[16px] w-full flex items-center">
         <Checkbox
@@ -71,11 +71,11 @@ export default function EmailInput({
       <Button
         type="submit"
         isDisabled={!isSelected}
-        isLoading={isPendingVerifyEmail}
+        isLoading={sendOTPIsPending}
         spinner={<Spinner color="white" size="sm" />}
         className="mt-[64px] w-full rounded-lg p-2 bg-primary text-white md:mt-[50px] md:text-lg"
       >
-        {isPendingVerifyEmail ? "" : "ورود"}
+        {sendOTPIsPending ? "" : "ورود"}
       </Button>
     </form>
   );
