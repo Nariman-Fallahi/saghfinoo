@@ -13,6 +13,11 @@ h6 {
   direction: rtl;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  transition: background-color 0s 600000s, color 0s 600000s !important;
+}
+
 @layer utilities {
   .no-scrollbar {
     @apply [scrollbar-width:none];
@@ -21,7 +26,6 @@ h6 {
     display: none;
   }
 }
-
 
 input:focus {
   outline: none;

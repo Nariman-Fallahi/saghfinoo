@@ -21,7 +21,7 @@ export default function AuthModal() {
   const { isOpen, setOpen } = useModalStore();
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [isSelected, setIsSelected] = useState<boolean>(false);
-  const [otp, setOtp] = useState<string>("");
+  // const [otp, setOtp] = useState<string>("");
   const [focusedInput, setFocusedInput] = useState<number | null>(null);
   const [token, setToken] = useState<string>("");
   const [authStep, setAuthStep] = useState<AuthStepType>("phone");
@@ -105,53 +105,49 @@ export default function AuthModal() {
     );
   };
 
-  const handleVerifyOTP = () => {
-    if (otp === "" || otp.length < 5) {
-      ErrorNotification("لطفا کد ۵ رقمی را کامل وارد نمایید.");
-    } else {
-      verifyOTPMutate(
-        { phoneNumber: phoneNumber, code: otp, token: token },
-        {
-          onSuccess: (data) => {
-            switch (data?.code) {
-              case "complete_signup":
-                setAuthStep("signUp");
-                break;
-              case "wrong_code":
-                ErrorNotification("کد وارد شده اشتباه می‌باشد.");
-                break;
+  const handleVerifyOTP = (otp: string) => {
+    verifyOTPMutate(
+      { phoneNumber: phoneNumber, code: otp, token: token },
+      {
+        onSuccess: (data) => {
+          switch (data?.code) {
+            case "complete_signup":
+              setAuthStep("signUp");
+              break;
+            case "wrong_code":
+              ErrorNotification("کد وارد شده اشتباه می‌باشد.");
+              break;
 
-              case "to_manny_tries":
-                ErrorNotification("لطفا بعد تلاش کنید.");
-                break;
+            case "to_manny_tries":
+              ErrorNotification("لطفا بعد تلاش کنید.");
+              break;
 
-              case "login_done":
-                setCookie("access", data.access, {
-                  maxAge: data.expire,
-                  sameSite: "strict",
-                  secure: process.env.NODE_ENV === "production",
-                });
-                setCookie("refresh", data.refresh, {
-                  sameSite: "strict",
-                  secure: process.env.NODE_ENV === "production",
-                  httpOnly: true,
-                });
-                setOpen(false);
-                Success("ثبت نام با موفقیت انجام شد.");
-                queryClient.invalidateQueries({
-                  queryKey: [dataKey.GET_USER_INFO],
-                });
-                router.push("/proUser");
-                break;
-            }
-          },
-          onError: () => {
-            ErrorNotification("دراعتبارسنجی کد مشکلی پیش آمد.");
-            setAuthStep("phone");
-          },
-        }
-      );
-    }
+            case "login_done":
+              setCookie("access", data.access, {
+                maxAge: data.expire,
+                sameSite: "strict",
+                secure: process.env.NODE_ENV === "production",
+              });
+              setCookie("refresh", data.refresh, {
+                sameSite: "strict",
+                secure: process.env.NODE_ENV === "production",
+                httpOnly: true,
+              });
+              setOpen(false);
+              Success("ثبت نام با موفقیت انجام شد.");
+              queryClient.invalidateQueries({
+                queryKey: [dataKey.GET_USER_INFO],
+              });
+              router.push("/proUser");
+              break;
+          }
+        },
+        onError: () => {
+          ErrorNotification("دراعتبارسنجی کد مشکلی پیش آمد.");
+          setAuthStep("phone");
+        },
+      }
+    );
   };
 
   const handleEditPhoneNumber = () => {
@@ -205,14 +201,14 @@ export default function AuthModal() {
 
               {authStep === "otp" && (
                 <Otp
-                  otp={otp}
-                  setOtp={setOtp}
+                  phoneNumber={phoneNumber}
                   handleFocus={handleFocus}
                   handleBlur={handleBlur}
                   focusedInput={focusedInput}
                   time={time}
                   setTime={setTime}
                   handleVerifyOTP={handleVerifyOTP}
+                  handleSendOTP={handleSendOTP}
                   verifyOTPsPending={verifyOTPsPending}
                   handleEditPhoneNumber={handleEditPhoneNumber}
                 />

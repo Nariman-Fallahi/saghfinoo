@@ -1,8 +1,9 @@
 import OtpInput from "react-otp-input";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@heroui/button";
 import { Spinner } from "@heroui/spinner";
+import { ErrorNotification } from "@/notification/Error";
 
 interface OTPCredentialRequestOptions extends CredentialRequestOptions {
   otp: { transport: string[] };
@@ -14,36 +15,38 @@ interface OTPCredential extends Credential {
 }
 
 type OtpType = {
-  otp: string;
-  setOtp: (value: string) => void;
+  phoneNumber: string;
   handleFocus: (index: number) => void;
   handleBlur: () => void;
   focusedInput: number | null;
   time: number;
   setTime: (value: number) => void;
-  handleVerifyOTP: () => void;
+  handleVerifyOTP: (otp: string) => void;
+  handleSendOTP: (phoneNumber: string) => void;
   verifyOTPsPending: boolean;
   handleEditPhoneNumber: () => void;
 };
 
 export default function Otp({
-  otp: otpState,
-  setOtp,
+  phoneNumber,
   handleFocus,
   handleBlur,
   focusedInput,
   time,
   setTime,
   handleVerifyOTP,
+  handleSendOTP,
   verifyOTPsPending,
   handleEditPhoneNumber,
 }: OtpType) {
   const minutes = Math.floor(time / 60);
   const seconds = time % 60;
+  const [otpValue, setOtpValue] = useState("");
 
   const ResubmitCode = () => {
     setTime(90);
-    handleVerifyOTP();
+    setOtpValue("");
+    handleSendOTP(phoneNumber);
   };
 
   useEffect(() => {
@@ -60,37 +63,41 @@ export default function Otp({
         if (!credential || credential.type !== "otp") return;
         const otpCode = (credential as OTPCredential).code.trim();
         if (otpCode && otpCode.length === 5) {
-          setOtp(otpCode);
+          setOtpValue(otpCode);
+          abortController.abort();
         }
-      });
+      })
+      .catch(() => {});
 
     const timeoutId = setTimeout(() => abortController.abort(), 120_000);
 
     return () => {
       clearTimeout(timeoutId);
-      abortController.abort();
     };
-  }, [setOtp]);
+  }, []);
 
-  useEffect(() => {
-    if (otpState.length === 5) {
-      handleVerifyOTP();
+  const handleOtpComplete = (otp: string) => {
+    if (otp.length === 5) {
+      setTimeout(() => handleVerifyOTP(otpValue), 100);
     }
-  }, [handleVerifyOTP, otpState]);
+  };
 
   return (
     <div className="flex flex-col items-center w-full gap-4">
       <span
         onClick={handleEditPhoneNumber}
         className="text-sm md:text-base mt-1 text-[#717171]
-                 cursor-pointer"
+        cursor-pointer"
       >
         ویرایش شماره تلفن
       </span>
 
       <OtpInput
-        value={otpState}
-        onChange={setOtp}
+        value={otpValue}
+        onChange={(value: string) => {
+          setOtpValue(value);
+          handleOtpComplete(value);
+        }}
         numInputs={5}
         renderInput={(props, index) => (
           <input
@@ -137,10 +144,10 @@ export default function Otp({
       <Button
         className="mt-2 w-full rounded-lg p-2 bg-primary
         text-white md:mt-[50px] md:text-lg"
-        onPress={handleVerifyOTP}
+        isDisabled={otpValue.length < 5}
+        onPress={() => handleOtpComplete(otpValue)}
         isLoading={verifyOTPsPending}
         spinner={<Spinner color="white" size="sm" />}
-        isDisabled={otpState.length < 5}
       >
         {verifyOTPsPending ? "" : "ثبت کد"}
       </Button>
