@@ -7,7 +7,6 @@ from .managers import CustomUserManager
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(max_length=200, unique=True, null=True) # TODO: remove null
     phone_number = models.CharField(max_length=12, unique=True, null=True, validators=[validate_number])
     email = models.EmailField(max_length=300, null=True, unique=True)
     first_name = models.CharField(max_length=51, validators=[validate_name])
@@ -24,7 +23,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     activity_type = models.CharField(max_length=50,default='user')
 
-    USERNAME_FIELD = 'username'
+    USERNAME_FIELD = 'email' # we override authentication with email or password
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()

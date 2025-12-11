@@ -10,12 +10,13 @@ class SendOTPSerializer(serializers.Serializer):
 
     def validate(self, attrs):
 
+        print(attrs.get('phone_number'), attrs.get('email'))
         if attrs.get('phone_number'):
             validations.validate_se('phone_number', attrs['phone_number'], validations.validate_number)
         elif attrs.get('email'):
             validations.validate_se('email', attrs['email'], validations.validate_email)
         else:
-            serializers.ValidationError({'phone_number', "phone number or email is required"}, 'invalid_field ')
+            raise serializers.ValidationError({'phone_number': "phone number or email is required"})
 
 
         return super().validate(attrs)
@@ -52,7 +53,7 @@ class VerifyOTPSerializer(serializers.Serializer):
         elif attrs.get('email'):
             validations.validate_se('email', attrs['email'], validations.validate_email)
         else:
-            serializers.ValidationError({'phone_number', "phone number or email is required"}, 'invalid_field ')
+            raise serializers.ValidationError({'phone_number': "phone number or email is required"})
 
         return super().validate(attrs)
 
@@ -94,9 +95,15 @@ class SignupSerializer(serializers.ModelSerializer):
 
         raise ValueError(f"cannot find username field in SignupSerializer: phone_number: {self.validated_data.get('phone_number')}, email: {self.validated_data.get('email')}")
 
+    def get_send_otp_method_name(self):
+        if self.validated_data.get('phone_number'):
+            return 'sms'
+        else:
+            return 'email'
 
-class SigninSerializer(serializers.Serializer):
-    email = serializers.CharField(max_length=11)
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=11)
     password = serializers.CharField(max_length=512)
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
