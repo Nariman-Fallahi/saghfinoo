@@ -6,6 +6,7 @@ from PIL import Image
 
 from django.conf import settings
 from django.core.cache import caches
+from django.db.models import Q
 from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -18,7 +19,7 @@ from django.core.mail import send_mail
 
 from common.utils.sms import send_sms_otp
 from common import codes
-from .serializers import SendOTPSerializer, VerifyOTPSerializer, SignupSerializer, CustomTokenObtainPairSerializer, CustomUserResponseSerializer, ChangePasswordSerializer, CustomUserSerializer
+from .serializers import LoginSerializer, SendOTPSerializer, VerifyOTPSerializer, SignupSerializer, CustomTokenObtainPairSerializer, CustomUserResponseSerializer, ChangePasswordSerializer, CustomUserSerializer
 from .models import CustomUser
 
 auth_cache = caches['auth']
@@ -135,12 +136,16 @@ class SignupAPIView(APIView):
             if not info:
                 return Response({"errors":{'phone_number':"verifiy phone number or email first"}, "code":codes.VERIFY_NUMBER_FIRST, "status":400})
 
-            user = CustomUser.objects.filter(username=username)
+            user = CustomUser.objects.filter((Q(email=username) | Q(phone_number=username)))
 
             if len(user) > 0:
                 return Response({"errors":{'email':"user already created"}, "code":codes.USER_EXIST, "status":400})
 
-            user = CustomUser.objects.create_user(username, serializer.data['password'], serializer.data['first_name'], serializer.data['last_name'])
+            if serializer.get_send_otp_method_name() == 'email':
+                user = CustomUser.objects.create_user(username, None, serializer.data['password'], serializer.data['first_name'], serializer.data['last_name'])
+            else:
+                user = CustomUser.objects.create_user(None, username, serializer.data['password'], serializer.data['first_name'], serializer.data['last_name'])
+
 
             refresh, access = get_jwt_tokens_for_user(user)
 
@@ -155,20 +160,29 @@ def get_jwt_tokens_for_user(user):
 
     return str(refresh), str(refresh.access_token)
 
+    
+class LoginView(APIView):
+    serializer_classes = [LoginSerializer]
 
-# @api_view(['POST'])
-# def login(req):
-#     serializer = SigninSerializer(data=req.data)
-#     if serializer.is_valid():
-#         user = authenticate(username=serializer.data['number'], password=serializer.data['password'])
+    def post(self, req):
+        serializer = LoginSerializer(data=req.data)
+        if serializer.is_valid():
+            username = serializer.validated_data['username']
+            user = CustomUser.objects.filter((Q(email=username) | Q(phone_number=username)))
 
-#         if user:
-#             token, created = Token.objects.get_or_create(user=user)
+            if user and user[0].check_password(serializer.validated_data['password']):
 
-#             return Response({"msg":"You are in!", "token":token.key, "code":codes.LOGIN_DONE, "status":200})
-#         else:
-#             return Response({"error":"incurrect number or password", "code":codes.INCURRECT_NUMBER_OR_PASSWORD, "status":400})
-#     return Response({"errors":serializer.errors, "code":codes.INVALID_FIELD, "status":400})
+                refresh = RefreshToken.for_user(user[0])
+
+                return Response({
+                    'status':200,
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                    'user': CustomUserSerializer(user[0]).data,
+                })
+
+            return Response({'errors':{'non_field': 'invalid username or password'}, 'status':400})
+        return Response({'errors': serializer.errors, 'status': 400, 'code': codes.INVALID_FIELD})
 
 
 class AmIInAPIView(APIView):
@@ -177,13 +191,6 @@ class AmIInAPIView(APIView):
 
     def post(self, req):
         return Response({"msg":"You are in!", "status":200})
-
-
-# @api_view(["POST"])
-# @permission_classes((IsAuthenticated,))
-# def logout(req):
-#     req.user.auth_token.delete()
-#     return Response({"msg":"done!", "status":200})
 
 
 class GetUserInfoAPIView(APIView):
