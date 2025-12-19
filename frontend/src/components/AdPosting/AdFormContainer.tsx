@@ -2,13 +2,11 @@
 import Stepper from "./Stepper";
 import { useState, useEffect } from "react";
 import { AdPostingFormDataType } from "@/Types";
-import { dataKey, useGetRequest } from "@/services/ApiService";
 import { Api } from "@/services/ApiService";
 import { getCookie } from "cookies-next";
 import { usePostRequest } from "@/services/ApiService";
-import { SelectionDataType } from "@/Types";
 import { AdPostingApi } from "@/Types";
-import { isMobile } from "@/constant/Constants";
+import { isMobile } from "@/utils/isMobile";
 
 // Components
 import LocationDetails from "./levels/LocationDetails";
@@ -19,6 +17,7 @@ import AdditionalInformation from "./levels/AdditionalInformation";
 import UploadMedia from "./levels/UploadMedia";
 import Successful from "./status/Successful";
 import Error from "./status/Error";
+import { useSelectionData } from "@/hooks/queries/useSelectionData";
 
 export default function AdFormContainer() {
   const [textTitle, setTextTitle] = useState<string>("");
@@ -40,14 +39,8 @@ export default function AdFormContainer() {
 
   const access = getCookie("access");
 
-  const { data: selectionData } = useGetRequest<{ data: SelectionDataType[] }>({
-    url: Api.GetSelectionData,
-    key: [dataKey.GET_SELECTION_DATA],
-    enabled: true,
-    staleTime: 10 * 60 * 1000,
-  });
+  const { data: selectionData } = useSelectionData();
 
-  // cooling_system
   const cooling_system = selectionData?.data.filter(
     (item) => item.key === "coolingSystem"
   );
@@ -57,9 +50,6 @@ export default function AdFormContainer() {
     label: item.value,
   }));
 
-  // END cooling_system
-
-  // heating_system
   const heating_system = selectionData?.data.filter(
     (item) => item.key === "heatingSystem"
   );
@@ -68,9 +58,7 @@ export default function AdFormContainer() {
     value: item.id,
     label: item.value,
   }));
-  // END heating_system
 
-  // type_of_transaction
   const type_of_transaction = selectionData?.data.filter(
     (item) => item.key === "typeOfTransaction"
   );
@@ -79,9 +67,7 @@ export default function AdFormContainer() {
     value: item.id,
     label: item.value,
   }));
-  // END type_of_transaction
 
-  // property_type
   const property_type = selectionData?.data.filter(
     (item) => item.key === "propertyType"
   );
@@ -90,9 +76,7 @@ export default function AdFormContainer() {
     value: item.id,
     label: item.value,
   }));
-  // END property_type
 
-  // type_of_restroom
   const type_of_restroom = selectionData?.data.filter(
     (item) => item.key === "typeOfRestroom"
   );
@@ -101,9 +85,7 @@ export default function AdFormContainer() {
     value: item.id,
     label: item.value,
   }));
-  // END type_of_restroom
 
-  // flooring
   const flooring = selectionData?.data.filter(
     (item) => item.key === "flooring"
   );
@@ -112,7 +94,6 @@ export default function AdFormContainer() {
     value: item.id,
     label: item.value,
   }));
-  // END flooring
 
   const { mutate: adPostinMutate, data: adPosting } =
     usePostRequest<AdPostingApi>({

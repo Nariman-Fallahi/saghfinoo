@@ -1,5 +1,5 @@
 "use client";
-import { Title } from "@/constant/Constants";
+import { Title } from "@/components/ui/Title";
 import AdsCart from "@/components/AdsCart";
 import { useGetRequest, Api, dataKey } from "@/services/ApiService";
 import { AdsDataType } from "@/Types";

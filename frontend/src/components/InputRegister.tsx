@@ -1,13 +1,12 @@
 import { HTMLInputTypeAttribute, useCallback, useState, useRef } from "react";
 import Image from "next/image";
-import { isPersian } from "@/constant/Constants";
-import { TextError } from "@/constant/Constants";
 import {
   FieldValues,
   Path,
   RegisterOptions,
   UseFormRegister,
 } from "react-hook-form";
+import { TextError } from "./ui/TextError";
 
 type InputType<T extends FieldValues> = {
   placeholder: string;

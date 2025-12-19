@@ -1,9 +1,8 @@
 "use client";
 import { SwiperSlide } from "swiper/react";
 import Image from "next/image";
-import { Title } from "@/constant/Constants";
+import { Title } from "@/components/ui/Title";
 import { CommentType } from "@/Types";
-import { numberToPersian } from "@/constant/Constants";
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 
 // Import Swiper styles
@@ -13,6 +12,7 @@ import "swiper/css/navigation";
 // import required modules
 import { Navigation } from "swiper/modules";
 import CustomSwiper from "../CustomSwiper";
+import { numberToPersian } from "@/utils/numberToPersian";
 
 type CommentsType = {
   data: CommentType[] | undefined;

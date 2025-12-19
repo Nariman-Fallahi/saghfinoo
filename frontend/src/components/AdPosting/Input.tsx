@@ -1,10 +1,11 @@
-import { SelectTitle, TextError } from "@/constant/Constants";
 import {
   FieldErrors,
   FieldValues,
   Path,
   UseFormRegister,
 } from "react-hook-form";
+import { TextError } from "../ui/TextError";
+import { SelectTitle } from "../ui/SelectTitle";
 
 type InputType<T extends FieldValues> = {
   title: string;

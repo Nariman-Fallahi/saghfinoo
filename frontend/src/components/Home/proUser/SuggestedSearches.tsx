@@ -1,4 +1,4 @@
-import { Title } from "@/constant/Constants";
+import { Title } from "@/components/ui/Title";
 import { SuggestedSearchesDataType } from "@/Types";
 import Link from "next/link";
 

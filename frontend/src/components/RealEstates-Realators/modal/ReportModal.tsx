@@ -10,10 +10,10 @@ import {
 import CustomButton from "@/components/CustomButton";
 import { CookieValueTypes } from "cookies-next";
 import { Spinner } from "@heroui/spinner";
-import { TextError } from "@/constant/Constants";
 import { Success } from "@/notification/Success";
 import { ErrorNotification } from "@/notification/Error";
 import { useEffect } from "react";
+import { TextError } from "@/components/ui/TextError";
 
 type ReportModalType = {
   data: DataModalREA;

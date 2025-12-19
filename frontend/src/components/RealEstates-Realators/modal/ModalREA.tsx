@@ -1,5 +1,5 @@
 import { Modal, ModalContent, ModalBody } from "@heroui/modal";
-import { isMobile } from "@/constant/Constants";
+import { isMobile } from "@/utils/isMobile";
 import { useActiveModalName } from "@/store/ReaModalActive";
 import { DataModalREA } from "@/Types";
 import ShareModal from "./ShareModal";

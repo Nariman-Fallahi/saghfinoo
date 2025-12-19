@@ -1,7 +1,7 @@
-import { SelectTitle } from "@/constant/Constants";
 import { SelectionDataType } from "@/Types";
 import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
+import { SelectTitle } from "../ui/SelectTitle";
 
 type AutocompleteMobileType<T extends FieldValues> = {
   name: Path<T>;

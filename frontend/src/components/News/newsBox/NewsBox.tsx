@@ -1,4 +1,4 @@
-import { Title } from "@/constant/Constants";
+import { Title } from "@/components/ui/Title";
 import Image from "next/image";
 import ReadingTimeCard from "../ReadingTimeCard";
 import Slider from "./Slider";

@@ -9,10 +9,11 @@ import { Api } from "@/services/ApiService";
 import { useState, useEffect } from "react";
 import { getCookie } from "cookies-next";
 import { ErrorNotification } from "@/notification/Error";
-import { LoginErrorText, numberToPersian } from "@/constant/Constants";
 import { Success } from "@/notification/Success";
 import { Spinner } from "@heroui/spinner";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
+import { numberToPersian } from "@/utils/numberToPersian";
+import { LOGIN_ERROR_TEXT } from "@/constant/textConstants";
 
 type AdsCartType = {
   isloading: boolean;
@@ -70,7 +71,7 @@ export default function AdsCart({
       setAdsSave_Delete_Id(id);
       isSaved ? adsDeleteMutate({}) : adsSaveMutate({});
     } else {
-      ErrorNotification(LoginErrorText);
+      ErrorNotification(LOGIN_ERROR_TEXT);
     }
   };
 

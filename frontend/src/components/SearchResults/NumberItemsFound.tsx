@@ -1,4 +1,4 @@
-import { numberToPersian } from "@/constant/Constants";
+import { numberToPersian } from "@/utils/numberToPersian";
 
 export default function NumberItemsFound({ number }: { number: number }) {
   return (

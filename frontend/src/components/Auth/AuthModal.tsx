@@ -12,7 +12,7 @@ import { useRouter } from "@bprogress/next/app";
 import { Api, dataKey } from "@/services/ApiService";
 import { usePostRequest } from "@/services/ApiService";
 import { AuthStepType, LoginDataType } from "@/Types";
-import { isMobile } from "@/constant/Constants";
+import { isMobile } from "@/utils/isMobile";
 import PhoneNumberInput from "./PhoneNumberInput";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -21,8 +21,6 @@ export default function AuthModal() {
   const { isOpen, setOpen } = useModalStore();
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [isSelected, setIsSelected] = useState<boolean>(false);
-  // const [otp, setOtp] = useState<string>("");
-  const [focusedInput, setFocusedInput] = useState<number | null>(null);
   const [token, setToken] = useState<string>("");
   const [authStep, setAuthStep] = useState<AuthStepType>("phone");
   const [time, setTime] = useState<number>(90);
@@ -60,14 +58,6 @@ export default function AuthModal() {
     case "signUp":
       ModalRegisterTitle = "ثبت نام";
   }
-
-  const handleFocus = (index: number) => {
-    setFocusedInput(index);
-  };
-
-  const handleBlur = () => {
-    setFocusedInput(null);
-  };
 
   const handleSendOTP = (phoneNumber: string) => {
     if (!isSelected) return;
@@ -109,7 +99,7 @@ export default function AuthModal() {
     verifyOTPMutate(
       { phoneNumber: phoneNumber, code: otp, token: token },
       {
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
           switch (data?.code) {
             case "complete_signup":
               setAuthStep("signUp");
@@ -135,8 +125,9 @@ export default function AuthModal() {
               });
               setOpen(false);
               Success("ثبت نام با موفقیت انجام شد.");
-              queryClient.invalidateQueries({
+              await queryClient.refetchQueries({
                 queryKey: [dataKey.GET_USER_INFO],
+                exact: true,
               });
               router.push("/proUser");
               break;
@@ -202,9 +193,6 @@ export default function AuthModal() {
               {authStep === "otp" && (
                 <Otp
                   phoneNumber={phoneNumber}
-                  handleFocus={handleFocus}
-                  handleBlur={handleBlur}
-                  focusedInput={focusedInput}
                   time={time}
                   setTime={setTime}
                   handleVerifyOTP={handleVerifyOTP}

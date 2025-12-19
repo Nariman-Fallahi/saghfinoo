@@ -1,6 +1,5 @@
 import { Api, baseURL } from "@/services/ApiService";
 import SearchBox from "@/components/Home/SearchBox";
-import { ServicesDataProUserHome } from "@/constant/Constants";
 import { Metadata } from "next";
 import {
   allrealEstateOfficesDataType,
@@ -13,6 +12,7 @@ import NewestHouseRent from "@/components/Home/proUser/NewestHouseRent";
 import SuggestedSearches from "@/components/Home/proUser/SuggestedSearches";
 import TopRealEstate from "@/components/Home/proUser/TopRealEstate";
 import TopRealtors from "@/components/Home/proUser/TopRealtors";
+import { ServicesDataProUserHome } from "@/constant/servicesDataProUser";
 
 export const metadata: Metadata = {
   title: "صفحه اصلی",

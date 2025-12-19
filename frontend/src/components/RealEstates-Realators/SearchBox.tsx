@@ -1,12 +1,10 @@
 "use client";
-import { Title } from "@/constant/Constants";
-import { Api } from "@/services/ApiService";
-import { useGetRequest, dataKey } from "@/services/ApiService";
-import { CitiesType } from "@/Types";
+import { Title } from "@/components/ui/Title";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useRouter } from "@bprogress/next/app";
 import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
+import { useAllCities } from "@/hooks/queries/useAllCities";
 
 type SearchBoxType = {
   title?: string;
@@ -17,12 +15,7 @@ export default function SearchBox({ title, className }: SearchBoxType) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { data, isLoading } = useGetRequest<{ data: CitiesType[] }>({
-    url: Api.SearchCity,
-    key: [dataKey.GET_ALL_CITY],
-    enabled: true,
-    staleTime: 10 * 60 * 1000,
-  });
+  const { data: allCitiesData, isPending: allCitiesPending } = useAllCities();
 
   const handleSelectChange = (city: any) => {
     router.push(`${pathname}?city=${city}`);
@@ -35,11 +28,11 @@ export default function SearchBox({ title, className }: SearchBoxType) {
       <div className={`${title ? "mt-3 md:mt-6" : ""}`}>
         <Autocomplete
           placeholder="لطفا شهر مورد نظر خود را جستجو کنید"
-          isLoading={isLoading}
+          isLoading={allCitiesPending}
           aria-label="propertyType"
           variant="bordered"
           radius="sm"
-          defaultItems={data?.data || []}
+          defaultItems={allCitiesData?.data || []}
           inputProps={{
             classNames: {
               inputWrapper: "w-full md:w-1/3",

@@ -1,6 +1,6 @@
 "use client";
+import { isMobile } from "@/utils/isMobile";
 import { Pagination } from "@heroui/pagination";
-import { isMobile } from "@/constant/Constants";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 

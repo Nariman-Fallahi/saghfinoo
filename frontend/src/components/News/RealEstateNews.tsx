@@ -1,4 +1,4 @@
-import { Title } from "@/constant/Constants";
+import { Title } from "@/components/ui/Title";
 import Image from "next/image";
 import CustomButton from "../CustomButton";
 import Card from "./ReadingTimeCard";

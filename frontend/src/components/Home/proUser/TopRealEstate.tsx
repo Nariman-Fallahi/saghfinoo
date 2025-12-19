@@ -1,5 +1,5 @@
 "use client";
-import { Title } from "@/constant/Constants";
+import { Title } from "@/components/ui/Title";
 import RealEstatesCards from "@/components/RealEstatesCards";
 import { allrealEstateOfficesDataType } from "@/Types";
 

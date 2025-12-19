@@ -7,14 +7,19 @@ import ItemMenu from "@/components/UserProfile/ItemMenu";
 import { notFound } from "next/navigation";
 import { deleteCookie } from "cookies-next";
 import { useRouter } from "@bprogress/next/app";
+import { useUserInfo } from "@/hooks/queries/useUserInfo";
 
 enum UserProfileItem {
-  EditingInformation = "EditingInformation",
-  MyAds = "MyAds",
-  SavedAds = "SavedAds",
+  EditingInformation = "editingInformation",
+  MyAds = "myAds",
+  SavedAds = "savedAds",
 }
 
-export default function UserProfilePage({ params }: { params: { id: string } }) {
+export default function UserProfilePage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const { id } = params;
   const router = useRouter();
 
@@ -28,6 +33,8 @@ export default function UserProfilePage({ params }: { params: { id: string } }) 
     notFound();
   }
 
+  const { data: userInfoData } = useUserInfo();
+
   return (
     <div className="mt-28 md:mt-36 flex px-4 md:px-8 w-full">
       <div className="hidden md:flex flex-col w-2/6">
@@ -38,10 +45,10 @@ export default function UserProfilePage({ params }: { params: { id: string } }) 
             src="/icons/profile-circle.svg"
             alt=""
           />
+
           <div className="flex flex-col mr-3">
-            <span className="text-sm lg:text-lg">نام کاربر</span>
-            <span className="mt-1 text-[#717171] text-sm lg:text-lg">
-              نوع فعالیت
+            <span className="text-sm lg:text-lg">
+              {userInfoData?.data.firstName} {userInfoData?.data.lastName}
             </span>
           </div>
         </div>

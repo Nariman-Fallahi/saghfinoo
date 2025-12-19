@@ -4,33 +4,21 @@ import DesktopMenu from "./DesktopMenu";
 import { navigationMenuType } from "@/Types";
 import { getCookie } from "cookies-next";
 import AuthModal from "@/components/Auth/AuthModal";
-import { Api, dataKey, usePostRequest } from "@/services/ApiService";
-import { useGetRequest } from "@/services/ApiService";
-import { userInfoDataType } from "@/Types";
+import { Api, usePostRequest } from "@/services/ApiService";
 import Image from "next/image";
 import { useRouter } from "@bprogress/next/app";
-import { isMobile, LoginErrorText } from "@/constant/Constants";
+import { isMobile } from "@/utils/isMobile";
 import { ErrorNotification } from "@/notification/Error";
 import CustomButton from "@/components/CustomButton";
 import { Suspense, useEffect } from "react";
+import { useUserInfo } from "@/hooks/queries/useUserInfo";
+import { LOGIN_ERROR_TEXT } from "@/constant/textConstants";
 
 export default function Menu() {
-  const access = getCookie("access");
   const router = useRouter();
+  const access = getCookie("access");
 
-  const {
-    data: userInfoData,
-    status,
-    refetch,
-  } = useGetRequest<userInfoDataType>({
-    url: Api.GetUserInfo,
-    key: [dataKey.GET_USER_INFO],
-    headers: {
-      Authorization: `Bearer ${access}`,
-    },
-    staleTime: 5 * 1000 * 60,
-    enabled: true,
-  });
+  const { data: userInfoData, status, refetch } = useUserInfo();
 
   const { data: isRECData, mutate: isRECMutate } = usePostRequest({
     url: `${Api.Ad}/`,
@@ -122,7 +110,7 @@ export default function Menu() {
       <CustomButton
         onPress={() => {
           if (!isLogin) {
-            ErrorNotification(LoginErrorText);
+            ErrorNotification(LOGIN_ERROR_TEXT);
           } else if (isRECData.status == 403) {
             ErrorNotification("فقط مشاور املاک میتواند آگهی ثبت کند.");
           } else {

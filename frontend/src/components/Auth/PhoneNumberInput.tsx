@@ -2,7 +2,7 @@ import { Button } from "@heroui/button";
 import { Checkbox } from "@heroui/checkbox";
 import { Spinner } from "@heroui/spinner";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { TextError } from "@/constant/Constants";
+import { TextError } from "../ui/TextError";
 
 type Inputs = {
   phoneNumber: string;

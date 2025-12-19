@@ -7,9 +7,9 @@ import { Spinner } from "@heroui/spinner";
 import { Success } from "@/notification/Success";
 import { ErrorNotification } from "@/notification/Error";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { TextError } from "@/constant/Constants";
 import UserIcon from "./UserIcon";
 import { CookieValueTypes } from "cookies-next";
+import { TextError } from "@/components/ui/TextError";
 
 type ScoreModalType = {
   data: DataModalREA;

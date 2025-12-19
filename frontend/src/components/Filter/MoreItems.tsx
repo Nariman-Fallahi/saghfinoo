@@ -1,7 +1,7 @@
 import { Control, Controller, UseFormWatch } from "react-hook-form";
-import { SelectTitle } from "@/constant/Constants";
 import CustomButton from "../CustomButton";
 import { FilterDataType } from "@/Types";
+import { SelectTitle } from "../ui/SelectTitle";
 
 type MoreItemsType = {
   control: Control<FilterDataType, any>;

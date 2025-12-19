@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from "react";
 import InputRegister from "../InputRegister";
 import { changePasswordType, userInfoDataType } from "@/Types";
 import Title from "./Title";
-import { dataKey, useGetRequest, usePostRequest } from "@/services/ApiService";
+import { usePostRequest } from "@/services/ApiService";
 import { Api } from "@/services/ApiService";
 import { getCookie } from "cookies-next";
 import { Success } from "@/notification/Success";
@@ -15,6 +15,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { Spinner } from "@heroui/spinner";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { editUserProfileType } from "@/Types";
+import { useUserInfo } from "@/hooks/queries/useUserInfo";
 
 type Inputs = {
   iconUser: File;
@@ -39,15 +40,7 @@ export default function EditingInformation() {
     data: userInfoData,
     refetch,
     isPending: userInfoPending,
-  } = useGetRequest<userInfoDataType>({
-    url: Api.GetUserInfo,
-    key: [dataKey.GET_USER_INFO],
-    enabled: true,
-    staleTime: 5 * 60 * 1000,
-    headers: {
-      Authorization: `Bearer ${access}`,
-    },
-  });
+  } = useUserInfo();
 
   const {
     mutate: editUserProfileMutate,

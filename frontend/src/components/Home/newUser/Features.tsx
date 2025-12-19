@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
 import { Button } from "@heroui/button";
-import { FeaturesDataNewUserHome } from "@/constant/Constants";
-import { Title } from "@/constant/Constants";
+import { Title } from "@/components/ui/Title";
+import { FeaturesDataNewUserHome } from "@/constant/featuresData";
 
 export default function Features() {
   return (

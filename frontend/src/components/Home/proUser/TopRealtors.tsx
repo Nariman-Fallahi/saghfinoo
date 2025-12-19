@@ -1,4 +1,4 @@
-import { Title } from "@/constant/Constants";
+import { Title } from "@/components/ui/Title";
 import RealatorsCarts from "@/components/RealatorsCarts";
 import { allRealtorDataType } from "@/Types";
 

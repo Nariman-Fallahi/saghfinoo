@@ -1,4 +1,3 @@
-import { Title } from "@/constant/Constants";
 import Image from "next/image";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -7,6 +6,7 @@ import { useGetRequest } from "@/services/ApiService";
 import PaginationComponent from "./Pagination";
 import { allRealtorDataType } from "@/Types";
 import { useSearchParams } from "next/navigation";
+import { Title } from "./ui/Title";
 
 type ConsultantsType = {
   userName: string | string[];

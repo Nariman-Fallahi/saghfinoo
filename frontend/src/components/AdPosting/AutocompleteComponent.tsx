@@ -1,6 +1,8 @@
 import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
-import { isMobile, SelectTitle, TextError } from "@/constant/Constants";
+import { isMobile } from "@/utils/isMobile";
 import { Key } from "react";
+import { TextError } from "../ui/TextError";
+import { SelectTitle } from "../ui/SelectTitle";
 
 type AutocompleteItemProps = {
   placeholder: string;

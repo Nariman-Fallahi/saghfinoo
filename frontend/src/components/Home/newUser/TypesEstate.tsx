@@ -1,15 +1,15 @@
 import Image from "next/image";
-import { TypesEstateDataNewUserHome } from "@/constant/Constants";
-import { Title } from "@/constant/Constants";
-import { numberToPersian } from "@/constant/Constants";
+import { Title } from "@/components/ui/Title";
+import { numberToPersian } from "@/utils/numberToPersian";
+import { EstateTypes } from "@/constant/estateTypes";
 
 export default function TypesEstate() {
   return (
     <div className="mt-7 p-3 flex flex-col">
-      <Title title={TypesEstateDataNewUserHome.title} />
+      <Title title={EstateTypes.title} />
 
       <div className="flex w-full flex-wrap p-3 justify-between lg:mt-6">
-        {TypesEstateDataNewUserHome.data.map((item) => {
+        {EstateTypes.data.map((item) => {
           return (
             <div
               className="flex flex-col items-center w-[48%] bg-slate-50

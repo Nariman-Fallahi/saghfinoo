@@ -1,9 +1,4 @@
-import {
-  CitiesType,
-  FilterDataType,
-  ProvincesType,
-  SelectionDataType,
-} from "@/Types";
+import { FilterDataType, SelectionDataType } from "@/Types";
 import { useEffect, useState } from "react";
 import { Api, dataKey, useGetRequest } from "@/services/ApiService";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -17,6 +12,7 @@ import { useRouter } from "@bprogress/next/app";
 import { usePathname } from "next/navigation";
 import useAddQuery from "@/hooks/useAddQuery";
 import useUpdateSearchParams from "../useUpdateSearchParams";
+import { useAllCities } from "@/hooks/queries/useAllCities";
 
 export type OpenCustomMenu = "rent" | "deposit" | "metre" | null;
 
@@ -50,17 +46,8 @@ DesktopFilterType) {
     );
   }, []);
 
-  // GetAllCity
-  const { data: allCitiesData, isPending: allCitiesPending } = useGetRequest<{
-    data: CitiesType[];
-  }>({
-    url: Api.SearchCity,
-    key: [dataKey.GET_ALL_CITY],
-    enabled: true,
-    staleTime: 10 * 60 * 10,
-  });
+  const { data: allCitiesData, isPending: allCitiesPending } = useAllCities();
 
-  // Get propertyTypeData
   const { data: propertyTypeData, isPending: propertyTypePending } =
     useGetRequest<{
       data: SelectionDataType[];
@@ -79,11 +66,6 @@ DesktopFilterType) {
     reset,
     formState: { errors },
   } = useForm<FilterDataType>();
-
-  // useEffect(() => {
-  //   reset(urlQuery);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   const onSubmit: SubmitHandler<FilterDataType> = (data) => {
     updateSearchParams(data);

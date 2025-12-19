@@ -55,7 +55,7 @@ export default function SignUp({
         phoneNumber: phoneNumber,
       },
       {
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
           if (data.code === "login_done") {
             setCookie("access", data.access, {
               maxAge: data.expire,
@@ -68,8 +68,9 @@ export default function SignUp({
             Success("ثبت نام با موفقیت انجام شد.");
             setAuthStep("phone");
             setOpen(false);
-            queryClient.invalidateQueries({
+            await queryClient.refetchQueries({
               queryKey: [dataKey.GET_USER_INFO],
+              exact: true,
             });
             router.push("/proUser");
           }

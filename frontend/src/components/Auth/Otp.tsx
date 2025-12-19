@@ -3,11 +3,6 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Button } from "@heroui/button";
 import { Spinner } from "@heroui/spinner";
-import { ErrorNotification } from "@/notification/Error";
-
-interface OTPCredentialRequestOptions extends CredentialRequestOptions {
-  otp: { transport: string[] };
-}
 
 interface OTPCredential extends Credential {
   code: string;
@@ -16,9 +11,6 @@ interface OTPCredential extends Credential {
 
 type OtpType = {
   phoneNumber: string;
-  handleFocus: (index: number) => void;
-  handleBlur: () => void;
-  focusedInput: number | null;
   time: number;
   setTime: (value: number) => void;
   handleVerifyOTP: (otp: string) => void;
@@ -29,9 +21,6 @@ type OtpType = {
 
 export default function Otp({
   phoneNumber,
-  handleFocus,
-  handleBlur,
-  focusedInput,
   time,
   setTime,
   handleVerifyOTP,
@@ -39,6 +28,7 @@ export default function Otp({
   verifyOTPsPending,
   handleEditPhoneNumber,
 }: OtpType) {
+  const [focusedInput, setFocusedInput] = useState<number | null>(null);
   const minutes = Math.floor(time / 60);
   const seconds = time % 60;
   const [otpValue, setOtpValue] = useState("");
@@ -47,6 +37,14 @@ export default function Otp({
     setTime(90);
     setOtpValue("");
     handleSendOTP(phoneNumber);
+  };
+
+  const handleFocus = (index: number) => {
+    setFocusedInput(index);
+  };
+
+  const handleBlur = () => {
+    setFocusedInput(null);
   };
 
   useEffect(() => {
@@ -78,7 +76,7 @@ export default function Otp({
 
   const handleOtpComplete = (otp: string) => {
     if (otp.length === 5) {
-      setTimeout(() => handleVerifyOTP(otpValue), 100);
+      setTimeout(() => handleVerifyOTP(otp), 100);
     }
   };
 
@@ -102,6 +100,7 @@ export default function Otp({
         renderInput={(props, index) => (
           <input
             {...props}
+            autoFocus={index === 0}
             onFocus={() => handleFocus(index)}
             onBlur={handleBlur}
             className="rounded-lg w-[50px] h-12 mr-2 ml-2 outline-none text-center text-2xl

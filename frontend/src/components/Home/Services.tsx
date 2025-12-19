@@ -1,5 +1,5 @@
-import { Title } from "@/constant/Constants";
 import Image from "next/image";
+import { Title } from "../ui/Title";
 
 type ServicesType = {
   title: string;

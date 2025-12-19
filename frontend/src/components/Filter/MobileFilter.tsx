@@ -3,8 +3,7 @@ import { Modal, ModalContent, ModalBody } from "@heroui/modal";
 import { Button } from "@heroui/button";
 import Image from "next/image";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { CitiesType, SelectionDataType, FilterDataType } from "@/Types";
-import { Api, dataKey, useGetRequest } from "@/services/ApiService";
+import { FilterDataType } from "@/Types";
 import { useState } from "react";
 import Input from "./Input";
 import MoreItems from "./MoreItems";
@@ -12,6 +11,8 @@ import { useRouter } from "@bprogress/next/app";
 import { usePathname } from "next/navigation";
 import AutocompleteMobile from "./AutocompleteMobile";
 import useUpdateSearchParams from "./useUpdateSearchParams";
+import { useAllCities } from "@/hooks/queries/useAllCities";
+import { useSelectionData } from "@/hooks/queries/useSelectionData";
 
 type MobileFilterType = {
   isViewMore: boolean;
@@ -40,38 +41,19 @@ export default function MobileFilter({
     formState: { errors },
   } = useForm<FilterDataType>();
 
-  // GetAllCity
-  const { data: allCitiesData, isPending: allCitiesPending } = useGetRequest<{
-    data: CitiesType[];
-  }>({
-    url: Api.SearchCity,
-    key: [dataKey.GET_ALL_CITY],
-    enabled: true,
-    staleTime: 10 * 60 * 10,
-  });
+  const { data: allCitiesData, isPending: allCitiesPending } = useAllCities();
 
-  // Get SelectionData
   const { data: selectionData, isPending: selectionDataPending } =
-    useGetRequest<{
-      data: SelectionDataType[];
-    }>({
-      url: Api.GetSelectionData,
-      key: [dataKey.GET_SELECTION_DATA],
-      enabled: true,
-      staleTime: 10 * 60 * 1000,
-    });
+    useSelectionData();
 
-  // property_type
   const property_type = selectionData?.data.filter(
     (item) => item.key === "propertyType"
   );
 
-  // cooling_system
   const cooling_system = selectionData?.data.filter(
     (item) => item.key === "coolingSystem"
   );
 
-  // heating_system
   const heating_system = selectionData?.data.filter(
     (item) => item.key === "heatingSystem"
   );

@@ -8,10 +8,10 @@ import "swiper/css/navigation";
 
 // import required modules
 import { Navigation } from "swiper/modules";
-import { Title } from "@/constant/Constants";
 import { NewsDataType } from "@/Types";
 import { useEffect, useState } from "react";
 import CustomSwiper from "@/components/CustomSwiper";
+import { Title } from "@/components/ui/Title";
 
 type LatestNewsType = {
   data: NewsDataType[];

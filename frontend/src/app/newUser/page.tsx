@@ -1,6 +1,3 @@
-import { ServicesDataNewUserHome } from "@/constant/Constants";
-
-// Components
 import Features from "@/components/Home/newUser/Features";
 import TypesEstate from "@/components/Home/newUser/TypesEstate";
 import LatestNews from "@/components/Home/newUser/LatestNews";
@@ -9,6 +6,7 @@ import SearchBox from "@/components/Home/SearchBox";
 import { NewsDataType } from "@/Types";
 import { Api, baseURL } from "@/services/ApiService";
 import { Metadata } from "next";
+import { ServicesDataNewUserHome } from "@/constant/servicesDataNewUser";
 
 export const metadata: Metadata = {
   title: "صفحه اصلی",

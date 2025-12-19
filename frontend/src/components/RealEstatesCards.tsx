@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Button } from "@heroui/button";
 import { allrealEstateOfficesDataType } from "@/Types";
 import { useRouter } from "@bprogress/next/app";
-import { isMobile } from "@/constant/Constants";
+import { isMobile } from "@/utils/isMobile";
 
 type RealEstatesCardsType = {
   data: allrealEstateOfficesDataType[];

@@ -1,10 +1,9 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
-import { Api, dataKey, useGetRequest } from "@/services/ApiService";
-import { CitiesType } from "@/Types";
 import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
 import { useRouter } from "@bprogress/next/app";
+import { useAllCities } from "@/hooks/queries/useAllCities";
 
 type TabSearchBoxType = {
   title: string;
@@ -34,12 +33,7 @@ export default function SearchBox() {
 
   const router = useRouter();
 
-  const { data, isPending } = useGetRequest<{ data: CitiesType[] }>({
-    url: Api.SearchCity,
-    key: [dataKey.GET_ALL_CITY],
-    enabled: true,
-    staleTime: 10 * 60 * 10,
-  });
+  const { data: allCitiesData, isPending: allCitiesPending } = useAllCities();
 
   return (
     <div
@@ -78,11 +72,11 @@ export default function SearchBox() {
         </div>
 
         <Autocomplete
-          isLoading={isPending}
+          isLoading={allCitiesPending}
           placeholder="شهر مورد نظر را جستجو کنید"
           aria-label="search city"
           radius="sm"
-          defaultItems={data?.data || []}
+          defaultItems={allCitiesData?.data || []}
           onSelectionChange={(value) =>
             router.push(
               `/searchResults?type_of_transaction_name=${typeOfTransaction}&city=${

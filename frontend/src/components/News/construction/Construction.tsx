@@ -1,4 +1,4 @@
-import { Title } from "@/constant/Constants";
+import { Title } from "@/components/ui/Title";
 import Slider from "./Slider";
 import { NewsDataType } from "@/Types";
 

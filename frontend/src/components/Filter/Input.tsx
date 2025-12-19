@@ -4,9 +4,9 @@ import {
   RegisterOptions,
   UseFormRegister,
 } from "react-hook-form";
-import { TextError } from "@/constant/Constants";
-import { SelectTitle } from "@/constant/Constants";
 import { useState } from "react";
+import { TextError } from "../ui/TextError";
+import { SelectTitle } from "../ui/SelectTitle";
 
 type InputType<T extends FieldValues> = {
   title?: string;

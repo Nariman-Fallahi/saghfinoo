@@ -3,10 +3,11 @@ import Image from "next/image";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useActiveModalName } from "@/store/ReaModalActive";
-import { isMobile, LoginErrorText } from "@/constant/Constants";
+import { isMobile } from "@/utils/isMobile";
 import { getCookie } from "cookies-next";
 import { ErrorNotification } from "@/notification/Error";
 import MoreActions from "./MoreActions";
+import { LOGIN_ERROR_TEXT } from "@/constant/textConstants";
 
 type InfoType = {
   onOpen: () => void;
@@ -31,7 +32,7 @@ export default function Info({ onOpen, isPending, data, isScore }: InfoType) {
 
   const handleAction = (name: "ContactInfo" | "Share" | "Score" | "Report") => {
     if (["Score", "Report"].includes(name) && !access) {
-      ErrorNotification(LoginErrorText);
+      ErrorNotification(LOGIN_ERROR_TEXT);
       return;
     }
 
