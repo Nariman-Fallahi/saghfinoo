@@ -1,10 +1,10 @@
 import { Api, axiosInstance, baseURL } from "@/services/ApiService";
 
 // Components
-import RealEstateNews from "@/components/News/RealEstateNews";
-import NewsBox from "@/components/News/newsBox/NewsBox";
-import Construction from "@/components/News/construction/Construction";
-import Ad from "@/components/News/Ad";
+import RealEstateNews from "@/components/news/RealEstateNews";
+import NewsBox from "@/components/news/newsBox/NewsBox";
+import Construction from "@/components/news/construction/Construction";
+import Ad from "@/components/news/Ad";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

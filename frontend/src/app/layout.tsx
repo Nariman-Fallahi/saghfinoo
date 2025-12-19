@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
 import { ToastContainer } from "react-toastify";
-import Menu from "@/components/Menu/HeaderMenu/Menu";
-import FooterMenu from "@/components/Menu/FooterMenu/FooterMenu";
+import Menu from "@/components/menu/HeaderMenu/Menu";
+import FooterMenu from "@/components/menu/FooterMenu/FooterMenu";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Providers } from "./providers";
 

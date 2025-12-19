@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
 import SearchAndFilter from "@/components/SearchResults/SearchAndFilter";
-import MobileFilter from "@/components/Filter/MobileFilter";
-import DesktopFilter from "@/components/Filter/desktop/DesktopFilter";
+import MobileFilter from "@/components/filter/MobileFilter";
+import DesktopFilter from "@/components/filter/desktop/DesktopFilter";
 import { AdsDataType } from "@/Types";
 import { Api, dataKey, useGetRequest } from "@/services/ApiService";
 import AdsCart from "@/components/AdsCart";

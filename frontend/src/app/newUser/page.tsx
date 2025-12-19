@@ -1,8 +1,8 @@
-import Features from "@/components/Home/newUser/Features";
-import TypesEstate from "@/components/Home/newUser/TypesEstate";
-import LatestNews from "@/components/Home/newUser/LatestNews";
-import Services from "@/components/Home/Services";
-import SearchBox from "@/components/Home/SearchBox";
+import Features from "@/components/home/newUser/Features";
+import TypesEstate from "@/components/home/newUser/TypesEstate";
+import LatestNews from "@/components/home/newUser/LatestNews";
+import Services from "@/components/home/Services";
+import SearchBox from "@/components/home/SearchBox";
 import { NewsDataType } from "@/Types";
 import { Api, baseURL } from "@/services/ApiService";
 import { Metadata } from "next";

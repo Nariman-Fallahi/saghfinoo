@@ -6,9 +6,9 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import Image from "next/image";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
-import MobileFilter from "../Filter/MobileFilter";
+import MobileFilter from "../filter/MobileFilter";
 import { useState } from "react";
-import DesktopFilter from "../Filter/desktop/DesktopFilter";
+import DesktopFilter from "../filter/desktop/DesktopFilter";
 
 export type ProvinceType =
   | { name: string | undefined; id: number | undefined }
