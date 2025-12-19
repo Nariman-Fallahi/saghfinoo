@@ -1,5 +1,5 @@
 "use client";
-import SearchBox from "../RealEstates-Realators/SearchBox";
+import SearchBox from "../realEstates-Realators/SearchBox";
 import { Button } from "@heroui/button";
 import Image from "next/image";
 import DateRangeSelector from "./DateRangeSelector";

@@ -1,11 +1,11 @@
 import { Api, baseURL } from "@/services/ApiService";
 import { allrealEstateOfficesDataType } from "@/Types";
 import ErrNoData from "@/components/ErrNoData";
-import SearchDataNotFound from "@/components/RealEstates-Realators/SearchDataNotFound";
+import SearchDataNotFound from "@/components/realEstates-Realators/SearchDataNotFound";
 import { Metadata } from "next";
 
 // Components
-import SearchBox from "@/components/RealEstates-Realators/SearchBox";
+import SearchBox from "@/components/realEstates-Realators/SearchBox";
 import RealEstatesCards from "@/components/RealEstatesCards";
 import PaginationComponent from "@/components/Pagination";
 

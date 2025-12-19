@@ -3,9 +3,9 @@ import { allRealtorDataType } from "@/Types";
 import ErrNoData from "@/components/ErrNoData";
 
 // Components
-import SearchBox from "@/components/RealEstates-Realators/SearchBox";
+import SearchBox from "@/components/realEstates-Realators/SearchBox";
 import RealatorsCarts from "@/components/RealatorsCarts";
-import SearchDataNotFound from "@/components/RealEstates-Realators/SearchDataNotFound";
+import SearchDataNotFound from "@/components/realEstates-Realators/SearchDataNotFound";
 import { Metadata } from "next";
 import PaginationComponent from "@/components/Pagination";
 

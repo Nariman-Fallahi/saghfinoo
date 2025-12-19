@@ -4,14 +4,14 @@ import { useGetRequest } from "@/services/ApiService";
 import { useParams } from "next/navigation";
 import { AdsDataType, RealtorDataType } from "@/Types";
 import { useDisclosure } from "@heroui/modal";
-import ModalREA from "@/components/RealEstates-Realators/modal/ModalREA";
+import ModalREA from "@/components/realEstates-Realators/modal/ModalREA";
 import { CommentType } from "@/Types";
 import { useSearchParams } from "next/navigation";
 
 // Components
-import Info from "@/components/RealEstates-Realators/info/Info";
-import Ads from "@/components/RealEstates-Realators/Ads";
-import Comments from "@/components/RealEstates-Realators/Comments";
+import Info from "@/components/realEstates-Realators/info/Info";
+import Ads from "@/components/realEstates-Realators/Ads";
+import Comments from "@/components/realEstates-Realators/Comments";
 
 export default function RealatorProfile() {
   const params = useParams();

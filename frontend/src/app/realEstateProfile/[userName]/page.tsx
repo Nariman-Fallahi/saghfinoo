@@ -7,11 +7,11 @@ import { AdsDataType, CommentType, realEstateOfficesType } from "@/Types";
 import ErrNoData from "@/components/ErrNoData";
 
 // Components
-import Info from "@/components/RealEstates-Realators/info/Info";
-import ModalREA from "@/components/RealEstates-Realators/modal/ModalREA";
+import Info from "@/components/realEstates-Realators/info/Info";
+import ModalREA from "@/components/realEstates-Realators/modal/ModalREA";
 import Consultants from "@/components/Consultants";
-import Ads from "@/components/RealEstates-Realators/Ads";
-import Comments from "@/components/RealEstates-Realators/Comments";
+import Ads from "@/components/realEstates-Realators/Ads";
+import Comments from "@/components/realEstates-Realators/Comments";
 
 export default function RealEstateProfilePage() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();

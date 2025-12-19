@@ -1,9 +1,9 @@
 "use client";
 import Image from "next/image";
-import EditingInformation from "@/components/UserProfile/EditingInformation";
-import MyAds from "@/components/UserProfile/MyAds";
-import SavedAds from "@/components/UserProfile/SavedAds";
-import ItemMenu from "@/components/UserProfile/ItemMenu";
+import EditingInformation from "@/components/userProfile/EditingInformation";
+import MyAds from "@/components/userProfile/MyAds";
+import SavedAds from "@/components/userProfile/SavedAds";
+import ItemMenu from "@/components/userProfile/ItemMenu";
 import { notFound } from "next/navigation";
 import { deleteCookie } from "cookies-next";
 import { useRouter } from "@bprogress/next/app";
