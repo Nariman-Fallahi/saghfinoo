@@ -3,7 +3,7 @@ import TypesEstate from "@/components/home/newUser/TypesEstate";
 import LatestNews from "@/components/home/newUser/LatestNews";
 import Services from "@/components/home/Services";
 import SearchBox from "@/components/home/SearchBox";
-import { NewsDataType } from "@/Types";
+import { NewsDataType } from "@/types";
 import { Api, baseURL } from "@/services/ApiService";
 import { Metadata } from "next";
 import { ServicesDataNewUserHome } from "@/constant/servicesDataNewUser";

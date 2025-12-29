@@ -1,4 +1,4 @@
-import { DataModalREA, ReportModaltDataType } from "@/Types";
+import { DataModalREA, ReportModaltDataType } from "@/types";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import UserIcon from "./UserIcon";
 import {

@@ -1,15 +1,15 @@
 "use client";
 import { useState } from "react";
-import SearchAndFilter from "@/components/SearchResults/SearchAndFilter";
 import MobileFilter from "@/components/filter/MobileFilter";
 import DesktopFilter from "@/components/filter/desktop/DesktopFilter";
-import { AdsDataType } from "@/Types";
+import { AdsDataType } from "@/types";
 import { Api, dataKey, useGetRequest } from "@/services/ApiService";
 import AdsCart from "@/components/AdsCart";
-import DateRangeSelector from "@/components/SearchResults/DateRangeSelector";
-import NumberItemsFound from "@/components/SearchResults/NumberItemsFound";
 import PaginationComponent from "@/components/Pagination";
 import { useSearchParams } from "next/navigation";
+import SearchAndFilter from "./SearchAndFilter";
+import NumberItemsFound from "./NumberItemsFound";
+import DateRangeSelector from "./DateRangeSelector";
 
 export default function SearchResultsContainer() {
   const [isOpenFilterMobileModal, setIsOpenFilterMobileModal] =

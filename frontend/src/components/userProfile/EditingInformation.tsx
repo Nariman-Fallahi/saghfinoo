@@ -3,7 +3,7 @@ import CustomButton from "../CustomButton";
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 import InputRegister from "../InputRegister";
-import { changePasswordType, userInfoDataType } from "@/Types";
+import { changePasswordType, userInfoDataType } from "@/types";
 import Title from "./Title";
 import { usePostRequest } from "@/services/ApiService";
 import { Api } from "@/services/ApiService";
@@ -14,7 +14,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { Spinner } from "@heroui/spinner";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { editUserProfileType } from "@/Types";
+import { editUserProfileType } from "@/types";
 import { useUserInfo } from "@/hooks/queries/useUserInfo";
 
 type Inputs = {

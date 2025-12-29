@@ -1,4 +1,4 @@
-import { SelectionDataType } from "@/Types";
+import { SelectionDataType } from "@/types";
 import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
 import { SelectTitle } from "../ui/SelectTitle";

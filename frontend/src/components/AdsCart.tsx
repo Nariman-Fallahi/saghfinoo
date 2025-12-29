@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Button } from "@heroui/button";
 import "react-loading-skeleton/dist/skeleton.css";
 import S_Ads from "@/skeleton/S_Ads";
-import { AdsDataType } from "@/Types";
+import { AdsDataType } from "@/types";
 import { usePostRequest } from "@/services/ApiService";
 import { Api } from "@/services/ApiService";
 import { useState, useEffect } from "react";

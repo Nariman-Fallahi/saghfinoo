@@ -1,6 +1,6 @@
 import AdsCart from "../AdsCart";
 import { Title } from "@/components/ui/Title";
-import { AdsDataType } from "@/Types";
+import { AdsDataType } from "@/types";
 import PaginationComponent from "../Pagination";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";

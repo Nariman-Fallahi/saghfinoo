@@ -1,9 +1,9 @@
 import MobileMenu from "./MobileMenu";
 import DesktopMenu from "./DesktopMenu";
-import { dataMenuType } from "@/Types";
-import { staticFooterItemsType } from "@/Types";
+import { dataMenuType } from "@/types";
+import { staticFooterItemsType } from "@/types";
 import Image from "next/image";
-import { DevelopersType } from "@/Types";
+import { DevelopersType } from "@/types";
 
 export default function FooterMenu() {
   const dynamicFooterItems: dataMenuType = [

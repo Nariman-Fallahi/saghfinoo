@@ -1,5 +1,5 @@
 import { Api, baseURL } from "@/services/ApiService";
-import { allrealEstateOfficesDataType } from "@/Types";
+import { allrealEstateOfficesDataType } from "@/types";
 import ErrNoData from "@/components/ErrNoData";
 import SearchDataNotFound from "@/components/realEstates-Realators/SearchDataNotFound";
 import { Metadata } from "next";

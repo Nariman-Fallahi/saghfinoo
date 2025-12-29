@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { dataMenuType } from "@/Types";
-import { staticFooterItemsType } from "@/Types";
+import { dataMenuType } from "@/types";
+import { staticFooterItemsType } from "@/types";
 
 type DecktopMenuType = {
   dynamicFooterItems: dataMenuType;

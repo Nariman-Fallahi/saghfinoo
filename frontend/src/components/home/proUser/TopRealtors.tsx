@@ -1,6 +1,6 @@
 import { Title } from "@/components/ui/Title";
 import RealatorsCarts from "@/components/RealatorsCarts";
-import { allRealtorDataType } from "@/Types";
+import { allRealtorDataType } from "@/types";
 
 type TopRealtorsType = {
   data: allRealtorDataType[];

@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
-import { usePostRequestType } from "../Types";
+import { usePostRequestType } from "../types";
 import { ErrorNotification } from "@/notification/Error";
-import { useGetRequestType } from "../Types";
+import { useGetRequestType } from "../types";
 import axios from "axios";
 
 export enum Api {

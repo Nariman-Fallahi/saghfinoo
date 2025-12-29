@@ -1,5 +1,5 @@
 import { Api, dataKey, useGetRequest } from "@/services/ApiService";
-import { userInfoDataType } from "@/Types";
+import { userInfoDataType } from "@/types";
 import { getCookie } from "cookies-next";
 
 export const useUserInfo = () => {

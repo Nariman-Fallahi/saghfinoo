@@ -13,7 +13,7 @@
     "@heroui/autocomplete": "2.3.11",
     "@heroui/button": "2.2.10",
     "@heroui/checkbox": "2.3.9",
-    "@heroui/dropdown": "^2.3.27",
+    "@heroui/dropdown": "^2.3.28",
     "@heroui/modal": "2.2.8",
     "@heroui/pagination": "2.2.9",
     "@heroui/select": "2.4.10",
@@ -39,13 +39,13 @@
   },
   "devDependencies": {
     "@tanstack/react-query-devtools": "^5.91.1",
-    "@types/node": "^20.19.26",
+    "@types/node": "^20.19.27",
     "@types/react": "^18.3.27",
     "@types/react-dom": "^18.3.7",
     "eslint": "^8.57.1",
     "eslint-config-next": "14.2.4",
     "postcss": "^8.5.6",
-    "tailwindcss": "^3.4.18",
+    "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3"
   }
 }

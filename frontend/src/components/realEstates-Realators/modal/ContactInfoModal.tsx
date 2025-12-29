@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { DataModalREA } from "@/Types";
+import { DataModalREA } from "@/types";
 
 type ContactInfoModalType = {
   data: DataModalREA;

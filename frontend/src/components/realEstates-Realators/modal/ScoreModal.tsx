@@ -2,7 +2,7 @@ import CustomButton from "@/components/CustomButton";
 import { useEffect } from "react";
 import { usePostRequest, useGetRequest, dataKey } from "@/services/ApiService";
 import { Api } from "@/services/ApiService";
-import { DataModalREA, ScoreReasonsType } from "@/Types";
+import { DataModalREA, ScoreReasonsType } from "@/types";
 import { Spinner } from "@heroui/spinner";
 import { Success } from "@/notification/Success";
 import { ErrorNotification } from "@/notification/Error";

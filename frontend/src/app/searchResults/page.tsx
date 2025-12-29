@@ -1,4 +1,4 @@
-import SearchResultsContainer from "@/components/SearchResults/SearchResultsContainer";
+import SearchResultsContainer from "@/components/searchResults/SearchResultsContainer";
 import { Suspense } from "react";
 
 export default function SearchResults() {

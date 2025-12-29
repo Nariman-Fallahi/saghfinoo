@@ -4,7 +4,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { Api, dataKey } from "@/services/ApiService";
 import { useGetRequest } from "@/services/ApiService";
 import PaginationComponent from "./Pagination";
-import { allRealtorDataType } from "@/Types";
+import { allRealtorDataType } from "@/types";
 import { useSearchParams } from "next/navigation";
 import { Title } from "./ui/Title";
 

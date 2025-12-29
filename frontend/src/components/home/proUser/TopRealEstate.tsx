@@ -1,7 +1,7 @@
 "use client";
 import { Title } from "@/components/ui/Title";
 import RealEstatesCards from "@/components/RealEstatesCards";
-import { allrealEstateOfficesDataType } from "@/Types";
+import { allrealEstateOfficesDataType } from "@/types";
 
 type TopRealEstateType = {
   data: allrealEstateOfficesDataType[];

@@ -1,9 +1,9 @@
 import { Api, dataKey } from "@/services/ApiService";
 import { useGetRequest } from "@/services/ApiService";
-import { ProvincesType } from "@/Types";
-import { CitiesType } from "@/Types";
+import { ProvincesType } from "@/types";
+import { CitiesType } from "@/types";
 import { useEffect, useState } from "react";
-import { AdPostingFormDataType } from "@/Types";
+import { AdPostingFormDataType } from "@/types";
 import { Dispatch, SetStateAction } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import BtnSubmit from "../BtnSubmit";

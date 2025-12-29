@@ -7,7 +7,7 @@ import { setCookie } from "cookies-next";
 import { useRouter } from "@bprogress/next/app";
 import { dataKey, usePostRequest } from "@/services/ApiService";
 import { Api } from "@/services/ApiService";
-import { AuthStepType, SignUpDataType } from "@/Types";
+import { AuthStepType, SignUpDataType } from "@/types";
 import InputRegister from "../InputRegister";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";

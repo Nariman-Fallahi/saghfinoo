@@ -1,11 +1,11 @@
 "use client";
 import Stepper from "./Stepper";
 import { useState, useEffect } from "react";
-import { AdPostingFormDataType } from "@/Types";
+import { AdPostingFormDataType } from "@/types";
 import { Api } from "@/services/ApiService";
 import { getCookie } from "cookies-next";
 import { usePostRequest } from "@/services/ApiService";
-import { AdPostingApi } from "@/Types";
+import { AdPostingApi } from "@/types";
 import { isMobile } from "@/utils/isMobile";
 
 // Components

@@ -2,7 +2,7 @@
 import { Title } from "@/components/ui/Title";
 import AdsCart from "@/components/AdsCart";
 import { useGetRequest, Api, dataKey } from "@/services/ApiService";
-import { AdsDataType } from "@/Types";
+import { AdsDataType } from "@/types";
 import { getCookie } from "cookies-next";
 
 export default function NewestHouseRent() {

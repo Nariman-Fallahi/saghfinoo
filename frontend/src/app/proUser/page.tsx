@@ -5,7 +5,7 @@ import {
   allrealEstateOfficesDataType,
   allRealtorDataType,
   SuggestedSearchesDataType,
-} from "@/Types";
+} from "@/types";
 //  Components
 import Services from "@/components/home/Services";
 import NewestHouseRent from "@/components/home/proUser/NewestHouseRent";

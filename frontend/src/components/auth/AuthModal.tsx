@@ -11,7 +11,7 @@ import { setCookie } from "cookies-next";
 import { useRouter } from "@bprogress/next/app";
 import { Api, dataKey } from "@/services/ApiService";
 import { usePostRequest } from "@/services/ApiService";
-import { AuthStepType, LoginDataType } from "@/Types";
+import { AuthStepType, LoginDataType } from "@/types";
 import { isMobile } from "@/utils/isMobile";
 import PhoneNumberInput from "./PhoneNumberInput";
 import { useQueryClient } from "@tanstack/react-query";

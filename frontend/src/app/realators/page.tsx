@@ -1,5 +1,5 @@
 import { Api, baseURL } from "@/services/ApiService";
-import { allRealtorDataType } from "@/Types";
+import { allRealtorDataType } from "@/types";
 import ErrNoData from "@/components/ErrNoData";
 
 // Components

@@ -1,5 +1,5 @@
 import { Api, dataKey, useGetRequest } from "@/services/ApiService";
-import { CitiesType } from "@/Types";
+import { CitiesType } from "@/types";
 
 export const useAllCities = () => {
   return useGetRequest<{ data: CitiesType[] }>({

@@ -14,7 +14,7 @@ import { Spinner } from "@heroui/spinner";
 import { useParams } from "next/navigation";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { AdsDataType } from "@/Types";
+import { AdsDataType } from "@/types";
 
 export default function SavedAds() {
   const access = getCookie("access");

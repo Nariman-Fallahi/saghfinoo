@@ -10,7 +10,7 @@ import "swiper/css/navigation";
 
 // import required modules
 import { Navigation } from "swiper/modules";
-import { NewsDataType } from "@/Types";
+import { NewsDataType } from "@/types";
 
 //TODO Edit Component
 

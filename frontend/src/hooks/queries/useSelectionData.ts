@@ -1,5 +1,5 @@
 import { Api, dataKey, useGetRequest } from "@/services/ApiService";
-import { SelectionDataType } from "@/Types";
+import { SelectionDataType } from "@/types";
 
 export const useSelectionData = () => {
   return useGetRequest<{ data: SelectionDataType[] }>({

@@ -3,7 +3,7 @@ import { useDisclosure } from "@heroui/modal";
 import { useParams, useSearchParams } from "next/navigation";
 import { dataKey, useGetRequest } from "@/services/ApiService";
 import { Api } from "@/services/ApiService";
-import { AdsDataType, CommentType, realEstateOfficesType } from "@/Types";
+import { AdsDataType, CommentType, realEstateOfficesType } from "@/types";
 import ErrNoData from "@/components/ErrNoData";
 
 // Components

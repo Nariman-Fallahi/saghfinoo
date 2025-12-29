@@ -1,4 +1,4 @@
-import { FilterDataType, SelectionDataType } from "@/Types";
+import { FilterDataType, SelectionDataType } from "@/types";
 import { useEffect, useState } from "react";
 import { Api, dataKey, useGetRequest } from "@/services/ApiService";
 import { SubmitHandler, useForm } from "react-hook-form";

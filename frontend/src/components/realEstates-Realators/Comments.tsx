@@ -2,7 +2,7 @@
 import { SwiperSlide } from "swiper/react";
 import Image from "next/image";
 import { Title } from "@/components/ui/Title";
-import { CommentType } from "@/Types";
+import { CommentType } from "@/types";
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 
 // Import Swiper styles

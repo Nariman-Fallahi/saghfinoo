@@ -8,7 +8,7 @@ import "swiper/css/navigation";
 
 // import required modules
 import { Navigation } from "swiper/modules";
-import { NewsDataType } from "@/Types";
+import { NewsDataType } from "@/types";
 import { useEffect, useState } from "react";
 import CustomSwiper from "@/components/CustomSwiper";
 import { Title } from "@/components/ui/Title";

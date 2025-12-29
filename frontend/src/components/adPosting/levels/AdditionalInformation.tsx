@@ -1,5 +1,5 @@
 import React, { useState, Dispatch, SetStateAction, useEffect } from "react";
-import { AdPostingFormDataType } from "@/Types";
+import { AdPostingFormDataType } from "@/types";
 import BtnSubmit from "../BtnSubmit";
 import { useForm, SubmitHandler } from "react-hook-form";
 

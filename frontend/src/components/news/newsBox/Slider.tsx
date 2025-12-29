@@ -5,7 +5,7 @@ import { isMobile } from "@/utils/isMobile";
 import SliderBox from "../SliderBox";
 import { useRouter } from "@bprogress/next/app";
 import { usePathname } from "next/navigation";
-import { NewsDataType } from "@/Types";
+import { NewsDataType } from "@/types";
 
 // Import Swiper styles
 import "swiper/css";

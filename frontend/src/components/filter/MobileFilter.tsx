@@ -3,7 +3,7 @@ import { Modal, ModalContent, ModalBody } from "@heroui/modal";
 import { Button } from "@heroui/button";
 import Image from "next/image";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { FilterDataType } from "@/Types";
+import { FilterDataType } from "@/types";
 import { useState } from "react";
 import Input from "./Input";
 import MoreItems from "./MoreItems";

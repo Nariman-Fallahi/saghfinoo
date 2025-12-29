@@ -1,7 +1,7 @@
 "use client";
 import MobileMenu from "./MobileMenu";
 import DesktopMenu from "./DesktopMenu";
-import { navigationMenuType } from "@/Types";
+import { navigationMenuType } from "@/types";
 import { getCookie } from "cookies-next";
 import AuthModal from "@/components/auth/AuthModal";
 import { Api, usePostRequest } from "@/services/ApiService";

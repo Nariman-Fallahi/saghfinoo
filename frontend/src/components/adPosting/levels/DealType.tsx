@@ -1,7 +1,7 @@
-import { AdPostingFormDataType } from "@/Types";
+import { AdPostingFormDataType } from "@/types";
 import { Dispatch } from "react";
 import { SetStateAction } from "react";
-import { optionType } from "@/Types";
+import { optionType } from "@/types";
 import { useForm, SubmitHandler, Controller, Form } from "react-hook-form";
 import BtnSubmit from "../BtnSubmit";
 import AutocompleteComponent from "../AutocompleteComponent";

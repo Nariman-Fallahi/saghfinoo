@@ -1,6 +1,6 @@
 import { Title } from "@/components/ui/Title";
 import Slider from "./Slider";
-import { NewsDataType } from "@/Types";
+import { NewsDataType } from "@/types";
 
 export default function Construction({ data }: { data: NewsDataType[] }) {
   return (

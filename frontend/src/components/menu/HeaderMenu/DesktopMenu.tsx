@@ -1,10 +1,10 @@
 "use client";
 import Image from "next/image";
 import { Button } from "@heroui/button";
-import { navigationMenuType } from "@/Types";
+import { navigationMenuType } from "@/types";
 import { useModalStore } from "@/store/Auth";
 import Link from "next/link";
-import { userInfoDataType } from "@/Types";
+import { userInfoDataType } from "@/types";
 import { Spinner } from "@heroui/spinner";
 import { useRouter } from "@bprogress/next/app";
 import { usePathname, useSearchParams } from "next/navigation";

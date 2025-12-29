@@ -2,10 +2,10 @@
 import { Api, dataKey } from "@/services/ApiService";
 import { useGetRequest } from "@/services/ApiService";
 import { useParams } from "next/navigation";
-import { AdsDataType, RealtorDataType } from "@/Types";
+import { AdsDataType, RealtorDataType } from "@/types";
 import { useDisclosure } from "@heroui/modal";
 import ModalREA from "@/components/realEstates-Realators/modal/ModalREA";
-import { CommentType } from "@/Types";
+import { CommentType } from "@/types";
 import { useSearchParams } from "next/navigation";
 
 // Components

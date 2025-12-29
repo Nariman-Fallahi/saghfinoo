@@ -1,5 +1,5 @@
 import { Title } from "@/components/ui/Title";
-import { SuggestedSearchesDataType } from "@/Types";
+import { SuggestedSearchesDataType } from "@/types";
 import Link from "next/link";
 
 type SuggestedSearchesType = {

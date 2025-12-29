@@ -2,10 +2,10 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Button } from "@heroui/button";
-import { navigationMenuType } from "@/Types";
+import { navigationMenuType } from "@/types";
 import { useModalStore } from "@/store/Auth";
 import Link from "next/link";
-import { userInfoDataType } from "@/Types";
+import { userInfoDataType } from "@/types";
 import { useRouter } from "@bprogress/next/app";
 
 type mobileMenuType = {
