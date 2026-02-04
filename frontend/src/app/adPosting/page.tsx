@@ -1,4 +1,4 @@
-import AdFormContainer from "@/components/AdPosting/AdFormContainer";
+import AdFormContainer from "@/components/adPosting/AdFormContainer";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

@@ -1,9 +1,9 @@
 "use client";
 import Image from "next/image";
 import { Button } from "@heroui/button";
-import { allRealtorDataType } from "@/types/Type";
+import { allRealtorDataType } from "@/types";
 import "react-loading-skeleton/dist/skeleton.css";
-import { isMobile } from "@/constant/Constants";
+import { isMobile } from "@/utils/isMobile";
 import { useRouter } from "@bprogress/next/app";
 
 type RealatorsCartsType = {

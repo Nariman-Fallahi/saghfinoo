@@ -1,15 +1,17 @@
 "use client";
+import { isMobile } from "@/utils/isMobile";
 import { Pagination } from "@heroui/pagination";
-import { isMobile } from "@/constant/Constants";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type PaginationComponent = {
   totalPages: number | undefined;
+  paramKey?: string;
 };
 
 export default function PaginationComponent({
   totalPages,
+  paramKey,
 }: PaginationComponent) {
   const router = useRouter();
   const pathname = usePathname();
@@ -21,11 +23,10 @@ export default function PaginationComponent({
     if (!totalPages) return;
 
     const updatedSearchParams = new URLSearchParams(searchParams.toString());
-    updatedSearchParams.set("page", pageNumber.toString());
+    updatedSearchParams.set(paramKey || "page", pageNumber.toString());
 
     router.push(`${pathname}?${updatedSearchParams.toString()}`);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageNumber]);
+  }, [pageNumber, paramKey, pathname, router, searchParams, totalPages]);
 
   return totalPages && totalPages > 1 ? (
     <div className="w-full flex mt-8 ltr justify-center">

@@ -1,18 +1,18 @@
-import { Api, baseURL } from "@/ApiService";
-import SearchBox from "@/components/Home/SearchBox";
-import { ServicesDataProUserHome } from "@/constant/Constants";
+import { Api, baseURL } from "@/services/ApiService";
+import SearchBox from "@/components/home/SearchBox";
 import { Metadata } from "next";
 import {
   allrealEstateOfficesDataType,
   allRealtorDataType,
   SuggestedSearchesDataType,
-} from "@/types/Type";
+} from "@/types";
 //  Components
-import Services from "@/components/Home/Services";
-import NewestHouseRent from "@/components/Home/proUser/NewestHouseRent";
-import SuggestedSearches from "@/components/Home/proUser/SuggestedSearches";
-import TopRealEstate from "@/components/Home/proUser/TopRealEstate";
-import TopRealtors from "@/components/Home/proUser/TopRealtors";
+import Services from "@/components/home/Services";
+import NewestHouseRent from "@/components/home/proUser/NewestHouseRent";
+import SuggestedSearches from "@/components/home/proUser/SuggestedSearches";
+import TopRealEstate from "@/components/home/proUser/TopRealEstate";
+import TopRealtors from "@/components/home/proUser/TopRealtors";
+import { ServicesDataProUserHome } from "@/constant/servicesDataProUser";
 
 export const metadata: Metadata = {
   title: "صفحه اصلی",
