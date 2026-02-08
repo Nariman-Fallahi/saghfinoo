@@ -2,19 +2,19 @@
 import Image from "next/image";
 import { Button } from "@heroui/button";
 import { navigationMenuType } from "@/types";
-import { useModalStore } from "@/store/Auth";
 import Link from "next/link";
 import { userInfoDataType } from "@/types";
 import { Spinner } from "@heroui/spinner";
 import { useRouter } from "@bprogress/next/app";
 import { usePathname, useSearchParams } from "next/navigation";
+import { useAuthModal } from "@/hooks/useAuthModal";
 
 type desktopMenuType = {
   NavigationMenu: navigationMenuType;
   userInfoData: userInfoDataType | undefined;
   dataStatus: "error" | "success" | "pending";
   iconMenu: JSX.Element;
-  adPostingBtn: JSX.Element;
+  createPostingButton: JSX.Element;
   isLogin: boolean;
 };
 
@@ -22,11 +22,11 @@ export default function DesktopMenu({
   NavigationMenu,
   userInfoData,
   dataStatus,
-  iconMenu,
-  adPostingBtn: AdPostingBtn,
+  iconMenu: IconMenu,
+  createPostingButton: CreatePostingButton,
   isLogin,
 }: desktopMenuType) {
-  const { setOpen } = useModalStore();
+  const { setOpen } = useAuthModal();
   const router = useRouter();
 
   const pathname = usePathname();
@@ -39,7 +39,7 @@ export default function DesktopMenu({
          shadow rounded-2xl mt-6 z-50"
       >
         <ul className="flex items-center text-sm lg:text-xl">
-          {iconMenu}
+          {IconMenu}
           {NavigationMenu.map((item, index) => {
             const isSearchResultsPage = pathname.startsWith("/searchResults");
             let isActive: boolean;
@@ -108,7 +108,7 @@ export default function DesktopMenu({
             </li>
           )}
 
-          <li>{AdPostingBtn}</li>
+          <li>{CreatePostingButton}</li>
         </ul>
       </nav>
     </div>

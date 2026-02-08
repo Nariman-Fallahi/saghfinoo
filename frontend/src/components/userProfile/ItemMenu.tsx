@@ -5,10 +5,10 @@ type ItemMenuType = {
   title: string;
   icon: string;
   alt: string;
-  userName: string;
   onClick?: () => void;
-  active?: string;
+  active?: boolean;
   routerPush?: string;
+  className?: string;
 };
 
 export default function ItemMenu({
@@ -16,9 +16,9 @@ export default function ItemMenu({
   alt,
   icon,
   title,
-  userName,
   routerPush,
   onClick,
+  className,
 }: ItemMenuType) {
   const router = useRouter();
 
@@ -32,10 +32,10 @@ export default function ItemMenu({
         }
       }}
       className={`flex mt-2 p-2 cursor-pointer text-[#717171] ${
-        userName === active
+        active
           ? "before:w-1 before:h-5 before:rounded-xl before:ml-2 before:bg-primary text-black"
           : null
-      }`}
+      } ${className || ""}`}
     >
       <i>
         <Image width={20} height={20} src={icon} alt={alt} />

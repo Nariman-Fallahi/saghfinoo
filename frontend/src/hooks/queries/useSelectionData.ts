@@ -1,11 +1,10 @@
-import { Api, dataKey, useGetRequest } from "@/services/ApiService";
+import { Api, QueryKeys } from "@/services/apiService";
 import { SelectionDataType } from "@/types";
+import { useGetRequest } from "../useRequest";
 
 export const useSelectionData = () => {
   return useGetRequest<{ data: SelectionDataType[] }>({
     url: Api.GetSelectionData,
-    key: [dataKey.GET_SELECTION_DATA],
-    enabled: true,
-    staleTime: 10 * 60 * 1000,
+    key: [QueryKeys.GET_SELECTION_DATA],
   });
 };

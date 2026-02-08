@@ -1,18 +1,28 @@
+"use client";
 import { Title } from "@/components/ui/Title";
-import RealatorsCarts from "@/components/RealatorsCarts";
+import RealatorsCard from "@/components/RealatorsCard";
 import { allRealtorDataType } from "@/types";
+import { QueryKeys } from "@/services/apiService";
+import { useGetRequest } from "@/hooks/useRequest";
 
-type TopRealtorsType = {
-  data: allRealtorDataType[];
-};
+interface TopRealtorsProps {
+  fetchUrl: string;
+}
 
-export default function TopRealtors({ data }: TopRealtorsType) {
+export default function TopRealtors({ fetchUrl }: TopRealtorsProps) {
+  const { data, isLoading } = useGetRequest<{
+    data: allRealtorDataType[];
+  }>({
+    key: [QueryKeys.GET_REALTOR_TOP],
+    url: fetchUrl,
+  });
+
   return (
     <div className="w-full flex flex-col mt-7 p-3">
       <Title title="مشاوران برتر" />
 
       <div className="flex flex-wrap">
-        <RealatorsCarts data={data} />
+        <RealatorsCard data={data?.data} isLoading={isLoading} />
       </div>
     </div>
   );

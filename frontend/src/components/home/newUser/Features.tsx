@@ -2,11 +2,11 @@
 import Image from "next/image";
 import { Button } from "@heroui/button";
 import { Title } from "@/components/ui/Title";
-import { FeaturesDataNewUserHome } from "@/constant/featuresData";
+import { FeaturesDataNewUserHome } from "@/constant/home/featuresData";
 
 export default function Features() {
   return (
-    <div className="mt-7 p-3 flex flex-col lg:mt-10">
+    <div className="p-3 flex flex-col lg:mt-10">
       <Title title={FeaturesDataNewUserHome.title} />
 
       <div

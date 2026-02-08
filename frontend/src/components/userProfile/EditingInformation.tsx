@@ -1,21 +1,19 @@
 "use client";
-import CustomButton from "../CustomButton";
+import CustomButton from "../ui/CustomButton";
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
-import InputRegister from "../InputRegister";
-import { changePasswordType, userInfoDataType } from "@/types";
+import InputRegister from "../ui/InputRegister";
+import { changePasswordType } from "@/types";
 import Title from "./Title";
-import { usePostRequest } from "@/services/ApiService";
-import { Api } from "@/services/ApiService";
-import { getCookie } from "cookies-next";
+import { Api } from "@/services/apiService";
 import { Success } from "@/notification/Success";
 import { ErrorNotification } from "@/notification/Error";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 import { Spinner } from "@heroui/spinner";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { editUserProfileType } from "@/types";
 import { useUserInfo } from "@/hooks/queries/useUserInfo";
+import { usePostRequest } from "@/hooks/useRequest";
+import EditingInformationSkeleton from "../ui/skeletons/EditingInformationSkeleton";
 
 type Inputs = {
   iconUser: File;
@@ -34,50 +32,30 @@ export default function EditingInformation() {
     lastName?: string;
   }>();
 
-  const access = getCookie("access");
-
   const {
     data: userInfoData,
     refetch,
     isPending: userInfoPending,
   } = useUserInfo();
 
-  const {
-    mutate: editUserProfileMutate,
-    data: editUserProfileData,
-    status: editUserProfileStatus,
-  } = usePostRequest<editUserProfileType>({
-    url: Api.EditUserProfile,
-    key: "editUserProfile",
-    headers: {
-      Authorization: `Bearer ${access}`,
-    },
-    method: "PUT",
-  });
+  const { mutate: editUserProfileMutate, status: editUserProfileStatus } =
+    usePostRequest<editUserProfileType>({
+      url: Api.EditUserProfile,
+      key: "editUserProfile",
+      method: "PUT",
+    });
 
-  const {
-    mutate: uploadProfileMutate,
-    data: uploadProfileData,
-    status: uploadProfileStatus,
-  } = usePostRequest({
-    url: Api.UploadProfileImage,
-    key: "uploadProfileImage",
-    headers: {
-      Authorization: `Bearer ${access}`,
-    },
-  });
+  const { mutate: uploadProfileMutate, status: uploadProfileStatus } =
+    usePostRequest({
+      url: Api.UploadProfileImage,
+      key: "uploadProfileImage",
+    });
 
-  const {
-    mutate: changePasswordMutate,
-    data: changePasswordData,
-    status: changePasswordStatus,
-  } = usePostRequest<changePasswordType>({
-    url: Api.ChangePassword,
-    key: "changePassword",
-    headers: {
-      Authorization: `Bearer ${access}`,
-    },
-  });
+  const { mutate: changePasswordMutate, status: changePasswordStatus } =
+    usePostRequest<changePasswordType>({
+      url: Api.ChangePassword,
+      key: "changePassword",
+    });
 
   useEffect(() => {
     setDefaultValues({
@@ -101,29 +79,68 @@ export default function EditingInformation() {
     reset(defaultValues);
   }, [defaultValues, reset]);
 
+  if (userInfoPending) return <EditingInformationSkeleton />;
+
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     if (data.iconUser) {
       const formData = new FormData();
       formData.append("image", data.iconUser);
 
-      uploadProfileMutate(formData);
+      uploadProfileMutate(formData, {
+        onSuccess: (res) => {
+          if (res.msg === "done") {
+            Success("عکس پروفایل با موفقیت تغییر کرد.");
+            refetch();
+          } else {
+            ErrorNotification("در تغییر عکس پروفایل مشکلی پیش آمد.");
+          }
+        },
+      });
     }
 
     if (
       data.fristName !== defaultValues?.fristName ||
       data.lastName !== defaultValues.lastName
     ) {
-      editUserProfileMutate({
-        first_name: data.fristName,
-        last_name: data.lastName,
-      });
+      editUserProfileMutate(
+        {
+          first_name: data.fristName,
+          last_name: data.lastName,
+        },
+        {
+          onSuccess: (res) => {
+            if (res.msg === "done") {
+              Success("اطلاعات با موفقیت تغییر پیدا کرد.");
+              refetch();
+            } else {
+              ErrorNotification("در تغییر اطلاعات حساب کاربری مشکلی پیش آمد.");
+            }
+          },
+        },
+      );
     }
 
     if (data.currentPassword && data.newPassword) {
-      changePasswordMutate({
-        current_password: data.currentPassword,
-        new_password: data.newPassword,
-      });
+      changePasswordMutate(
+        {
+          current_password: data.currentPassword,
+          new_password: data.newPassword,
+        },
+        {
+          onSuccess: (res) => {
+            if (res.msg === "done") {
+              Success("رمزعبور با موفقیت تغییر پیدا کرد.");
+              refetch();
+            } else if (
+              res.current_password === "current password is incurrent"
+            ) {
+              ErrorNotification("رمز عبور قبلی اشتباه میباشد.");
+            } else {
+              ErrorNotification("در تغییر رمز عبور مشکلی پیش آمد.");
+            }
+          },
+        },
+      );
     }
   };
 
@@ -146,46 +163,6 @@ export default function EditingInformation() {
       setImagePreview(null);
     }
   };
-
-  useEffect(() => {
-    if (editUserProfileStatus === "success" && editUserProfileData) {
-      if (editUserProfileData.msg === "done") {
-        Success("اطلاعات با موفقیت تغییر پیدا کرد");
-        refetch();
-      } else {
-        ErrorNotification("در تغییر عکس پروفایل مشکلی پیش آمد");
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editUserProfileData, editUserProfileStatus]);
-
-  useEffect(() => {
-    if (uploadProfileStatus === "success" && uploadProfileData) {
-      if (uploadProfileData.msg === "done") {
-        Success("عکس پروفایل با موفقیت تغییر کرد");
-        refetch();
-      } else {
-        ErrorNotification("در تغییر عکس پروفایل مشکلی پیش آمد");
-      }
-    }
-  }, [refetch, uploadProfileData, uploadProfileStatus]);
-
-  useEffect(() => {
-    if (changePasswordStatus === "success" && changePasswordData) {
-      if (changePasswordData.msg === "done") {
-        Success("اطلاعات با موفقیت تغییر پیدا کرد");
-        refetch();
-      } else if (
-        changePasswordData.errors.current_password ===
-        "current password is incurrent"
-      ) {
-        ErrorNotification("رمز عبور قبلی اشتباه میباشد");
-      } else {
-        ErrorNotification("در تغییر رمز عبور مشکلی پیش آمد");
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [changePasswordData, changePasswordStatus]);
 
   return (
     <>
@@ -218,30 +195,21 @@ export default function EditingInformation() {
             )}
           />
           <i>
-            {userInfoPending ? (
-              <Skeleton
-                circle
-                width={60}
-                height={60}
-                className="md:!w-[70px] md:!h-[70px]"
-              />
-            ) : (
-              <Image
-                width={60}
-                height={60}
-                className="rounded-full md:w-[70px] md:h-[70px] lg:w-[85px]"
-                quality={100}
-                sizes="(min-width: 768px) 70px, 70px"
-                src={
-                  imagePreview
-                    ? imagePreview
-                    : userInfoData?.data.imageFullPath
+            <Image
+              width={60}
+              height={60}
+              className="rounded-full md:w-[70px] md:h-[70px] lg:w-[85px]"
+              quality={100}
+              sizes="(min-width: 768px) 70px, 70px"
+              src={
+                imagePreview
+                  ? imagePreview
+                  : userInfoData?.data.imageFullPath
                     ? userInfoData?.data.imageFullPath
                     : "/icons/profile-circle.svg"
-                }
-                alt="Image User"
-              />
-            )}
+              }
+              alt="Image User"
+            />
           </i>
         </div>
 

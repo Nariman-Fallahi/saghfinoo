@@ -4,17 +4,25 @@ import { getCookie, setCookie } from "cookies-next";
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl;
   const res = NextResponse.next();
-  const access = getCookie("access", { res, req });
-  const refresh = getCookie("refresh", { res, req });
+  const accessToken = getCookie("accessToken", { res, req });
+  const refreshToken = getCookie("refreshToken", { res, req });
   const pathname = url.pathname;
 
   const isProtectedPath = (path: string) => {
-    const protectedPatterns = [/^\/proUser/, /^\/adPosting/, /^\/userProfile/];
+    // const protectedPatterns = [
+    //   /^\/pro-user/,
+    //   /^\/create-ad/,
+    //   /^\/user-profile/,
+    // ];
+
+    const protectedPatterns = [
+      /^\/pro-user5555/,
+    ];
 
     return protectedPatterns.some((pattern) => pattern.test(path));
   };
 
-  if (access === undefined && refresh !== undefined) {
+  if (accessToken === undefined && refreshToken !== undefined) {
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/users/token/refresh`,
@@ -23,13 +31,13 @@ export async function middleware(req: NextRequest) {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ refresh }),
-        }
+          body: JSON.stringify({ refreshToken }),
+        },
       );
       if (response.ok) {
         const data = await response.json();
-        if (data.access && refresh) {
-          setCookie("access", data.access, {
+        if (data.access && refreshToken) {
+          setCookie("accessToken", data.access, {
             res,
             req,
             maxAge: data.expire,
@@ -37,18 +45,18 @@ export async function middleware(req: NextRequest) {
           });
         }
       } else {
-        return NextResponse.redirect(new URL("/newUser", req.url));
+        return NextResponse.redirect(new URL("/new-user", req.url));
       }
     } catch {
-      return NextResponse.redirect(new URL("/newUser", req.url));
+      return NextResponse.redirect(new URL("/new-user", req.url));
     }
   }
 
-  if (pathname === "newUser" && access) {
-    return NextResponse.redirect(new URL("/proUser", req.url));
+  if (pathname === "newUser" && accessToken) {
+    return NextResponse.redirect(new URL("/home/pro-user", req.url));
   }
 
-  if (isProtectedPath(pathname) && !access) {
+  if (isProtectedPath(pathname) && !accessToken) {
     return NextResponse.redirect(new URL("/403", req.url));
   }
 

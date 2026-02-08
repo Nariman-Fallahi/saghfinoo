@@ -3,16 +3,16 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Button } from "@heroui/button";
 import { navigationMenuType } from "@/types";
-import { useModalStore } from "@/store/Auth";
 import Link from "next/link";
 import { userInfoDataType } from "@/types";
 import { useRouter } from "@bprogress/next/app";
+import { useAuthModal } from "@/hooks/useAuthModal";
 
 type mobileMenuType = {
   NavigationMenu: navigationMenuType;
   userInfoData: userInfoDataType | undefined;
   iconMenu: JSX.Element;
-  adPostingBtn: JSX.Element;
+  createPostingButton: JSX.Element;
   isLogin: boolean;
 };
 
@@ -20,11 +20,11 @@ export default function MobileMenu({
   NavigationMenu,
   userInfoData,
   iconMenu,
-  adPostingBtn: AdPostingBtn,
+  createPostingButton: CreatePostingButton,
   isLogin,
 }: mobileMenuType) {
   const [menuStatus, setMenuStatus] = useState<"open" | "close" | null>(null);
-  const { setOpen } = useModalStore();
+  const { setOpen } = useAuthModal();
   const router = useRouter();
 
   const ClickRegister = () => {
@@ -60,7 +60,7 @@ export default function MobileMenu({
           <Image width={24} height={24} src="/icons/menu.svg" alt="Menu Icon" />
         </Button>
         {iconMenu}
-        {AdPostingBtn}
+        {CreatePostingButton}
       </nav>
 
       <div

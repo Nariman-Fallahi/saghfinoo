@@ -65,8 +65,6 @@
 <img width="25" align="center" src="https://tanstack.com/images/logos/logo-color-100.png"> `React Query`
 <img width="30" align="center" src="https://hexmos.com/freedevtools/svg_icons/axios/axios-plain.svg"> `Axios`
 <img width="25" align="center" src="https://swiperjs.com/images/swiper-logo.svg"> `Swiper`
-<img width="30" align="center" src="https://user-images.githubusercontent.com/958486/218346783-72be5ae3-b953-4dd7-b239-788a882fdad6.svg"> `Zustand`
-
 <img width="25" align="center" src="https://react-hook-form.com/images/logo/react-hook-form-logo-only.png"> `React Hook Form`
 
 </div>

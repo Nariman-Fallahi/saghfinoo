@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
 import { ToastContainer } from "react-toastify";
-import Menu from "@/components/menu/HeaderMenu/Menu";
-import FooterMenu from "@/components/menu/FooterMenu/FooterMenu";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Providers } from "./providers";
 
@@ -25,11 +23,7 @@ export default function RootLayout({
   return (
     <html dir="rtl" lang="fa">
       <body className={Shabnam.className}>
-        <Providers>
-          <Menu />
-          {children}
-          <FooterMenu />
-        </Providers>
+        <Providers>{children}</Providers>
         <ToastContainer rtl />
         <SpeedInsights />
       </body>

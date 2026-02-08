@@ -1,24 +1,21 @@
 "use client";
 import { Title } from "@/components/ui/Title";
-import AdsCart from "@/components/AdsCart";
-import { useGetRequest, Api, dataKey } from "@/services/ApiService";
+import AdsCard from "@/components/AdsCard";
+import { QueryKeys } from "@/services/apiService";
 import { AdsDataType } from "@/types";
-import { getCookie } from "cookies-next";
+import { useGetRequest } from "@/hooks/useRequest";
 
-export default function NewestHouseRent() {
-  const access = getCookie("access");
+interface NewestHouseRentProps {
+  fetchUrl: string;
+}
 
-  const { isLoading, isFetching, refetch, data } = useGetRequest<{
+export default function NewestHouseRent({ fetchUrl }: NewestHouseRentProps) {
+  const { isLoading, refetch, data } = useGetRequest<{
     data: AdsDataType[];
     totalPages: number;
   }>({
-    url: `${Api.Ad}/?page=1&type_of_transaction_name=اجاره&limit=6`,
-    key: [dataKey.GET_NEWEST_HOUSE_RENT],
-    enabled: true,
-    staleTime: 10 * 60 * 1000,
-    headers: {
-      Authorization: `Bearer ${access}`,
-    },
+    url: fetchUrl,
+    key: [QueryKeys.GET_NEWEST_HOUSE_RENT],
   });
 
   return (
@@ -26,11 +23,10 @@ export default function NewestHouseRent() {
       <Title title="جدید ترین خانه های اجاره ای" />
 
       <div className="flex flex-wrap">
-        <AdsCart
+        <AdsCard
           data={data?.data}
-          isFetching={isFetching}
           isloading={isLoading}
-          refetch={refetch}
+          onActionSuccess={() => refetch()}
         />
       </div>
     </div>

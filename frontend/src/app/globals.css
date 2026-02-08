@@ -15,7 +15,9 @@ h6 {
 
 input:-webkit-autofill,
 input:-webkit-autofill:focus {
-  transition: background-color 0s 600000s, color 0s 600000s !important;
+  transition:
+    background-color 0s 600000s,
+    color 0s 600000s !important;
 }
 
 @layer utilities {
@@ -60,38 +62,6 @@ ul {
     width: 0;
     display: none;
   }
-}
-
-@media (hover: none) {
-  .swiper-button-prev,
-  .swiper-button-next {
-    display: none !important;
-  }
-}
-
-.swiper-button-prev:after,
-.swiper-button-next:after {
-  font-size: 25px !important;
-}
-
-.swiper-button-prev,
-.swiper-button-next {
-  width: 50px !important;
-  height: 50px !important;
-  border-radius: 999px !important;
-  background-color: #ffffff !important;
-  padding: 3px !important;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
-}
-
-.swiper-button-prev:active,
-.swiper-button-next:active {
-  background-color: #f8f8f8 !important;
-}
-
-.swiper-button-prev.swiper-button-disabled,
-.swiper-button-next.swiper-button-disabled {
-  display: none !important;
 }
 
 #nprogress .bar {

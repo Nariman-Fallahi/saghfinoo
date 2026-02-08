@@ -2,222 +2,86 @@
 import Title from "./Title";
 import NoData from "./NoData";
 import DeleteAllAdsBtn from "./DeleteAllAdsBtn";
-import { Api, dataKey } from "@/services/ApiService";
-import { usePostRequest } from "@/services/ApiService";
-import { useEffect, useState } from "react";
+import { Api, QueryKeys } from "@/services/apiService";
+import { useState } from "react";
 import { Success } from "@/notification/Success";
-import { ErrorNotification } from "@/notification/Error";
-import { useGetRequest } from "@/services/ApiService";
 import { AdsDataType } from "@/types";
-import { getCookie } from "cookies-next";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
-import { isMobile } from "@/utils/isMobile";
 import { Spinner } from "@heroui/spinner";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@heroui/button";
 import Image from "next/image";
+import { useGetRequest, usePostRequest } from "@/hooks/useRequest";
+import MyAdsSkeleton from "../ui/skeletons/MyAdsSkeleton";
+import { ErrorNotification } from "@/notification/Error";
 
 export default function MyAds() {
-  const access = getCookie("access");
   const searchParams = useSearchParams();
   const pageNumber = searchParams.get("pageNumber") || "1";
-  const [adDeleteId, setAdDeleteId] = useState<number>();
+  const [adDeleteId, setAdDeleteId] = useState<number | null>(null);
 
-  const {
-    mutate: deleteAllAdsDataMutate,
-    data: deleteAllAdsData,
-    isPending: DeleteAllPending,
-  } = usePostRequest({
-    url: Api.DeleteAllMyAds,
-    key: "deleteAllAds",
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${access}`,
-    },
-  });
-
-  const { data, isPending, refetch, isFetching, isLoading } = useGetRequest<{
+  const { data, isPending, refetch } = useGetRequest<{
     data: AdsDataType[];
     totalPages: number;
   }>({
     url: `${Api.GetAllMyAds}?page=${pageNumber}`,
-    key: [dataKey.GET_ALL_MY_ADS, pageNumber.toString()],
-    enabled: true,
-    staleTime: 10 * 60 * 1000,
-    headers: {
-      Authorization: `Bearer ${access}`,
-    },
+    key: [QueryKeys.GET_ALL_MY_ADS, pageNumber.toString()],
   });
 
-  const {
-    mutate: deleteAdsDataMutate,
-    data: deleteAdsData,
-    isPending: deleteAdsPending,
-  } = usePostRequest({
-    url: `${Api.Ad}/${adDeleteId}`,
-    key: "deleteAds",
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${access}`,
-    },
-  });
+  const { mutate: deleteAllAdsDataMutate, isPending: deleteAllPending } =
+    usePostRequest({
+      url: Api.DeleteAllMyAds,
+      key: "deleteAllAds",
+      method: "DELETE",
+    });
+
+  const { mutate: deleteAdsDataMutate, isPending: deleteSinglePending } =
+    usePostRequest({
+      url: `${Api.Ad}/${adDeleteId}`,
+      key: "deleteAds",
+      method: "DELETE",
+    });
 
   const handleDeleteAds = (id: number) => {
     setAdDeleteId(id);
-    deleteAdsDataMutate({});
+    deleteAdsDataMutate(
+      {},
+      {
+        onSuccess: (res) => {
+          if (res.msg === "done") {
+            Success("آگهی با موفقیت حذف شد.");
+            setAdDeleteId(null);
+            refetch();
+          } else {
+            ErrorNotification("در حذف آگهی مشکلی پیش آمد.");
+          }
+        },
+      },
+    );
   };
 
-  useEffect(() => {
-    if (deleteAllAdsData && deleteAllAdsData.msg === "done") {
-      Success("تمام آگهی های شما با موفقیت حذف شدند");
-      refetch();
-    } else if (deleteAllAdsData && deleteAllAdsData.msg !== "done") {
-      ErrorNotification("در حذف تمام آگهی ها مشکلی پیش آمد");
-    }
-  }, [deleteAllAdsData, refetch]);
+  const handleDeleteAllAds = () => {
+    deleteAllAdsDataMutate(
+      {},
+      {
+        onSuccess: (res) => {
+          if (res.msg === "done") {
+            Success("تمام آگهی های شما با موفقیت حذف شدند.");
+            refetch();
+          } else {
+            ErrorNotification("در حذف تمام آگهی ها مشکلی پیش آمد.");
+          }
+        },
+      },
+    );
+  };
 
-  useEffect(() => {
-    if (deleteAdsData && deleteAdsData.msg === "done") {
-      Success("این آگهی با موفقیت حذف شد");
-      refetch();
-    } else if (deleteAdsData && deleteAdsData.msg !== "done") {
-      ErrorNotification("در حذف این آگهی مشکلی پیش آمد");
-    }
-  }, [deleteAdsData, refetch]);
+  if (isPending) return <MyAdsSkeleton />;
 
-  const isData = data?.data && data?.data.length >= 1 && !isPending;
-
-  return (
-    <>
-      <Title title="آگهی های من" />
-
-      {isPending ? (
-        <Skeleton width={145} height={20} className="mt-4 md:!w-[180px]" />
-      ) : (
-        isData &&
-        (!DeleteAllPending ? (
-          <DeleteAllAdsBtn
-            onPress={() => {
-              deleteAllAdsDataMutate({});
-            }}
-          />
-        ) : (
-          <div className="flex mt-5 items-center">
-            <Spinner size="sm" color="danger" />
-            <p className="text-sm md:text-base mr-3">
-              در حال حذف تمام آگهی ها ...
-            </p>
-          </div>
-        ))
-      )}
-
-      {isPending && (
-        <div className="flex flex-wrap justify-between w-full">
-          {Array.from({ length: isMobile ? 4 : 6 }).map((_, index) => (
-            <div
-              key={index}
-              className="w-[48%] rounded-lg flex flex-col items-center relative
-               lg:w-[30%] border mt-5 pb-2"
-            >
-              <Skeleton
-                containerClassName="w-full !-mt-1"
-                className="rounded-t md:!h-[100px]"
-                height={70}
-              />
-              <Skeleton
-                containerClassName="w-[75%]"
-                count={4}
-                className="mt-21 md:mt-2"
-              />
-            </div>
-          ))}
-        </div>
-      )}
-
-      {isData && (
-        <>
-          <div className="flex flex-wrap justify-between w-full">
-            {data?.data.map((item) => {
-              return (
-                // <div className="flex flex-col" key={item.id}>
-                //   <AdsCart
-                //     data={data.data}
-                //     isFetching={isFetching}
-                //     isloading={isLoading}
-                //     refetch={refetch}
-                //   />
-
-                //   <Button className="w-full" radius="sm">
-                //     حذف این آگهی
-                //   </Button>
-                // </div>
-                <div
-                  key={item.id}
-                  className="w-[48%] rounded-lg flex flex-col items-center relative
-                lg:w-[30%] border mt-5"
-                >
-                  <Image
-                    width={500}
-                    height={1000}
-                    className="w-full h-1/2 rounded-t"
-                    src="/image/Bg-SearchBox.webp"
-                    alt=""
-                  />
-                  <div className="flex flex-col p-3 w-full">
-                    <p className="text-xs md:text-sm lg:text-base text-[#909090] mt-1 truncate">
-                      {`${item.typeOfTransaction} ${item.propertyType}`}
-                    </p>
-                    <p className="text-xs md:text-sm lg:text-base text-[#909090] mt-1 truncate">
-                      {`${item.area}‌متر، شهرستان ${item.city}`}
-                    </p>
-                    <p className="text-xs md:text-sm lg:text-base font-bold mt-1 truncate">
-                      {item.deposit !== 0
-                        ? `${item.deposit} میلیون تومان رهن`
-                        : `رهن ندارد`}
-                    </p>
-                    <p className="text-xs md:text-sm lg:text-base font-bold mt-1 truncate">
-                      {`${item.rent} میلیون تومان اجاره`}
-                    </p>
-                  </div>
-                  <div className="absolute z-10 w-full flex justify-between p-2 items-center">
-                    {/* <div
-                    className={`${
-                      item.is_confirmed ? "bg-gray-300" : "bg-red-300"
-                    } opacity-70 text-xs md:text-sm lg:text-base rounded
-                    flex items-center justify-center p-1 cursor-default`}
-                  >
-                    {item.is_confirmed ? "تایید شده‌" : "در انتظار تایید"}
-                  </div> */}
-                    <Button
-                      isIconOnly
-                      radius="full"
-                      variant="light"
-                      onPress={() => {
-                        handleDeleteAds(item.id);
-                      }}
-                    >
-                      {!deleteAdsPending ? (
-                        <Image
-                          width={16}
-                          height={16}
-                          className="md:w-5 md:h-5 lg:w-6 lg:h-6"
-                          src="/icons/trash.svg"
-                          alt="Trash"
-                        />
-                      ) : (
-                        <Spinner size="sm" color="default" />
-                      )}
-                    </Button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </>
-      )}
-
-      {!isPending && data?.data && data?.data.length < 1 && (
+  const hasData = data?.data && data.data.length > 0;
+  if (!hasData) {
+    return (
+      <>
+        <Title title="آگهی های من" />
         <NoData
           title="هنوز آگهی ثبت نکردید !"
           description="با ثبت رایگان آگهی در هر جایی که هستید به سرعت ملکتان را معامله کنید."
@@ -225,7 +89,81 @@ export default function MyAds() {
           titleBtn="ثبت آگهی"
           linkBtn="/adPosting"
         />
-      )}
+      </>
+    );
+  }
+
+  return (
+    <>
+      <Title title="آگهی های من" />
+
+      <div className="mt-4">
+        {deleteAllPending ? (
+          <div className="flex items-center gap-2">
+            <Spinner size="sm" color="danger" />
+            <p className="text-sm text-gray-600">در حال حذف تمام آگهی ها...</p>
+          </div>
+        ) : (
+          <DeleteAllAdsBtn onPress={handleDeleteAllAds} />
+        )}
+      </div>
+
+      <div className="flex flex-wrap justify-between w-full mt-5 gap-y-5">
+        {data.data.map((item) => (
+          <div
+            key={item.id}
+            className="w-[48%] lg:w-[31%] rounded-xl border border-gray-100 shadow-sm flex flex-col relative overflow-hidden"
+          >
+            <Image
+              width={400}
+              height={300}
+              className="w-full h-32 md:h-44 object-cover"
+              src={item.imageFullPath || "/image/Bg-SearchBox.webp"}
+              alt="Ad Image"
+            />
+
+            <div className="flex flex-col p-3 w-full space-y-1">
+              <p className="text-xs md:text-sm text-gray-500 truncate">
+                {`${item.typeOfTransaction} ${item.propertyType}`}
+              </p>
+              <p className="text-xs md:text-sm text-gray-400 truncate">
+                {`${item.area}‌ متر، ${item.city}`}
+              </p>
+              <p className="text-xs md:text-sm font-bold text-gray-800 truncate">
+                {item.deposit !== 0
+                  ? `${item.deposit} میلیون تومان رهن`
+                  : "بدون رهن"}
+              </p>
+              <p className="text-xs md:text-sm font-bold text-gray-800 truncate">
+                {item.rent !== 0
+                  ? `${item.rent} میلیون تومان اجاره`
+                  : "بدون اجاره"}
+              </p>
+            </div>
+
+            <div className="absolute top-2 left-2 z-10">
+              <Button
+                isIconOnly
+                radius="full"
+                variant="flat"
+                className="bg-white/80 backdrop-blur-sm"
+                onPress={() => handleDeleteAds(item.id)}
+              >
+                {deleteSinglePending && adDeleteId === item.id ? (
+                  <Spinner size="sm" color="danger" />
+                ) : (
+                  <Image
+                    width={18}
+                    height={18}
+                    src="/icons/trash.svg"
+                    alt="Delete"
+                  />
+                )}
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
     </>
   );
 }

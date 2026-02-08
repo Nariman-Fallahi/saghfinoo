@@ -1,11 +1,11 @@
 import Image from "next/image";
 import { Title } from "@/components/ui/Title";
 import { numberToPersian } from "@/utils/numberToPersian";
-import { EstateTypes } from "@/constant/estateTypes";
+import { EstateTypes } from "@/constant/home/estateTypes";
 
 export default function TypesEstate() {
   return (
-    <div className="mt-7 p-3 flex flex-col">
+    <div className="p-3 flex flex-col">
       <Title title={EstateTypes.title} />
 
       <div className="flex w-full flex-wrap p-3 justify-between lg:mt-6">

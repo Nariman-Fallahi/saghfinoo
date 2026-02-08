@@ -4,13 +4,20 @@ import { Button } from "@heroui/button";
 import { allrealEstateOfficesDataType } from "@/types";
 import { useRouter } from "@bprogress/next/app";
 import { isMobile } from "@/utils/isMobile";
+import RealEstatesCardsSkeleton from "./ui/skeletons/RealEstatesCardsSkeleton";
 
 type RealEstatesCardsType = {
-  data: allrealEstateOfficesDataType[];
+  data: allrealEstateOfficesDataType[] | undefined;
+  isLoading: boolean;
 };
 
-export default function RealEstatesCards({ data }: RealEstatesCardsType) {
+export default function RealEstatesCards({
+  data,
+  isLoading,
+}: RealEstatesCardsType) {
   const router = useRouter();
+
+  if (isLoading || !data) return <RealEstatesCardsSkeleton count={6} />;
 
   return (
     <>
@@ -72,7 +79,7 @@ export default function RealEstatesCards({ data }: RealEstatesCardsType) {
             <Button
               radius="sm"
               className="hidden md:flex mt-3 bg-primary text-white"
-              onPress={() => router.push(`/realEstateProfile/${item.username}`)}
+              onPress={() => router.push(`/real-estate-profile/${item.username}`)}
             >
               مشاهده صفحه شخصی
             </Button>

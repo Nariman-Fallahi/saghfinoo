@@ -6,19 +6,19 @@ import Otp from "./Otp";
 import SignUp from "./SignUp";
 import { ErrorNotification } from "@/notification/Error";
 import { Success } from "@/notification/Success";
-import { useModalStore } from "@/store/Auth";
 import { setCookie } from "cookies-next";
 import { useRouter } from "@bprogress/next/app";
-import { Api, dataKey } from "@/services/ApiService";
-import { usePostRequest } from "@/services/ApiService";
+import { Api, QueryKeys } from "@/services/apiService";
 import { AuthStepType, LoginDataType } from "@/types";
 import { isMobile } from "@/utils/isMobile";
 import PhoneNumberInput from "./PhoneNumberInput";
 import { useQueryClient } from "@tanstack/react-query";
+import { usePostRequest } from "@/hooks/useRequest";
+import { useAuthModal } from "@/hooks/useAuthModal";
 
 export default function AuthModal() {
   const router = useRouter();
-  const { isOpen, setOpen } = useModalStore();
+  const { isOpen, setOpen } = useAuthModal();
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [isSelected, setIsSelected] = useState<boolean>(false);
   const [token, setToken] = useState<string>("");
@@ -91,7 +91,7 @@ export default function AuthModal() {
         onError: () => {
           ErrorNotification("در ارتباط با سرور مشکلی پیش آمد.");
         },
-      }
+      },
     );
   };
 
@@ -113,12 +113,12 @@ export default function AuthModal() {
               break;
 
             case "login_done":
-              setCookie("access", data.access, {
+              setCookie("accessToken", data.access, {
                 maxAge: data.expire,
                 sameSite: "strict",
                 secure: process.env.NODE_ENV === "production",
               });
-              setCookie("refresh", data.refresh, {
+              setCookie("refreshToken", data.refresh, {
                 sameSite: "strict",
                 secure: process.env.NODE_ENV === "production",
                 httpOnly: true,
@@ -126,10 +126,10 @@ export default function AuthModal() {
               setOpen(false);
               Success("ثبت نام با موفقیت انجام شد.");
               await queryClient.refetchQueries({
-                queryKey: [dataKey.GET_USER_INFO],
+                queryKey: [QueryKeys.GET_USER_INFO],
                 exact: true,
               });
-              router.push("/proUser");
+              router.push("/home/pro-user");
               break;
           }
         },
@@ -137,7 +137,7 @@ export default function AuthModal() {
           ErrorNotification("دراعتبارسنجی کد مشکلی پیش آمد.");
           setAuthStep("phone");
         },
-      }
+      },
     );
   };
 

@@ -1,3 +1,5 @@
+import { UseMutationOptions } from "@tanstack/react-query";
+
 // Home
 export type navigationMenuType = {
   title: string;
@@ -10,6 +12,13 @@ interface IconItem {
   icon: string;
   text: string;
 }
+
+export type PaginatedResponse<T> = {
+  data: T[];
+  total_pages: number;
+  status: number;
+};
+export type AgencyEntityType = "realEstate" | "realtor";
 
 type FooterItem = string | IconItem;
 
@@ -38,13 +47,6 @@ export type DevelopersType = {
   contact: contact[];
 }[];
 
-export type usePostRequestType = {
-  url: string;
-  key: string;
-  headers?: Record<string, string>;
-  method?: "POST" | "DELETE" | "PUT";
-};
-
 export type LoginDataType = {
   phoneNumber: string;
   code: number | string;
@@ -71,12 +73,19 @@ export type changePasswordType = {
   current_password: string;
 };
 
-export type useGetRequestType = {
+export type PostRequestType = {
+  url: string;
+  key: string;
+  headers?: Record<string, string>;
+  method?: "POST" | "PUT" | "PATCH" | "DELETE";
+};
+
+export type GetRequestType<T> = {
   url: string;
   key: string[];
   headers?: Record<string, string>;
-  enabled: boolean;
-  staleTime: number;
+  enabled?: boolean;
+  staleTime?: number;
 };
 
 export type userInfoDataType = {
@@ -181,7 +190,7 @@ export type RealtorDataType = {
   };
 };
 
-export type DataModalREA = {
+export type AgencyActionsModalType = {
   profileIcon: string | undefined;
   name: string | undefined;
   number: {
@@ -196,6 +205,13 @@ export type DataModalREA = {
     email: string | undefined;
   };
 };
+
+export type AgencyActionType =
+  | "ContactInfo"
+  | "Share"
+  | "Score"
+  | "Report"
+  | null;
 
 // Ad Posting Form Data Type
 export type AdPostingFormDataType = {
@@ -313,12 +329,22 @@ export type ReportModaltDataType = {
   name: string;
 };
 
-export type NewsDataType = {
+export type NewsPostsType = {
   imageFullPath: string;
   readTime: number;
   title: string;
   shortDescription: string;
+  category: string;
+  special: number;
   slug: string;
+  createdAt: string;
+};
+
+export type NewsType = {
+  id: number;
+  title: string;
+  layout: string;
+  posts: NewsPostsType[];
 };
 
 export type SuggestedSearchesDataType = {
@@ -343,4 +369,5 @@ export type FilterDataType = {
   numberOfFloors?: string;
   coolingSystem?: string;
   heatingSystem?: string;
+  sort?: string;
 };

@@ -20,12 +20,12 @@ export default function Services({ title, subtitle, data }: ServicesType) {
         {subtitle}
       </h4>
 
-      <div className="w-full flex p-3 flex-wrap mt-4 justify-between md:justify-around">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-6 w-full [&>*:last-child]:col-span-2 md:[&>*:last-child]:col-span-1 justify-center">
         {data.map((item) => {
           return (
             <div
-              className="w-[156px] px-3 py-4 flex flex-col items-center shadow
-               rounded-xl bg-white mt-4 md:w-[25%] lg:w-[185px]"
+              className="px-3 py-4 flex flex-col items-center shadow
+               rounded-xl bg-white mt-4"
               key={item.id}
             >
               <Image

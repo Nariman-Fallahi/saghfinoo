@@ -1,12 +1,12 @@
+"use client";
 import Image from "next/image";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
-import { Api, dataKey } from "@/services/ApiService";
-import { useGetRequest } from "@/services/ApiService";
+import { Api, QueryKeys } from "@/services/apiService";
 import PaginationComponent from "./Pagination";
 import { allRealtorDataType } from "@/types";
 import { useSearchParams } from "next/navigation";
 import { Title } from "./ui/Title";
+import { useGetRequest } from "@/hooks/useRequest";
+import ConsultantsSkeleton from "./ui/skeletons/ConsultantsSkeleton";
 
 type ConsultantsType = {
   userName: string | string[];
@@ -14,81 +14,48 @@ type ConsultantsType = {
 
 export default function Consultants({ userName }: ConsultantsType) {
   const searchParams = useSearchParams();
-  const pageNumber = searchParams.get("page") || 1;
+  const pageNumber = searchParams.get("page") || "1";
 
   const { data, isPending } = useGetRequest<{
     data: allRealtorDataType[];
     total_pages: number;
   }>({
     url: `${Api.Realtors}/?reo_username=${userName}&page=${pageNumber}`,
-    key: [dataKey.GET_REAL_ESTATE_CONSULTANTS],
-    staleTime: 10 * 60 * 1000,
-    enabled: true,
+    key: [QueryKeys.GET_REAL_ESTATE_CONSULTANTS, pageNumber],
   });
 
-  return (
-    <div className="mt-10 flex flex-col w-fill p-4 md:mt-14 md:p-8">
-      {isPending ? (
-        <Skeleton width={220} height={25} />
-      ) : (
-        <Title
-          title={`مشاورین ${data?.data.map(
-            (item) => item.realEstateOffice.name
-          )}`}
-        />
-      )}
+  if (isPending || !data) return <ConsultantsSkeleton />;
 
-      <div className="mt-5 flex justify-between flex-wrap md:mt-8">
-        {isPending ? (
-          Array.from({ length: 4 }).map((_, index) => (
-            <div
-              key={index}
-              className="w-[24%] flex flex-col justify-center md:bg-[#F9F9F9]
-             md:p-3 md:w-1/6 md:rounded-xl md:ml-1 md:mr-2 items-center"
-            >
-              <Skeleton
-                circle
-                width={70}
-                height={70}
-                className="md:w-[120px] md:h-[120px]"
-              />
-              <div className="mt-3 md:mt-4">
-                <Skeleton width={80} className="md:!w-[130px]" />
-              </div>
-            </div>
-          ))
-        ) : (
-          <>
-            {data?.data.map((item) => {
-              return (
-                <div
-                  key={item.id}
-                  className="w-[24%] flex flex-col justify-center md:bg-[#F9F9F9]
-                 md:p-3 md:w-1/6 md:rounded-xl md:ml-1 md:mr-2 items-center"
-                >
-                  <Image
-                    width={70}
-                    height={70}
-                    className="rounded-full md:w-[120px] md:h-[120px]"
-                    sizes="(min-width: 768px) 120px, 120px"
-                    src={item.user.imageFullPath || "/icons/profile-circle.svg"}
-                    alt="profileIcon"
-                  />
-                  <span className="mt-3 font-medium text-xs md:text-base md:mt-4">
-                    {isPending ? (
-                      <Skeleton width={50} className="md:!w-[100px]" />
-                    ) : (
-                      `${item.user.firstName} ${item.user.lastName}`
-                    )}
-                  </span>
-                </div>
-              );
-            })}
-          </>
-        )}
+  const officeName = data?.data?.[0]?.realEstateOffice?.name || "";
+
+  return (
+    <div className="mt-10 flex flex-col w-full p-4 md:mt-14 md:p-8">
+      <Title title={`مشاورین املاک ${officeName}`} />
+
+      <div className="mt-5 flex justify-start flex-wrap gap-y-6 md:mt-8">
+        {data?.data.map((item) => (
+          <div
+            key={item.id}
+            className="w-1/4 flex flex-col justify-center md:bg-[#F9F9F9]
+             md:p-3 md:w-[15%] md:rounded-xl md:mx-2 items-center text-center"
+          >
+            <Image
+              width={120}
+              height={120}
+              className="rounded-full w-[70px] h-[70px] md:w-[120px] md:h-[120px] object-cover"
+              src={item.user.imageFullPath || "/icons/profile-circle.svg"}
+              alt={`${item.user.firstName} ${item.user.lastName}`}
+            />
+            <span className="mt-3 font-medium text-xs md:text-base md:mt-4 truncate w-full">
+              {`${item.user.firstName} ${item.user.lastName}`}
+            </span>
+          </div>
+        ))}
       </div>
 
-      <PaginationComponent totalPages={data?.total_pages} />
+      {data?.total_pages && data.total_pages > 1 && (
+        <PaginationComponent totalPages={data.total_pages} />
+      )}
     </div>
   );
 }

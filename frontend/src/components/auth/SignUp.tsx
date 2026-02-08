@@ -1,16 +1,17 @@
 import { Button } from "@heroui/button";
 import { ErrorNotification } from "@/notification/Error";
 import { Success } from "@/notification/Success";
-import { useModalStore } from "@/store/Auth";
 import { Spinner } from "@heroui/spinner";
 import { setCookie } from "cookies-next";
 import { useRouter } from "@bprogress/next/app";
-import { dataKey, usePostRequest } from "@/services/ApiService";
-import { Api } from "@/services/ApiService";
+import { QueryKeys } from "@/services/apiService";
+import { Api } from "@/services/apiService";
 import { AuthStepType, SignUpDataType } from "@/types";
-import InputRegister from "../InputRegister";
+import InputRegister from "../ui/InputRegister";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";
+import { usePostRequest } from "@/hooks/useRequest";
+import { useAuthModal } from "@/hooks/useAuthModal";
 
 type SignUpType = {
   phoneNumber: string;
@@ -29,7 +30,7 @@ export default function SignUp({
   phoneNumber,
   setAuthStep,
 }: SignUpType) {
-  const { setOpen } = useModalStore();
+  const { setOpen } = useAuthModal();
   const router = useRouter();
 
   const queryClient = useQueryClient();
@@ -57,11 +58,11 @@ export default function SignUp({
       {
         onSuccess: async (data) => {
           if (data.code === "login_done") {
-            setCookie("access", data.access, {
+            setCookie("accessToken", data.access, {
               maxAge: data.expire,
               sameSite: "strict",
             });
-            setCookie("refresh", data.refresh, {
+            setCookie("refreshToken", data.refresh, {
               sameSite: "strict",
               httpOnly: true,
             });
@@ -69,16 +70,16 @@ export default function SignUp({
             setAuthStep("phone");
             setOpen(false);
             await queryClient.refetchQueries({
-              queryKey: [dataKey.GET_USER_INFO],
+              queryKey: [QueryKeys.GET_USER_INFO],
               exact: true,
             });
-            router.push("/proUser");
+            router.push("/home/pro-user");
           }
         },
         onError: () => {
           ErrorNotification("در ارسال اطلاعات مشکلی پیش آمد.");
         },
-      }
+      },
     );
   };
 
