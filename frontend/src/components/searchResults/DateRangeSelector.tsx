@@ -18,7 +18,7 @@ export default function DateRangeSelector({
 }: Props) {
   if (isLoading) {
     return (
-      <div className="w-full md:w-40 h-8 md:h-9 bg-gray-200 animate-pulse !rounded-[4px] border border-gray-100" />
+      <div className="w-full md:w-40 h-8 md:h-9 bg-gray-200 animate-pulse rounded-[4px]! border border-gray-100" />
     );
   }
 
@@ -47,10 +47,10 @@ export default function DateRangeSelector({
             }
           }}
           classNames={{
-            trigger: "!rounded-[4px] border border-gray-200 h-8 md:h-9 px-3",
+            trigger: "rounded-[4px]! border border-gray-200 h-8 md:h-9 px-3",
             innerWrapper: "flex items-center justify-start gap-2",
             value:
-              "text-[12px] md:text-sm font-medium text-right !justify-start flex",
+              "text-[12px] md:text-sm font-medium text-right justify-start! flex",
           }}
         >
           {options.map((item) => (

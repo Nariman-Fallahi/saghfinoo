@@ -8,16 +8,16 @@ export const USER_PROFILE_MENU = [
   {
     id: UserProfileItem.EditingInformation,
     title: "ویرایش اطلاعات",
-    icon: "/icons/edit.svg",
+    icon: "/icons/ui/edit.svg",
   },
   {
     id: UserProfileItem.MyAds,
     title: "آگهی‌های من",
-    icon: "/icons/receipt-text.svg",
+    icon: "/icons/ui/receipt-text.svg",
   },
   {
     id: UserProfileItem.SavedAds,
     title: "آگهی‌های ذخیره شده",
-    icon: "/icons/save.svg",
+    icon: "/icons/ui/save.svg",
   },
 ] as const;

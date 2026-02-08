@@ -33,8 +33,8 @@ export default function InputRegister<T extends FieldValues>({
 }: InputType<T>) {
   const [inputPassword, setInputPassword] = useState<{
     type: "text" | "password";
-    icon: "/icons/eye.svg" | "/icons/eye-slash.svg";
-  }>({ type: "password", icon: "/icons/eye.svg" });
+    icon: "/icons/ui/eye.svg" | "/icons/ui/eye-slash.svg";
+  }>({ type: "password", icon: "/icons/ui/eye.svg" });
 
   const divRef = useRef<HTMLDivElement>(null);
 
@@ -42,7 +42,7 @@ export default function InputRegister<T extends FieldValues>({
     setInputPassword((prev) => ({
       type: prev.type === "password" ? "text" : "password",
       icon:
-        prev.type === "password" ? "/icons/eye-slash.svg" : "/icons/eye.svg",
+        prev.type === "password" ? "/icons/ui/eye-slash.svg" : "/icons/ui/eye.svg",
     }));
   }, []);
 
@@ -66,19 +66,19 @@ export default function InputRegister<T extends FieldValues>({
     <div className="w-full flex flex-col">
       <div
         ref={divRef}
-        className="mt-[28px] flex items-center rtl p-3 rounded border text-sm md:p-3 md:mt-[24px]"
+        className="mt-7 flex items-center rtl p-3 rounded-sm border text-sm md:p-3 md:mt-6"
       >
         <Image
           width={17}
           height={17}
-          className="md:w-[20px] md:h-[20px]"
+          className="md:w-5 md:h-5"
           src={icon}
           alt={alt}
         />
         <input
           placeholder={placeholder}
           type={type !== "password" ? type : inputPassword.type}
-          className="w-full outline-none mr-2 text-xs md:text-sm"
+          className="w-full outline-hidden mr-2 text-xs md:text-sm"
           disabled={disabled}
           {...register(name, rules)}
           onFocus={handleFocus}

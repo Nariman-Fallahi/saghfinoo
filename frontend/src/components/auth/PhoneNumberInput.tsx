@@ -46,15 +46,15 @@ export default function PhoneNumberInput({
         })}
         placeholder="مثال: ۰۹۹۳۱۲۳۴۵۶۷"
         type="text"
-        className="mt-[40px] p-2 rounded-lg w-full border-[#2F80ED] border
-        outline-none text-sm md:p-3 md:mt-[24px]"
+        className="mt-10 p-2 rounded-lg w-full border-[#2F80ED] border
+        outline-hidden text-sm md:p-3 md:mt-6"
         style={{
           boxShadow: "0px 0px 0px 3px rgba(47, 128, 237, 0.19)",
         }}
       />
       <TextError text={errors.phoneNumber?.message} />
       {/* CheckBox */}
-      <div className="mt-[16px] w-full flex items-center">
+      <div className="mt-4 w-full flex items-center">
         <Checkbox
           isSelected={isSelected}
           onValueChange={setIsSelected}
@@ -73,7 +73,7 @@ export default function PhoneNumberInput({
         isDisabled={!isSelected}
         isLoading={sendOTPIsPending}
         spinner={<Spinner color="white" size="sm" />}
-        className="mt-[64px] w-full rounded-lg p-2 bg-primary text-white md:mt-[50px] md:text-lg"
+        className="mt-16 w-full rounded-lg p-2 bg-primary text-white md:mt-12.5 md:text-lg"
       >
         {sendOTPIsPending ? "" : "ورود"}
       </Button>

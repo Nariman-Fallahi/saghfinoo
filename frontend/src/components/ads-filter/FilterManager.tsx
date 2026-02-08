@@ -79,14 +79,14 @@ export default function FilterManager({
       <div className="md:hidden">
         <Button
           size="sm"
-          className="!rounded-[4px] border w-full flex items-center justify-center gap-2"
+          className="rounded-sm! border w-full flex items-center justify-center gap-2"
           variant="bordered"
           onPress={() => setIsMobileOpen(true)}
         >
           <Image
             width={16}
             height={16}
-            src="/icons/filter-search.svg"
+            src="/icons/ui/filter-search.svg"
             alt="FilterSearch"
           />
           فیلترها

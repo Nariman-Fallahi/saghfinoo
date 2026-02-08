@@ -32,7 +32,7 @@ export default function Stepper({ count, activeStep }: StepperType) {
                 width={17}
                 height={17}
                 className="md:w-6 md:h-6"
-                src="/icons/tick.svg"
+                src="/icons/ui/tick.svg"
                 alt=""
               />
             )}
@@ -41,7 +41,7 @@ export default function Stepper({ count, activeStep }: StepperType) {
                 width={18}
                 height={18}
                 className="md:w-6 md:h-6"
-                src="/icons/Eliipse.svg"
+                src="/icons/ui/eliipse.svg"
                 alt=""
               />
             )}

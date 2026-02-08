@@ -89,9 +89,9 @@ export default function AdsCard({
           <Image
             width={100}
             height={100}
-            className="w-full h-[100px] rounded-t-lg md:h-1/2"
+            className="w-full h-25 rounded-t-lg md:h-1/2"
             sizes="(min-width: 768px) 100%, 50%"
-            src={item.imageFullPath || "/icons/noneImage.svg"}
+            src={item.imageFullPath || "/icons/common/user-placeholder.svg"}
             alt="Ads Image"
           />
 
@@ -121,8 +121,8 @@ export default function AdsCard({
                       height={16}
                       src={
                         item.isSaved
-                          ? "/icons/trash-black.svg"
-                          : "/icons/archive-add.svg"
+                          ? "/icons/ui/trash-black.svg"
+                          : "/icons/ui/archive-add.svg"
                       }
                       className="md:w-6 md:h-6"
                       alt="Save"

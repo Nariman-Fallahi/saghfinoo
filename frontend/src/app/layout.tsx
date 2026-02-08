@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: "سقفینو",
   description: "سقفینو، سقفی برای همه",
   icons: {
-    icon: "/icons/Logo.svg",
+    icon: "/icons/common/logo.svg",
   },
 };
 

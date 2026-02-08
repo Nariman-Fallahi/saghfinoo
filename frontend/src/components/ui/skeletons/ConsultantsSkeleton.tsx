@@ -12,15 +12,15 @@ export default function ConsultantsSkeleton() {
           >
             <div className="rounded-full bg-gray-200 w-[70px] h-[70px] md:w-[120px] md:h-[120px]" />
 
-            <div className="mt-3 h-3 w-16 bg-gray-200 rounded md:mt-4 md:h-4 md:w-24" />
+            <div className="mt-3 h-3 w-16 bg-gray-200 rounded-sm md:mt-4 md:h-4 md:w-24" />
           </div>
         ))}
       </div>
 
       <div className="mt-10 flex justify-center space-x-2">
-        <div className="size-8 bg-gray-100 rounded md:size-10" />
-        <div className="size-8 bg-gray-200 rounded md:size-10" />
-        <div className="size-8 bg-gray-100 rounded md:size-10" />
+        <div className="size-8 bg-gray-100 rounded-sm md:size-10" />
+        <div className="size-8 bg-gray-200 rounded-sm md:size-10" />
+        <div className="size-8 bg-gray-100 rounded-sm md:size-10" />
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ export default function VerticalNewsCard({
 
   return (
     <div className="w-full flex flex-col border rounded-lg overflow-hidden transition-shadow">
-      <div className="relative w-full aspect-[4/3] md:aspect-[16/9] rounded-t-lg overflow-hidden">
+      <div className="relative w-full aspect-4/3 md:aspect-video rounded-t-lg overflow-hidden">
         <Image
           src={post.imageFullPath}
           alt={post.title}

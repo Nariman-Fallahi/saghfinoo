@@ -23,7 +23,7 @@ const ContactLink = ({
           {tel}
         </span>
       </div>
-      <div className="bg-white p-3 rounded-xl shadow-sm group-hover:shadow-md transition-all">
+      <div className="bg-white p-3 rounded-xl shadow-xs group-hover:shadow-md transition-all">
         <Image
           src={icon}
           width={24}
@@ -44,9 +44,9 @@ export default function ContactInfo({ data }: ContactInfoModalProps) {
   return (
     <div className="w-full flex flex-col items-center mt-10 px-4">
       <div className="relative p-1 border-2 border-blue-100 rounded-full shadow-lg">
-        <div className="relative w-[100px] h-[100px] md:w-[130px] md:h-[130px]">
+        <div className="relative w-25 h-25 md:w-32.5 md:h-32.5">
           <Image
-            src={data?.profileIcon || "/icons/profile-circle.svg"}
+            src={data?.profileIcon || "/icons/ui/profile-circle.svg"}
             alt={data.name || "profile"}
             fill
             className="rounded-full object-cover"
@@ -65,12 +65,12 @@ export default function ContactInfo({ data }: ContactInfoModalProps) {
         <ContactLink
           tel={data.number?.phoneNumber}
           label="شماره موبایل"
-          icon="/icons/call-color.svg"
+          icon="/icons/ui/call-color.svg"
         />
         <ContactLink
           tel={data.number?.landlineNumber}
           label="تلفن ثابت"
-          icon="/icons/call-color.svg"
+          icon="/icons/ui/call-color.svg"
         />
       </div>
     </div>

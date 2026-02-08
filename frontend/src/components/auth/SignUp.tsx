@@ -88,7 +88,7 @@ export default function SignUp({
       onSubmit={handleSubmit(onSubmit)}
       className="w-full flex flex-col items-center"
     >
-      <p className="text-sm text-[#353535] md:mt-2 md:text-base mt-[-30px] text-center">
+      <p className="text-sm text-[#353535] md:mt-2 md:text-base -mt-7.5 text-center">
         با این شماره تلفن حساب کاربری وجود ندارد.
         <br />
         برای ثبت نام اطلاعات زیر را کامل کنید.
@@ -99,7 +99,7 @@ export default function SignUp({
           placeholder="نام خود را  وارد نمایید"
           alt="Frist Name"
           type="text"
-          icon="/icons/user.svg"
+          icon="/icons/ui/user.svg"
           register={register}
           rules={{
             required: "لطفا نام خود را وارد کنید",
@@ -124,7 +124,7 @@ export default function SignUp({
           placeholder="نام خانوادگی خود را وارد نمایید"
           alt="Last Name"
           type="text"
-          icon="/icons/user.svg"
+          icon="/icons/ui/user.svg"
           register={register}
           rules={{
             required: "لطفا نام خانوادگی خود را وارد کنید",
@@ -149,7 +149,7 @@ export default function SignUp({
           placeholder="رمز دلخواه خود را وارد نمایید"
           alt="Password"
           type="password"
-          icon="/icons/key.svg"
+          icon="/icons/ui/key.svg"
           register={register}
           rules={{
             required: "لطفا رمز عبور خود را وارد کنید",
@@ -169,7 +169,7 @@ export default function SignUp({
         <Button
           type="submit"
           className="text-sm mt-5 w-4/5 rounded-lg p-2 bg-primary text-white
-           md:mt-[50px] md:text-base"
+           md:mt-12.5 md:text-base"
           isLoading={isPending}
           spinner={<Spinner color="white" size="sm" />}
         >

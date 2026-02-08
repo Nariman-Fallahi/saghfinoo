@@ -44,17 +44,17 @@ export default function Comments({
             {data?.map((item) => (
               <div
                 key={item.id}
-                className="flex-none w-[242px] md:w-[280px] pl-5 mb-1"
+                className="flex-none w-60.5 md:w-70 pl-5 mb-1"
               >
                 <div
-                  className="h-[125px] md:h-[250px] p-2 flex flex-col shadow-sm 
+                  className="h-31.25 md:h-62.5 p-2 flex flex-col shadow-xs 
                                rounded-2xl border border-[#EDEDED] pb-3 md:items-center md:p-5 bg-white"
                 >
                   <div className="flex md:flex-col md:items-center">
                     <Image
                       width={60}
                       height={60}
-                      className="rounded-full w-10 h-10 md:w-[60px] md:h-[60px] object-cover"
+                      className="rounded-full w-10 h-10 md:w-15 md:h-15 object-cover"
                       src={
                         item.owner__image_full_path ||
                         "/icons/profile-circle.svg"
@@ -65,7 +65,7 @@ export default function Comments({
                       <p className="text-xs md:text-sm md:mt-3 font-bold line-clamp-1 text-gray-800">
                         {`${item.owner__first_name} ${item.owner__last_name}`}
                       </p>
-                      <p className="w-max text-[10px] mt-2 pb-[2px] border-b border-red-500 md:text-xs md:mt-2 text-red-500">
+                      <p className="w-max text-[10px] mt-2 pb-0.5 border-b border-red-500 md:text-xs md:mt-2 text-red-500">
                         {`${numberToPersian(item.score)} از ۵`}
                       </p>
                     </div>

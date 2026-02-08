@@ -163,12 +163,12 @@ export default function AuthModal() {
                     className="md:hidden"
                     width={85}
                     height={45}
-                    src="/icons/Logo.svg"
+                    src="/icons/common/logo.svg"
                     alt=""
                   />
                 ))}
 
-              <p className="mt-[64px] text-xl font-bold md:text-2xl md:mt-[32px]">
+              <p className="mt-16 text-xl font-bold md:text-2xl md:mt-8">
                 {ModalRegisterTitle}
               </p>
 
@@ -176,7 +176,7 @@ export default function AuthModal() {
                 <p className="hidden md:block mt-4">به سقفینو خوش آمدید.</p>
               )}
 
-              <p className="mt-[60px] text-sm text-[#353535] md:mt-2 md:text-base">
+              <p className="mt-15 text-sm text-[#353535] md:mt-2 md:text-base">
                 {ModalRegisterDescription}
               </p>
 

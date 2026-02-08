@@ -18,7 +18,7 @@ export default function DeleteAllAdsBtn({ onPress }: DeleteAllAdsBtnType) {
           <Image
             width={20}
             height={20}
-            src="/icons/trash-black.svg"
+            src="/icons/ui/trash-black.svg"
             alt="Trash All"
           />
         </i>

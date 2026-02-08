@@ -1,31 +1,41 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  cursor: default;
-  direction: rtl;
+@config '../../tailwind.config.ts';
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
 }
 
-input:-webkit-autofill,
-input:-webkit-autofill:focus {
-  transition:
-    background-color 0s 600000s,
-    color 0s 600000s !important;
+@utility no-scrollbar {
+  @apply [scrollbar-width:none];
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @layer utilities {
-  .no-scrollbar {
-    @apply [scrollbar-width:none];
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    cursor: default;
+    direction: rtl;
   }
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:focus {
+    transition:
+      background-color 0s 600000s,
+      color 0s 600000s !important;
   }
 }
 

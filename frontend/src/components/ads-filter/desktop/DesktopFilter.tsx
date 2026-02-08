@@ -154,7 +154,7 @@ export default function DesktopFilter({
               <Image
                 width={16}
                 height={16}
-                src="/icons/filter-search.svg"
+                src="/icons/ui/filter-search.svg"
                 alt="filter-search icon"
               />
               <span className="md:text-xs lg:text-sm text-gray-400 ml-2">

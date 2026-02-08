@@ -45,7 +45,7 @@ export default function CitySearch({ title, className }: CitySearchProps) {
               <Image
                 width={16}
                 height={16}
-                src="/icons/search-normal.svg"
+                src="/icons/ui/search-normal.svg"
                 className="md:w-5 md:h-5"
                 alt="Search Icon"
               />

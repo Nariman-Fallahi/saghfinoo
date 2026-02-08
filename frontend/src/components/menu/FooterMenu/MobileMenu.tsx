@@ -15,7 +15,7 @@ export default function MobileMenu({
 }: MobileMenuType) {
   return (
     <footer className="w-full mt-10 p-3 pt-10 bg-[#F9F9F9] flex flex-col pb-0 md:hidden">
-      <Image width={80} height={80} src="/icons/Logo.svg" alt="" />
+      <Image width={80} height={80} src="/icons/common/logo.svg" alt="" />
       <h5 className="font-medium text-base mt-4">
         {staticFooterItems.titleFooterMenu}
       </h5>
@@ -59,7 +59,7 @@ export default function MobileMenu({
           className="w-full"
           width={324}
           height={60}
-          src="/icons/iconFooterMenu.svg"
+          src="/icons/common/footer-accent.svg"
           alt=""
         />
       </div>

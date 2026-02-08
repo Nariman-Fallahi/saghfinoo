@@ -20,7 +20,7 @@ const Input: React.FC<InputType> = ({ number, onchange }) => {
       <span className="ml-2">{number}</span>
       <input
         type="text"
-        className="w-full outline-none border-b border-dashed text-sm md:text-base"
+        className="w-full outline-hidden border-b border-dashed text-sm md:text-base"
         onChange={(e) => onchange(e.target.value)}
       />
     </div>

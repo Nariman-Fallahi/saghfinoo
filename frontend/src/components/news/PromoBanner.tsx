@@ -10,7 +10,7 @@ export default function PromoBanner() {
         width={165}
         height={165}
         className="md:w-48 md:h-48 lg:w-56 lg:h-56"
-        src="/icons/Illustration.svg"
+        src="/icons/common/house-searching-illustration.svg"
         alt="Ad Icon"
       />
 

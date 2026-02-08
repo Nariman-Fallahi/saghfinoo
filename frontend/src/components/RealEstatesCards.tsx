@@ -36,7 +36,7 @@ export default function RealEstatesCards({
             <Image
               width={50}
               height={50}
-              className="rounded-full mt-2 md:w-[80px] md:h-[80px]"
+              className="rounded-full mt-2 md:w-20 md:h-20"
               src={item.imageFullPath || "/icons/archive-minus.svg"}
               alt=""
             />
@@ -49,7 +49,7 @@ export default function RealEstatesCards({
                   width={15}
                   height={15}
                   className="mr-2 md:w-5 md:h-5"
-                  src="/icons/blueTick.svg"
+                  src="/icons/common/blue-tick.svg"
                   alt="Account confirmation check"
                 />
               )}

@@ -38,7 +38,7 @@ export default function About() {
             width={500}
             height={200}
             className="w-full md:hidden rounded-md"
-            src="/image/About-image.png"
+            src="/images/about/about-image.png"
             alt="Image"
           />
 
@@ -49,7 +49,7 @@ export default function About() {
           <Image
             width={500}
             height={200}
-            src="/image/desktop-image-about.png"
+            src="/images/about/desktop-image-about.png"
             alt="Image"
             className="w-1/4 hidden md:block rounded-md"
           />

@@ -40,13 +40,13 @@ export default function Input<T extends FieldValues>({
           displayMode === "column" ? "flex-col" : "flex-row gap-4"
         }`}
       >
-        <div className="flex w-fit border rounded border-[#D9D9D9] text-[13px] lg:text-base md:border-none">
+        <div className="flex w-fit border rounded-sm border-[#D9D9D9] text-[13px] lg:text-base md:border-none">
           <span className="p-[9px] bg-red-500 text-white rounded-tr cursor-default">
             از
           </span>
           <input
             {...minRegister}
-            className="w-full outline-none px-2"
+            className="w-full outline-hidden px-2"
             placeholder={placeholder.min}
             type="text"
             onChange={(e) => {
@@ -56,7 +56,7 @@ export default function Input<T extends FieldValues>({
           <span className="p-2 text-[#ADADAD] cursor-default">{unit}</span>
         </div>
 
-        <div className="flex w-fit rounded border border-[#D9D9D9] text-[13px] lg:text-base md:border-none">
+        <div className="flex w-fit rounded-sm border border-[#D9D9D9] text-[13px] lg:text-base md:border-none">
           <span
             className={`p-[9px] bg-red-500 text-white cursor-default ${
               displayMode === "column" ? "rounded-br" : "rounded-tr"
@@ -66,7 +66,7 @@ export default function Input<T extends FieldValues>({
           </span>
           <input
             {...maxRegister}
-            className="w-full outline-none px-2"
+            className="w-full outline-hidden px-2"
             placeholder={placeholder.max}
             type="text"
             onChange={(e) => {

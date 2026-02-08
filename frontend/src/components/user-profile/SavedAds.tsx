@@ -1,6 +1,6 @@
 "use client";
 import Title from "./Title";
-import NoData from "./NoData";
+import ProfileEmptyState from "./ProfileEmptyState";
 import DeleteAllAdsBtn from "./DeleteAllAdsBtn";
 import AdsCard from "../AdsCard";
 import { Api, QueryKeys } from "@/services/apiService";
@@ -53,48 +53,67 @@ export default function SavedAds() {
     return (
       <div className="flex flex-col animate-pulse">
         <Title title="آگهی های ذخیره شده" />
-        <div className="h-6 w-36 bg-gray-200 rounded mt-5" />{" "}
+        <div className="h-6 w-36 bg-gray-200 rounded-sm mt-5" />{" "}
         <AdsCard data={undefined} isloading={true} onActionSuccess={() => {}} />
       </div>
     );
   }
 
   const hasData = adsSavedData?.data && adsSavedData.data.length > 0;
-  if (!hasData) {
-    return (
-      <>
-        <Title title="آگهی های ذخیره شده" />
-        <NoData
-          icon="/icons/SavedAds-icon.svg"
-          title="هنوز آگهی ذخیره نکردید !"
-          description="صفحه املاک اجاره ای سقفینو را ببینید و از میان آنها آگهی های دلخواه را ذخیره کنید"
-          titleBtn="املاک اجاره ای"
-          linkBtn="/searchResults?type_of_transaction_name=اجاره"
-        />
-      </>
-    );
-  }
 
   return (
     <>
       <Title title="آگهی های ذخیره شده" />
 
-      <div className="mt-5">
-        {deleteAllPending ? (
-          <div className="flex items-center gap-2">
-            <Spinner size="sm" color="danger" />
-            <p className="text-sm text-gray-500">در حال حذف تمام ذخیره‌ها...</p>
-          </div>
-        ) : (
-          <DeleteAllAdsBtn onPress={handleDeleteAllAdsSaved} />
-        )}
-      </div>
+      {!hasData && (
+        <ProfileEmptyState
+          icon="/icons/common/saved-ads.svg"
+          title="هنوز آگهی ذخیره نکردید !"
+          description="صفحه املاک اجاره ای سقفینو را ببینید و از میان آنها آگهی های دلخواه را ذخیره کنید"
+          titleBtn="املاک اجاره ای"
+          linkBtn="/searchResults?type_of_transaction_name=اجاره"
+        />
+      )}
 
-      <AdsCard
-        data={adsSavedData.data}
-        isloading={false}
-        onActionSuccess={() => adsSavedRefetch()}
-      />
+      {hasData && (
+        <>
+          <div className="mt-5">
+            {deleteAllPending ? (
+              <div className="flex items-center gap-2">
+                <Spinner size="sm" color="danger" />
+                <p className="text-sm text-gray-500">
+                  در حال حذف تمام ذخیره‌ها...
+                </p>
+              </div>
+            ) : (
+              <DeleteAllAdsBtn onPress={handleDeleteAllAdsSaved} />
+            )}
+          </div>
+          <AdsCard
+            data={adsSavedData.data}
+            isloading={false}
+            onActionSuccess={() => adsSavedRefetch()}
+          />
+
+          <div className="mt-5">
+            {deleteAllPending ? (
+              <div className="flex items-center gap-2">
+                <Spinner size="sm" color="danger" />
+                <p className="text-sm text-gray-500">
+                  در حال حذف تمام ذخیره‌ها...
+                </p>
+              </div>
+            ) : (
+              <DeleteAllAdsBtn onPress={handleDeleteAllAdsSaved} />
+            )}
+          </div>
+          <AdsCard
+            data={adsSavedData.data}
+            isloading={false}
+            onActionSuccess={() => adsSavedRefetch()}
+          />
+        </>
+      )}
     </>
   );
 }

@@ -1,4 +1,4 @@
-"use client";
+"use client";;
 import Image from "next/image";
 import { Button } from "@heroui/button";
 import { navigationMenuType } from "@/types";
@@ -8,6 +8,8 @@ import { Spinner } from "@heroui/spinner";
 import { useRouter } from "@bprogress/next/app";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useAuthModal } from "@/hooks/useAuthModal";
+
+import type { JSX } from "react";
 
 type desktopMenuType = {
   NavigationMenu: navigationMenuType;
@@ -57,7 +59,7 @@ export default function DesktopMenu({
                   href={item.link}
                   className={`mr-4 lg:mr-6 cursor-pointer hover:text-red-600 flex flex-col relative ${
                     isActive
-                      ? "after:bg-red-500 after:h-[3px] after:w-full after:content-[''] after:absolute after:mt-8 after:rounded text-red-500"
+                      ? "after:bg-red-500 after:h-0.75 after:w-full after:content-[''] after:absolute after:mt-8 after:rounded-sm text-red-500"
                       : null
                   }`}
                 >
@@ -99,7 +101,7 @@ export default function DesktopMenu({
                   className="rounded-full h-7 lg:w-9 lg:h-9"
                   src={
                     userInfoData?.data.imageFullPath ||
-                    "/icons/profile-circle.svg"
+                    "/icons/ui/profile-circle.svg"
                   }
                   alt="User Profile"
                 />

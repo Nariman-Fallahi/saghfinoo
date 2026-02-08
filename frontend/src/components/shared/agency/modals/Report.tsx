@@ -82,7 +82,7 @@ export default function Report({
       className="w-full flex flex-col items-center mt-3"
     >
       <UserIcon
-        src={data.profileIcon || "/icons/profile-circle.svg"}
+        src={data.profileIcon || "/icons/ui/profile-circle.svg"}
         userName={data.name}
       />
 
@@ -119,7 +119,7 @@ export default function Report({
 
       <div className="w-full mt-3">
         <textarea
-          className="w-full p-3 text-sm resize-none h-28 border border-[#E1E1E1] mt-3 outline-none rounded md:text-base"
+          className="w-full p-3 text-sm resize-none h-28 border border-[#E1E1E1] mt-3 outline-hidden rounded-sm md:text-base"
           placeholder="لطفا گزارش خود را به صورت کامل بنویسید."
           {...register("description", {
             required: "وارد کردن توضیحات گزارش ضرروری میباشد",

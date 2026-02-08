@@ -29,11 +29,11 @@ export default function MoreItems({ control, watch }: { control: Control<FilterD
             name={item.name}
             control={control}
             render={({ field: { onChange } }) => (
-              <div className="border w-full justify-between flex rounded-sm">
+              <div className="border w-full justify-between flex rounded-xs">
                 {OPTIONS[item.opt].map((val) => (
                   <CustomButton
                     key={val}
-                    className={`!rounded-none w-full border min-w-fit p-[14.5px] ${
+                    className={`rounded-none! w-full border min-w-fit p-[14.5px] ${
                       watch(item.name) === val || (!watch(item.name) && val === OPTIONS[item.opt][0])
                         ? "bg-primary text-white" : ""
                     }`}

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function Error403() {
   return (
     <ErrorDisplay
-      icon="/icons/403-error.svg"
+      icon="/icons/errors/403-error.svg"
       title="ERROR 403"
       description="شما دسترسی کافی برای مشاهده این صفحه را ندارید."
     >

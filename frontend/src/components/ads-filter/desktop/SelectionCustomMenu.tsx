@@ -93,7 +93,7 @@ export default function SelectionCustomMenu({
             <div className="w-full flex justify-between pb-3 gap-3 px-4">
               <Button
                 type="submit"
-                className="w-1/2 mt-3 bg-primary !rounded"
+                className="w-1/2 mt-3 bg-primary rounded-sm!"
                 size="sm"
                 radius="sm"
                 color="danger"
@@ -102,7 +102,7 @@ export default function SelectionCustomMenu({
               </Button>
 
               <Button
-                className="w-1/2 mt-3 !rounded"
+                className="w-1/2 mt-3 rounded-sm!"
                 size="sm"
                 radius="sm"
                 color="default"

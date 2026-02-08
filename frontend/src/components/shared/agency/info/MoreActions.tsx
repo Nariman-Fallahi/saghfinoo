@@ -22,19 +22,19 @@ export default function MoreActions({
     {
       key: "share",
       title: "اشتراک گذاری",
-      icon: "/icons/export.svg",
+      icon: "/icons/ui/export.svg",
       action: handleShareBtn,
     },
     {
       key: "score",
       title: "امتیاز دهی به مشاور",
-      icon: "/icons/like-dislike.svg",
+      icon: "/icons/ui/like-dislike.svg",
       action: handleRegisterScoreBtn,
     },
     {
       key: "report",
       title: "گزارش",
-      icon: "/icons/warning-2.svg",
+      icon: "/icons/ui/warning.svg",
       action: handleViolationReport,
     },
   ];
@@ -44,12 +44,12 @@ export default function MoreActions({
       <Dropdown className="shadow-none rounded-lg border border-[#E1E1E1]">
         <DropdownTrigger>
           <button>
-            <Image width={18} height={18} src="/icons/more.svg" alt="" />
+            <Image width={18} height={18} src="/icons/ui/more.svg" alt="" />
           </button>
         </DropdownTrigger>
 
         <DropdownMenu
-          className="shadow-none rounded p-0"
+          className="shadow-none rounded-sm p-0"
           aria-label="actions"
           onAction={(key) => {
             const item = items.find((i) => i.key === key);

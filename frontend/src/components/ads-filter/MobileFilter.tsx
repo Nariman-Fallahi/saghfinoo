@@ -69,7 +69,7 @@ export default function MobileFilter({
               <Image
                 width={105}
                 height={105}
-                src="/icons/Logo.svg"
+                src="/icons/common/logo.svg"
                 alt="Logo"
               />
 
@@ -134,7 +134,7 @@ export default function MobileFilter({
                       <Image
                         width={16}
                         height={16}
-                        src="/icons/arrow-down-red.svg"
+                        src="/icons/ui/arrow-down-red.svg"
                         alt="ArrowDown"
                         className={viewMore ? "rotate-180" : "rotate-0"}
                       />

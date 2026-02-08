@@ -45,9 +45,9 @@ export default function FooterMenu() {
     {
       title: "ارتباط با ما",
       items: [
-        { icon: "/icons/call.svg", text: "تلفن" },
-        { icon: "/icons/instagram.svg", text: "اینستاگرام" },
-        { icon: "/icons/Telegram.svg", text: "تلگرام" },
+        { icon: "/icons/socials/call.svg", text: "تلفن" },
+        { icon: "/icons/socials/instagram.svg", text: "اینستاگرام" },
+        { icon: "/frontend/public/icons/socials/telegram.svg", text: "تلگرام" },
       ],
     },
     {
@@ -78,7 +78,7 @@ export default function FooterMenu() {
       role: "فرانت اند",
       contact: [
         {
-          image: "/icons/github.png",
+          image: "/icons/socials/github.png",
           url: "https://github.com/Nariman-Fallahi",
         },
         {
@@ -91,7 +91,7 @@ export default function FooterMenu() {
       fullName: "محمدامین یعقوبی",
       role: "بک اند",
       contact: [
-        { image: "/icons/github.png", url: "https://github.com/yaghoubi-mn" },
+        { image: "/icons/socials/github.png", url: "https://github.com/yaghoubi-mn" },
         {
           image: "/icons/linkedin.png",
           url: "https://www.linkedin.com/in/mohammadamin-yaghoubi-461aaa296/",
@@ -129,7 +129,7 @@ export default function FooterMenu() {
                         aria-label={item.fullName}
                       >
                         <Image
-                          className="mr-2 ml-2 lg:w-[30px] lg:h-[30px]"
+                          className="mr-2 ml-2 lg:w-7.5 lg:h-7.5"
                           width={25}
                           height={25}
                           src={itemContact.image}
@@ -144,7 +144,7 @@ export default function FooterMenu() {
           })}
         </div>
         <div
-          className="w-full flex p-2 bg-gray-200 text-xs absolute mt-[7rem]
+          className="w-full flex p-2 bg-gray-200 text-xs absolute mt-28
          justify-center lg:text-sm"
         >
           تمام حقوق برای سقفینو محفوظ است.

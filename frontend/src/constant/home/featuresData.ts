@@ -3,7 +3,7 @@ export const FeaturesDataNewUserHome = {
   data: [
     {
       id: 1,
-      icon: "/icons/Features1.svg",
+      icon: "/images/home/features/feature-1.svg",
       title: "به آسانی یک خانه اجاره کنید",
       description:
         "در میان صدها آگهی که روزانه به وب‌سایت سقفینو افزوده می‌شود، با استفاده از بیش از ۲۸ فیلتر کاربردی تلاش کرده‌ایم خانه‌ای که در جست‌وجوی آن هستید را هر چه سریعتر پیدا و اجاره کنید.",
@@ -11,7 +11,7 @@ export const FeaturesDataNewUserHome = {
     },
     {
       id: 2,
-      icon: "/icons/Features2.svg",
+      icon: "/images/home/features/feature-2.svg",
       title: "خانه مورد علاقه‌تان را بخرید",
       description:
         "بالای ۱ میلیون آگهی فروش در وب‌سایت سقفینو وجود دارد. ما علاوه بر آگهی‌های فراوان با به‌کارگیری املاک و مشاورین متخصص در هر شهر، تلاش می‌کنیم در تجربه لذت یک خرید آسان با شما سهیم باشد.",
@@ -19,7 +19,7 @@ export const FeaturesDataNewUserHome = {
     },
     {
       id: 3,
-      icon: "/icons/Features3.svg",
+      icon: "/images/home/features/feature-2.svg",
       title: "مالک هستید؟",
       description:
         "آیا می‌دانید میانگین بازدید از وب‌سایت به‌طور متوسط روزانه بالای هزاران نفر است؟ پس به‌سادگی و با چند کلیک ساده، ملک‌تان را به‌صورت رایگان در سقفینو آگهی و در سریع‌ترین زمان ممکن معامله کنید.",

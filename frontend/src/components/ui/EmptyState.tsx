@@ -10,7 +10,7 @@ type EmptyStateProps = {
 };
 
 export default function EmptyState({
-  imageSrc = "/icons/searchDataNotFound.svg",
+  imageSrc = "/icons/common/no-search-results.svg",
   title,
   message,
   showReset = false,
@@ -24,7 +24,7 @@ export default function EmptyState({
         <Image
           width={200}
           height={200}
-          className="relative opacity-90 drop-shadow-sm md:w-64 md:h-64"
+          className="relative opacity-90 drop-shadow-xs md:w-64 md:h-64"
           src={imageSrc}
           alt="No Data"
         />
@@ -42,7 +42,7 @@ export default function EmptyState({
         <Button
           color="primary"
           variant="flat"
-          className="font-semibold !rounded-[8px] px-8"
+          className="font-semibold rounded-lg! px-8"
           onPress={() => router.push(window.location.pathname)}
         >
           حذف تمام فیلترها

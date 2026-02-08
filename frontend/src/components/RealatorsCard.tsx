@@ -34,7 +34,7 @@ export default function RealatorsCard({
             <Image
               width={80}
               height={80}
-              className="rounded-full !h-[80px]"
+              className="rounded-full h-[80px]!"
               src={item.user.imageFullPath}
               alt=""
             />

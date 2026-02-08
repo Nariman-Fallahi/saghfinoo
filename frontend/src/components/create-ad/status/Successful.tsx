@@ -8,8 +8,8 @@ export default function Successful() {
         <Image
           width={250}
           height={250}
-          className="w-[200px] h-[200px] md:w-[350px] md:h-[350px] drop-shadow-xl"
-          src="/icons/formSubmit_S.svg"
+          className="w-50 h-50 md:w-87.5 md:h-87.5 drop-shadow-xl"
+          src="/icons/common/submission-success.svg"
           alt="Successful registration"
         />
       </div>

@@ -35,7 +35,7 @@ export default function Info({
   data,
   isScore,
 }: InfoType) {
-   const isAuthenticated = hasCookie("accessToken");
+  const isAuthenticated = hasCookie("accessToken");
 
   const handleAction = (name: AgencyActionType) => {
     if (!name) return;
@@ -51,24 +51,24 @@ export default function Info({
 
   return (
     <div className="w-full flex flex-col">
-      <div className="w-full h-44 mt-[60px] md:h-[280px] md:mt-0">
+      <div className="w-full h-44 mt-15 md:h-70 md:mt-0">
         <Image
           className="size-full object-cover"
           width={1000}
           height={500}
           quality={100}
-          src={data?.bgUserImg || "/icons/Banner.png"}
+          src={data?.bgUserImg || "/images/common/banner.webp"}
           alt="Banner"
         />
       </div>
 
       <div
         className="size-24 rounded-full -mt-12 relative mr-4
-           bg-[#F9F9F9] flex justify-center items-center md:w-[200px] md:h-[200px]
-           md:-mt-[100px] md:mr-8 border-4 border-white overflow-hidden shadow-sm p-1"
+           bg-[#F9F9F9] flex justify-center items-center md:w-50 md:h-50
+           md:-mt-25 md:mr-8 border-4 border-white overflow-hidden shadow-xs p-1"
       >
         <Image
-          src={data.profileIcon || "/icons/noneImage.svg"}
+          src={data.profileIcon || "/icons/common/user-placeholder.svg"}
           alt="Profile"
           width={130}
           height={130}
@@ -86,7 +86,7 @@ export default function Info({
                   width={15}
                   height={15}
                   className="mr-2 md:w-5 md:h-5"
-                  src="/icons/blueTick.svg"
+                  src="/icons/common/blue-tick.svg"
                   alt="Verified"
                 />
               )}
@@ -116,8 +116,8 @@ export default function Info({
                   height={16}
                   src={
                     data.address
-                      ? "/icons/location.svg"
-                      : "/icons/user-square.svg"
+                      ? "/icons/ui/location.svg"
+                      : "/icons/ui/user-square.svg"
                   }
                   className="md:w-6 md:h-6 lg:w-7 lg:h-7"
                   alt="icon"
@@ -141,7 +141,7 @@ export default function Info({
           </Button>
         </div>
 
-        <div className="p-5 hidden md:flex ml-7 flex-col rounded-xl shadow absolute left-0 bg-white items-center mt-14 min-w-[250px]">
+        <div className="p-5 hidden md:flex ml-7 flex-col rounded-xl shadow-sm absolute left-0 bg-white items-center mt-14 min-w-62.5">
           {isScore && (
             <div className="w-full flex flex-col items-center">
               <p className="text-sm lg:text-base text-center">
@@ -165,7 +165,7 @@ export default function Info({
             className="mt-2"
             onPress={() => handleAction("Report")}
           >
-            <Image width={24} height={24} src="/icons/warning-2.svg" alt="" />
+            <Image width={24} height={24} src="/icons/ui/warning.svg" alt="" />
             <span>گزارش تخلف</span>
           </Button>
         </div>

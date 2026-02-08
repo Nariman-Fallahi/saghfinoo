@@ -31,7 +31,7 @@ export default function Input<T extends FieldValues>({
       <SelectTitle text={title} />
       <input
         className="text-[13px] md:text-sm p-2 border border-[#ADADAD] rounded
-         outline-none md:p-[8.7px] h-10 min-h-10"
+         outline-hidden md:p-[8.7px] h-10 min-h-10"
         placeholder={placeholder}
         disabled={disabled}
         {...register(name, {

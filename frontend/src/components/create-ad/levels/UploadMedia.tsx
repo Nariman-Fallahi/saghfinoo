@@ -67,7 +67,7 @@ export default function UploadMedia({
                 <Image
                   width={50}
                   height={50}
-                  src="/icons/gallery-add.svg"
+                  src="/icons/ui/gallery-add.svg"
                   alt=""
                 />
                 <input
@@ -90,12 +90,12 @@ export default function UploadMedia({
                 >
                   <i
                     onClick={removeFile(index)}
-                    className="bg-gray-500 p-1 rounded opacity-70 hover:bg-gray-600"
+                    className="bg-gray-500 p-1 rounded-sm opacity-70 hover:bg-gray-600"
                   >
                     <Image
                       width={26}
                       height={26}
-                      src="/icons/trash.svg"
+                      src="/icons/ui/trash.svg"
                       alt="Icon trash"
                     />
                   </i>
@@ -107,7 +107,7 @@ export default function UploadMedia({
                       alt="Image preview"
                       width={500}
                       height={250}
-                      className="w-full h-40 rounded"
+                      className="w-full h-40 rounded-sm"
                     />
                   ) : files[index].type.startsWith("video/") ? (
                     <video

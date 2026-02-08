@@ -1,6 +1,6 @@
 "use client";
 import { Api, QueryKeys } from "@/services/apiService";
-import { useParams, useSearchParams } from "next/navigation";
+import { notFound, useParams, useSearchParams } from "next/navigation";
 import { RealtorDataType, CommentType, AgencyActionType } from "@/types";
 import { useDisclosure } from "@heroui/modal";
 
@@ -12,10 +12,14 @@ import { useState } from "react";
 import AgencyActionsModal from "@/components/shared/agency/modals/AgencyActionsModal";
 import AgencyAdsList from "@/components/shared/agency/AgencyAdsList";
 import { useAds } from "@/hooks/queries/useAds";
+import FetchError from "@/components/FetchError";
 
 export default function RealatorProfile() {
   const params = useParams();
-  const realtorId = params.id.toString();
+  const realtorId = params?.id?.toString();
+
+  if (!realtorId) notFound();
+
   const {
     isOpen: isAgencyModalOpen,
     onOpen: openAgencyModal,
@@ -27,7 +31,11 @@ export default function RealatorProfile() {
   const realatorAdsPageNumber =
     searchParams.get("realatorAdsPageNumber") || "1";
 
-  const { data: realtorData, isLoading: realtorLoading } = useGetRequest<{
+  const {
+    data: realtorData,
+    isLoading: realtorIsLoading,
+    isError: realtorIsError,
+  } = useGetRequest<{
     data: RealtorDataType;
     status: number;
   }>({
@@ -61,6 +69,8 @@ export default function RealatorProfile() {
   const allComments = commentPages?.pages.flatMap((page) => page.data) || [];
 
   const realtor = realtorData?.data;
+
+  if (realtorIsError || !realtor) return <FetchError />;
 
   const realtorProfileData = {
     titleContactInfoBtn: "تماس با مشاور",
@@ -96,7 +106,7 @@ export default function RealatorProfile() {
     <>
       <Info
         onOpen={openAgencyModal}
-        isLoading={realtorLoading}
+        isLoading={realtorIsLoading}
         data={realtorProfileData}
         isScore={true}
         setAgencyAction={setAgencyAction}

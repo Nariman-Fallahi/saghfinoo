@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type JSX } from "react";
 import { Button } from "@heroui/button";
 import { navigationMenuType } from "@/types";
 import Link from "next/link";
@@ -57,7 +57,7 @@ export default function MobileMenu({
           onPress={() => setMenuStatus("open")}
           aria-label="Open / Close Menu"
         >
-          <Image width={24} height={24} src="/icons/menu.svg" alt="Menu Icon" />
+          <Image width={24} height={24} src="/icons/ui/menu.svg" alt="Menu Icon" />
         </Button>
         {iconMenu}
         {CreatePostingButton}
@@ -84,7 +84,7 @@ export default function MobileMenu({
               <Image
                 width={24}
                 height={24}
-                src="/icons/close-circle.svg"
+                src="/icons/ui/close-circle.svg"
                 alt="Close Menu"
               />
             </Button>
@@ -99,7 +99,7 @@ export default function MobileMenu({
               height={isLogin ? 36 : 20}
               src={
                 (isLogin && userInfoData?.data.imageFullPath) ||
-                "/icons/profile-circle.svg"
+                "/icons/ui/profile-circle.svg"
               }
               alt=""
               className="rounded-full h-9"
@@ -108,7 +108,7 @@ export default function MobileMenu({
               <Image
                 width={20}
                 height={20}
-                src="/icons/edit.svg"
+                src="/icons/ui/edit.svg"
                 className="mr-2"
                 alt="Edit Profile"
               />
@@ -122,7 +122,7 @@ export default function MobileMenu({
               <Image
                 width={20}
                 height={20}
-                src="/icons/arrow-left-2.svg"
+                src="/icons/ui/arrow-left-2.svg"
                 className="mr-2"
                 alt="Icon"
               />
@@ -143,7 +143,7 @@ export default function MobileMenu({
                 <Image
                   width={20}
                   height={20}
-                  src="/icons/arrow-left.svg"
+                  src="/icons/ui/arrow-left.svg"
                   alt="Icon"
                 />
               </Link>

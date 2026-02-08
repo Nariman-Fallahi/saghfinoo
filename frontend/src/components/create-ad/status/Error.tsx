@@ -30,9 +30,9 @@ export default function Error() {
         <Image
           width={180}
           height={180}
-          src="/icons/Folder.svg"
+          src="/icons/errors/submission-error.svg"
           alt="Error"
-          className="md:w-[300px] md:h-[300px]"
+          className="md:w-75 md:h-75"
         />
       </i>
     </>

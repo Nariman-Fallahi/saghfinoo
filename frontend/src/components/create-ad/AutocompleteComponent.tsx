@@ -40,8 +40,8 @@ export default function AutocompleteComponent({
         onSelectionChange={onSelectionChange}
         inputProps={{
           classNames: {
-            inputWrapper: "!border !rounded !border-[#ADADAD] !p-2",
-            input: "!text-[13px] md:!text-sm",
+            inputWrapper: "border! rounded-sm! border-[#ADADAD]! p-2!",
+            input: "text-[13px]! md:text-sm!",
           },
         }}
         isDisabled={!data}

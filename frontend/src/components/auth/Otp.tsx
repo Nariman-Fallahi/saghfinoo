@@ -103,8 +103,8 @@ export default function Otp({
             autoFocus={index === 0}
             onFocus={() => handleFocus(index)}
             onBlur={handleBlur}
-            className="rounded-lg w-[50px] h-12 mr-2 ml-2 outline-none text-center text-2xl
-             md:!w-[80px]"
+            className="rounded-lg w-12.5 h-12 mr-2 ml-2 outline-hidden text-center text-2xl
+             md:w-20!"
             style={{
               border: `1px solid ${
                 focusedInput === index ? "#2F80ED" : "#ADADAD"
@@ -126,8 +126,8 @@ export default function Otp({
             <Image
               width={16}
               height={16}
-              className="md:w-[18px] md:h-[18px]"
-              src="/icons/clock.svg"
+              className="md:w-4.5 md:h-4.5"
+              src="/icons/ui/clock.svg"
               alt=""
             />
             <p className="text-[#717171] mr-1">
@@ -142,7 +142,7 @@ export default function Otp({
 
       <Button
         className="mt-2 w-full rounded-lg p-2 bg-primary
-        text-white md:mt-[50px] md:text-lg"
+        text-white md:mt-12.5 md:text-lg"
         isDisabled={otpValue.length < 5}
         onPress={() => handleOtpComplete(otpValue)}
         isLoading={verifyOTPsPending}

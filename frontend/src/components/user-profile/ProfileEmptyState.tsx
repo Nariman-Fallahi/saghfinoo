@@ -10,7 +10,7 @@ type NoData = {
   linkBtn: string;
 };
 
-export default function NoData({
+export default function ProfileEmptyState({
   icon,
   title,
   description,
@@ -24,7 +24,7 @@ export default function NoData({
         width={170}
         height={170}
         src={icon}
-        className="lg:w-[210px] lg:h-[210px]"
+        className="lg:w-52.5 lg:h-52.5"
         sizes="(min-width: 1024px) 210px, 210px"
         alt=""
       />

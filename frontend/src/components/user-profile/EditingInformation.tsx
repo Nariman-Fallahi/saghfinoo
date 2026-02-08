@@ -198,7 +198,7 @@ export default function EditingInformation() {
             <Image
               width={60}
               height={60}
-              className="rounded-full md:w-[70px] md:h-[70px] lg:w-[85px]"
+              className="rounded-full md:w-17.5 md:h-17.5 lg:w-21.25"
               quality={100}
               sizes="(min-width: 768px) 70px, 70px"
               src={
@@ -206,7 +206,7 @@ export default function EditingInformation() {
                   ? imagePreview
                   : userInfoData?.data.imageFullPath
                     ? userInfoData?.data.imageFullPath
-                    : "/icons/profile-circle.svg"
+                    : "/icons/ui/profile-circle.svg"
               }
               alt="Image User"
             />
@@ -220,7 +220,7 @@ export default function EditingInformation() {
               placeholder="نام خود را  وارد نمایید"
               alt="Frist Name"
               type="text"
-              icon="/icons/user.svg"
+              icon="/icons/ui/user.svg"
               register={register}
               rules={{
                 pattern: {
@@ -246,7 +246,7 @@ export default function EditingInformation() {
               placeholder="نام خانوادگی خود را  وارد نمایید"
               alt="Last Name"
               type="text"
-              icon="/icons/user.svg"
+              icon="/icons/ui/user.svg"
               register={register}
               rules={{
                 pattern: {
@@ -272,7 +272,7 @@ export default function EditingInformation() {
               placeholder="ایمیل خود را وارد کنید (اختیاری)"
               alt="Email"
               type="email"
-              icon="/icons/sms.svg"
+              icon="/icons/ui/sms.svg"
               register={register}
               rules={{
                 pattern: {
@@ -294,7 +294,7 @@ export default function EditingInformation() {
               placeholder="رمز عبور فعلی خود را وارد کنید"
               alt="Current Password"
               type="password"
-              icon="/icons/key.svg"
+              icon="/icons/ui/key.svg"
               register={register}
               rules={{
                 pattern: {
@@ -316,7 +316,7 @@ export default function EditingInformation() {
               placeholder="رمز عبور جدید خود را وارد کنید"
               alt="New Password"
               type="password"
-              icon="/icons/key.svg"
+              icon="/icons/ui/key.svg"
               register={register}
               rules={{
                 required: watch("currentPassword")

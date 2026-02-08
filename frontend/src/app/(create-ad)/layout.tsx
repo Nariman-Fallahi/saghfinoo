@@ -11,19 +11,19 @@ export default function AdPostingLayout({
       <div
         className="hidden md:block w-[30%] h-full bg-no-repeat bg-cover border-l"
         style={{
-          backgroundImage: "url(/icons/BgForm.svg)",
+          backgroundImage: "url(/icons/common/create-ad-bg.svg)",
           backgroundPosition: "center",
         }}
       />
 
-      <div className="flex flex-col flex-grow w-full md:w-[70%] h-full">
+      <div className="flex flex-col grow w-full md:w-[70%] h-full">
         <header className="border-b p-4 z-20">
           <div className="flex justify-between items-center px-4 md:px-8">
             <Image
               width={72}
               height={32}
               className="lg:w-20"
-              src="/icons/Logo.svg"
+              src="/icons/common/logo.svg"
               alt="Saghfinoo Logo"
             />
             <Link
@@ -35,7 +35,7 @@ export default function AdPostingLayout({
           </div>
         </header>
 
-        <main className="flex-grow p-4 md:p-8 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+        <main className="grow p-4 md:p-8 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
           <div className="max-w-4xl mx-auto">{children}</div>
         </main>
       </div>

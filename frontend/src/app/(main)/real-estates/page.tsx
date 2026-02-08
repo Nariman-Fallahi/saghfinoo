@@ -17,11 +17,12 @@ export const metadata: Metadata = {
   description: SITE_METADATA.realEstates.description,
 };
 
-export default async function RealEstates({
-  searchParams,
-}: {
-  searchParams: { city?: string; page?: string };
-}) {
+export default async function RealEstates(
+  props: {
+    searchParams: Promise<{ city?: string; page?: string }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   const queryClient = new QueryClient();
 
   const page = searchParams.page || "1";
@@ -43,7 +44,7 @@ export default async function RealEstates({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="mt-[82px] md:mt-[180px] md:1/3">
+      <div className="mt-20.5 md:mt-45 md:1/3">
         <SearchBox title="املاک و مستغلات" />
       </div>
 

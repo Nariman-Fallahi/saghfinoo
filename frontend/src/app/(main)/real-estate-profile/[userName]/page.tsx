@@ -1,13 +1,8 @@
 "use client";
 import { useDisclosure } from "@heroui/modal";
-import { useParams, useSearchParams } from "next/navigation";
+import { notFound, useParams, useSearchParams } from "next/navigation";
 import { QueryKeys, Api } from "@/services/apiService";
-import {
-  AdsDataType,
-  AgencyActionType,
-  CommentType,
-  realEstateOfficesType,
-} from "@/types";
+import { AgencyActionType, CommentType, realEstateOfficesType } from "@/types";
 import FetchError from "@/components/FetchError";
 
 // Components
@@ -29,7 +24,9 @@ export default function RealEstateProfilePage() {
   const [agencyAction, setAgencyAction] = useState<AgencyActionType>(null);
   const params = useParams();
   const searchParams = useSearchParams();
-  const userName = params.userName.toString();
+  const userName = params?.userName?.toString() || "";
+
+  if (!userName) notFound();
 
   const realEstateAdsPageNumber =
     searchParams.get("realEstateAdsPageNumber") || "1";
@@ -44,7 +41,6 @@ export default function RealEstateProfilePage() {
   });
 
   const adsURL = `${Api.Ad}/?page=${realEstateAdsPageNumber}&reo_username=${userName}`;
-
   const {
     data: adsData,
     isLoading: adsIsLoading,
@@ -67,9 +63,9 @@ export default function RealEstateProfilePage() {
 
   const allComments = commentPages?.pages.flatMap((page) => page.data) || [];
 
-  if (isError) return <FetchError />;
-
   const reo = realEstateData?.data;
+
+  if (isError || !reo) return <FetchError />;
 
   const agencyProfileData = {
     titleContactInfoBtn: "تماس با ما",

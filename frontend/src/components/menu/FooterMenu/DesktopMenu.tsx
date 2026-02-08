@@ -42,12 +42,12 @@ export default function DecktopMenu({
         ))}
       </div>
       {/* Line */}
-      <div className="w-full h-[1px] mt-5 bg-gray-400"></div>
+      <div className="w-full h-px mt-5 bg-gray-400"></div>
       {/* END Line */}
       <div className="w-full flex justify-between p-3 mt-4">
         {/* 1 */}
         <div className="flex flex-col w-[35%]">
-          <Image width={120} height={120} src="/icons/Logo.svg" alt="" />
+          <Image width={120} height={120} src="/icons/common/logo.svg" alt="" />
           <h4 className="mt-6 text-base">{staticFooterItems.title}</h4>
           <p className="mt-3 text-gray-700 text-xs">
             {staticFooterItems.description}
@@ -88,7 +88,7 @@ export default function DecktopMenu({
         <Image
           width={736}
           height={123}
-          src="/icons/iconFooterMenu.svg"
+          src="/icons/common/footer-accent.svg"
           alt=""
         />
       </div>

@@ -37,8 +37,8 @@ export default function SearchBox() {
 
   return (
     <div
-      style={{ backgroundImage: "url(/image/bgSearch.webp)" }}
-      className="mt-[57px] md:mt-0 flex flex-col items-center p-5
+      style={{ backgroundImage: "url(/images/common/bg-search.webp)" }}
+      className="mt-14.25 md:mt-0 flex flex-col items-center p-5
      bg-center bg-cover pb-10 lg:h-screen"
     >
       <h1
@@ -86,16 +86,16 @@ export default function SearchBox() {
           }
           inputProps={{
             classNames: {
-              inputWrapper: "!bg-white !shadow-none",
-              input: "lg:!text-base mr-2",
+              inputWrapper: "bg-white! shadow-none!",
+              input: "lg:text-base! mr-2",
             },
           }}
           startContent={
             <Image
               width="16"
               height="16"
-              className="md:w-[18px] md:h-[18px] lg:w-5 lg:h-5"
-              src="/icons/search-normal.svg"
+              className="md:w-4.5 md:h-4.5 lg:w-5 lg:h-5"
+              src="/icons/ui/search-normal.svg"
               alt="search icon"
             />
           }

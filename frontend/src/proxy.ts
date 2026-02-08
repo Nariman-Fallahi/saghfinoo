@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { getCookie, setCookie } from "cookies-next";
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const url = req.nextUrl;
   const res = NextResponse.next();
   const accessToken = getCookie("accessToken", { res, req });
@@ -9,14 +9,10 @@ export async function middleware(req: NextRequest) {
   const pathname = url.pathname;
 
   const isProtectedPath = (path: string) => {
-    // const protectedPatterns = [
-    //   /^\/pro-user/,
-    //   /^\/create-ad/,
-    //   /^\/user-profile/,
-    // ];
-
     const protectedPatterns = [
-      /^\/pro-user5555/,
+      /^\/pro-user/,
+      /^\/create-ad/,
+      /^\/user-profile/,
     ];
 
     return protectedPatterns.some((pattern) => pattern.test(path));

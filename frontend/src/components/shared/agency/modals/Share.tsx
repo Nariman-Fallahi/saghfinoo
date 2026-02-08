@@ -23,7 +23,7 @@ const SocialNetwork = ({ name, alt, href, icon }: SocialNetworkItem) => {
         height={24}
         src={icon}
         alt={alt}
-        className="md:w-[30px] md:h-[30px]"
+        className="md:w-7.5 md:h-7.5"
         sizes="(min-width: 768px) 30px, 24px"
       />
       <span className="mr-2 md:text-xl">{name}</span>
@@ -47,35 +47,35 @@ export default function Share({ data }: ShareType) {
       key: "telegram",
       name: "تلگرام",
       alt: "Telegram Link",
-      icon: "/icons/Telegram-blue.svg",
+      icon: "/icons/socials/telegram-blue.svg",
       href: data.telegram,
     },
     {
       key: "whatsapp",
       name: "واتساپ",
       alt: "Whatsapp Link",
-      icon: "/icons/whatsapp.svg",
+      icon: "/icons/socials/whatsapp.svg",
       href: data.whatsapp,
     },
     {
       key: "twitter",
       name: "ایکس",
       alt: "X | Twitter Link",
-      icon: "/icons/x.svg",
+      icon: "/icons/socials/x.svg",
       href: data.twitter,
     },
     {
       key: "facebook",
       name: "فیسبوک",
       alt: "Facebook Link",
-      icon: "/icons/facebook.svg",
+      icon: "/icons/socials/facebook.svg",
       href: data.facebook,
     },
     {
       key: "email",
       name: "ایمیل",
       alt: "Email Link",
-      icon: "/icons/formkit_email.svg",
+      icon: "/icons/socials/email.svg",
       href: data.email,
     },
   ];

@@ -17,11 +17,12 @@ export const metadata: Metadata = {
   description: SITE_METADATA.realators.description,
 };
 
-export default async function Realators({
-  searchParams,
-}: {
-  searchParams: { city?: string; page?: string };
-}) {
+export default async function Realators(
+  props: {
+    searchParams: Promise<{ city?: string; page?: string }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   const queryClient = new QueryClient();
 
   const page = searchParams.page || "1";
@@ -43,7 +44,7 @@ export default async function Realators({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="mt-[82px] md:mt-[180px]">
+      <div className="mt-20.5 md:mt-45">
         <CitySearch title="مشاورین املاک" />
       </div>
 

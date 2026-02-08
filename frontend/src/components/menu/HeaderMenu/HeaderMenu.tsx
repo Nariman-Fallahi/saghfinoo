@@ -53,8 +53,8 @@ const IconMenu = () => {
     <Image
       width={72}
       height={32}
-      className="md:w-[77px] md:h-[37px] lg:w-[131px] lg:h-[63px] cursor-pointer"
-      src="/icons/Logo.svg"
+      className="md:w-19.25 md:h-9.25 lg:w-32.75 lg:h-15.75 cursor-pointer"
+      src="/icons/common/logo.svg"
       alt="Go to homepage"
       onClick={() => {
         router.push(isAuthenticated ? "/home/pro-user" : "/home/new-user");
@@ -66,27 +66,27 @@ const IconMenu = () => {
 const baseMenu: navigationMenuType = [
   {
     title: "اجاره",
-    icon: "/icons/house.svg",
+    icon: "/icons/ui/house.svg",
     link: "/search-results?type_of_transaction_name=اجاره",
   },
   {
     title: "خرید",
-    icon: "/icons/key.svg",
+    icon: "/icons/ui/key.svg",
     link: "/search-results?type_of_transaction_name=خرید",
   },
   {
     title: "املاک و مستغلات",
-    icon: "/icons/house-2.svg",
+    icon: "/icons/ui/house-2.svg",
     link: "/real-estates",
   },
   {
     title: "مشاورین املاک",
-    icon: "/icons/people.svg",
+    icon: "/icons/ui/people.svg",
     link: "/realators",
   },
   {
     title: "اخبار روز",
-    icon: "/icons/receipt-2.svg",
+    icon: "/icons/ui/receipt-2.svg",
     link: "/news",
   },
 ];
@@ -109,17 +109,17 @@ export default function HeaderMenu() {
     ? [
         {
           title: "ایجاد آگهی",
-          icon: "/icons/add-circle.svg",
+          icon: "/icons/ui/add-circle.svg",
           link: "/create-ad",
         },
         {
           title: "آگهی های من",
-          icon: "/icons/receipt-text.svg",
+          icon: "/icons/ui/receipt-text.svg",
           link: "/user-profile/my-ads",
         },
         {
           title: "آگهی های ذخیره شده",
-          icon: "/icons/save.svg",
+          icon: "/icons/ui/save.svg",
           link: "/user-profile/saved-ads",
         },
       ]

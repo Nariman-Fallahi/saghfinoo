@@ -1,9 +1,10 @@
 "use client";
+import { use } from "react";
 import Image from "next/image";
-import EditingInformation from "@/components/userProfile/EditingInformation";
-import MyAds from "@/components/userProfile/MyAds";
-import SavedAds from "@/components/userProfile/SavedAds";
-import ItemMenu from "@/components/userProfile/ItemMenu";
+import EditingInformation from "@/components/user-profile/EditingInformation";
+import MyAds from "@/components/user-profile/MyAds";
+import SavedAds from "@/components/user-profile/SavedAds";
+import ItemMenu from "@/components/user-profile/ItemMenu";
 import { notFound } from "next/navigation";
 import { deleteCookie } from "cookies-next";
 import { useRouter } from "@bprogress/next/app";
@@ -16,11 +17,10 @@ const COMPONENT_MAP: Record<string, React.ReactNode> = {
   [UserProfileItem.SavedAds]: <SavedAds />,
 };
 
-export default function UserProfilePage({
-  params,
-}: {
-  params: { id: string };
+export default function UserProfilePage(props: {
+  params: Promise<{ id: string }>;
 }) {
+  const params = use(props.params);
   const { id } = params;
   const router = useRouter();
   const { data: userInfoData } = useUserInfo();
@@ -43,7 +43,7 @@ export default function UserProfilePage({
           <Image
             width={35}
             height={35}
-            src="/icons/profile-circle.svg"
+            src="/icons/ui/profile-circle.svg"
             alt="Profile"
           />
           <div className="flex flex-col mr-3">
@@ -69,7 +69,7 @@ export default function UserProfilePage({
 
           <ItemMenu
             title="خروج"
-            icon="/icons/logout.svg"
+            icon="/icons/ui/logout.svg"
             alt="Logout"
             onClick={handleLogout}
             className="text-red-600"

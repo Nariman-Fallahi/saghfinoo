@@ -1,4 +1,4 @@
-export const mockNewsData: NewsType[] = [
+const mockNewsData: NewsType[] = [
   {
     id: 1,
     title: "اخبار املاک",
@@ -128,7 +128,6 @@ import {
 } from "@tanstack/react-query";
 
 // Components
-import Ad from "@/components/news/PromoBanner";
 import { SITE_METADATA } from "@/constant/metadata";
 import NewsSection from "@/components/news/NewsSection";
 import { NewsType } from "@/types";
@@ -139,15 +138,14 @@ export const metadata: Metadata = {
   description: SITE_METADATA.news.description,
 };
 
-export default async function News({
-  searchParams,
-}: {
-  searchParams: {
+export default async function News(props: {
+  searchParams: Promise<{
     housingNewsPageNumber?: string;
     constructionNewsPageNumber?: string;
     rentNewsPageNumber?: string;
-  };
+  }>;
 }) {
+  const searchParams = await props.searchParams;
   const queryClient = new QueryClient();
 
   const housingPage = searchParams.housingNewsPageNumber || "1";
