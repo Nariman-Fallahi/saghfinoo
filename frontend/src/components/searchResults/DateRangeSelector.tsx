@@ -18,7 +18,7 @@ export default function DateRangeSelector({
 }: Props) {
   if (isLoading) {
     return (
-      <div className="w-full md:w-40 h-8 md:h-9 bg-gray-200 animate-pulse rounded-[4px]! border border-gray-100" />
+      <div className="w-full md:w-40 h-8 md:h-9 bg-gray-200 animate-pulse rounded-sm! border border-gray-100" />
     );
   }
 

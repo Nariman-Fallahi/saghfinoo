@@ -47,7 +47,7 @@ export default function FooterMenu() {
       items: [
         { icon: "/icons/socials/call.svg", text: "تلفن" },
         { icon: "/icons/socials/instagram.svg", text: "اینستاگرام" },
-        { icon: "/frontend/public/icons/socials/telegram.svg", text: "تلگرام" },
+        { icon: "/icons/socials/telegram.svg", text: "تلگرام" },
       ],
     },
     {

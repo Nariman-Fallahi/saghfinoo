@@ -17,17 +17,19 @@ export default function Error({
   }, [error]);
 
   return (
-    <ErrorDisplay
-      icon="/icons/errors/403-error.svg"
-      title="ERROR 403"
-      description="شما دسترسی کافی برای مشاهده این صفحه را ندارید."
-    >
-      <div className="grid grid-cols-2 gap-6">
-        <BackToHomeButton />
-        <CustomButton radius="sm" onPress={() => reset()}>
-          تلاش دوباره
-        </CustomButton>
-      </div>
-    </ErrorDisplay>
+    <div className="h-screen w-full flex justify-center items-center">
+      <ErrorDisplay
+        icon="/icons/errors/submission-error.svg"
+        title="ERROR 500"
+        description="خطای داخلی سرور رخ داده است. در صورت تداوم، با پشتیبانی تماس بگیرید."
+      >
+        <div className="grid grid-cols-2 gap-6">
+          <BackToHomeButton />
+          <CustomButton radius="sm" onPress={() => reset()}>
+            تلاش دوباره
+          </CustomButton>
+        </div>
+      </ErrorDisplay>
+    </div>
   );
 }

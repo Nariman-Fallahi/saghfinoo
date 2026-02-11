@@ -40,7 +40,7 @@ export default async function NewUserHomePage() {
           subtitle="اما در سقفینو مشاورین املاک کنار شما میمانند"
           data={ServicesDataNewUserHome}
         />
-        <LatestNews fetchUrl={getNewsFetchUrl} />
+        <LatestNews />
       </div>
     </HydrationBoundary>
   );

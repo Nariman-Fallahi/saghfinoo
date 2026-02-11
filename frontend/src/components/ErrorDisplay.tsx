@@ -19,17 +19,16 @@ export default function ErrorDisplay({
         <Image
           width={250}
           height={250}
-          className="md:w-[350px] md:h-[350px]"
-          sizes="(min-width: 768px) 350px, 350px"
           src={icon}
           alt="ERROR"
+          className="w-62.5 h-auto md:w-65 lg:w-70"
+          sizes="(min-width: 768px) 87.5px, 250px"
         />
+
         <p className="font-bold text-xl mt-8 md:text-2xl">{title}</p>
         <p className="mt-3 text-sm text-center md:text-xl">{description}</p>
 
-        <div className="mt-8">
-          {children && children}
-        </div>
+        <div className="mt-8">{children && children}</div>
       </div>
     </div>
   );

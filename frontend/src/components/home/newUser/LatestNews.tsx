@@ -1,18 +1,16 @@
 "use client";
 import Image from "next/image";
 import { Title } from "@/components/ui/Title";
-import { QueryKeys } from "@/services/apiService";
+import { Api, QueryKeys } from "@/services/apiService";
 import CustomEmblaSlider from "@/components/CustomEmblaSlider";
 import { useInfiniteRequest } from "@/hooks/useRequest";
 import { NewsType } from "@/types";
 
-interface LatestNewsProps {
-  fetchUrl: string;
-}
-
-export default function LatestNews({ fetchUrl }: LatestNewsProps) {
+export default function LatestNews() {
   const { data, isLoading, fetchNextPage, hasNextPage } =
-    useInfiniteRequest<NewsType>(fetchUrl, [QueryKeys.GET_NEWS]);
+    useInfiniteRequest<NewsType>(`${Api.News}/?special=0`, [
+      QueryKeys.GET_NEWS,
+    ]);
 
   const allNews =
     data?.pages.flatMap((page) =>
